@@ -1,0 +1,27 @@
+<h1>{{ question.question_text }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+{% csrf_token %}
+<table class="grid" cellspacing="10">
+
+<!-- loop this for each item -->
+<tr>
+   <td></td>
+   {% for item in question.item_set.all %}
+      <td><label for="item{{ forloop.counter }}">{{ forloop.counter }}</label></td>
+   {% endfor %}
+</tr>
+
+<!-- loop this for each item -->
+{% for item in question.item_set.all %}
+   <tr>
+      <td class="griditem"><label for="item{{ forloop.counter }}">{{ item.item_text }}</label></td>
+      <!-- loop this for each choice -->
+      {% for choice in item.choice_set.all %}
+         <td><input type=radio  name="{{choice.choice_num}}" value="{{choice.choice_num}}"></td>
+   </tr>
+
+</table>
+</form>

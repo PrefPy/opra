@@ -4,9 +4,28 @@
 
 <form action="{% url 'polls:vote' question.id %}" method="post">
 {% csrf_token %}
-{% for choice in question.choice_set.all %}
-    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
+<table class="grid" cellspacing="10">
+
+<!-- loop this for each item -->
+<tr>
+	<td></td>
+	{% for item in question.item_set.all %}
+		<td align="center"><label for="item{{ forloop.counter }}">{{ forloop.counter }}</label></td>
+	{% endfor %}
+</tr>
+
+<!-- loop this for each item -->
+{% for item in question.item_set.all %}
+	<tr>
+		<td class="griditem"><label for="item{{ forloop.counter }}">{{ item.item_text }}</label></td>
+		<!-- loop this for each item -->
+		{% for item in question.item_set.all %}
+			<td><input type="radio" name="rank{{ forloop.parentloop.counter }}" id="rank{{ forloop.parentloop.counter }}.{{ forloop.counter }}" value="{{ forloop.counter }}" /></td>
+		{% endfor %}
+	</tr>
 {% endfor %}
-<input type="submit" value="Vote" />
+</table>
+
+<input type="submit" value="Submit" />
+
 </form>

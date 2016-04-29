@@ -18,9 +18,17 @@ class Question(models.Model):
     	return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
 @python_2_unicode_compatible
+class Item(models.Model):
+	question = models.ForeignKey(Question, on_delete=models.CASCADE)
+	item_text = models.CharField(max_length=200)
+	rank = models.IntegerField(default=0)
+	def __str__(self):
+		return self.item_text
+
+@python_2_unicode_compatible
 class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
+    item = models.ForeignKey(Item, default=1, on_delete=models.CASCADE)
+    choice_num = models.IntegerField(default=1)
     votes = models.IntegerField(default=0)
     def __str__(self):
-    	return self.choice_text
+    	return str(self.choice_num)

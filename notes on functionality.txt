@@ -30,3 +30,5 @@ ALGORITHM STUFF:
 -1st Question = serial dictatorship in order of response
 -2nd Question = serial dictatorship in reverse order of response
 -bonus: option to select alternative allocation algorithms
+
+brehhhhhhhhhhh

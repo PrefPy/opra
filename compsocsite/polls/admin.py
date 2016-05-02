@@ -1,13 +1,12 @@
 from django.contrib import admin
 
-from .models import Question, Item, Choice
+from .models import Student, Question, Response, Item
 
 # Register your models here.
 
 class ItemInline(admin.TabularInline):
     model = Item
     extra = 3
-
 
 class QuestionAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -19,4 +18,13 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ['pub_date']
     search_fields = ['question_text']
 
+class StudentAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Name',               {'fields': ['student_name']}),
+        ('Email', {'fields': ['student_email']}),
+    ]
+    list_display = ('student_name', 'student_email')
+    search_fields = ['student_name']
+
 admin.site.register(Question, QuestionAdmin)
+admin.site.register(Student, StudentAdmin)

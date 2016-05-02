@@ -43,10 +43,11 @@ class Response(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     timestamp = models.DateTimeField('response timestamp')
-    allocation = models.ForeignKey(Item, on_delete=models.CASCADE) # assigned by algorithm function
+    allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
     def __str__(self):
-        return "Response: " + self.question.question_text
-
+        return "Response of student " + self.student.student_name + " for question " + self.question.question_text
+    class Meta:
+        ordering = ['timestamp']
 
 # Dictionary Helper Models - from https://djangosnippets.org/snippets/2451/
 # Models include modifications to be used specifically for holding student preferences - these changes are marked with comments
@@ -177,5 +178,5 @@ class KeyValuePair(models.Model):
     """A Key-Value pair with a pointer to the Dictionary that owns it.
     """
     container = models.ForeignKey(Dictionary, db_index=True)
-    key = models.ForeignKey(Item, default=None, on_delete=models.CASCADE) # changed from original model
-    value = models.IntegerField(default=0) # changed from original model
+    key = models.ForeignKey(Item, default=None, on_delete=models.CASCADE, db_index=True) # changed from original model
+    value = models.IntegerField(default=0, db_index=True) # changed from original model

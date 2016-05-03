@@ -23,6 +23,10 @@ class IndexView(generic.ListView):
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(DetailView, self).get_context_data(**kwargs)
+        ctx['students'] = Student.objects.all()
+        return ctx
     def get_queryset(self):
         """
         Excludes any questions that aren't published yet.
@@ -43,7 +47,7 @@ def vote(request, question_id):
     # if no button selected on a given item, set to highest possible selection
     # HttpResponseRedirect to thank you screen
     question = get_object_or_404(Question, pk=question_id)
-    response = Response(question=question, student=Student.objects.get(pk=1), timestamp=timezone.now())
+    response = Response(question=question, student=Student.objects.get(student_name=request.POST['Name']), timestamp=timezone.now())
     response.save()
     d = response.dictionary_set.create(name = response.student.student_name + " Preferences")
 

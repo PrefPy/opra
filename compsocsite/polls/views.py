@@ -47,16 +47,17 @@ def vote(request, question_id):
     response.save()
     d = response.dictionary_set.create(name = response.student.student_name + " Preferences")
 
-    item_num = 0
+    item_num = 1
     for item in question.item_set.all():
         try:
-            selected_choice = item.get(pk=request.POST['item'+str(item_num)])
+            selected_choice = request.POST["item" + str(item_num)]
         except:
             # set value to lowest possible rank
+            print "The .POST is not working sadly."
             d[item] = question.item_set.all().count()
         else:
             # add pref to response dict
-            d[item] = int(selected_choice.value)
+            d[item] = int(selected_choice)
         d.save()
         item_num += 1
     return HttpResponseRedirect(reverse('polls:index'))

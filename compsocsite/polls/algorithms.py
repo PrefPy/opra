@@ -20,10 +20,10 @@ def allocation_serial_dictatorship(the_question):
 		items.append(item)
 
 	for student in student_order:
-		highest_rank = -1
+		highest_rank = items.len()
 		prefs = student.dictionary_set.all()[0]
 		for item in items:
-			if prefs.get(item) > highest_rank:
+			if prefs.get(item) < highest_rank:
 				highest_rank = prefs.get(item)
 				myitem = item
 		print "Allocating item " + myitem.item_text + " to student " + student.student.student_name

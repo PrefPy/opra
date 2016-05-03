@@ -46,7 +46,7 @@ class Response(models.Model):
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
     def __str__(self):
-        return "Response of student " + self.student.student_name + " for question " + self.question.question_text
+        return "Response of student " + self.student.student_name + "\nfor question " + self.question.question_text
     class Meta:
         ordering = ['timestamp'] 
 

@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.views import generic
 
-from .models import Question, Item
+from .models import *
 
 from django.utils import timezone
 
@@ -44,17 +44,22 @@ def vote(request, question_id):
     # HttpResponseRedirect to thank you screen
     question = get_object_or_404(Question, pk=question_id)
     response = Response(question=question, student=Student.objects.get(pk=1), timestamp=timezone.now())
+    response.save()
+    d = response.dictionary_set.create(name = response.student.student_name + " Preferences")
 
     item_num = 0
-    for item in question.item_set:
+    for item in question.item_set.all():
         try:
             selected_choice = item.get(pk=request.POST['item'+str(item_num)])
         except:
             # set value to lowest possible rank
+            d[item] = question.item_set.all().count()
         else:
             # add pref to response dict
-
+            d[item] = int(selected_choice.value)
+        d.save()
         item_num += 1
+    return HttpResponseRedirect(reverse('polls:index'))
 
 
 # def vote(request, question_id):

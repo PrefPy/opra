@@ -26,14 +26,22 @@
 {% endfor %}
 </table>
 
+<br> <br> <br>
+<h2>Please select your name:<br></h2>
 
-<select title=Name>
-	<option value=Name disabled selected>Name</option>
+{% for student in students %}
+	<input type="radio" name="name" id="{{ student.student_name }}" value="{{ student.student_name }}" required />
+    <label for="{{ student.student_name }}">{{ student.student_name }}</label><br />
+{% endfor %}
+<!--
+<select id="Input Name" required>
+	<option value="Name" disabled selected>Name</option>
 	{% for student in students %}
-		<option value=student.student_name>{{ student.student_name }}</option>
+		<option name=student.student_name value=student.student_name>{{ student.student_name }}</option>
 	{% endfor %}
 </select>
-
+-->
+<br><br>
 <input type="submit" value="Submit" />
 
 </form>

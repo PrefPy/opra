@@ -47,7 +47,7 @@ def vote(request, question_id):
     # if no button selected on a given item, set to highest possible selection
     # HttpResponseRedirect to thank you screen
     question = get_object_or_404(Question, pk=question_id)
-    response = Response(question=question, student=Student.objects.get(student_name=request.POST['Name']), timestamp=timezone.now())
+    response = Response(question=question, student=Student.objects.get(student_name=request.POST['name']), timestamp=timezone.now())
     response.save()
     d = response.dictionary_set.create(name = response.student.student_name + " Preferences")
 

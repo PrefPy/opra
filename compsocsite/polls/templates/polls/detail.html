@@ -26,6 +26,14 @@
 {% endfor %}
 </table>
 
+
+<select title=Name>
+	<option value=Name disabled selected>Name</option>
+	{% for student in students %}
+		<option value=student.student_name>{{ student.student_name }}</option>
+	{% endfor %}
+</select>
+
 <input type="submit" value="Submit" />
 
 </form>

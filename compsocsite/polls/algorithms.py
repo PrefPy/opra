@@ -19,3 +19,4 @@ def allocation_serial_dictatorship(the_question):
 		student.allocation = myitem
 		student.save()
 		items.remove(myitem)
+	return

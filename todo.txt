@@ -1,0 +1,17 @@
+-vote function (in views.py): make response object, add preferences to dictionary, etc.
+-admin.py:
+	-add viewable responses section, can filter by student or question
+	-add algorithms section, with following options:
+		-choose algorithm to use (from drop-down)
+		-run algorithm
+		-publish results (automatic after algorithm runs?)
+-DetailView (in views.py) & detail.html: add student name selection drop-down
+-ResultsView (in views.py) & results.html: change to show results of allocation when admin publishes them
+-optional: add forms.py to simplify html stuff
+	-idk if it’s worth the effort to do this?
+-bonus:
+	-automate emailing
+	-add student user authentication
+	-figure out grad/undergrad distinction with date selection???
+
+Also: I think a Project model might be useful, to group Questions that go together, so that the algorithm knows which Questions to use for the allocation stuff.

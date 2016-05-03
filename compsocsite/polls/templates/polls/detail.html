@@ -26,6 +26,12 @@
 {% endfor %}
 </table>
 
+
+<select name=Name>
+	{% for student in Student.objects.all() %}
+		<option value=student.student_name>student.student_name</option>
+</select>
+
 <input type="submit" value="Submit" />
 
 </form>

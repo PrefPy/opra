@@ -47,7 +47,7 @@ class Response(models.Model):
     def __str__(self):
         return "Response of student " + self.student.student_name + " for question " + self.question.question_text
     class Meta:
-        ordering = ['timestamp']
+        ordering = ['timestamp'] 
 
 # Dictionary Helper Models - from https://djangosnippets.org/snippets/2451/
 # Models include modifications to be used specifically for holding student preferences - these changes are marked with comments

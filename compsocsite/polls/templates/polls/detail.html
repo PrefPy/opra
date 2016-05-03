@@ -20,7 +20,7 @@
 		<td class="griditem"><label for="item{{ forloop.counter }}">{{ item.item_text }}</label></td>
 		<!-- loop this for each item -->
 		{% for item in question.item_set.all %}
-			<td><input type="radio" name="rank{{ forloop.parentloop.counter }}" id="rank{{ forloop.parentloop.counter }}.{{ forloop.counter }}" value="{{ forloop.counter }}" /></td>
+			<td><input type="radio" name="item{{ forloop.parentloop.counter }}" id="item{{ forloop.parentloop.counter }}.rank{{ forloop.counter }}" value="{{ forloop.counter }}" /></td>
 		{% endfor %}
 	</tr>
 {% endfor %}

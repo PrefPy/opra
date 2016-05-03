@@ -35,13 +35,27 @@ class ResultsView(generic.DetailView):
     template_name = 'polls/results.html'
 
 def vote(request, question_id):
-    return HttpResponse("You're voting on question %s." % question_id)
+    # return HttpResponse("You're voting on question %s." % question_id)
     # TODO:
     # make Response with student's name, current time, question
     # go through each item and identify which radio button has been selected
     # add item + radio button ranking to Response's Dictionary
     # if no button selected on a given item, set to highest possible selection
     # HttpResponseRedirect to thank you screen
+    question = get_object_or_404(Question, pk=question_id)
+    response = Response(question=question, student=Student.objects.get(pk=1), timestamp=timezone.now())
+
+    item_num = 0
+    for item in question.item_set:
+        try:
+            selected_choice = item.get(pk=request.POST['item'+str(item_num)])
+        except:
+            # set value to lowest possible rank
+        else:
+            # add pref to response dict
+
+        item_num += 1
+
 
 # def vote(request, question_id):
 #     question = get_object_or_404(Question, pk=question_id)

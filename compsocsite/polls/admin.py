@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Student, Question, Response, Item
+from .models import Student, Question, Response, Item, Dictionary, KeyValuePair
+from .algorithms import *
 
 # Register your models here.
 
@@ -26,5 +27,15 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = ('student_name', 'student_email')
     search_fields = ['student_name']
 
+def PublishAllocations(modeladmin, request, queryset):
+    allocation_serial_dictatorship(queryset)
+PublishAllocations.short_description = "Run allocation algorithm for these responses"
+
+class ResponseAdmin(admin.ModelAdmin):
+    list_display = ['question', 'student']
+    ordering = ['question']
+    actions = [PublishAllocations]
+
+admin.site.register(Response, ResponseAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Student, StudentAdmin)

@@ -1,9 +1,9 @@
 -admin.py:
-	-add section to view specific preferences (currently can just view student/question/timestamp/allocation of a response)
-	-allow admin to choose which questions/results are published on the index page
-	-allow admin to select allocation algorithm
-	-don't let admin run algorithm on items with different questions
-	-don't let admin run algorithm on follow-up question before primary question
+	-add section to view preferences from dict (currently can just view student/question/timestamp/allocation of a response)
+	-allow admin to choose which questions/results are published on the index page (possibly select date range?)
+	-allow admin to select allocation algorithm to use (i suppose we could define a different admin action for each algorithm but that repeats a lot of code, idk)
+	-don't let admin run algorithm on responses with different questions (currently causes error)
+	-don't let admin run algorithm on follow-up question before primary question has been allocated (currently causes error)
 -bonus:
 	-automate emailing
 	-add student user authentication

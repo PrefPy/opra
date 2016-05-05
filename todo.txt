@@ -6,7 +6,7 @@
 		-publish results (automatic after algorithm runs?)
 -ResultsView (in views.py) & results.html: change to show results of allocation when admin publishes them
 -optional: add forms.py to simplify html stuff :( :( :( :( :( :(
-	-idk if it’s worth the effort to do this?
+	-idk if it’s worth the effort to do this? (lol it probably was)
 -bonus:
 	-automate emailing
 	-add student user authentication

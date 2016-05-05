@@ -38,6 +38,10 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
 
+class ConfirmationView(generic.DetailView):
+    model = Question
+    template_name = 'polls/confirmation.html'
+
 def vote(request, question_id):
     # return HttpResponse("You're voting on question %s." % question_id)
     # TODO:
@@ -64,7 +68,7 @@ def vote(request, question_id):
             d[item] = int(selected_choice)
         d.save()
         item_num += 1
-    return HttpResponseRedirect(reverse('polls:index'))
+    return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))
 
 
 # def vote(request, question_id):

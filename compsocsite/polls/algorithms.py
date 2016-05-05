@@ -1,19 +1,24 @@
 from polls.models import Question, Item, Response, Student, Dictionary, KeyValuePair
 import operator
 
-def allocation_serial_dictatorship(the_question):
-	item_set = Item.objects.filter(question = the_question)
-	student_order = Response.objects.filter(question = the_question)
-	if the_question.follow_up != None:
-		responses = []
+#Algorithm to allocate items to students for a given question.
+#It takes as an argument the question to run the algorithm on.
+#The order of the serial dictatorship will be decided by increasing
+#order of the timestamps on the responses for novel questions, and reverse
+#order of the timestamps on the original question for follow-up questions.
+def allocation_serial_dictatorship(responses):
+	item_set = responses[0].question.item_set.all()
+	student_order = responses
+	if responses[0].question.follow_up != None:
+		response_set = []
 		for r in student_order:
-			responses.append(r)
+			response_set.append(r)
 
 		for r in responses:
 			temp = r.question.follow_up.response_set.filter(student = r.student)
 			r.timestamp = temp.timestamp
-		responses.sort(key = operator.attrgetter('timestamp'), reverse = True)
-		student_order = responses
+		response_set.sort(key = operator.attrgetter('timestamp'), reverse = True)
+		student_order = response_set
 	items = []
 
 	for item in item_set:
@@ -27,7 +32,6 @@ def allocation_serial_dictatorship(the_question):
 				highest_rank = prefs.get(item)
 				myitem = item
 		print "Allocating item " + myitem.item_text + " to student " + student.student.student_name
-		student.allocation = myitem
-		student.save()
+		student.update(allocation = myitem)
 		items.remove(myitem)
 	return

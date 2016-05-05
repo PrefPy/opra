@@ -1,13 +1,12 @@
 -admin.py:
-	-add viewable responses section, can filter by student or question
-	-add algorithms section, with following options:
-		-choose algorithm to use (from drop-down)
-		-run algorithm
-		-publish results (automatic after algorithm runs?)
--ResultsView (in views.py) & results.html: change to show results of allocation when admin publishes them
--optional: add forms.py to simplify html stuff :( :( :( :( :( :(
-	-idk if it’s worth the effort to do this? (lol it probably was)
+	-add section to view specific preferences (currently can just view student/question/timestamp/allocation of a response)
+	-allow admin to choose which questions/results are published on the index page
+	-allow admin to select allocation algorithm
+	-don't let admin run algorithm on items with different questions
+	-don't let admin run algorithm on follow-up question before primary question
 -bonus:
 	-automate emailing
 	-add student user authentication
 	-figure out grad/undergrad distinction with date selection???
+	-make the UI not look like shit
+	-do more testing to make sure it doesn’t break

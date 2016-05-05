@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
+from .algorithms import *
 
 def PublishAllocations(modeladmin, request, queryset):
     allocation_serial_dictatorship(queryset)
@@ -43,6 +44,7 @@ class QuestionAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,               {'fields': ['question_text']}),
         ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
+        ('Follow up', {'fields': ['follow_up']})
     ]
     inlines = [ItemInline]
     list_display = ('question_text', 'pub_date')

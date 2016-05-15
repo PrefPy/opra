@@ -1,8 +1,10 @@
 from polls.models import Question, Item, Response, Student, Dictionary, KeyValuePair
 import operator
 
-#Algorithm to allocate items to students for a given question.
-#It takes as an argument the question to run the algorithm on.
+# ALLOCATION ALGORITHM FUNCTIONS HERE:
+
+#Serial dictatorship algorithm to allocate items to students for a given question.
+#It takes as an argument the set of responses to run the algorithm on.
 #The order of the serial dictatorship will be decided by increasing
 #order of the timestamps on the responses for novel questions, and reverse
 #order of the timestamps on the original question for follow-up questions.
@@ -10,7 +12,7 @@ def allocation_serial_dictatorship(responses):
 	item_set = responses[0].question.item_set.all()
 	student_response_order = responses
 
-	# it's a follow-up question, so run it in reverse order of timestamp from original question
+	# it's a follow-up question, so run allocation in reverse order of timestamp from original question
 	if responses[0].question.follow_up != None:
 		print "follow up question!"
 		response_set = []
@@ -24,7 +26,6 @@ def allocation_serial_dictatorship(responses):
 		student_response_order = response_set
 	items = []
 
-	# this is working correctly
 	for item in item_set:
 		items.append(item)
 

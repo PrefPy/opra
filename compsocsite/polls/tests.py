@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 
 from .models import Question
 
+# NOTE: ALL OF THIS IS OUTDATED.
+
 def create_question(question_text, days):
     """
     Creates a question with the given `question_text` and published the

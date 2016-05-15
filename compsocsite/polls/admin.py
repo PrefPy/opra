@@ -2,12 +2,17 @@ from django.contrib import admin
 from .models import *
 from .algorithms import *
 
-def PublishAllocations(modeladmin, request, queryset):
+# ALLOCATION ALGORITHM ACTION DEFS GO HERE:
+
+# serial dictatorship admin action
+def PublishAllocations_SerialDictatorship(modeladmin, request, queryset):
     allocation_serial_dictatorship(queryset)
-PublishAllocations.short_description = "Run allocation algorithm for these responses"
+PublishAllocations_SerialDictatorship.short_description = "Run serial dictatorship allocation algorithm for these responses"
 
 
+# limits admin change permissions
 # https://gist.github.com/aaugustin/1388243
+# TODO: change to allow more admin control over responses
 class ReadOnlyModelAdmin(admin.ModelAdmin):
     """
     ModelAdmin class that prevents modifications through the admin.
@@ -35,11 +40,12 @@ class ReadOnlyModelAdmin(admin.ModelAdmin):
     # def has_delete_permission(self, request, obj=None):
     #     return False
 
-
+# item enter fields on the question form
 class ItemInline(admin.TabularInline):
     model = Item
     extra = 3
 
+# question creation form / list view
 class QuestionAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,               {'fields': ['question_text']}),
@@ -51,6 +57,7 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ['pub_date']
     search_fields = ['question_text']
 
+# student creation form / list view
 class StudentAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Name',               {'fields': ['student_name']}),
@@ -59,11 +66,15 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = ('student_name', 'student_email')
     search_fields = ['student_name']
 
+# response editing / viewing
 class ResponseAdmin(ReadOnlyModelAdmin):
     list_display = ('student', 'question', 'timestamp')
     list_filter = ['student', 'question', 'timestamp']
-    actions = [PublishAllocations]
+    
+    # DEFINE ALL ADDITIONAL ALLOCATION ACTIONS HERE
+    actions = [PublishAllocations_SerialDictatorship]
 
+# register models
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Response, ResponseAdmin)

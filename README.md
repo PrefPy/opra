@@ -1,7 +1,7 @@
 # OPRA: Online Preference Reporting and Allocation
 Maggie Borkowski and Tyler Johnston's final project for Computational Social Choice, Spring 2016
 
-test
+
 This project is a web app that assists in the assignment of presentations to students. It allows students to rank their preferences for a presentation topic and presentation date. When all students have input their preferences, it algorithmically allocates topics and presentation dates for all students.
 
 The web app is built on Django, and uses an SQLite database. [Click here](https://docs.djangoproject.com/en/1.9/) for more information on how Django works.

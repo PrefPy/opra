@@ -34,7 +34,6 @@ class Question(models.Model):
 class Item(models.Model):
 	question = models.ForeignKey(Question, on_delete=models.CASCADE)
 	item_text = models.CharField(max_length=200)
-	# rank = models.IntegerField(default=0)
 	def __str__(self):
 		return self.item_text
 

@@ -6,6 +6,7 @@
 {% csrf_token %}
 <table class="grid" cellspacing="10">
 
+<!-- ranking numbers in top row of grid -->
 <!-- loop this for each item -->
 <tr>
 	<td></td>
@@ -14,10 +15,13 @@
 	{% endfor %}
 </tr>
 
+<!-- item text -->
 <!-- loop this for each item -->
 {% for item in question.item_set.all %}
 	<tr>
 		<td class="griditem"><label for="item{{ forloop.counter }}">{{ item.item_text }}</label></td>
+
+		<!-- radio buttons -->
 		<!-- loop this for each item -->
 		{% for item in question.item_set.all %}
 			<td><input type="radio" name="item{{ forloop.parentloop.counter }}" id="item{{ forloop.parentloop.counter }}.rank{{ forloop.counter }}" value="{{ forloop.counter }}" /></td>
@@ -29,18 +33,13 @@
 <br> <br> <br>
 <h2>Please select your name:<br></h2>
 
+<!-- student name selection -->
 {% for student in students %}
 	<input type="radio" name="name" id="{{ student.student_name }}" value="{{ student.student_name }}" required />
     <label for="{{ student.student_name }}">{{ student.student_name }}</label><br />
 {% endfor %}
-<!--
-<select id="Input Name" required>
-	<option value="Name" disabled selected>Name</option>
-	{% for student in students %}
-		<option name=student.student_name value=student.student_name>{{ student.student_name }}</option>
-	{% endfor %}
-</select>
--->
+
+<!-- submit button -->
 <br><br>
 <input type="submit" value="Submit" />
 

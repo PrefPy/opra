@@ -1,5 +1,6 @@
 from polls.models import Question, Item, Response, Student, Dictionary, KeyValuePair
 import operator
+import random
 
 #Algorithm to allocate items to students for a given question.
 #It takes as an argument the question to run the algorithm on.
@@ -12,7 +13,6 @@ def allocation_serial_dictatorship(responses):
 
 	# it's a follow-up question, so run it in reverse order of timestamp from original question
 	if responses[0].question.follow_up != None:
-		print "follow up question!"
 		response_set = []
 		for r in student_response_order:
 			response_set.append(r)
@@ -37,6 +37,22 @@ def allocation_serial_dictatorship(responses):
 				highest_rank = prefs.get(item)
 				myitem = item
 		print "Allocating item " + myitem.item_text + " to student " + student_response.student.student_name
+		student_response.allocation = myitem
+		student_response.save()
+		items.remove(myitem)
+	return
+
+def allocation_random_assignment(responses):
+	item_set = responses[0].question.item_set.all()
+	student_response_order = responses
+	items = []
+
+	for item in item_set:
+		items.append(item)
+
+	for student_response in student_response_order:
+		index = randrange(items.len())
+		myitem = items[index]
 		student_response.allocation = myitem
 		student_response.save()
 		items.remove(myitem)

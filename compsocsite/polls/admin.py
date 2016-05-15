@@ -6,6 +6,10 @@ def PublishAllocations(modeladmin, request, queryset):
     allocation_serial_dictatorship(queryset)
 PublishAllocations.short_description = "Run allocation algorithm for these responses"
 
+def PublishAllocationsRandomly(modeladmin, request, queryset):
+    allocation_random_assignment(queryset)
+PublishAllocationsRandomly.short_description = "Run random allocation algorithm for these responses"
+
 
 # https://gist.github.com/aaugustin/1388243
 class ReadOnlyModelAdmin(admin.ModelAdmin):
@@ -62,7 +66,7 @@ class StudentAdmin(admin.ModelAdmin):
 class ResponseAdmin(ReadOnlyModelAdmin):
     list_display = ('student', 'question', 'timestamp')
     list_filter = ['student', 'question', 'timestamp']
-    actions = [PublishAllocations]
+    actions = [PublishAllocations, PublishAllocationsRandomly]
 
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Student, StudentAdmin)

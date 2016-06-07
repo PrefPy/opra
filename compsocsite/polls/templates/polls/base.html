@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>OPRA</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <!-- Static navbar -->
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/polls/">Voting System</a>
+                    </div>
+                    <div id="navbar" class="navbar-collapse collapse">
+                        {% if user.is_authenticated %}
+                            <ul class="nav navbar-nav">
+                                <li><a href="/polls/add/">Add Poll</a></li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="/auth/logout/">Logout</a></li>
+                            </ul>
+                        {% else %}
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="/auth/register/">Register</a></li>
+                                <li><a href="/auth/login/">Login</a></li>
+                            </ul>
+                        {% endif %}
+                    </div><!--/.nav-collapse -->
+                </div><!--/.container-fluid -->
+            </nav>
+
+            <div class="row">
+                {% block content %}
+                {% endblock %}
+            </div>      
+        </div> <!-- /container -->
+    </body>
+</html>

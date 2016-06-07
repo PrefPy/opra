@@ -1,0 +1,15 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    <h1>Login to OPRA</h1>
+
+    <form id="login_form" method="post" action="/auth/login/">
+        {% csrf_token %}
+        Username: <input type="text" name="username" value="" size="50" />
+        <br />
+        Password: <input type="password" name="password" value="" size="50" />
+        <br />
+
+        <input type="submit" value="submit" />
+    </form>
+{% endblock %}

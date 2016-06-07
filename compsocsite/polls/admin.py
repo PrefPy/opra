@@ -2,12 +2,13 @@ from django.contrib import admin
 from .models import *
 from .algorithms import *
 
+
 # ALLOCATION ALGORITHM ACTION DEFS GO HERE
 
 # serial dictatorship admin action def
 def PublishAllocations_SerialDictatorship(modeladmin, request, queryset):
     allocation_serial_dictatorship(queryset)
-PublishAllocations.short_description = "Run allocation algorithm for these responses"
+PublishAllocations_SerialDictatorship.short_description = "Run allocation algorithm for these responses"
 
 # random assignment admin action def
 def PublishAllocationsRandomly(modeladmin, request, queryset):
@@ -55,10 +56,12 @@ class QuestionAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,               {'fields': ['question_text']}),
         ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
-        ('Follow up', {'fields': ['follow_up']})
+        ('Follow up', {'fields': ['follow_up']}),
+        ('Owner', {'fields' : ['question_owner']}),
+        ('Voters', {'fields' : ['question_voters']}),
     ]
     inlines = [ItemInline]
-    list_display = ('question_text', 'pub_date')
+    list_display = ('question_text', 'pub_date', 'question_owner')
     list_filter = ['pub_date']
     search_fields = ['question_text']
 

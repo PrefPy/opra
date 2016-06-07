@@ -1,9 +1,15 @@
-<h1>{{ question.question_text }}</h1>
+{% extends 'polls/base.html' %}
 
-<ul>
-{% for response in question.response_set.all %}
-    <li>{{ response.student.student_name }}: {{ response.allocation.item_text }}</li>
-{% endfor %}
-</ul>
+{% block content %}
+    <div class="col-md-12">
+        <h1>{{ question.question_text }}</h1>
 
-<a href="{% url 'polls:index' %}"> Return Home</a>
+        <ul>
+        {% for response in question.response_set.all %}
+            <li>{{ response.student.student_name }}: {{ response.allocation.item_text }}</li>
+        {% endfor %}
+        </ul>
+
+        <a href="{% url 'polls:index' %}"> Return Home</a>
+    </div>
+{% endblock %}

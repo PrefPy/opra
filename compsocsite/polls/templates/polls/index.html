@@ -1,27 +1,59 @@
-<h2>Home Page</h2>
-<br>
-<h3>Questions:</h3>
-{% if question_list %}
-    <ul>
-    {% for question in question_list %}
-        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No questions are currently available.</p>
-{% endif %}
-<br>
-<h3>Results:</h3>
-{% if question_list %}
-    	<ul>
-    	{% for question in question_list %}
-    		{% if question.response_set.all.0.allocation %}
-        		<li><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></li>
-        	{% else %}
-        		<li>Allocation not complete: {{ question.question_text }}</li>
-        	{% endif %}
-    	{% endfor %}
-    	</ul>
-{% else %}
-    <p>No results are currently available.</p>
-{% endif %}
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Questions</div>
+                <div class="panel-body">
+                    {% if question_list %}
+                        <ul>
+                        {% for question in question_list %}
+                            {% for voter in question.question_voters.all %}
+                                {% if voter == request.user %}
+                                    <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No questions are currently available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Results</div>
+                <div class="panel-body">
+                    {% if question_list %}
+                        <ul>
+                        {% for question in question_list %}
+                            {% for voter in question.question_voters.all %}
+                                {% if voter == request.user %}
+                                    {% if question.response_set.all.0.allocation %}
+                                        <li><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></li>
+                                    {% else %}
+                                        <li>Allocation not complete: {{ question.question_text }}</li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No results are currently available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+     {% else %}
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    Welcome! Please register/login to get started.
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

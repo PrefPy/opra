@@ -5,7 +5,7 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
-
+from django.contrib.auth.models import User
 
 # Models
 
@@ -23,11 +23,15 @@ class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
     follow_up = models.OneToOneField('Question', on_delete=models.CASCADE, null = True, blank = True)
+    question_owner = models.ForeignKey(User, null = True)
+    question_voters = models.ManyToManyField(User, related_name='voters')
     def __str__(self):
         return self.question_text
     def was_published_recently(self):
         now = timezone.now()
-    	return now - datetime.timedelta(days=1) <= self.pub_date <= now
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
+    def get_voters(self):
+	return ",".join([str(voter) for voter in self.question_voters.all()])
 
 # item to rank in a question
 @python_2_unicode_compatible

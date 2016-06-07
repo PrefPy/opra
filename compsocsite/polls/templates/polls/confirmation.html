@@ -1,5 +1,11 @@
-<h1>{{ question.question_text }}</h1>
+{% extends 'polls/base.html' %}
 
-<p>Thanks for voting on this question! Your professor will publish results soon.</p>
+{% block content %}
+    <div class="col-md-12">
+        <h1>{{ question.question_text }}</h1>
 
-<a href = "{% url 'polls:index' %}"> Return home.</a>
+        <p>Thanks for voting on this question! Your professor will publish results soon.</p>
+
+        <a href = "{% url 'polls:index' %}"> Return home</a>
+    </div>
+{% endblock %}

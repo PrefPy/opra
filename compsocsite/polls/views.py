@@ -8,6 +8,10 @@ from django.views import generic
 from .models import *
 
 from django.utils import timezone
+from django.template import RequestContext
+from django.shortcuts import render_to_response
+from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth.decorators import login_required
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
@@ -16,6 +20,25 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
     	return Question.objects.all().order_by('-pub_date')
+
+def addView(request):
+    context = RequestContext(request)
+    
+    if request.method == 'POST':
+	questionString = request.POST['questionTitle']
+	
+	question = Question(question_text=questionString, pub_date=timezone.now(), question_owner=request.user)
+	question.save()
+	item1 = Item(question=question, item_text=request.POST['choice1'])
+	item2 = Item(question=question, item_text=request.POST['choice2'])
+	item3 = Item(question=question, item_text=request.POST['choice3'])
+	item1.save()
+	item2.save()
+	item3.save()
+		
+	return HttpResponse("Your question: " + questionString)
+  
+    return render_to_response('polls/add.html', {}, context)    
 
 # view for question detail
 class DetailView(generic.DetailView):
@@ -64,4 +87,5 @@ def vote(request, question_id):
         d.save()
         item_num += 1
     return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))
+
 

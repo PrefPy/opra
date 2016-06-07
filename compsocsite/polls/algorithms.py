@@ -41,7 +41,7 @@ def allocation_serial_dictatorship(responses):
 			if prefs.get(item) < highest_rank:
 				highest_rank = prefs.get(item)
 				myitem = item
-		print "Allocating item " + myitem.item_text + " to student " + student_response.student.student_name
+		print ("Allocating item " + myitem.item_text + " to student " + student_response.student.student_name)
 		# now we allocate that item to this student and remove that item from consideration for other students
 		student_response.allocation = myitem
 		student_response.save()

@@ -1,5 +1,4 @@
-# OPRA: Online Preference Reporting and Allocation
-Maggie Borkowski and Tyler Johnston's final project for Computational Social Choice, Spring 2016
+# OPRA: Online Preference Reporting and Aggregation
 
 
 This project is a web app that assists in the assignment of presentations to students. It allows students to rank their preferences for a presentation topic and presentation date. When all students have input their preferences, it algorithmically allocates topics and presentation dates for all students.

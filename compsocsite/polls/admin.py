@@ -76,8 +76,8 @@ class StudentAdmin(admin.ModelAdmin):
 
 # response editing / viewing
 class ResponseAdmin(ReadOnlyModelAdmin):
-    list_display = ('student', 'question', 'timestamp')
-    list_filter = ['student', 'question', 'timestamp']
+    list_display = ('user', 'question', 'timestamp')
+    list_filter = ['user', 'question', 'timestamp']
 
     # DEFINE ALL ADDITIONAL ALLOCATION ACTIONS HERE
     actions = [PublishAllocations_SerialDictatorship, PublishAllocationsRandomly]

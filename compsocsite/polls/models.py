@@ -45,11 +45,11 @@ class Item(models.Model):
 @python_2_unicode_compatible
 class Response(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null = True)
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
     def __str__(self):
-        return "Response of student " + self.student.student_name + "\nfor question " + self.question.question_text
+        return "Response of student " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:
         ordering = ['timestamp'] 
 

@@ -69,9 +69,9 @@ def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     
     # make Response object to store data
-    response = Response(question=question, student=Student.objects.get(student_name=request.POST['name']), timestamp=timezone.now())
+    response = Response(question=question, user=request.user, timestamp=timezone.now())
     response.save()
-    d = response.dictionary_set.create(name = response.student.student_name + " Preferences")
+    d = response.dictionary_set.create(name = response.user.username + " Preferences")
 
     # find ranking student gave for each item under the question
     item_num = 1

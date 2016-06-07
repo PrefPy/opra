@@ -49,15 +49,7 @@
         </div>
     </div>
     
-    <h2>Please select your name:<br></h2>
-    <!-- student name selection -->
-    {% for student in students %}
-        <input type="radio" name="name" id="{{ student.student_name }}" value="{{ student.student_name }}" required />
-        <label for="{{ student.student_name }}">{{ student.student_name }}</label><br />
-    {% endfor %}
-
     <!-- submit button -->
-    <br><br>
     <input type="submit" value="Submit" />
 </form>
 </div>

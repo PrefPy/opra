@@ -14,6 +14,9 @@
                                     <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
                                 {% endif %}
                             {% endfor %}
+                            {% if question.question_owner == request.user %}
+                                <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+                            {% endif %}
                         {% endfor %}
                         </ul>
                     {% else %}
@@ -38,7 +41,9 @@
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
-
+                            {% if question.question_owner == request.user %}
+                                <li><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></li>
+                            {% endif %}
                         {% endfor %}
                         </ul>
                     {% else %}

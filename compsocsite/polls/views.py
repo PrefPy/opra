@@ -23,21 +23,17 @@ class IndexView(generic.ListView):
 
 def addView(request):
     context = RequestContext(request)
-    
     if request.method == 'POST':
-	questionString = request.POST['questionTitle']
-	
-	question = Question(question_text=questionString, pub_date=timezone.now(), question_owner=request.user)
-	question.save()
-	item1 = Item(question=question, item_text=request.POST['choice1'])
-	item2 = Item(question=question, item_text=request.POST['choice2'])
-	item3 = Item(question=question, item_text=request.POST['choice3'])
-	item1.save()
-	item2.save()
-	item3.save()
-		
-	return HttpResponse("Your question: " + questionString)
-  
+        questionString = request.POST['questionTitle']
+        question = Question(question_text=questionString, pub_date=timezone.now(), question_owner=request.user)
+        question.save()
+        item1 = Item(question=question, item_text=request.POST['choice1'])
+        item2 = Item(question=question, item_text=request.POST['choice2'])
+        item3 = Item(question=question, item_text=request.POST['choice3'])
+        item1.save()
+        item2.save()
+        item3.save()
+        return HttpResponse("Your question: " + questionString)
     return render_to_response('polls/add.html', {}, context)    
 
 # view for question detail
@@ -47,7 +43,7 @@ class DetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
         ctx['students'] = Student.objects.all()
-	ctx['users'] = User.objects.all()
+        ctx['users'] = User.objects.all()
         return ctx
     def get_queryset(self):
         """
@@ -71,15 +67,13 @@ def addvoter(request, question_id):
 
     newVoters = request.POST.getlist('voters')
     for voter in newVoters:
-	voterObj = User.objects.get(username=voter)
-	question.question_voters.add(voterObj.id)
-
+        voterObj = User.objects.get(username=voter)
+        question.question_voters.add(voterObj.id)
     return HttpResponseRedirect('/polls/%s/' % question_id)
 
 # function to process student submission
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    
     # make Response object to store data
     response = Response(question=question, user=request.user, timestamp=timezone.now())
     response.save()

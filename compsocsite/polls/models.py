@@ -31,7 +31,7 @@ class Question(models.Model):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
     def get_voters(self):
-	return ",".join([str(voter) for voter in self.question_voters.all()])
+        return ",".join([str(voter) for voter in self.question_voters.all()])
 
 # item to rank in a question
 @python_2_unicode_compatible

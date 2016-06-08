@@ -65,14 +65,6 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ['pub_date']
     search_fields = ['question_text']
 
-# student creation form / list view
-class StudentAdmin(admin.ModelAdmin):
-    fieldsets = [
-        ('Name',               {'fields': ['student_name']}),
-        ('Email', {'fields': ['student_email']}),
-    ]
-    list_display = ('student_name', 'student_email')
-    search_fields = ['student_name']
 
 # response editing / viewing
 class ResponseAdmin(ReadOnlyModelAdmin):
@@ -84,5 +76,4 @@ class ResponseAdmin(ReadOnlyModelAdmin):
 
 # register models
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(Student, StudentAdmin)
 admin.site.register(Response, ResponseAdmin)

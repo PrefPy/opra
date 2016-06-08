@@ -1,4 +1,4 @@
-from polls.models import Question, Item, Response, Student, Dictionary, KeyValuePair
+from polls.models import *
 import operator
 import random
 

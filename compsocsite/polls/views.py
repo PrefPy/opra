@@ -59,6 +59,10 @@ class ResultsView(generic.DetailView):
 class ConfirmationView(generic.DetailView):
     model = Question
     template_name = 'polls/confirmation.html'
+    
+class PreferenceView(generic.DetailView):
+    model = Question
+    template_name = 'polls/preferences.html'
 
 #function to add voter to voter list (invite only)
 def addvoter(request, question_id):

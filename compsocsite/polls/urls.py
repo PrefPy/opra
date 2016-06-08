@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
     url(r'^(?P<question_id>[0-9]+)/addvoter/$', views.addvoter, name='addvoter'),
     url(r'^(?P<pk>[0-9]+)/confirmation/$', views.ConfirmationView.as_view(), name='confirmation'),
+    url(r'^(?P<pk>[0-9]+)/preferences/$', views.PreferenceView.as_view(), name='preferences'),
 ]

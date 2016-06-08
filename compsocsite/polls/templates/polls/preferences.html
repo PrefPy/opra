@@ -1,0 +1,38 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    <div class="col-md-12">
+        <h1>{{ question.question_text }}</h1>
+
+        <ul>
+        {% if question.question_owner == request.user %}
+            {% for response in question.response_set.all %}
+                {{ response.user.username }}: 
+                {% for d in response.dictionary_set.all %}
+                    {% for item in d.items %}
+                        <li>{{ item.0 }} : {{ item.1}}</li>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+
+        {% else %}
+            {% for response in question.response_set.all %}
+                {% if response.user == request.user %}
+                    {{ response.user.username }}:
+                    {% for d in response.dictionary_set.all %}
+                        {% for item in d.items %}
+                           <li>{{ item.0 }} : {{ item.1}}</li>
+                        {% endfor %}
+                    {% endfor %}
+                {%endif%}
+            {% endfor %}
+        {% endif %}
+
+
+        </ul>
+
+
+
+        <a href="{% url 'polls:index' %}"> Return Home</a>
+    </div>
+{% endblock %}

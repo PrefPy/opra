@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading">Questions</div>
                 <div class="panel-body">
@@ -20,7 +20,25 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Preferences</div>
+                <div class="panel-body">
+                    {% if question_list %}
+                        <ul>
+                        {% for question in question_list %}
+                            {% if request.user in question.question_voters.all or question.question_owner == request.user %}
+                                <li><a href="{% url 'polls:preferences' question.id %}">{{ question.question_text }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No questions are currently available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading">Results</div>
                 <div class="panel-body">

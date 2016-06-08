@@ -5,7 +5,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.views import generic
 
-from .forms import *
 from .models import *
 
 from django.utils import timezone

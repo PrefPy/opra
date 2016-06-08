@@ -13,10 +13,10 @@
         {% endif %}
     {% endfor %}
 </p>
+    
 {% if question.question_owner == request.user %}
     <p>
         Add Voter: <br />
-        
         <form action="{% url 'polls:addvoter' question.id %}" method="post">
             {% csrf_token %}
             <select name="voters" multiple>

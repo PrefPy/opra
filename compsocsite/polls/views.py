@@ -42,7 +42,6 @@ class DetailView(generic.DetailView):
     template_name = 'polls/detail.html'
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
-        ctx['students'] = Student.objects.all()
         ctx['users'] = User.objects.all()
         return ctx
     def get_queryset(self):

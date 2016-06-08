@@ -13,6 +13,24 @@
         {% endif %}
     {% endfor %}
 </p>
+{% if question.question_owner == request.user %}
+    <p>
+        Add Voter: <br />
+        
+        <form action="{% url 'polls:addvoter' question.id %}" method="post">
+            {% csrf_token %}
+            <select name="voters" multiple>
+            {% for user in users %}
+                {% if user not in question.question_voters.all %}
+                     <option value="{{ user.username }}">{{ user.username }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+    </p>
+{% endif %}    
+
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 

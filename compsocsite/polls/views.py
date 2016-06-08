@@ -1,6 +1,6 @@
 import datetime
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.views import generic
@@ -47,6 +47,7 @@ class DetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
         ctx['students'] = Student.objects.all()
+	ctx['users'] = User.objects.all()
         return ctx
     def get_queryset(self):
         """
@@ -63,6 +64,17 @@ class ResultsView(generic.DetailView):
 class ConfirmationView(generic.DetailView):
     model = Question
     template_name = 'polls/confirmation.html'
+
+#function to add voter to voter list (invite only)
+def addvoter(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    newVoters = request.POST.getlist('voters')
+    for voter in newVoters:
+	voterObj = User.objects.get(username=voter)
+	question.question_voters.add(voterObj.id)
+
+    return HttpResponseRedirect('/polls/%s/' % question_id)
 
 # function to process student submission
 def vote(request, question_id):

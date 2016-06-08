@@ -9,12 +9,7 @@
                     {% if question_list %}
                         <ul>
                         {% for question in question_list %}
-                            {% for voter in question.question_voters.all %}
-                                {% if voter == request.user %}
-                                    <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-                                {% endif %}
-                            {% endfor %}
-                            {% if question.question_owner == request.user %}
+                            {% if request.user in question.question_voters.all or question.question_owner == request.user %}
                                 <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
                             {% endif %}
                         {% endfor %}
@@ -32,17 +27,12 @@
                     {% if question_list %}
                         <ul>
                         {% for question in question_list %}
-                            {% for voter in question.question_voters.all %}
-                                {% if voter == request.user %}
-                                    {% if question.response_set.all.0.allocation %}
-                                        <li><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></li>
-                                    {% else %}
-                                        <li>Allocation not complete: {{ question.question_text }}</li>
-                                    {% endif %}
+                            {% if request.user in question.question_voters.all or question.question_owner == request.user %}
+                                {% if question.response_set.all.0.allocation %}
+                                    <li><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></li>
+                                {% else %}
+                                    <li>Allocation not complete: {{ question.question_text }}</li>
                                 {% endif %}
-                            {% endfor %}
-                            {% if question.question_owner == request.user %}
-                                <li><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></li>
                             {% endif %}
                         {% endfor %}
                         </ul>

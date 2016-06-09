@@ -40,8 +40,18 @@ def addView(request):
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
+# view for settings detail
+class SettingsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/settings.html'
     def get_context_data(self, **kwargs):
-        ctx = super(DetailView, self).get_context_data(**kwargs)
+        ctx = super(SettingsView, self).get_context_data(**kwargs)
         ctx['users'] = User.objects.all()
         return ctx
     def get_queryset(self):
@@ -72,7 +82,7 @@ def addvoter(request, question_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
-    return HttpResponseRedirect('/polls/%s/' % question_id)
+    return HttpResponseRedirect('/polls/%s/settings' % question_id)
 
 # function to process student submission
 def vote(request, question_id):

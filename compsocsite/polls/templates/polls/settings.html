@@ -1,0 +1,36 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<div class="col-md-12">
+<h1>Settings for {{ question.question_text }}</h1>
+<p><b>Created by</b> {{ question.question_owner }}</p>
+<p><b>Voters: </b>
+    {% for voter in question.question_voters.all %}
+        {% if voter == request.user %}
+            <i>{{ voter }}</i>,
+        {% else %}
+            {{ voter }},
+        {% endif %}
+    {% endfor %}
+</p>
+    
+{% if question.question_owner == request.user %}
+    <p>
+        Add Voter: <br />
+        <form action="{% url 'polls:addvoter' question.id %}" method="post">
+            {% csrf_token %}
+            <select name="voters" multiple>
+            {% for user in users %}
+                {% if user not in question.question_voters.all %}
+                     <option value="{{ user.username }}">{{ user.username }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <input type="submit" value="Invite">
+        </form>
+    </p>
+{% endif %}    
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+</div>
+{% endblock %}

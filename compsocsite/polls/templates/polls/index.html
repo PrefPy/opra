@@ -2,42 +2,72 @@
 
 {% block content %}
     {% if user.is_authenticated %}
+
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Welcome {{ request.user.username }}</div>
                 <div class="panel-body">
-                <table class="table">    
-                {% if question_list %}
-                    <thead>
-                        <tr>
-                        <th>Current Polls</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for question in question_list %}
-                        {% if request.user in question.question_voters.all or question.question_owner == request.user %}
-                        <tr>
-                            <td>{{ question.question_text }}</td>
-                            <td><a href="{% url 'polls:detail' question.id %}">Cast Vote</a></td>
-                            <td><a href="{% url 'polls:preferences' question.id %}">View Vote</a></td>
-                            {% if question.response_set.all.0.allocation %}
-                                <td><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></td>
-                            {% else %}
-                                <td>Allocation not complete</td>
-                            {% endif %}
-                        </tr>
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#home"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
+                    <li><a data-toggle="tab" href="#settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+                </ul>
+                    
+                <div class="tab-content">
+                    <div id="home" class="tab-pane active">
+                        <table class="table">    
+                        {% if question_list %}
+                            <thead>
+                                <tr>
+                                <th>Current Polls</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for question in question_list %}
+                                {% if request.user in question.question_voters.all or question.question_owner == request.user %}
+                                <tr>
+                                    <td>{{ question.question_text }}</td>
+                                    <td><a href="{% url 'polls:detail' question.id %}">Cast Vote</a></td>
+                                    <td><a href="{% url 'polls:preferences' question.id %}">View Vote</a></td>
+                                    {% if question.response_set.all.0.allocation %}
+                                        <td><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></td>
+                                    {% else %}
+                                        <td>Allocation not complete</td>
+                                    {% endif %}
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tr>
+                                <td>No polls are currently available.</td>
+                            </tr>
                         {% endif %}
-                    {% endfor %}
-                    </tbody>
-                {% else %}
-                    <tr>
-                        <td>No polls are currently available.</td>
-                    </tr>
-                {% endif %}
-                </table>
+                        </table>
+                    </div>
+                    <div id="settings" class="tab-pane">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th>Polls Created</th>
+                                <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for question in question_list %}
+                                {% if question.question_owner == request.user %}
+                                <tr>
+                                    <td>{{ question.question_text }}</td>
+                                    <td><a href="{% url 'polls:settings' question.id %}">Modify Poll</a></td>    
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

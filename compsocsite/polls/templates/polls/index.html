@@ -2,61 +2,42 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <div class="col-md-4">
+        <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Questions</div>
+                <div class="panel-heading">Welcome {{ request.user.username }}</div>
                 <div class="panel-body">
-                    {% if question_list %}
-                        <ul>
-                        {% for question in question_list %}
-                            {% if request.user in question.question_voters.all or question.question_owner == request.user %}
-                                <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+                <table class="table">    
+                {% if question_list %}
+                    <thead>
+                        <tr>
+                        <th>Current Polls</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for question in question_list %}
+                        {% if request.user in question.question_voters.all or question.question_owner == request.user %}
+                        <tr>
+                            <td>{{ question.question_text }}</td>
+                            <td><a href="{% url 'polls:detail' question.id %}">Cast Vote</a></td>
+                            <td><a href="{% url 'polls:preferences' question.id %}">View Vote</a></td>
+                            {% if question.response_set.all.0.allocation %}
+                                <td><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></td>
+                            {% else %}
+                                <td>Allocation not complete</td>
                             {% endif %}
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No questions are currently available.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Preferences</div>
-                <div class="panel-body">
-                    {% if question_list %}
-                        <ul>
-                        {% for question in question_list %}
-                            {% if request.user in question.question_voters.all or question.question_owner == request.user %}
-                                <li><a href="{% url 'polls:preferences' question.id %}">{{ question.question_text }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No questions are currently available.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Results</div>
-                <div class="panel-body">
-                    {% if question_list %}
-                        <ul>
-                        {% for question in question_list %}
-                            {% if request.user in question.question_voters.all or question.question_owner == request.user %}
-                                {% if question.response_set.all.0.allocation %}
-                                    <li><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></li>
-                                {% else %}
-                                    <li>Allocation not complete: {{ question.question_text }}</li>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No results are currently available.</p>
-                    {% endif %}
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <tr>
+                        <td>No polls are currently available.</td>
+                    </tr>
+                {% endif %}
+                </table>
                 </div>
             </div>
         </div>

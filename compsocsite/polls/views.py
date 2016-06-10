@@ -53,6 +53,7 @@ class SettingsView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(SettingsView, self).get_context_data(**kwargs)
         ctx['users'] = User.objects.all()
+        ctx['items'] = Item.objects.all()
         return ctx
     def get_queryset(self):
         """

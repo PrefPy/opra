@@ -12,6 +12,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
+from django.core import mail
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
@@ -83,6 +84,9 @@ def addvoter(request, question_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
+        mail.send_mail('You have been invited to vote!',
+            'Hello,\n\nYou have been invited to vote on a poll.\n\nSincerely,\nOPRAH Staff',
+            'oprahprogramtest@gmail.com',[voterObj.email])
     return HttpResponseRedirect('/polls/%s/settings' % question_id)
 
 # function to process student submission

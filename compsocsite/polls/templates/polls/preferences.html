@@ -16,16 +16,25 @@
             {% endfor %}
 
         {% else %}
-            {% for response in question.response_set.all %}
-                {% if response.user == request.user %}
-                    {{ response.user.username }}:
+            {{ mostRecentResponse.user.username }} (last voted on {{ mostRecentResponse.timestamp }}) <br />
+            {% for d in mostRecentResponse.dictionary_set.all %}
+                {% for item in d.items %}
+                   <li>{{ item.0 }} : {{ item.1}}</li>
+                {% endfor %}
+            {% endfor %}
+            <button data-toggle="collapse" data-target="#history" class="btn btn-info">History</button>
+
+            <div id="history" class="collapse">
+                {% for response in history %}
+                    {{ response.user.username }}: {{ response.timestamp }}
                     {% for d in response.dictionary_set.all %}
                         {% for item in d.items %}
                            <li>{{ item.0 }} : {{ item.1}}</li>
                         {% endfor %}
                     {% endfor %}
-                {% endif %}
-            {% endfor %}
+                {% endfor %}
+            </div>
+            
         {% endif %}
 
 

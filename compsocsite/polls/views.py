@@ -75,6 +75,12 @@ class ConfirmationView(generic.DetailView):
 class PreferenceView(generic.DetailView):
     model = Question
     template_name = 'polls/preferences.html'
+    def get_context_data(self, **kwargs):
+	ctx = super(PreferenceView, self).get_context_data(**kwargs)
+	currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+	ctx['mostRecentResponse'] = currentUserResponses[0]
+	ctx['history'] = currentUserResponses[1:]
+	return ctx
 
 #function to add voter to voter list (invite only)
 def addvoter(request, question_id):

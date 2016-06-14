@@ -37,6 +37,40 @@ def addView(request):
         return HttpResponseRedirect('/polls/%s/settings' % question.id)
     return render_to_response('polls/add.html', {}, context)    
 
+def editAction(request, question_id):
+    context = RequestContext(request)
+    
+    if request.method == 'POST':
+        question = get_object_or_404(Question, pk=question_id)
+        item_text = request.POST['choice']
+        item = Item(question=question, item_text = item_text)
+        item.save()
+        return HttpResponse("Your question: " + question.question_text+" has been  successfully edited")
+    return render_to_response('polls/action.html', {"qid":question_id}, context)
+
+class EditView(generic.ListView):
+    template_name = 'polls/edit.html'
+    context_object_name = 'question_listasd'
+    
+    def get_queryset(self):
+        return Question.objects.all().order_by('-pub_date')
+
+class addGroupView(generic.ListView):
+    template_name = 'polls/addgroup.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(addGroupView, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        return ctx
+    def get_queryset(self):
+    	return Question.objects.all().order_by('-pub_date')
+
+class MembersView(generic.DetailView):
+    model = Group
+    template_name = 'polls/members.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(MembersView, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        return ctx
 # view for question detail
 class DetailView(generic.DetailView):
     model = Question
@@ -97,7 +131,7 @@ class PreferenceView(generic.DetailView):
                 if response1.user.username == response2.user.username:
                     add = False
                     previous_responses.append(response1)
-		    break
+                    break
 
             if add:
                 latest_responses.append(response1)   
@@ -119,6 +153,29 @@ def addvoter(request, question_id):
             'oprahprogramtest@gmail.com',[voterObj.email])
     return HttpResponseRedirect('/polls/%s/settings' % question_id)
 
+def addgroup(request):
+    context = RequestContext(request)
+    if request.method == 'POST':
+        groupName = request.POST['groupName']
+        group = Group(name = groupName, owner = request.user)
+        group.save()
+        newMembers = request.POST.getlist('voters')
+        for member in newMembers:
+            memberObj = User.objects.get(username=member)
+            group.members.add(memberObj.id)
+        return HttpResponse("Your group: " + groupName)
+    return render_to_response('polls/addgroup.html', {}, context)
+
+def addmember(request, group_id):
+    context = RequestContext(request)
+    if request.method == 'POST':
+        group = get_object_or_404(Group, pk=group_id)
+        newMembers = request.POST.getlist('members')
+        for member in newMembers:
+            memberObj = User.objects.get(username=member)
+            group.members.add(memberObj.id)
+        return HttpResponse("New members added.")
+    return render_to_response('polls/members.html', {}, context)  
 # function to process student submission
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

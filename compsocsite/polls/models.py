@@ -44,6 +44,12 @@ class Response(models.Model):
         return "Response of student " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:
         ordering = ['timestamp'] 
+        
+@python_2_unicode_compatible
+class Group(models.Model):
+    name = models.CharField(max_length=200)
+    members = models.ManyToManyField(User, related_name = "members")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
 # Dictionary Helper Models - from https://djangosnippets.org/snippets/2451/
 # Models include modifications to be used specifically for holding student preferences - these changes are marked with comments

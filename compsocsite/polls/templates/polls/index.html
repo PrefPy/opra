@@ -9,6 +9,7 @@
                 <div class="panel-body">
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#home"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
+                    <li><a data-toggle="tab" href="#groups"><span class="glyphicon glyphicon-cog"></span> Groups</a></li>
                     <li><a data-toggle="tab" href="#settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
                 </ul>
                     
@@ -44,6 +45,30 @@
                             <tr>
                                 <td>No polls are currently available.</td>
                             </tr>
+                        {% endif %}
+                        </table>
+                    </div>
+                    <div id="groups" class="tab-pane">
+                        <table class="table">
+                        {% if groups %}
+                            <thead>
+                                <tr>
+                                <th>Current Groups</th>
+                                <th></th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                            {% for group in groups %}
+                                {% if request.user == group.owner %}
+                                    <tr>
+                                        <td>{{group.name}}</td>
+                                        <td><a href="{% url 'polls:members' group.id %}">View/Change members</a></td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <td>No groups present.</td>
                         {% endif %}
                         </table>
                     </div>

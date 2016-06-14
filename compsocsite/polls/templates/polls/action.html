@@ -1,0 +1,15 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<div class="col-md-12">
+    <h1>Edit an existing Poll</h1>
+
+    <form id="edit_poll" method="post" action="/polls/edit/{{qid}}/">
+        {% csrf_token %}
+        <br /><br />
+        New choice: <input type="text" name="choice" value="" size="100" />
+        <br /><br />
+        <input type="submit" value="submit" />
+    </form>
+</div>
+{% endblock %}

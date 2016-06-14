@@ -13,4 +13,10 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/addvoter/$', views.addvoter, name='addvoter'),
     url(r'^(?P<pk>[0-9]+)/confirmation/$', views.ConfirmationView.as_view(), name='confirmation'),
     url(r'^(?P<pk>[0-9]+)/preferences/$', views.PreferenceView.as_view(), name='preferences'),
+    url(r'^(?P<group_id>[0-9]+)/addmember/$', views.addmember, name='addmember'),
+    url(r'^addgroup/$', views.addGroupView.as_view(), name='addgroup'),
+    url(r'^(?P<pk>[0-9]+)/members/$', views.MembersView.as_view(), name='members'),
+    url(r'^addgroupfunc/$', views.addgroup, name='addgroupfunc'),
+    url(r'^edit/$', views.EditView.as_view(), name='edit'),
+    url(r'^edit/([0-9]+)/$', views.editAction, name = 'action'),
 ]

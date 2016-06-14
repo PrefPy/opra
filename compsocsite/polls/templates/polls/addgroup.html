@@ -1,0 +1,24 @@
+{% extends 'polls/base.html' %}
+{% block content %}
+
+
+<p>
+    <b>Add Group: </b>
+
+    <form action="{% url 'polls:addgroupfunc' %}" id="addgroupfunc" method="post">
+        {% csrf_token %}
+        Group Name: <br />
+        <input type="text" name="groupName" value="" size="100" />
+        <select name="voters" class="form-control" multiple>
+        {% for user in users %}
+            <option value="{{ user.username }}">{{ user.username }}</option>
+        {% endfor %}
+        </select>
+        <input type="submit" value="submit">
+    </form>
+</p>
+
+
+
+
+{% endblock %}

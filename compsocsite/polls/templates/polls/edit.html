@@ -1,0 +1,24 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Posted Questions</div>
+                <div class="panel-body">
+                    {% if question_listasd %}
+                        <ul>
+                        {% for question in question_listasd %}
+                            {% if question.question_owner == request.user %}
+                                <li><a href="{% url 'polls:action' question.id %}">{{ question.question_text }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No questions are currently available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

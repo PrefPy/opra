@@ -6,37 +6,53 @@
 
         <ul>
         {% if question.question_owner == request.user %}
-            {% for response in lastest_responses %}
-                {{ response.user.username }} (last voted on {{ response.timestamp }}) <br /> 
-                {% for d in response.dictionary_set.all %}
-                    {% for item in d.items %}
-                        <li>{{ item.0 }} : {{ item.1}}</li>
-                    {% endfor %}
-                {% endfor %}
-            {% endfor %}
-           
-            
-        {% else %}
-            {{ mostRecentResponse.user.username }} (last voted on {{ mostRecentResponse.timestamp }}) <br />
-            {% for d in mostRecentResponse.dictionary_set.all %}
-                {% for item in d.items %}
-                   <li>{{ item.0 }} : {{ item.1}}</li>
-                {% endfor %}
-            {% endfor %}
-            
-            <button data-toggle="collapse" data-target="#history" class="btn btn-info">History</button>
-
-            <div id="history" class="collapse">
-                {% for response in history %}
-                    {{ response.user.username }}: {{ response.timestamp }}
+            {% if latest_responses|length > 0 %}
+                {% for response in latest_responses %}
+                    {{ response.user.username }} (last voted on {{ response.timestamp }}) <br /> 
                     {% for d in response.dictionary_set.all %}
                         {% for item in d.items %}
-                           <li>{{ item.0 }} : {{ item.1}}</li>
+                            <li>{{ item.0 }} : {{ item.1}}</li>
                         {% endfor %}
                     {% endfor %}
                 {% endfor %}
-            </div>
-            
+
+                <button data-toggle="collapse" data-target="#history" class="btn btn-info">History</button>
+                <div id="history" class="collapse">
+                    {% for response in previous_responses %}
+                        {{ response.user.username }}: {{ response.timestamp }}
+                        {% for d in response.dictionary_set.all %}
+                            {% for item in d.items %}
+                               <li>{{ item.0 }} : {{ item.1}}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No one has voted on this poll yet.</p>
+            {% endif %}
+        {% else %}
+            {% if mostRecentResponse != None %}
+                {{ mostRecentResponse.user.username }} (last voted on {{ mostRecentResponse.timestamp }}) <br />
+                {% for d in mostRecentResponse.dictionary_set.all %}
+                    {% for item in d.items %}
+                       <li>{{ item.0 }} : {{ item.1}}</li>
+                    {% endfor %}
+                {% endfor %}
+
+                <button data-toggle="collapse" data-target="#history" class="btn btn-info">History</button>
+                <div id="history" class="collapse">
+                    {% for response in history %}
+                        {{ response.user.username }}: {{ response.timestamp }}
+                        {% for d in response.dictionary_set.all %}
+                            {% for item in d.items %}
+                               <li>{{ item.0 }} : {{ item.1}}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>You haven't voted on this poll yet.</p>
+            {% endif %}
         {% endif %}
 
 

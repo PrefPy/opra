@@ -34,6 +34,7 @@ def addView(request):
         item1.save()
         item2.save()
         item3.save()
+        question.save()
         return HttpResponse("Your question: " + questionString)
     return render_to_response('polls/add.html', {}, context)    
 
@@ -76,11 +77,28 @@ class PreferenceView(generic.DetailView):
     model = Question
     template_name = 'polls/preferences.html'
     def get_context_data(self, **kwargs):
-	ctx = super(PreferenceView, self).get_context_data(**kwargs)
-	currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
-	ctx['mostRecentResponse'] = currentUserResponses[0]
-	ctx['history'] = currentUserResponses[1:]
-	return ctx
+        ctx = super(PreferenceView, self).get_context_data(**kwargs)
+        currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        ctx['mostRecentResponse'] = currentUserResponses[0]
+        ctx['history'] = currentUserResponses[1:]
+        
+        all_responses=self.object.response_set.reverse()
+        lastest_responses=[]
+        lastest_responses.append(all_responses[0])   
+        others=[]
+        all=all_responses[1:]
+        
+        for response1 in all:
+            add=True
+            for response2 in lastest_responses:
+                if(response1.user.username==response2.user.username):
+                    add=False
+            if add:
+                lastest_responses.append(response1)   
+        
+        ctx['lastest_responses']=lastest_responses
+
+        return ctx
 
 #function to add voter to voter list (invite only)
 def addvoter(request, question_id):

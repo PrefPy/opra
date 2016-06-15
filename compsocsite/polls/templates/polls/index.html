@@ -9,7 +9,7 @@
                 <div class="panel-body">
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#home"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
-                    <li><a data-toggle="tab" href="#groups"><span class="glyphicon glyphicon-cog"></span> Groups</a></li>
+                    <li><a data-toggle="tab" href="#groups"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
                     <li><a data-toggle="tab" href="#settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
                 </ul>
                     
@@ -19,7 +19,7 @@
                         {% if question_list %}
                             <thead>
                                 <tr>
-                                <th>Current Polls</th>
+                                <th>Current Polls <a href="/polls/add/"><span class="btn btn-primary">Add Poll</span></a></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -29,7 +29,12 @@
                             {% for question in question_list %}
                                 {% if request.user in question.question_voters.all or question.question_owner == request.user %}
                                 <tr>
-                                    <td>{{ question.question_text }}</td>
+                                    <td>
+                                        {{ question.question_text }}
+                                        {% if question.question_owner == request.user %}
+                                            <a href="{% url 'polls:settings' question.id %}"><span class="glyphicon glyphicon-cog"></span></a>
+                                        {% endif %}
+                                    </td>
                                     <td><a href="{% url 'polls:detail' question.id %}">Cast Vote</a></td>
                                     <td><a href="{% url 'polls:preferences' question.id %}">View Vote</a></td>
                                     {% if question.response_set.all.0.allocation %}
@@ -45,6 +50,9 @@
                             <tr>
                                 <td>No polls are currently available.</td>
                             </tr>
+                            <tr>
+                                <td><a href="/polls/add/"><span class="btn btn-primary">Add Poll</span></a></td>
+                            </tr>
                         {% endif %}
                         </table>
                     </div>
@@ -53,7 +61,7 @@
                         {% if groups %}
                             <thead>
                                 <tr>
-                                <th>Current Groups</th>
+                                <th>Current Groups <a href="/polls/addgroup/"><span class="btn btn-primary">Add Group</span></a></th>
                                 <th></th>
                                 </tr>
                             </thead>
@@ -68,29 +76,11 @@
                             {% endfor %}
                             </tbody>
                         {% else %}
-                            <td>No groups present.</td>
+                            <tr><td>No groups present. <a href="/polls/addgroup/"><span class="btn btn-primary">Add Group</span></a></td></tr>
                         {% endif %}
                         </table>
                     </div>
                     <div id="settings" class="tab-pane">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                <th>Polls Created</th>
-                                <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for question in question_list %}
-                                {% if question.question_owner == request.user %}
-                                <tr>
-                                    <td>{{ question.question_text }}</td>
-                                    <td><a href="{% url 'polls:settings' question.id %}">Modify Poll</a></td>    
-                                </tr>
-                                {% endif %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
                     </div>
                 </div>
                 </div>

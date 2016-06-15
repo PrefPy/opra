@@ -1,24 +1,15 @@
 {% extends 'polls/base.html' %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Posted Questions</div>
-                <div class="panel-body">
-                    {% if question_listasd %}
-                        <ul>
-                        {% for question in question_listasd %}
-                            {% if question.question_owner == request.user %}
-                                <li><a href="{% url 'polls:action' question.id %}">{{ question.question_text }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No questions are currently available.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    {% endif %}
+<div class="col-md-12">
+    <h1>Edit an existing Poll</h1>
+
+    <form id="edit_poll" method="post" action="/polls/edit/{{qid}}/">
+        {% csrf_token %}
+        <br /><br />
+        New choice: <input type="text" name="choice" value="" size="100" />
+        <br /><br />
+        <input type="submit" value="submit" />
+    </form>
+</div>
 {% endblock %}

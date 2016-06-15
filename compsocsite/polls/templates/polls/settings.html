@@ -8,18 +8,17 @@
 {% if question.question_owner == request.user %}
 <h3>Voters</h3>
 <hr />
-<p>
-    <b>Current Voters:</b>
+    <div class="col-md-6">
+    <b>Current Voters: </b>
     <select name="voters" class="form-control" multiple>
     {% for user in users %}
         {% if user in question.question_voters.all %}
              <option value="{{ user.username }}">{{ user.username }}</option>
         {% endif %}
     {% endfor %}
-    </select>
-        
-</p>      
-<p>
+    </select>    
+    </div>     
+    <div class="col-md-6">
     <b>Add Voter: </b>
     <form action="{% url 'polls:addvoter' question.id %}" method="post">
         {% csrf_token %}
@@ -30,19 +29,39 @@
             {% endif %}
         {% endfor %}
         </select>
+        <br />
         <input type="submit" class="btn btn-success" value="Invite">
     </form>      
-</p> 
-
-<h3>Choices</h3>
+    </div> 
+<h3>
+    Choices 
+</h3>
 <hr />
-<p>
+<div class="col-md-6">
+    <ul class="list-group">
     {% for item in items %}
         {% if item.question == question %}
-            <li>{{ item }}</li>
+            <li class="list-group-item ">
+                {{ item }} 
+                <a href="/polls/delchoice/{{ item.id }}">
+                    <div class="pull-right">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </div>
+                </a>
+            </li>
         {% endif %}
     {% endfor %}
-</p>
+        <li  class="list-group-item">
+            <form action="{% url 'polls:addchoice' question.id %}" method="post" >
+                {% csrf_token %}
+                <input type="text" name="choice" value="" size="50" />
+                <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>
 {% endif %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

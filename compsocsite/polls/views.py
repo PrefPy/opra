@@ -37,23 +37,18 @@ def addView(request):
         return HttpResponseRedirect('/polls/%s/settings' % question.id)
     return render_to_response('polls/add.html', {}, context)    
 
-def editAction(request, question_id):
-    context = RequestContext(request)
-    
-    if request.method == 'POST':
-        question = get_object_or_404(Question, pk=question_id)
-        item_text = request.POST['choice']
-        item = Item(question=question, item_text = item_text)
-        item.save()
-        return HttpResponse("Your question: " + question.question_text+" has been  successfully edited")
-    return render_to_response('polls/action.html', {"qid":question_id}, context)
+def addChoice(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    item_text = request.POST['choice']
+    item = Item(question=question, item_text=item_text)
+    item.save()
+    return HttpResponseRedirect('/polls/%s/settings' % question.id)
 
-class EditView(generic.ListView):
-    template_name = 'polls/edit.html'
-    context_object_name = 'question_listasd'
-    
-    def get_queryset(self):
-        return Question.objects.all().order_by('-pub_date')
+def deleteChoice(request, choice_id):
+    item = Item.objects.filter(id=choice_id)
+    question = item[0].question
+    item.delete()
+    return HttpResponseRedirect('/polls/%s/settings' % question.id)
 
 class addGroupView(generic.ListView):
     template_name = 'polls/addgroup.html'
@@ -71,6 +66,7 @@ class MembersView(generic.DetailView):
         ctx = super(MembersView, self).get_context_data(**kwargs)
         ctx['users'] = User.objects.all()
         return ctx
+    
 # view for question detail
 class DetailView(generic.DetailView):
     model = Question
@@ -176,6 +172,7 @@ def addmember(request, group_id):
             group.members.add(memberObj.id)
         return HttpResponse("New members added.")
     return render_to_response('polls/members.html', {}, context)  
+
 # function to process student submission
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

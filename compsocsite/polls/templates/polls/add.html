@@ -6,16 +6,19 @@
 
     <form id="add_poll" method="post" action="/polls/add/">
         {% csrf_token %}
-        Title: <br />
+        Enter a Question Title: <br />
         <input type="text" name="questionTitle" value="" size="100" />
         <br /><br />
-        Choice 1: <input type="text" name="choice1" value="" size="100" />
+        Choice 1: <br />
+        <input type="text" name="choice1" value="" size="100" /> 
         <br />
-        Choice 2: <input type="text" name="choice2" value="" size="100" />
+        Choice 2: <br />
+        <input type="text" name="choice2" value="" size="100" />
         <br />
-        Choice 3: <input type="text" name="choice3" value="" size="100" />
+        Choice 3: <br />
+        <input type="text" name="choice3" value="" size="100" />
         <br /><br />
-        <input type="submit" value="submit" />
+        <input type="submit" value="Submit" class="btn btn-primary" />
     </form>
 </div>
 {% endblock %}

@@ -81,6 +81,15 @@
                         </table>
                     </div>
                     <div id="settings" class="tab-pane">
+                        <br />
+                        <form method="post" action="/polls/settings/update/">
+                            {% csrf_token %}
+                            <fieldset class="form-group">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" name="email" value="{{ request.user.email }}">
+                            </fieldset>
+                            <input type="submit" class="btn btn-success" value="Save Changes">
+                        </form>
                     </div>
                 </div>
                 </div>

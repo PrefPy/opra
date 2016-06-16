@@ -2,32 +2,30 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-
         <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Welcome {{ request.user.username }}</div>
-                <div class="panel-body">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#home"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
-                    <li><a data-toggle="tab" href="#groups"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
-                    <li><a data-toggle="tab" href="#settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
-                </ul>
-                    
-                <div class="tab-content">
-                    <div id="home" class="tab-pane active">
-                        <table class="table">    
+            <h1>Welcome {{ request.user.username }}</h1>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
+                <li><a data-toggle="tab" href="#groups"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
+                <li><a data-toggle="tab" href="#settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
+            </ul>
+
+            <div class="tab-content">
+            <div id="home" class="tab-pane active">
+                <br />
+                {% if question_list == None %}
+                    <tr><td>No polls are currently available.</td></tr>
+                    <tr><td><a href="/polls/add/"><span class="btn btn-primary">Add Poll</span></a></td></tr>
+                {% endif %}
+
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><b>Polls created</b> <a href="/polls/add/"><span class="btn btn-primary">Add New</span></a></div>
+                        <div class="panel-body">
+                        <table class="table">
                         {% if question_list %}
-                            <thead>
-                                <tr>
-                                <th>Current Polls <a href="/polls/add/"><span class="btn btn-primary">Add Poll</span></a></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
                             {% for question in question_list %}
-                                {% if request.user in question.question_voters.all or question.question_owner == request.user %}
+                                {% if question.question_owner == request.user %}
                                 <tr>
                                     <td>
                                         {{ question.question_text }}
@@ -45,55 +43,75 @@
                                 </tr>
                                 {% endif %}
                             {% endfor %}
-                            </tbody>
-                        {% else %}
-                            <tr>
-                                <td>No polls are currently available.</td>
-                            </tr>
-                            <tr>
-                                <td><a href="/polls/add/"><span class="btn btn-primary">Add Poll</span></a></td>
-                            </tr>
-                        {% endif %}
+                        {% endif %}    
                         </table>
-                    </div>
-                    <div id="groups" class="tab-pane">
-                        <table class="table">
-                        {% if groups %}
-                            <thead>
-                                <tr>
-                                <th>Current Groups <a href="/polls/addgroup/"><span class="btn btn-primary">Add Group</span></a></th>
-                                <th></th>
-                                </tr>
-                            </thead>
-                            <tbody> 
-                            {% for group in groups %}
-                                {% if request.user == group.owner %}
-                                    <tr>
-                                        <td>{{group.name}}</td>
-                                        <td><a href="{% url 'polls:members' group.id %}">View/Change members</a></td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                            </tbody>
-                        {% else %}
-                            <tr><td>No groups present. <a href="/polls/addgroup/"><span class="btn btn-primary">Add Group</span></a></td></tr>
-                        {% endif %}
-                        </table>
-                    </div>
-                    <div id="settings" class="tab-pane">
-                        <br />
-                        <form method="post" action="/polls/settings/update/">
-                            {% csrf_token %}
-                            <fieldset class="form-group">
-                                <label for="email">Email</label>
-                                <input type="text" class="form-control" name="email" value="{{ request.user.email }}">
-                            </fieldset>
-                            <input type="submit" class="btn btn-success" value="Save Changes">
-                        </form>
+                        </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><b>Polls participated in</b></div>
+                        <div class="panel-body">
+                            <table class="table">
+                            {% if question_list %}
+                                {% for question in question_list %}
+                                    {% if question.question_owner != request.user and request.user in question.question_voters.all %}
+                                    <tr>
+                                        <td>
+                                            {{ question.question_text }}
+                                        </td>
+                                        <td><a href="{% url 'polls:detail' question.id %}">Cast Vote</a></td>
+                                        <td><a href="{% url 'polls:preferences' question.id %}">View Vote</a></td>
+                                        {% if question.response_set.all.0.allocation %}
+                                            <td><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></td>
+                                        {% else %}
+                                            <td>Allocation not complete</td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}    
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div id="groups" class="tab-pane">
+                <table class="table">
+                {% if groups %}
+                    <thead>
+                        <tr>
+                        <th>Current Groups <a href="/polls/addgroup/"><span class="btn btn-primary">Add Group</span></a></th>
+                        <th></th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                    {% for group in groups %}
+                        {% if request.user == group.owner %}
+                            <tr>
+                                <td>{{ group.name }}</td>
+                                <td><a href="{% url 'polls:members' group.id %}">View/Change members</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <tr><td>No groups present. <a href="/polls/addgroup/"><span class="btn btn-primary">Add Group</span></a></td></tr>
+                {% endif %}
+                </table>
+            </div>
+            <div id="settings" class="tab-pane">
+                <br />
+                <form method="post" action="/polls/settings/update/">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" name="email" value="{{ request.user.email }}">
+                    </fieldset>
+                    <input type="submit" class="btn btn-success" value="Save Changes">
+                </form>
+            </div>
+        </div>
         </div>
      {% else %}
         <div class="col-md-6">

@@ -1,15 +1,21 @@
 {% extends 'polls/base.html' %}
 
 {% block content %}
-    <h1>Login to OPRA</h1>
+    <h1>Login to OPRAH</h1>
 
-    <form id="login_form" method="post" action="/auth/login/">
-        {% csrf_token %}
-        Username: <input type="text" name="username" value="" size="50" />
-        <br />
-        Password: <input type="password" name="password" value="" size="50" />
-        <br />
+    <div class="col-md-4">
+        <form id="login_form" method="post" action="/auth/login/">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="" size="50" />
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="username">Password</label> 
+                <input type="password" class="form-control" id="password" name="password" value="" size="50" />
+            </fieldset>
 
-        <input type="submit" value="submit" />
-    </form>
+            <input type="submit" value="Login" class="btn btn-primary" />
+        </form>
+    </div>
 {% endblock %}

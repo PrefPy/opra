@@ -16,6 +16,7 @@
                     {% endfor %}
                 {% endfor %}
 
+                {% if history %}
                 <button data-toggle="collapse" data-target="#history" class="btn btn-info">History</button>
                 <div id="history" class="collapse">
                     {% for response in previous_responses %}
@@ -27,6 +28,7 @@
                         {% endfor %}
                     {% endfor %}
                 </div>
+                {% endif %}
             {% else %}
                 <p>No one has voted on this poll yet.</p>
             {% endif %}
@@ -39,6 +41,7 @@
                     {% endfor %}
                 {% endfor %}
 
+                {% if history %}
                 <button data-toggle="collapse" data-target="#history" class="btn btn-info">History</button>
                 <div id="history" class="collapse">
                     {% for response in history %}
@@ -50,15 +53,12 @@
                         {% endfor %}
                     {% endfor %}
                 </div>
+                {% endif %}
             {% else %}
                 <p>You haven't voted on this poll yet.</p>
             {% endif %}
         {% endif %}
-
-
         </ul>
-
-
 
         <a href="{% url 'polls:index' %}"> Return Home</a>
     </div>

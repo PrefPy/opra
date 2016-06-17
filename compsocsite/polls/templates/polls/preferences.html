@@ -4,6 +4,35 @@
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>
 
+        {% if cand_map %}
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Poll Results</div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>Poll Mechanism</th>
+                        {% for option in cand_map.values %}
+                            <th>{{ option }}</th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Borda</td>
+                        {% for score in vote_results.0.values %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Plurality</td>
+                        {% for score in vote_results.1.values %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+        
         <ul>
         {% if question.question_owner == request.user %}
             {% if latest_responses|length > 0 %}

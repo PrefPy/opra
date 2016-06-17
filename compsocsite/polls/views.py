@@ -13,8 +13,6 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
@@ -93,22 +91,6 @@ class SettingsView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
-
-def updateSettings(request):
-    context = RequestContext(request)
-    
-    if request.method == 'POST':
-        updatedEmail = request.POST['email']
-	
-    try:
-	    validate_email(updatedEmail)
-    except ValidationError as e:
-	    return HttpResponse("Invalid email")
-    else:
-        request.user.email = updatedEmail
-        request.user.save()
-	
-    return HttpResponseRedirect('/polls/')
 
 # view for results detail
 class ResultsView(generic.DetailView):

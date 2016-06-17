@@ -12,9 +12,10 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 def register(request):
-    # Like before, get the request's context.
     context = RequestContext(request)
     
     # A boolean value for telling the template whether the registration was successful.
@@ -27,18 +28,15 @@ def register(request):
         # Note that we make use of both UserForm and UserProfileForm.
         user_form = UserForm(data=request.POST)
  
-        
         # If the two forms are valid...
         if user_form.is_valid():
             # Save the user's form data to the database.
             user = user_form.save()
             
-            # Now we hash the password with the set_password method.
-            # Once hashed, we can update the user object.
+            # Hash the password with the set_password method
             user.set_password(user.password)
             user.save()
             
-
             # Update our variable to tell the template registration was successful.
             registered = True
         
@@ -59,54 +57,49 @@ def register(request):
                               context)
 
 def user_login(request):
-    # Like before, obtain the context for the user's request.
     context = RequestContext(request)
     
-    # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
-        # Gather the username and password provided by the user.
-        # This information is obtained from the login form.
         username = request.POST['username']
         password = request.POST['password']
         
-        # Use Django's machinery to attempt to see if the username/password
-        # combination is valid - a User object is returned if it is.
+        # Check if the username/password combination is valid - a User object is returned if it is.
         user = authenticate(username=username, password=password)
         
-        # If we have a User object, the details are correct.
-        # If None (Python's way of representing the absence of a value), no user
-        # with matching credentials was found.
         if user:
-            # Is the account active? It could have been disabled.
             if user.is_active:
-                # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
                 login(request, user)
                 return HttpResponseRedirect('/polls/')
-                # An inactive account was used - no logging in!
             return HttpResponse("Your account is disabled.")
         else:
-            # Bad login details were provided. So we can't log the user in.
             print ("Invalid login details")
             return HttpResponse("Invalid login details supplied.")
-
-# The request is not a HTTP POST, so display the login form.
-# This scenario would most likely be a HTTP GET.
+	
+# Display the login form.
     else:
-    # No context variables to pass to the template system, hence the
-    # blank dictionary object...
         return render_to_response('login.html', {}, context)
 
-def some_view(request):
-    if not request.user.is_authenticated():
-        return HttpResponse("You are logged in.")
-    else:
-    
-        return HttpResponse("You are not logged in.")
+@login_required
+def displaySettings(request):
+    context = RequestContext(request)
+    return render_to_response('settings.html', {}, context)
 
 @login_required
-def restricted(request):
-    return HttpResponse("Since you're logged in, you can see this text!")
+def updateSettings(request):
+    context = RequestContext(request)
+    
+    if request.method == 'POST':
+        updatedEmail = request.POST['email']
+	
+    try:
+	validate_email(updatedEmail)
+    except ValidationError as e:
+        return HttpResponse("Invalid email")
+    else:
+	request.user.email = updatedEmail
+	request.user.save()
+	
+    return HttpResponseRedirect('/auth/settings/')    
 
 @login_required
 def user_logout(request):

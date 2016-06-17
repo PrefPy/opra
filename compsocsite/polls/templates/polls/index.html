@@ -7,7 +7,6 @@
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#home"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
                 <li><a data-toggle="tab" href="#groups"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
-                <li><a data-toggle="tab" href="#settings"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
             </ul>
 
             <div class="tab-content">
@@ -99,17 +98,6 @@
                     <tr><td>No groups present. <a href="/polls/addgroup/"><span class="btn btn-primary">Add Group</span></a></td></tr>
                 {% endif %}
                 </table>
-            </div>
-            <div id="settings" class="tab-pane">
-                <br />
-                <form method="post" action="/polls/settings/update/">
-                    {% csrf_token %}
-                    <fieldset class="form-group">
-                        <label for="email">Email</label>
-                        <input type="text" class="form-control" name="email" value="{{ request.user.email }}">
-                    </fieldset>
-                    <input type="submit" class="btn btn-success" value="Save Changes">
-                </form>
             </div>
         </div>
         </div>

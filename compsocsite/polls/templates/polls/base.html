@@ -23,6 +23,7 @@
                     <div id="navbar" class="navbar-collapse collapse">
                         {% if user.is_authenticated %}
                             <ul class="nav navbar-nav navbar-right">
+                                <li><a href="/auth/settings/">Settings</a></li>
                                 <li><a href="/auth/logout/">Logout</a></li>
                             </ul>
                         {% else %}

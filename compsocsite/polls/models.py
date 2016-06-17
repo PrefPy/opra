@@ -51,7 +51,7 @@ class Group(models.Model):
     members = models.ManyToManyField(User, related_name = "members")
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
-	return ""
+        return ""
 
 # Dictionary Helper Models - from https://djangosnippets.org/snippets/2451/
 # Models include modifications to be used specifically for holding student preferences - these changes are marked with comments

@@ -100,13 +100,13 @@ def updateSettings(request):
     if request.method == 'POST':
         updatedEmail = request.POST['email']
 	
-	try:
+    try:
 	    validate_email(updatedEmail)
-	except ValidationError as e:
+    except ValidationError as e:
 	    return HttpResponse("Invalid email")
-	else:
-	    request.user.email = updatedEmail
-	    request.user.save()
+    else:
+        request.user.email = updatedEmail
+        request.user.save()
 	
     return HttpResponseRedirect('/polls/')
 
@@ -156,14 +156,19 @@ class PreferenceView(generic.DetailView):
 
 #function to add voter to voter list (invite only)
 def addvoter(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+    question    = get_object_or_404(Question, pk=question_id)
+    creator_obj = User.objects.get(id=question.question_owner_id)
 
     newVoters = request.POST.getlist('voters')
+    title = question.question_text
+    creator = creator_obj.username
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
-        mail.send_mail('You have been invited to vote!',
-            'Hello,\n\nYou have been invited to vote on a poll.\n\nSincerely,\nOPRAH Staff',
+        mail.send_mail('You have been invited to vote on ' + title,
+            'Hello ' + voterObj.username + ',\n\n' + creator
+            + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
+            + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
             'oprahprogramtest@gmail.com',[voterObj.email])
     return HttpResponseRedirect('/polls/%s/settings' % question_id)
 

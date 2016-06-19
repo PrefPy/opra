@@ -21,7 +21,7 @@ class IndexView(generic.ListView):
     context_object_name = 'question_list'
 
     def get_queryset(self):
-    	return Question.objects.all().order_by('-pub_date')
+        return Question.objects.all().order_by('-pub_date')
 
 def addView(request):
     context = RequestContext(request)
@@ -58,7 +58,7 @@ class addGroupView(generic.ListView):
         ctx['users'] = User.objects.all()
         return ctx
     def get_queryset(self):
-    	return Question.objects.all().order_by('-pub_date')
+            return Question.objects.all().order_by('-pub_date')
 
 class MembersView(generic.DetailView):
     model = Group
@@ -117,8 +117,8 @@ class PreferenceView(generic.DetailView):
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
         ctx['latest_responses'] = latest_responses
         ctx['previous_responses'] = previous_responses
-	ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
-	ctx['vote_results'] = getVoteResults(latest_responses)	
+        ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
+        ctx['vote_results'] = getVoteResults(latest_responses)        
         return ctx
 
 #separate the user votes into two categories: (1)most recent (2)previous history
@@ -127,27 +127,27 @@ def categorizeResponses(all_responses):
     previous_responses = []
     
     if len(all_responses) > 0:
-	#the first response must be the most recent 
-	latest_responses.append(all_responses[0])   
+        #the first response must be the most recent 
+        latest_responses.append(all_responses[0])   
     
     others = all_responses[1:]
     
     #the outer loop goes through all the responses
     for response1 in others:
-	if response1.user == None:
-	    continue
-	
-	add = True
-	#check if the user has voted multiple times
-	for response2 in latest_responses:
-	    if response1.user.username == response2.user.username:
-		add = False
-		previous_responses.append(response1)
-		break
+        if response1.user == None:
+            continue
+        
+        add = True
+        #check if the user has voted multiple times
+        for response2 in latest_responses:
+            if response1.user.username == response2.user.username:
+                add = False
+                previous_responses.append(response1)
+                break
 
-	#this is the most recent vote
-	if add:
-	    latest_responses.append(response1)   
+        #this is the most recent vote
+        if add:
+            latest_responses.append(response1)   
     
     return (latest_responses, previous_responses)
 
@@ -156,10 +156,10 @@ def getCandidateMap(response):
     responseValues = response.dictionary_set.all()
     candMap = {}
     for d in responseValues:
-	counter = 0
+        counter = 0
         for item in d.items():
-	    candMap[counter] = item[0]
-	    counter += 1
+            candMap[counter] = item[0]
+            counter += 1
     return candMap
 
 #convert a user's preference into a 2d map
@@ -169,36 +169,36 @@ def getPreferenceGraph(response):
     candMap = getCandidateMap(response)
 
     for cand1Index in candMap:
-	tempDict = {}
-	for cand2Index in candMap:
-	    if cand1Index == cand2Index:
-		continue
-	    
-	    cand1 = candMap[cand1Index]
-	    cand2 = candMap[cand2Index]
-	    cand1Rank = response.dictionary_set.all()[0].get(cand1)
-	    cand2Rank = response.dictionary_set.all()[0].get(cand2)
-	    #lower number is better (i.e. rank 1 is better than rank 2)
-	    if cand1Rank < cand2Rank:
-		tempDict[cand2Index] = 1
-	    elif cand2Rank < cand1Rank:
-		tempDict[cand2Index] = -1
-	    else:
-		tempDict[cand2Index] = 0
-	prefGraph[cand1Index] = tempDict
+        tempDict = {}
+        for cand2Index in candMap:
+            if cand1Index == cand2Index:
+                continue
+            
+            cand1 = candMap[cand1Index]
+            cand2 = candMap[cand2Index]
+            cand1Rank = response.dictionary_set.all()[0].get(cand1)
+            cand2Rank = response.dictionary_set.all()[0].get(cand2)
+            #lower number is better (i.e. rank 1 is better than rank 2)
+            if cand1Rank < cand2Rank:
+                tempDict[cand2Index] = 1
+            elif cand2Rank < cand1Rank:
+                tempDict[cand2Index] = -1
+            else:
+                tempDict[cand2Index] = 0
+        prefGraph[cand1Index] = tempDict
     
     return prefGraph
 
 #initialize a profile object using all the preferences
 def getPollProfile(latest_responses):
     if len(latest_responses) == 0:
-	return None
+        return None
     
     prefList = []
     for response in latest_responses:
-	prefGraph = getPreferenceGraph(response)
-	userPref = Preference(prefGraph)
-	prefList.append(userPref)
+        prefGraph = getPreferenceGraph(response)
+        userPref = Preference(prefGraph)
+        prefList.append(userPref)
     return Profile(getCandidateMap(latest_responses[0]), prefList)
 
 #calculate the results of the vote using different algorithms
@@ -208,7 +208,7 @@ def getVoteResults(latest_responses):
         return []
 
     #make sure no ties or incomplete results are in the votes
-    print pollProfile.getElecType()
+    #print pollProfile.getElecType()
     if pollProfile.getElecType() != "soc":
         return []
 

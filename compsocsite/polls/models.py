@@ -28,10 +28,10 @@ class Question(models.Model):
 # item to rank in a question
 @python_2_unicode_compatible
 class Item(models.Model):
-	question = models.ForeignKey(Question, on_delete=models.CASCADE)
-	item_text = models.CharField(max_length=200)
-	def __str__(self):
-		return self.item_text
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    item_text = models.CharField(max_length=200)
+    def __str__(self):
+        return self.item_text
 
 # all information pertaining to a response that a student made to a question
 @python_2_unicode_compatible

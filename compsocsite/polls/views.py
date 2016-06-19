@@ -72,6 +72,16 @@ class MembersView(generic.DetailView):
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(DetailView, self).get_context_data(**kwargs)
+        currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        if len(currentUserResponses) > 0:
+            mostRecentResponse = currentUserResponses[0]
+            selectionArray = []             
+            for d in mostRecentResponse.dictionary_set.all():               
+                selectionArray = d.values()
+            ctx['currentSelection'] = selectionArray
+        return ctx
     def get_queryset(self):
         """
         Excludes any questions that aren't published yet.
@@ -208,7 +218,6 @@ def getVoteResults(latest_responses):
         return []
 
     #make sure no ties or incomplete results are in the votes
-    #print pollProfile.getElecType()
     if pollProfile.getElecType() != "soc":
         return []
 

@@ -31,7 +31,7 @@
                 {% endfor %}
                 </tr>
             </thead>
-
+            
             <!-- item text -->
             <!-- loop this for each item -->
             {% for item in question.item_set.all %}
@@ -41,7 +41,24 @@
                 <!-- radio buttons -->
                 <!-- loop this for each item -->
                 {% for item in question.item_set.all %}
-                    <td><input type="radio" name="item{{ forloop.parentloop.counter }}" id="item{{ forloop.parentloop.counter }}.rank{{ forloop.counter }}" value="{{ forloop.counter }}" /></td> 
+                    {% if currentSelection %}
+                        <!-- Autofill voting form using the most recent vote -->
+                        {% for selection in currentSelection %}
+                            {% if forloop.parentloop.parentloop.counter == forloop.counter %}
+                                 <td>
+                                {% if selection == forloop.parentloop.counter %}
+                                <input type="radio" name="item{{ forloop.parentloop.parentloop.counter }}" id="item{{ forloop.parentloop.parentloop.counter }}.rank{{ forloop.parentloop.counter }}" value="{{ forloop.parentloop.counter }}" checked />
+                                {% else %}
+                                <input type="radio" name="item{{ forloop.parentloop.parentloop.counter }}" id="item{{ forloop.parentloop.parentloop.counter }}.rank{{ forloop.parentloop.counter }}" value="{{ forloop.parentloop.counter }}" /> 
+                                {% endif %}
+                                </td> 
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <td>
+                        <input type="radio" name="item{{ forloop.parentloop.counter }}" id="item{{ forloop.parentloop.counter }}.rank{{ forloop.counter }}" value="{{ forloop.counter }}" /> 
+                        </td>
+                    {% endif %}
                 {% endfor %}
                 </tr>
             {% endfor %}

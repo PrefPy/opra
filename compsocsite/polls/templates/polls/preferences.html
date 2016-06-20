@@ -86,6 +86,32 @@
             {% else %}
                 <p>You haven't voted on this poll yet.</p>
             {% endif %}
+            <p></p>
+            {% if question.question_owner.userprofile.displayPref == 1 %}
+                <p>The owner allows everyone to see all votes cast.</p>
+                {% for response in latest_responses %}
+                    {% if response.user == request.user %}
+                    {% else %}
+                        {{ response.user.username }} (last voted on {{ response.timestamp }}) <br /> 
+                        {% for d in response.dictionary_set.all %}
+                            {% for item in d.items %}
+                                <li>{{ item.0 }} : {{ item.1}}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    {%endif%}
+                {% endfor %}
+            {% endif %}
+            {% if question.question_owner.userprofile.displayPref == 2 %}
+                <p>The following voters have voted on this poll:</p>
+                <ul>
+                    {% for response in latest_responses %}
+                        <li>{{response.user.username}} (last voted on {{ response.timestamp }})</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if question.question_owner.userprofile.displayPref == 3 %}
+                <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses.count}} of them have voted.</p>
+            {% endif %}
         {% endif %}
         </ul>
 

@@ -36,7 +36,8 @@ def register(request):
             # Hash the password with the set_password method
             user.set_password(user.password)
             user.save()
-            
+            profile = UserProfile(user=user, displayPref = 1)
+            profile.save()
             # Update our variable to tell the template registration was successful.
             registered = True
         
@@ -98,6 +99,17 @@ def updateSettings(request):
     else:
         request.user.email = updatedEmail
         request.user.save()
+    if request.method == 'POST':
+        displayChoice = request.POST['viewpreferences']
+        if displayChoice == "allpermit":
+            request.user.userprofile.displayPref = 1
+        elif displayChoice == "voternames":
+            request.user.userprofile.displayPref = 2
+        elif displayChoice == "justnumber":
+            request.user.userprofile.displayPref = 3
+        else:
+            request.user.userprofile.displayPref = 4
+        request.user.userprofile.save()
 	
     return HttpResponseRedirect('/auth/settings/')    
 

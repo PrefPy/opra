@@ -8,7 +8,7 @@
 {% if question.question_owner == request.user %}
 <h3>Voters</h3>
 <hr />
-    <div class="col-md-6">
+    <div class="col-md-4">
     <b>Current Voters: </b>
     <select name="voters" class="form-control" multiple>
     {% for user in users %}
@@ -18,7 +18,7 @@
     {% endfor %}
     </select>    
     </div>     
-    <div class="col-md-6">
+    <div class="col-md-4">
     <b>Add Voter: </b>
     <form action="{% url 'polls:addvoter' question.id %}" method="post">
         {% csrf_token %}
@@ -32,7 +32,22 @@
         <br />
         <input type="submit" class="btn btn-success" value="Invite">
     </form>      
-    </div> 
+    </div>
+    <div class="col-md-4">
+        <b>Add Members of A Group to Poll: </b>
+        <form action="{% url 'polls:addgroupvoters' question.id %}" method="post">
+            {% csrf_token %}
+            <select name="groups" class="form-control" multiple>
+                {% for group in groups %}
+                    {% if group.owner == request.user %}
+                        <option value="{{group.name}}">{{group.name}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <br />
+            <input type="submit" class="btn btn-success" value="Invite">
+        </form>
+    </div>
 <h3>Send Reminder Email:</h3>
 <hr />
 <div class="col-md-6">

@@ -4,7 +4,7 @@ Author: Kevin J. Hwang
 import io
 import math
 import itertools
-from profile import Profile
+from .profile import Profile
 from .preference import Preference
 
 class Mechanism():

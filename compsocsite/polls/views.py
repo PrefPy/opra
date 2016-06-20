@@ -246,6 +246,19 @@ def addvoter(request, question_id):
             'oprahprogramtest@gmail.com',[voterObj.email])
     return HttpResponseRedirect('/polls/%s/settings' % question_id)
 
+#function to send email
+def sendEmail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    creator_obj = User.objects.get(id=question.question_owner_id)
+    title = question.question_text
+    creator = creator_obj.username
+    voters = question.question_voters.all()
+    for voter in voters:
+        mail.send_mail('Reminder to vote on ' + title,
+            request.POST.get('email_txt'),
+            'oprahprogramtest@gmail.com',[voter.email])
+    return HttpResponseRedirect('/polls/%s/settings' % question_id)
+
 def addgroup(request):
     context = RequestContext(request)
     if request.method == 'POST':

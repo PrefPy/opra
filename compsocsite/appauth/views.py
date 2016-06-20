@@ -92,12 +92,12 @@ def updateSettings(request):
         updatedEmail = request.POST['email']
 	
     try:
-	validate_email(updatedEmail)
+        validate_email(updatedEmail)
     except ValidationError as e:
         return HttpResponse("Invalid email")
     else:
-	request.user.email = updatedEmail
-	request.user.save()
+        request.user.email = updatedEmail
+        request.user.save()
 	
     return HttpResponseRedirect('/auth/settings/')    
 

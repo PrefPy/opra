@@ -33,6 +33,44 @@
         <input type="submit" class="btn btn-success" value="Invite">
     </form>      
     </div> 
+<h3>Send Reminder Email:</h3>
+<hr />
+<div class="col-md-6">
+<p>
+    <form action="{% url 'polls:sendEmail' question.id %}" method="post">
+        {% csrf_token %}
+        <label for="email_txt">Send email to group now:</label>
+        <br/>
+        <textarea class="form-control" maxlength="500" name="email_txt" id="email_txt">{{ question.reminder_text }}</textarea>
+        <br/>
+        <input type="submit" class="btn btn-success" value="Send">
+    </form>
+</p>
+</div>
+<div class="col-md-6">
+<p>
+    <form action="{% url 'polls:sendEmail' question.id %}" method="post">
+        {% csrf_token %}
+        <label for="email_txt">Set reminder email:</label>
+        <br/>
+        <textarea class="form-control" maxlength="500" name="email_txt" id="email_txt">{{ question.reminder_text }}</textarea>
+        <br/>
+        <div class="col-md-6">
+            <label for="email_dte">Reminder date:</label>
+            <br/>
+            <input class="form-control" name="email_dte" id="email_dte" type="date"></input>
+            <br/>
+        </div>
+        <div class="col-md-6">
+            <label for="email_tme">Reminder time:</label>
+            <br/>
+            <input class="form-control" name="email_tme" id="email_tme" type="time"></input>
+            <br/>
+        </div>
+        <input type="submit" class="btn btn-success" value="Set">
+    </form>
+</p>
+</div>
 <h3>
     Choices 
 </h3>

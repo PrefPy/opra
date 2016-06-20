@@ -5,7 +5,7 @@ import io
 import math
 import itertools
 from profile import Profile
-from preference import Preference
+from .preference import Preference
 
 class Mechanism():
     """

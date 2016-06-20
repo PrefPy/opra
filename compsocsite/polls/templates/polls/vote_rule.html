@@ -1,0 +1,68 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    <div class="col-md-12">
+        <h1>{{ question.question_text }}</h1>
+
+        {% if cand_map %}
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Poll Results</div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>Poll Mechanism</th>
+                        {% for option in cand_map.values %}
+                            <th>{{ option }}</th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Borda</td>
+                        {% for score in vote_results.0.values %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Plurality</td>
+                        {% for score in vote_results.1.values %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Veto</td>
+                        {% for score in vote_results.2.values %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>K-Approval (k = 3)</td>
+                        {% for score in vote_results.3.values %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Simplified Bucklin</td>
+                        {% for score in vote_results.4.values %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Copeland</td>
+                        {% for score in vote_results.5.values %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Maximin</td>
+                        {% for score in vote_results.6.values %}
+                            <td>{{ score }}</td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    
+        <a href="{% url 'polls:index' %}"> Return Home</a>
+    </div>
+{% endblock %}

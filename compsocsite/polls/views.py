@@ -126,9 +126,7 @@ class PreferenceView(generic.DetailView):
         all_responses = self.object.response_set.reverse()
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
         ctx['latest_responses'] = latest_responses
-        ctx['previous_responses'] = previous_responses
-        ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
-        ctx['vote_results'] = getVoteResults(latest_responses)        
+        ctx['previous_responses'] = previous_responses    
         return ctx
 
 #separate the user votes into two categories: (1)most recent (2)previous history
@@ -160,6 +158,21 @@ def categorizeResponses(all_responses):
             latest_responses.append(response1)   
     
     return (latest_responses, previous_responses)
+
+# view that displays vote results using various algorithms
+class VoteResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/vote_rule.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(VoteResultsView, self).get_context_data(**kwargs)
+        
+        all_responses = self.object.response_set.reverse()
+        (latest_responses, previous_responses) = categorizeResponses(all_responses)
+        ctx['latest_responses'] = latest_responses
+        ctx['previous_responses'] = previous_responses
+        ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
+        ctx['vote_results'] = getVoteResults(latest_responses)        
+        return ctx
 
 #get a list of options for this poll
 def getCandidateMap(response):
@@ -222,10 +235,13 @@ def getVoteResults(latest_responses):
         return []
 
     scoreVectorList = []
-    algorithm1 = MechanismBorda() 
-    scoreVectorList.append(algorithm1.getCandScoresMap(pollProfile))
-    algorithm2 = MechanismPlurality() 
-    scoreVectorList.append(algorithm2.getCandScoresMap(pollProfile))  
+    scoreVectorList.append(MechanismBorda().getCandScoresMap(pollProfile))
+    scoreVectorList.append(MechanismPlurality().getCandScoresMap(pollProfile))  
+    scoreVectorList.append(MechanismVeto().getCandScoresMap(pollProfile))
+    scoreVectorList.append(MechanismKApproval(3).getCandScoresMap(pollProfile))
+    scoreVectorList.append(MechanismSimplifiedBucklin().getCandScoresMap(pollProfile))
+    scoreVectorList.append(MechanismCopeland(1).getCandScoresMap(pollProfile))
+    scoreVectorList.append(MechanismMaximin().getCandScoresMap(pollProfile))
     return scoreVectorList
 
 #function to add voter to voter list (invite only)

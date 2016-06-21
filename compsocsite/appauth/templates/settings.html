@@ -10,13 +10,15 @@
             <label for="email">Email</label>
             <input type="text" class="form-control" name="email" value="{{ request.user.email }}">
         </fieldset>
-        <label for="viewpreferences">Change settings for polls you created</label>
-        <select name="viewpreferences">
-            <option value="allpermit">Everyone can see all votes</option>
-            <option value="voternames">Only names of voters will be shown</option>
-            <option value="justnumber">Only numbers of voters will be shown</option>
-            <option value="nothing">Everyone can only see his/her own votes</option>
-        </select>
+        <fieldset class="form-group">
+            <label for="viewpreferences">Visibility settings for polls you created</label>
+            <select name="viewpreferences">
+                <option value="allpermit">Everyone can see all votes</option>
+                <option value="voternames">Only names of voters will be shown</option>
+                <option value="justnumber">Only numbers of voters will be shown</option>
+                <option value="nothing">Everyone can only see his/her own votes</option>
+            </select>
+        </fieldset>
         <input type="submit" class="btn btn-success" value="Save Changes">
     </form>
     </div>

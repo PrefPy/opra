@@ -10,13 +10,18 @@
 <hr />
     <div class="col-md-4">
     <b>Current Voters: </b>
-    <select name="voters" class="form-control" multiple>
-    {% for user in users %}
-        {% if user in question.question_voters.all %}
-             <option value="{{ user.username }}">{{ user.username }}</option>
-        {% endif %}
-    {% endfor %}
-    </select>    
+    <form action="{% url 'polls:delvoter' question.id %}" method="post">
+        {% csrf_token %}
+        <select name="voters" class="form-control" multiple>
+        {% for user in users %}
+            {% if user in question.question_voters.all %}
+                 <option value="{{ user.username }}">{{ user.username }}</option>
+            {% endif %}
+        {% endfor %}
+        </select>  
+        <br />
+        <input type="submit" class="btn btn-danger" value="Remove">
+    </form> 
     </div>     
     <div class="col-md-4">
     <b>Add Voter: </b>

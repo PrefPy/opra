@@ -59,7 +59,6 @@ def deletePoll(request,question_id):
     question.delete()
     return HttpResponseRedirect('/polls')
 
-
 class addGroupView(generic.ListView):
     template_name = 'polls/addgroup.html'
     def get_context_data(self, **kwargs):
@@ -255,7 +254,7 @@ def getVoteResults(latest_responses):
     return scoreVectorList
 
 #function to add voter to voter list (invite only)
-def addvoter(request, question_id):
+def addVoter(request, question_id):
     question    = get_object_or_404(Question, pk=question_id)
     creator_obj = User.objects.get(id=question.question_owner_id)
 
@@ -270,6 +269,16 @@ def addvoter(request, question_id):
             + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
             + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
             'oprahprogramtest@gmail.com',[voterObj.email])
+    return HttpResponseRedirect('/polls/%s/settings' % question_id)
+
+#remove voters from the list
+def removeVoter(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    
+    newVoters = request.POST.getlist('voters')    
+    for voter in newVoters:
+        voterObj = User.objects.get(username=voter)
+        question.question_voters.remove(voterObj.id)
     return HttpResponseRedirect('/polls/%s/settings' % question_id)
 
 def addgroupvoters(request, question_id):

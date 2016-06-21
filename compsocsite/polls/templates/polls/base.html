@@ -9,6 +9,7 @@
     <body>
         <div class="container">
             <!-- Static navbar -->
+            <!--<nav class="navbar navbar-default"> -->
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">
@@ -20,16 +21,28 @@
                         </button>
                         <a class="navbar-brand" href="/polls/">OPRAH</a>
                     </div>
-                    <div id="navbar" class="navbar-collapse collapse">
+                    <div id="navbar" class="collapse navbar-collapse">
                         {% if user.is_authenticated %}
+                        
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a href="/auth/settings/">Settings</a></li>
+                                 <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Setting
+                                    <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="/auth/settings/">Change Email</a></li>
+                                        <li><a href="#">Invite Friends</a></li>  
+                                    </ul>
+                                </li>
+                                
+                                <!--<a href="/auth/settings/">Settings</a></li>-->
+                                
                                 <li><a href="/auth/logout/">Logout</a></li>
                             </ul>
+                        
                         {% else %}
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a href="/auth/register/">Register</a></li>
-                                <li><a href="/auth/login/">Login</a></li>
+                                <li><a href="/auth/register/"><span class="glyphicon glyphicon-user"></span> Sign Up </a></li>
+                                <li><a href="/auth/login/"> <span class="glyphicon glyphicon-log-in"></span> Login </a></li>
                             </ul>
                         {% endif %}
                     </div><!--/.nav-collapse -->

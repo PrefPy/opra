@@ -54,6 +54,12 @@ def deleteChoice(request, choice_id):
     item.delete()
     return HttpResponseRedirect('/polls/%s/settings' % question.id)
 
+def deletePoll(request,question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.delete()
+    return HttpResponseRedirect('/polls')
+
+
 class addGroupView(generic.ListView):
     template_name = 'polls/addgroup.html'
     def get_context_data(self, **kwargs):

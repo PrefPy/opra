@@ -21,22 +21,23 @@
                         </button>
                         <a class="navbar-brand" href="/polls/">OPRAH</a>
                     </div>
-                    <div id="navbar" class="collapse navbar-collapse">
                         {% if user.is_authenticated %}
                         
                             <ul class="nav navbar-nav navbar-right">
+                                
                                  <li class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Setting
-                                    <span class="caret"></span></a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 
+                                        <span class="glyphicon glyphicon-user"> </span>
+                                        <span class="caret"></span>
+                                    </a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="/auth/settings/">Change Email</a></li>
-                                        <li><a href="#">Invite Friends</a></li>  
+                                         <li class="disabled"><a href="#">Signed in as {{ request.user.username }}</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li ><a href="/auth/settings/" align="center">Setting</a></li>
+                                        <li><a href="/auth/logout/" align="center">Logout</a></li>
                                     </ul>
                                 </li>
-                                
-                                <!--<a href="/auth/settings/">Settings</a></li>-->
-                                
-                                <li><a href="/auth/logout/">Logout</a></li>
+                                  
                             </ul>
                         
                         {% else %}
@@ -45,7 +46,7 @@
                                 <li><a href="/auth/login/"> <span class="glyphicon glyphicon-log-in"></span> Login </a></li>
                             </ul>
                         {% endif %}
-                    </div><!--/.nav-collapse -->
+                   
                 </div><!--/.container-fluid -->
             </nav>
 

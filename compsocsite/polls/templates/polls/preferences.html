@@ -62,6 +62,7 @@
                 <p>You haven't voted on this poll yet.</p>
             {% endif %}
             <p></p>
+            <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses|length}} of them have voted.</p>
             {% if question.question_owner.userprofile.displayPref == 1 %}
                 <p>The owner allows everyone to see all votes cast.</p>
                 {% for response in latest_responses %}
@@ -77,6 +78,7 @@
                 {% endfor %}
             {% endif %}
             {% if question.question_owner.userprofile.displayPref == 2 %}
+                <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses|length}} of them have voted.</p>
                 <p>The following voters have voted on this poll:</p>
                 <ul>
                     {% for response in latest_responses %}
@@ -85,7 +87,7 @@
                 </ul>
             {% endif %}
             {% if question.question_owner.userprofile.displayPref == 3 %}
-                <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses.count}} of them have voted.</p>
+                <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses|length}} of them have voted.</p>
             {% endif %}
         {% endif %}
         </ul>

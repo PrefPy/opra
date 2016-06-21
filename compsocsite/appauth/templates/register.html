@@ -1,25 +1,43 @@
 {% extends 'polls/base.html' %}
 
 {% block content %}
+<div class="col-md-6 col-md-offset-3" align="center">
+    <h3>Register with OPRAH</h3>
+    <br/>
 
-    <div class="col-md-6 col-md-offset-3" align="center">
-        <h3 >Login to OPRAH</h3>
-        <br/>
-        <form id="login_form" method="post" action="/auth/login/">
+    {% if registered %}
+        Thank you for registering!
+        <a href="/polls/">Return to the homepage.</a><br />
+    {% else %}
+        <form id="user_form" method="post" action="/auth/register/" enctype="multipart/form-data">
+
             {% csrf_token %}
+
+            <!-- Display each form. The as_p method wraps each element in a paragraph
+             (<p>) element. This ensures each element appears on a new line,
+             making everything look neater. -->
+           <!-- {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+            -->
             <fieldset class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" />
+                <label for="email">Email</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Email" value="" size="50" />
                 <small class="text-muted">We'll never share your informationo with anyone else.</small>
             </fieldset>
+            
+            <fieldset class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" />  
+            </fieldset>
+            
             <fieldset class="form-group">
                 <label for="username">Password</label> 
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
             </fieldset>
 
-            <input type="submit" value="Login" class="btn btn-primary" />
+            <input type="submit" value="Register" class="btn btn-primary" />
         </form>
-        </div>
+    {% endif %}
+</div>
 
-    </div>
 {% endblock %}

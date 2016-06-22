@@ -6,17 +6,21 @@
 
     <form id="add_poll" method="post" action="/polls/add/">
         {% csrf_token %}
-        Enter a Question Title: <br />
-        <input type="text" name="questionTitle" value="" size="100" />
+        <label for="questionTitle">Short (20 character) question title:</label> <br />
+        <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="20" size="100" /><br />
+        <label for="desc">Question description:</label> <br />
+        <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
+        <label for="image">Image:</label> <br />
+        <input type="text" class="form-control" id="image" name="image" value="" />
         <br /><br />
-        Choice 1: <br />
-        <input type="text" name="choice1" value="" size="100" /> 
+        <label for="choice1">Choice 1:</label> <br />
+        <input type="text" class="form-control" id="choice1" name="choice1" value="" maxlength="20" size="100" /> 
         <br />
-        Choice 2: <br />
-        <input type="text" name="choice2" value="" size="100" />
+        <label for="choice2">Choice 2:</label> <br />
+        <input type="text" class="form-control" id="choice2" name="choice2" value="" maxlength="20" size="100" />
         <br />
-        Choice 3: <br />
-        <input type="text" name="choice3" value="" size="100" />
+        <label for="choice3">Choice 3:</label> <br />
+        <input type="text" class="form-control" id="choice3" name="choice3" value="" maxlength="20" size="100" />
         <br /><br />
         <input type="submit" value="Submit" class="btn btn-primary" />
     </form>

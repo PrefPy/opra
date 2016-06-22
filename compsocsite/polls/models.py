@@ -12,7 +12,9 @@ from django.contrib.auth.models import User
 # question that will receive responses
 @python_2_unicode_compatible
 class Question(models.Model):
-    question_text = models.CharField(max_length=200)
+    question_text = models.CharField(max_length=20)
+    question_desc = models.CharField(max_length=500, null=True, blank=True)
+    image = models.CharField(max_length=500, default="https://pbs.twimg.com/media/B0eebrtIUAEVFad.jpg")
     pub_date = models.DateTimeField('date published')
     follow_up = models.OneToOneField('Question', on_delete=models.CASCADE, null = True, blank = True)
     question_owner = models.ForeignKey(User, null = True)

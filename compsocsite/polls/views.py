@@ -30,7 +30,14 @@ def addView(request):
     context = RequestContext(request)
     if request.method == 'POST':
         questionString = request.POST['questionTitle']
-        question = Question(question_text=questionString, pub_date=timezone.now(), question_owner=request.user)
+        questionDesc = request.POST['desc']
+        imageURL = request.POST['image']
+        if imageURL != '':
+            question = Question(question_text=questionString, question_desc=questionDesc,
+                image=imageURL, pub_date=timezone.now(), question_owner=request.user)
+        else:
+            question = Question(question_text=questionString, question_desc=questionDesc,
+                pub_date=timezone.now(), question_owner=request.user)
         question.save()
         item1 = Item(question=question, item_text=request.POST['choice1'])
         item2 = Item(question=question, item_text=request.POST['choice2'])
@@ -39,7 +46,7 @@ def addView(request):
         item2.save()
         item3.save()
         return HttpResponseRedirect('/polls/%s/settings' % question.id)
-    return render_to_response('polls/add.html', {}, context)    
+    return render_to_response('polls/add.html', {}, context)
 
 def addChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

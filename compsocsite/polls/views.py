@@ -82,6 +82,18 @@ class MembersView(generic.DetailView):
         ctx = super(MembersView, self).get_context_data(**kwargs)
         ctx['users'] = User.objects.all()
         return ctx
+
+def startPoll(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.status = 2
+    question.save()
+    return HttpResponseRedirect('/polls/')    
+
+def stopPoll(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.status = 3
+    question.save()
+    return HttpResponseRedirect('/polls/')
     
 # view for question detail
 class DetailView(generic.DetailView):

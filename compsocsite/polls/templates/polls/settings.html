@@ -20,7 +20,9 @@
         {% endfor %}
         </select>  
         <br />
+        {% if question.status == 1 %}
         <input type="submit" class="btn btn-danger" value="Remove">
+        {% endif %}
     </form> 
     </div>     
     <div class="col-md-4">
@@ -101,11 +103,13 @@
         {% if item.question == question %}
             <li class="list-group-item ">
                 {{ item }} 
+                {% if question.status == 1 %}
                 <a href="/polls/choice/delete/{{ item.id }}">
                     <div class="pull-right">
                         <span class="glyphicon glyphicon-remove"></span>
                     </div>
                 </a>
+                {% endif %}
             </li>
         {% endif %}
     {% endfor %}

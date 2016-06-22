@@ -39,12 +39,24 @@
                                     </div>
                                     </td>
                                     
-                                    <td><a href="{% url 'polls:detail' question.id %}">Cast Vote</a></td>
-                                    <td><a href="{% url 'polls:preferences' question.id %}">View Vote</a></td>
-                                    {% if question.response_set.all.0.allocation %}
-                                        <td><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></td>
-                                    {% else %}
-                                        <td>Allocation not complete</td>
+                                    <td>
+                                        {% if question.status == 2 %}
+                                        <a href="{% url 'polls:detail' question.id %}">Cast Vote</a>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if question.status == 2 or question.status == 3 %}
+                                        <a href="{% url 'polls:preferences' question.id %}">View Vote</a>
+                                        {% endif %}
+                                    </td>
+                                    {% if question.status == 1 %}
+                                        <td><a href="{% url 'polls:start' question.id %}"><span class="btn btn-success">Start Poll</span></a></td>
+                                    {% elif question.status == 2 %}
+                                        <td><a href="{% url 'polls:stop' question.id %}"><span class="btn btn-danger">Stop Poll</span></a></td>
+                                    {% elif question.status == 3 %}
+                                        <td>
+                                            <a href="/polls/{{ question.id }}/vote/results/" class="btn btn-primary">Get Vote Results</a>
+                                        </td>
                                     {% endif %}
                                 </tr>
                                 {% endif %}
@@ -63,18 +75,28 @@
                                 {% for question in question_list %}
                                     {% if question.question_owner != request.user and request.user in question.question_voters.all %}
                                     <tr>
-                                        
-                                        
-                                        
                                         <td>
                                             {{ question.question_text }}
                                         </td>
-                                        <td><a href="{% url 'polls:detail' question.id %}">Cast Vote</a></td>
-                                        <td><a href="{% url 'polls:preferences' question.id %}">View Vote</a></td>
-                                        {% if question.response_set.all.0.allocation %}
-                                            <td><a href="{% url 'polls:results' question.id %}">Allocation complete: {{ question.question_text }}</a></td>
-                                        {% else %}
-                                            <td>Allocation not complete</td>
+                                        <td>
+                                            {% if question.status == 2 %}
+                                            <a href="{% url 'polls:detail' question.id %}">Cast Vote</a>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if question.status == 2 or question.status == 3 %}
+                                            <a href="{% url 'polls:preferences' question.id %}">View Vote</a>
+                                            {% endif %}
+                                        </td>
+                                        {% if question.status == 1 %}
+                                            <td>Poll not started</td>
+                                        {% elif question.status == 2 %}
+                                            <td>Polling in session</td>
+                                        {% elif question.status == 3 %}
+                                            <td>
+                                                Polling complete 
+                                                <a href="/polls/{{ question.id }}/vote/results/" class="btn btn-primary">Get Vote Results</a>
+                                            </td>
                                         {% endif %}
                                     </tr>
                                     {% endif %}

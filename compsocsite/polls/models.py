@@ -19,6 +19,7 @@ class Question(models.Model):
     follow_up = models.OneToOneField('Question', on_delete=models.CASCADE, null = True, blank = True)
     question_owner = models.ForeignKey(User, null = True)
     question_voters = models.ManyToManyField(User, related_name='voters')
+    status = models.IntegerField(default=1)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):

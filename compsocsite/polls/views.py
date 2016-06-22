@@ -24,7 +24,7 @@ class IndexView(generic.ListView):
         ctx['groups'] = Group.objects.all()
         return ctx
     def get_queryset(self):
-    	return Question.objects.all().order_by('-pub_date')
+        return Question.objects.all().order_by('-pub_date')
 
 def addView(request):
     context = RequestContext(request)
@@ -56,8 +56,8 @@ def addChoice(request, question_id):
     return HttpResponseRedirect('/polls/%s/settings' % question.id)
 
 def deleteChoice(request, choice_id):
-    item = Item.objects.filter(id=choice_id)
-    question = item[0].question
+    item = get_object_or_404(Item, pk=choice_id)
+    question = item.question
     item.delete()
     return HttpResponseRedirect('/polls/%s/settings' % question.id)
 
@@ -359,6 +359,16 @@ def addmember(request, group_id):
 # function to process student submission
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+
+    # get the preference order
+    orderStr = request.POST["pref_order"]
+    prefOrder = []
+    if orderStr != "":
+        prefOrder = orderStr.split(",")
+    else:
+        for i in range(len(question.item_set.all())):
+            prefOrder.append("item" + str(i + 1))
+    
     # make Response object to store data
     response = Response(question=question, user=request.user, timestamp=timezone.now())
     response.save()
@@ -367,14 +377,15 @@ def vote(request, question_id):
     # find ranking student gave for each item under the question
     item_num = 1
     for item in question.item_set.all():
-        try:
-            selected_choice = request.POST["item" + str(item_num)]
-        except:
+        arrayIndex = prefOrder.index("item" + str(item_num))
+        if arrayIndex == -1:
             # set value to lowest possible rank
             d[item] = question.item_set.all().count()
         else:
+            # add 1 to array index, since rank starts at 1
+            rank = (prefOrder.index("item" + str(item_num))) + 1
             # add pref to response dict
-            d[item] = int(selected_choice)
+            d[item] = rank
         d.save()
         item_num += 1
     return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))

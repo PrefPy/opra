@@ -1,73 +1,59 @@
 {% extends 'polls/base.html' %}
 
-{% block content %}
-<a href="{{ question.image }}"><img class="col-md-4" src="{{ question.image }}"></a>
-<div class="col-md-8">
-<h1>{{ question.question_text }}</h1>
-<h2>{{ question.question_desc }}</h2>
-<p><b>Created by</b> {{ question.question_owner }}</p>
-<p><b>Voters: </b>
-</div>
-<div class="col-md-12">
-    <hr />
-    {% for voter in question.question_voters.all %}
-        {% if voter == request.user %}
-            <i>{{ voter }}</i>,
-        {% else %}
-            {{ voter }},
-        {% endif %}
-    {% endfor %}
-</p>
+{% block extra_head %}
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+$(function() {
+    $( "#sortable" ).sortable({
+        update: function(event, ui) {
+            var order = $("#sortable").sortable("toArray");
+            $('#pref_order').val(order.join(","));
+        }
+    });
     
+    $( "#sortable" ).disableSelection();
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <a href="{{ question.image }}"><img src="{{ question.image }}" width="128" height="128" ></a>
+    </div>
+    <div class="col-md-9">
+        <h1>{{ question.question_text }}</h1>
+        <p>{{ question.question_desc }}</p>
+        <p><b>Created by</b> {{ question.question_owner }}</p>
+        <p>
+            <b>Voters: </b>
+            {% for voter in question.question_voters.all %}
+                {% if voter == request.user %}
+                    <i>{{ voter }}</i>,
+                {% else %}
+                    {{ voter }},
+                {% endif %}
+            {% endfor %}
+        </p>
+    </div>
+</div>
+<hr />   
+
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
+<div class="row">
 <form action="{% url 'polls:vote' question.id %}" method="post">
     {% csrf_token %}
+    <input type="hidden" id="pref_order" name="pref_order" value="" />
+    <p><b>Preference Order:</b></p>
     <div class="row">
         <div class="col-md-6">
-        <table class="table" cellspacing="0">
-            <!-- ranking numbers in top row of grid -->
-            <!-- loop this for each item -->
-            <thead>
-                <tr>
-                <td></td>
-                {% for item in question.item_set.all %}
-                    <th><label for="item{{ forloop.counter }}">{{ forloop.counter }}</label></th>
-                {% endfor %}
-                </tr>
-            </thead>
-            
-            <!-- item text -->
-            <!-- loop this for each item -->
+        <ul id="sortable" class="list-group">
             {% for item in question.item_set.all %}
-                <tr>
-                <td class="griditem"><label for="item{{ forloop.counter }}">{{ item.item_text }}</label></td>
-
-                <!-- radio buttons -->
-                <!-- loop this for each item -->
-                {% for item in question.item_set.all %}
-                    {% if currentSelection %}
-                        <!-- Autofill voting form using the most recent vote -->
-                        {% for selection in currentSelection %}
-                            {% if forloop.parentloop.parentloop.counter == forloop.counter %}
-                                 <td>
-                                {% if selection == forloop.parentloop.counter %}
-                                <input type="radio" name="item{{ forloop.parentloop.parentloop.counter }}" id="item{{ forloop.parentloop.parentloop.counter }}.rank{{ forloop.parentloop.counter }}" value="{{ forloop.parentloop.counter }}" checked />
-                                {% else %}
-                                <input type="radio" name="item{{ forloop.parentloop.parentloop.counter }}" id="item{{ forloop.parentloop.parentloop.counter }}.rank{{ forloop.parentloop.counter }}" value="{{ forloop.parentloop.counter }}" /> 
-                                {% endif %}
-                                </td> 
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <td>
-                        <input type="radio" name="item{{ forloop.parentloop.counter }}" id="item{{ forloop.parentloop.counter }}.rank{{ forloop.counter }}" value="{{ forloop.counter }}" /> 
-                        </td>
-                    {% endif %}
-                {% endfor %}
-                </tr>
+            <li class="list-group-item" id="item{{ forloop.counter }}">{{ item.item_text }}</li>
             {% endfor %}
-        </table>
+        </ul> 
         </div>
     </div>
     

@@ -103,7 +103,7 @@ class Dictionary(models.Model):
         return iter(kvp.key for kvp in self.keyvaluepair_set.all())
 
     def itervalues(self):
-        """Returns an iterator for the keys of this Dictionary.
+        """Returns an iterator for the values of this Dictionary.
         """
         return iter(kvp.value for kvp in self.keyvaluepair_set.all())
 
@@ -123,6 +123,10 @@ class Dictionary(models.Model):
         """Returns all values in this Dictionary as a list.
         """
         return [kvp.value for kvp in self.keyvaluepair_set.all()]
+
+    def sorted_values(self):
+        """Sorts the Dictionary by value"""
+        return list(sorted(self.items(), key=lambda (k,v): (v,k)))
 
     def items(self):
         """Get a list of tuples of key, value for the items in this Dictionary.

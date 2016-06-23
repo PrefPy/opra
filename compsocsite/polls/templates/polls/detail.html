@@ -5,14 +5,18 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script>
 $(function() {
-    $( "#sortable" ).sortable({
+    $( "#sortable1" ).sortable({
         update: function(event, ui) {
-            var order = $("#sortable").sortable("toArray");
+            var order = $("#sortable1").sortable("toArray");
             $('#pref_order').val(order.join(","));
         }
     });
     
-    $( "#sortable" ).disableSelection();
+    $( "ul.droptrue" ).sortable({
+      connectWith: "ul"
+    });
+    
+    $( "#sortable1, #sortable2" ).disableSelection();
 });
 </script>
 {% endblock %}
@@ -46,14 +50,20 @@ $(function() {
 <form action="{% url 'polls:vote' question.id %}" method="post">
     {% csrf_token %}
     <input type="hidden" id="pref_order" name="pref_order" value="" />
-    <p><b>Preference Order:</b></p>
+    
     <div class="row">
-        <div class="col-md-6">
-        <ul id="sortable" class="list-group">
-            {% for item in question.item_set.all %}
-            <li class="list-group-item" id="item{{ forloop.counter }}">{{ item.item_text }}</li>
-            {% endfor %}
-        </ul> 
+        <div class="col-md-4">
+            <p><b>Preference Order:</b></p>
+            <ul id="sortable1" class="list-group well droptrue">
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <p>Remaining Elements:</p>
+            <ul id="sortable2" class="list-group well droptrue">
+                {% for item in question.item_set.all %}
+                <li class="list-group-item" id="item{{ forloop.counter }}">{{ item.item_text }}</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
     

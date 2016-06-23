@@ -14,7 +14,7 @@
                     {{ response.user.username }} (last voted on {{ response.timestamp }}) <br /> 
                     {% for d in response.dictionary_set.all %}
                         <div class="btn-group">
-                        {% for item in d.items %}
+                        {% for item in d.sorted_values %}
                             <button type="button" class="btn btn-default">{{ item.0 }} : {{ item.1 }}</button>
                         {% endfor %}
                         </div>
@@ -30,7 +30,7 @@
                         {{ response.user.username }}: {{ response.timestamp }} <br />
                         {% for d in response.dictionary_set.all %}
                             <div class="btn-group">
-                            {% for item in d.items %}
+                            {% for item in d.sorted_values %}
                                 <button type="button" class="btn btn-default">{{ item.0 }} : {{ item.1 }}</button>
                             {% endfor %}
                             </div>
@@ -48,7 +48,7 @@
                 {{ mostRecentResponse.user.username }} (last voted on {{ mostRecentResponse.timestamp }}) <br />
                 {% for d in mostRecentResponse.dictionary_set.all %}
                     <div class="btn-group">
-                    {% for item in d.items %}
+                    {% for item in d.sorted_values %}
                         <button type="button" class="btn btn-default">{{ item.0 }} : {{ item.1 }}</button>
                     {% endfor %}
                     </div>
@@ -63,7 +63,7 @@
                         {{ response.user.username }}: {{ response.timestamp }} <br />
                         {% for d in response.dictionary_set.all %}
                             <div class="btn-group">
-                            {% for item in d.items %}
+                            {% for item in d.sorted_values %}
                                 <button type="button" class="btn btn-default">{{ item.0 }} : {{ item.1 }}</button>
                             {% endfor %}
                             </div>
@@ -86,7 +86,7 @@
                         {{ response.user.username }} (last voted on {{ response.timestamp }}) <br /> 
                         {% for d in response.dictionary_set.all %}
                             <div class="btn-group">
-                            {% for item in d.items %}
+                            {% for item in d.sorted_values %}
                                 <button type="button" class="btn btn-default">{{ item.0 }} : {{ item.1 }}</button>
                             {% endfor %}
                             </div>

@@ -1,2 +1,2 @@
-compsocsite/appauth/__pycache__/
-compsocsite/appauth/migrations/__pycache__/
+__pycache__/
+*.pyc

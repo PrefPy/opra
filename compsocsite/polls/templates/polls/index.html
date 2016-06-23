@@ -95,7 +95,7 @@
                                         {% elif question.status == 3 %}
                                             <td>
                                                 Polling complete 
-                                                <a href="/polls/{{ question.id }}/vote/results/" class="btn btn-primary">Get Vote Results</a>
+                                                <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">Get Vote Results</a>
                                             </td>
                                         {% endif %}
                                     </tr>
@@ -112,7 +112,7 @@
                 {% if groups %}
                     <thead>
                         <tr>
-                        <th>Current Groups <a href="/polls/addgroup/"><span class="btn btn-primary">Add Group</span></a></th>
+                        <th>Current Groups <a href="/groups/addgroup/"><span class="btn btn-primary">Add Group</span></a></th>
                         <th></th>
                         </tr>
                     </thead>
@@ -121,13 +121,13 @@
                         {% if request.user == group.owner %}
                             <tr>
                                 <td>{{ group.name }}</td>
-                                <td><a href="{% url 'polls:members' group.id %}">View/Change members</a></td>
+                                <td><a href="{% url 'groups:members' group.id %}">View/Change members</a></td>
                             </tr>
                         {% endif %}
                     {% endfor %}
                     </tbody>
                 {% else %}
-                    <tr><td>No groups present. <a href="/polls/addgroup/"><span class="btn btn-primary">Add Group</span></a></td></tr>
+                    <tr><td>No groups present. <a href="/groups/addgroup/"><span class="btn btn-primary">Add Group</span></a></td></tr>
                 {% endif %}
                 </table>
             </div>

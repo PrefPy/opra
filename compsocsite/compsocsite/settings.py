@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'compsocsite',
     'appauth',
+    'groups',
 ]
 
 MIDDLEWARE_CLASSES = [

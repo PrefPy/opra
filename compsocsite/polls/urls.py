@@ -21,10 +21,5 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/preferences/$', views.PreferenceView.as_view(), name='preferences'),
     url(r'^(?P<pk>[0-9]+)/results/$', views.ResultsView.as_view(), name='results'),
     
-    url(r'^(?P<group_id>[0-9]+)/addmember/$', views.addmember, name='addmember'),
-    url(r'^addgroup/$', views.addGroupView.as_view(), name='addgroup'),
-    url(r'^(?P<pk>[0-9]+)/members/$', views.MembersView.as_view(), name='members'),
-    url(r'^addgroupfunc/$', views.addgroup, name='addgroupfunc'),
-    url(r'^(?P<question_id>[0-9]+)/addgroupvoters/$', views.addgroupvoters, name='addgroupvoters'),
     url(r'^(?P<question_id>[0-9]+)/sendEmail/$', views.sendEmail, name='sendEmail'),
 ]

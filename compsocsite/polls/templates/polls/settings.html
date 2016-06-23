@@ -42,7 +42,7 @@
     </div>
     <div class="col-md-4">
         <b>Add Members of A Group to Poll: </b>
-        <form action="{% url 'polls:addgroupvoters' question.id %}" method="post">
+        <form action="{% url 'groups:addgroupvoters' question.id %}" method="post">
             {% csrf_token %}
             <select name="groups" class="form-control" multiple>
                 {% for group in groups %}
@@ -104,7 +104,7 @@
             <li class="list-group-item ">
                 {{ item }} 
                 {% if question.status == 1 %}
-                <a href="/polls/choice/delete/{{ item.id }}">
+                <a href="{% url 'polls:delchoice' item.id %}">
                     <div class="pull-right">
                         <span class="glyphicon glyphicon-remove"></span>
                     </div>

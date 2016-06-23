@@ -14,6 +14,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 from .prefpy.mechanism import *
+from groups.models import *
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
@@ -65,23 +66,6 @@ def deletePoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.delete()
     return HttpResponseRedirect('/polls')
-
-class addGroupView(generic.ListView):
-    template_name = 'polls/addgroup.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(addGroupView, self).get_context_data(**kwargs)
-        ctx['users'] = User.objects.all()
-        return ctx
-    def get_queryset(self):
-            return Question.objects.all().order_by('-pub_date')
-
-class MembersView(generic.DetailView):
-    model = Group
-    template_name = 'polls/members.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(MembersView, self).get_context_data(**kwargs)
-        ctx['users'] = User.objects.all()
-        return ctx
 
 def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -300,25 +284,6 @@ def removeVoter(request, question_id):
         question.question_voters.remove(voterObj.id)
     return HttpResponseRedirect('/polls/%s/settings' % question_id)
 
-def addgroupvoters(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    creator_obj = User.objects.get(id=question.question_owner_id)
-    title = question.question_text
-    creator = creator_obj.username
-    newGroups = request.POST.getlist('groups')
-    for group in newGroups:
-        groupObj = Group.objects.get(name=group)
-        for voter in groupObj.members.all():
-            if voter not in question.question_voters.all():
-                voterObj = User.objects.get(username=voter)
-                question.question_voters.add(voterObj.id)
-                mail.send_mail('You have been invited to vote on ' + title,
-                    'Hello ' + voterObj.username + ',\n\n' + creator
-                    + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
-                    + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
-                    'oprahprogramtest@gmail.com',[voterObj.email])
-    return HttpResponseRedirect('/polls/%s/settings' % question_id)
-
 #function to send email
 def sendEmail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -331,30 +296,6 @@ def sendEmail(request, question_id):
             request.POST.get('email_txt'),
             'oprahprogramtest@gmail.com',[voter.email])
     return HttpResponseRedirect('/polls/%s/settings' % question_id)
-
-def addgroup(request):
-    context = RequestContext(request)
-    if request.method == 'POST':
-        groupName = request.POST['groupName']
-        group = Group(name = groupName, owner = request.user)
-        group.save()
-        newMembers = request.POST.getlist('voters')
-        for member in newMembers:
-            memberObj = User.objects.get(username=member)
-            group.members.add(memberObj.id)
-        return HttpResponseRedirect('/polls/%s/members' % group.id)
-    return render_to_response('polls/addgroup.html', {}, context)
-
-def addmember(request, group_id):
-    context = RequestContext(request)
-    if request.method == 'POST':
-        group = get_object_or_404(Group, pk=group_id)
-        newMembers = request.POST.getlist('members')
-        for member in newMembers:
-            memberObj = User.objects.get(username=member)
-            group.members.add(memberObj.id)
-        return HttpResponseRedirect('/polls/%s/members' % group.id)
-    return render_to_response('polls/members.html', {}, context)  
 
 # function to process student submission
 def vote(request, question_id):

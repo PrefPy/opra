@@ -76,7 +76,9 @@
                                     {% if question.question_owner != request.user and request.user in question.question_voters.all %}
                                     <tr>
                                         <td>
+                                            <a href="{% url 'polls:pollinfo' question.id %}"> 
                                             {{ question.question_text }}
+                                            </a>
                                         </td>
                                         <td>
                                             {% if question.status == 2 %}

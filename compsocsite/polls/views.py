@@ -16,6 +16,7 @@ from django.core import mail
 from .prefpy.mechanism import *
 from groups.models import *
 
+
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
@@ -98,7 +99,25 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
-
+# view of participated polls
+class PollInfoView(generic.DetailView):
+    model = Question
+    template_name = 'polls/pollinfo.html'
+# subview for view of participated polls
+class ViewVotersView(generic.DetailView):
+    model = Question
+    template_name= 'polls/viewvoters.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(ViewVotersView, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        ctx['items'] = Item.objects.all()
+        ctx['groups'] = Group.objects.all()
+        all_responses = self.object.response_set.reverse()
+        (latest_responses, previous_responses) = categorizeResponses(all_responses)
+        ctx['latest_responses'] = latest_responses
+        ctx['previous_responses'] = previous_responses 
+        return ctx
+    
 # view for settings detail
 class SettingsView(generic.DetailView):
     model = Question

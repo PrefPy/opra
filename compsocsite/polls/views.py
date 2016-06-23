@@ -1,7 +1,7 @@
 import datetime
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.core.urlresolvers import reverse
 from django.views import generic
 
@@ -288,8 +288,8 @@ def addVoter(request, question_id):
         question.question_voters.add(voterObj.id)
         mail.send_mail('You have been invited to vote on ' + title,
             'Hello ' + voterObj.username + ',\n\n' + creator
-            + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
-            + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
+            + ' has invited you to vote on a poll. Please visit '
+            + request.build_absolute_uri(reverse('polls:detail', args=[question_id])) + ' to vote.\n\nSincerely,\nOPRAH Staff',
             'oprahprogramtest@gmail.com',[voterObj.email])
     return HttpResponseRedirect('/polls/%s/settings' % question_id)
 

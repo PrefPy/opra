@@ -322,12 +322,15 @@ def vote(request, question_id):
 
     # get the preference order
     orderStr = request.POST["pref_order"]
-    prefOrder = []
+    prefOrder = []    
     if orderStr != "":
         prefOrder = orderStr.split(",")
+        # the user must rank all preferences
+        if len(prefOrder) != len(question.item_set.all()):
+            return HttpResponseRedirect('/polls/%s/' % question_id)
     else:
-        for i in range(len(question.item_set.all())):
-            prefOrder.append("item" + str(i + 1))
+        # the user must rank all preferences
+        return HttpResponseRedirect('/polls/%s/' % question_id)
     
     # make Response object to store data
     response = Response(question=question, user=request.user, timestamp=timezone.now())

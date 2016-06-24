@@ -36,10 +36,12 @@ def AddStep1View(request):
         imageURL = request.POST['image']
         if imageURL != '':
             question = Question(question_text=questionString, question_desc=questionDesc,
-                image=imageURL, pub_date=timezone.now(), question_owner=request.user)
+                image=imageURL, pub_date=timezone.now(), question_owner=request.user,
+                display_pref=request.user.userprofile.displayPref)
         else:
             question = Question(question_text=questionString, question_desc=questionDesc,
-                pub_date=timezone.now(), question_owner=request.user)
+                pub_date=timezone.now(), question_owner=request.user,
+                display_pref=request.user.userprofile.displayPref)
         question.save()
         return HttpResponseRedirect('/polls/%s/add_step2' % question.id)
     return render_to_response('polls/add_step1.html', {}, context)
@@ -358,6 +360,18 @@ def sendEmail(request, question_id):
             'oprahprogramtest@gmail.com',[voter.email])
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+def setview(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    displayChoice = request.POST['viewpreferences']
+    if displayChoice == "allpermit":
+        question.display_pref = 1
+    elif displayChoice == "voternames":
+        question.display_pref = 2
+    elif displayChoice == "justnumber":
+        question.display_pref = 3
+    else:
+        question.display_pref = 4
+    return HttpResponseRedirect('/polls/%s/settings' % question_id)
 # function to process student submission
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

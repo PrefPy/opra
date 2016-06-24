@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/start/$', views.startPoll, name='start'),  
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
     url(r'^(?P<question_id>[0-9]+)/stop/$', views.stopPoll, name='stop'),
+    url(r'^(?P<question_id>[0-9]+)/setview/$', views.setview, name='setview'),
     url(r'^(?P<pk>[0-9]+)/vote/results/$', views.VoteResultsView.as_view(), name='voteresults'),
     url(r'^(?P<pk>[0-9]+)/confirmation/$', views.ConfirmationView.as_view(), name='confirmation'),
     url(r'^(?P<pk>[0-9]+)/preferences/$', views.PreferenceView.as_view(), name='preferences'),

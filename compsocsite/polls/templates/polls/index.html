@@ -114,7 +114,7 @@
                 {% if groups %}
                     <thead>
                         <tr>
-                        <th>Current Groups <a href="/groups/addgroup/"><span class="btn btn-primary">Add Group</span></a></th>
+                        <th>Current Groups <a href="{% url 'groups:addgroup' %}"><span class="btn btn-primary">Add Group</span></a></th>
                         <th></th>
                         </tr>
                     </thead>
@@ -129,7 +129,7 @@
                     {% endfor %}
                     </tbody>
                 {% else %}
-                    <tr><td>No groups present. <a href="/groups/addgroup/"><span class="btn btn-primary">Add Group</span></a></td></tr>
+                    <tr><td>No groups present. <a href="{% url 'groups:addgroup' %}"><span class="btn btn-primary">Add Group</span></a></td></tr>
                 {% endif %}
                 </table>
             </div>
@@ -137,13 +137,6 @@
         </div>
      {% else %}
         <div class="col-md-12">
-            <!--
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    Welcome! Please register/login to get started.
-                </div>
-            </div>
-            -->
             <div class="jumbotron" align="center">
                 <h2 class ="display-3"> Welcome to OPRAH</h2>
                 <p class="lead">Polling platform that allows you to specify your preferences.</p>

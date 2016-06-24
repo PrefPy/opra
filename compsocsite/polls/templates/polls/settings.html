@@ -127,6 +127,7 @@
         </li>
     </ul>
 </div>
+
 <h3>Poll Viewing Setting</h3>
 <div class="col-md-6">
     <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}">
@@ -141,6 +142,7 @@
         <input type="submit" class="btn btn-success" value="submit">
     </form>
 </div>
+
 {% endif %}
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}

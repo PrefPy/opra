@@ -72,7 +72,22 @@
 </p>
 </div>
 
- <br/>
+
+<h3>Poll Viewing Setting</h3>
+<div class="col-md-6">
+    <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}">
+        {% csrf_token %}
+        <label for="viewpreferences">Visibility settings for this specific poll</label>
+        <select name="viewpreferences">
+            <option value="allpermit">Everyone can see all votes</option>
+            <option value="voternames">Only names of voters will be shown</option>
+            <option value="justnumber">Only numbers of voters will be shown</option>
+            <option value="nothing">Everyone can only see his/her own votes</option>
+        </select>
+    </form>
+</div>
+
+ <br/><br/>
     
  <div class="col-md-6 col-md-offset-3" align="center">
         <form action= "/polls/">

@@ -1,5 +1,5 @@
 {% extends 'polls/base.html' %}
-
+{% load poll_extra %}
 {% block content %}
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>
@@ -18,44 +18,73 @@
                     </tr>
                     <tr>
                         <td>Borda</td>
+                        {{vote_results.0|largest}}
                         {% for score in vote_results.0.values %}
-                            <td>{{ score }}</td>
+                            {% if score == vote_results.0.values|largest %}
+                                <td style="background-color: red">{{ score }}</td>
+                            {% else %}
+                                <td>{{score}}</td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                     <tr>
                         <td>Plurality</td>
                         {% for score in vote_results.1.values %}
-                            <td>{{ score }}</td>
+                            {% if score == vote_results.1.values|largest %}
+                                <td style="background-color: red">{{ score }}</td>
+                            {% else %}
+                                <td>{{score}}</td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                     <tr>
                         <td>Veto</td>
                         {% for score in vote_results.2.values %}
-                            <td>{{ score }}</td>
+                            {% if score == vote_results.2.values|largest %}
+                                <td style="background-color: red">{{ score }}</td>
+                            {% else %}
+                                <td>{{score}}</td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                     <tr>
                         <td>K-Approval (k = 3)</td>
                         {% for score in vote_results.3.values %}
-                            <td>{{ score }}</td>
+                            {% if score == vote_results.3.values|largest %}
+                                <td style="background-color: red">{{ score }}</td>
+                            {% else %}
+                                <td>{{score}}</td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                     <tr>
                         <td>Simplified Bucklin</td>
                         {% for score in vote_results.4.values %}
-                            <td>{{ score }}</td>
+                            {% if score == vote_results.4.values|smallest %}
+                                <td style="background-color: red">{{ score }}</td>
+                            {% else %}
+                                <td>{{score}}</td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                     <tr>
                         <td>Copeland</td>
                         {% for score in vote_results.5.values %}
-                            <td>{{ score }}</td>
+                            {% if score == vote_results.5.values|largest %}
+                                <td style="background-color: red">{{ score }}</td>
+                            {% else %}
+                                <td>{{score}}</td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                     <tr>
                         <td>Maximin</td>
                         {% for score in vote_results.6.values %}
-                            <td>{{ score }}</td>
+                            {% if score == vote_results.6.values|largest %}
+                                <td style="background-color: red">{{ score }}</td>
+                            {% else %}
+                                <td>{{score}}</td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                 </table>

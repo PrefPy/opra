@@ -111,11 +111,11 @@
         </div>
           <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <h3 class="page-header">{{ question.question_text }}</h3>
-              {% if request.user.userprofile.displayPref == 1 %}
+              {% if question.display_pref == 1 %}
                     <p> Everyone can see all information about this vote. </p>
-              {% elif request.user.userprofile.displayPref == 2 %}
+              {% elif question.display_pref == 2 %}
                     <p> Only names of voters will be shown. </p>
-              {% elif request.user.userprofile.displayPref == 3 %}
+              {% elif question.display_pref == 3 %}
                     <p> Only numbers of voters will be shown. </p>
               {% else %}
                     <p> You can only see your own vote.</p>

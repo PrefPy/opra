@@ -78,7 +78,7 @@
             {% endif %}
             <p></p>
             <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses|length}} of them have voted.</p>
-            {% if question.question_owner.userprofile.displayPref == 1 %}
+            {% if question.display_pref == 1 %}
                 <p>The owner allows everyone to see all votes cast.</p>
                 {% for response in latest_responses %}
                     {% if response.user == request.user %}
@@ -95,7 +95,7 @@
                     {%endif%}
                 {% endfor %}
             {% endif %}
-            {% if question.question_owner.userprofile.displayPref == 2 %}
+            {% if question.display_pref == 2 %}
                 <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses|length}} of them have voted.</p>
                 <p>The following voters have voted on this poll:</p>
                 <ul>
@@ -104,7 +104,7 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-            {% if question.question_owner.userprofile.displayPref == 3 %}
+            {% if question.display_pref == 3 %}
                 <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses|length}} of them have voted.</p>
             {% endif %}
         {% endif %}

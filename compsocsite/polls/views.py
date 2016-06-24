@@ -334,7 +334,8 @@ def addVoter(request, question_id):
             'Hello ' + voterObj.username + ',\n\n' + creator
             + ' has invited you to vote on a poll. Please visit '
             + request.build_absolute_uri(reverse('polls:detail', args=[question_id])) + ' to vote.\n\nSincerely,\nOPRAH Staff',
-            'oprahprogramtest@gmail.com',[voterObj.email])
+            'oprahprogramtest@gmail.com',[voterObj.email],
+            fail_silently=True)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 #remove voters from the list

@@ -1,8 +1,8 @@
 {% extends 'polls/base.html' %}
 
 {% block content %}
+<body>
     {% if user.is_authenticated %}
-        <div class="col-md-12">
             <h1>Welcome {{ request.user.username }}</h1>
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#home"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
@@ -19,7 +19,7 @@
 
                 <div class="col-md-6">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><b>Polls created</b> <a href="/polls/add/"><span class="btn btn-primary">Add New</span></a></div>
+                        <div class="panel-heading"><b>Polls created</b> <a href="/polls/add_step1/"><span class="btn btn-primary">Add New</span></a></div>
                         <div class="panel-body">
                         <table class="table">
                         {% if question_list %}
@@ -134,15 +134,43 @@
                 </table>
             </div>
         </div>
-        </div>
+
      {% else %}
-        <div class="col-md-12">
-            <div class="jumbotron" align="center">
-                <h2 class ="display-3"> Welcome to OPRAH</h2>
-                <p class="lead">Polling platform that allows you to specify your preferences.</p>
-                <hr class="m-y-2">
-                <a class="btn btn-primary btn-lg" href="/auth/register/" role="button">Join Today</a> 
-            </div>
+       
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Welcome to OPRAH</h1>
+        <p>Polling platform that allows you to specify your preferences.</p>
+        <p><a class="btn btn-primary btn-lg" href="/auth/register/" role="button">Join us today &raquo;</a></p>
+      </div>
+    </div>
+    
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2015 Company, Inc.</p>
+      </footer>
+    </div> <!-- /container -->
     {% endif %}
+</body>
 {% endblock %}

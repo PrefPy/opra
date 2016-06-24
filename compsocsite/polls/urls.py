@@ -5,14 +5,21 @@ from . import views
 app_name = 'polls'
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^add/$', views.addView, name='add'),  
+    
+    url(r'^add_step1/$', views.AddStep1View, name='AddStep1'), 
+    url(r'^(?P<pk>[0-9]+)/add_step2/$', views.AddStep2View.as_view(), name='AddStep2'), 
+    url(r'^(?P<pk>[0-9]+)/add_step3/$', views.AddStep3View.as_view(), name='AddStep3'),
+    url(r'^(?P<pk>[0-9]+)/add_step4/$', views.AddStep4View.as_view(), name='AddStep4'),
+    
     url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),
     url(r'^(?P<question_id>[0-9]+)/choice/add/$', views.addChoice, name='addchoice'),
     url(r'^choice/delete/([0-9]+)/$', views.deleteChoice, name='delchoice'),
     url(r'^delete/([0-9]+)/$', views.deletePoll, name='delpoll'),
     url(r'^(?P<question_id>[0-9]+)/addvoter/$', views.addVoter, name='addvoter'),
     url(r'^(?P<question_id>[0-9]+)/delvoter/$', views.removeVoter, name='delvoter'),
+    
     url(r'^(?P<pk>[0-9]+)/settings/$', views.SettingsView.as_view(), name='settings'),
+    
     url(r'^(?P<question_id>[0-9]+)/start/$', views.startPoll, name='start'),  
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
     url(r'^(?P<question_id>[0-9]+)/stop/$', views.stopPoll, name='stop'),

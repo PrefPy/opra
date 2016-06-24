@@ -1,0 +1,86 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<style>
+    p.sameline{
+        display:inline-block;
+    }
+</style>
+
+<div class="col-md-10 col-md-offset-1">
+    <h2  align="center">Create a New Poll</h2>
+    <br/>
+    <div class="steps"  align="center">
+
+        <p class="sameline" > 1. General   
+            <span class="glyphicon glyphicon-chevron-right"> </span>  
+            2. Opitions 
+
+    
+        <span class="glyphicon glyphicon-chevron-right"> </span>
+        3. Invite
+        </p>
+        
+        <p class="sameline" style="color:grey;">
+        <span class="glyphicon glyphicon-chevron-right"> </span>
+         4. Setting 
+        </p>
+    </div>
+    
+    <div class="progress">
+     <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
+    <span class="sr-only">75% Complete</span>
+    </div>
+    </div>
+    <br/>
+    
+    <h3>Send Reminder Email:</h3>
+<div class="col-md-6">
+<p>
+    <form action="{% url 'polls:sendEmail' question.id %}" method="post">
+        {% csrf_token %}
+        <label for="email_txt">Send email to group now:</label>
+        <br/>
+        <textarea class="form-control" maxlength="500" name="email_txt" id="email_txt">{{ question.reminder_text }}</textarea>
+        <br/>
+    </form>
+</p>
+</div>
+
+<div class="col-md-6">
+<p>
+    <form action="{% url 'polls:sendEmail' question.id %}" method="post">
+        {% csrf_token %}
+        <label for="email_txt">Set reminder email:</label>
+        <br/>
+        <textarea class="form-control" maxlength="500" name="email_txt" id="email_txt">{{ question.reminder_text }}</textarea>
+        <br/>
+        <div class="col-md-6">
+            <label for="email_dte">Reminder date:</label>
+            <br/>
+            <input class="form-control" name="email_dte" id="email_dte" type="date"></input>
+            <br/>
+        </div>
+    
+        <div class="col-md-6">
+            <label for="email_tme">Reminder time:</label>
+            <br/>
+            <input class="form-control" name="email_tme" id="email_tme" type="time"></input>
+            <br/>
+        </div>
+    </form>
+</p>
+</div>
+
+ <br/>
+    
+ <div class="col-md-6 col-md-offset-3" align="center">
+        <form action= "/polls/">
+            <input type="submit" value="Finish" class="btn btn-primary" size="300">
+        </form>
+    </div>
+    
+</div>
+
+    
+{% endblock %}

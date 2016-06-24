@@ -69,6 +69,7 @@
     </form>
 </p>
 </div>
+
 <div class="col-md-6">
 <p>
     <form action="{% url 'polls:sendEmail' question.id %}" method="post">
@@ -83,6 +84,7 @@
             <input class="form-control" name="email_dte" id="email_dte" type="date"></input>
             <br/>
         </div>
+    
         <div class="col-md-6">
             <label for="email_tme">Reminder time:</label>
             <br/>
@@ -93,6 +95,7 @@
     </form>
 </p>
 </div>
+
 <h3>
     Choices 
 </h3>

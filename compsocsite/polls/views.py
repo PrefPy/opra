@@ -27,8 +27,8 @@ class IndexView(generic.ListView):
         return ctx
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
-
-def addView(request):
+#the first step of creating new vote
+def AddStep1View(request):
     context = RequestContext(request)
     if request.method == 'POST':
         questionString = request.POST['questionTitle']
@@ -41,27 +41,69 @@ def addView(request):
             question = Question(question_text=questionString, question_desc=questionDesc,
                 pub_date=timezone.now(), question_owner=request.user)
         question.save()
-        item1 = Item(question=question, item_text=request.POST['choice1'])
-        item2 = Item(question=question, item_text=request.POST['choice2'])
-        item3 = Item(question=question, item_text=request.POST['choice3'])
-        item1.save()
-        item2.save()
-        item3.save()
-        return HttpResponseRedirect('/polls/%s/settings' % question.id)
-    return render_to_response('polls/add.html', {}, context)
+        return HttpResponseRedirect('/polls/%s/add_step2' % question.id)
+    return render_to_response('polls/add_step1.html', {}, context)
+
+class AddStep2View(generic.DetailView):
+    model = Question
+    template_name = 'polls/add_step2.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(AddStep2View, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        ctx['items'] = Item.objects.all()
+        ctx['groups'] = Group.objects.all()
+        return ctx
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
+class AddStep3View(generic.DetailView):
+    model = Question
+    template_name = 'polls/add_step3.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(AddStep3View, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        ctx['items'] = Item.objects.all()
+        ctx['groups'] = Group.objects.all()
+        return ctx
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+    
+class AddStep4View(generic.DetailView):
+    model = Question
+    template_name = 'polls/add_step4.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(AddStep4View, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        ctx['items'] = Item.objects.all()
+        ctx['groups'] = Group.objects.all()
+        return ctx
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
+    
 
 def addChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     item_text = request.POST['choice']
     item = Item(question=question, item_text=item_text)
     item.save()
-    return HttpResponseRedirect('/polls/%s/settings' % question.id)
+    #return HttpResponseRedirect('/polls/%s/settings' % question.id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def deleteChoice(request, choice_id):
     item = get_object_or_404(Item, pk=choice_id)
     question = item.question
     item.delete()
-    return HttpResponseRedirect('/polls/%s/settings' % question.id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def deletePoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -291,7 +333,7 @@ def addVoter(request, question_id):
             + ' has invited you to vote on a poll. Please visit '
             + request.build_absolute_uri(reverse('polls:detail', args=[question_id])) + ' to vote.\n\nSincerely,\nOPRAH Staff',
             'oprahprogramtest@gmail.com',[voterObj.email])
-    return HttpResponseRedirect('/polls/%s/settings' % question_id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 #remove voters from the list
 def removeVoter(request, question_id):
@@ -301,7 +343,7 @@ def removeVoter(request, question_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.remove(voterObj.id)
-    return HttpResponseRedirect('/polls/%s/settings' % question_id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 #function to send email
 def sendEmail(request, question_id):
@@ -314,7 +356,7 @@ def sendEmail(request, question_id):
         mail.send_mail('Reminder to vote on ' + title,
             request.POST.get('email_txt'),
             'oprahprogramtest@gmail.com',[voter.email])
-    return HttpResponseRedirect('/polls/%s/settings' % question_id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # function to process student submission
 def vote(request, question_id):

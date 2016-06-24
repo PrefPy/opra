@@ -80,6 +80,7 @@ def user_login(request):
     else:
         return render_to_response('login.html', {}, context)
 
+
 @login_required
 def displaySettings(request):
     context = RequestContext(request)

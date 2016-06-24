@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div class="col-md-6 col-md-offset-3" align="center">
+    <div class="col-md-4 col-md-offset-4" align="center">
         <h3 >Login to OPRAH</h3>
         <br/>
         <form id="login_form" method="post" action="/auth/login/">
@@ -15,10 +15,7 @@
                 <label for="username">Password</label> 
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
             </fieldset>
-
             <input type="submit" value="Login" class="btn btn-primary" />
         </form>
         </div>
-
-    </div>
 {% endblock %}

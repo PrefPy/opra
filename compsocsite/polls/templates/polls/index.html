@@ -14,12 +14,12 @@
                 <br />
                 {% if question_list == None %}
                     <tr><td>No polls are currently available.</td></tr>
-                    <tr><td><a href="/polls/add/"><span class="btn btn-primary">Add Poll</span></a></td></tr>
+                    <tr><td><a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary">Add Poll</span></a></td></tr>
                 {% endif %}
 
                 <div class="col-md-6">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><b>Polls created</b> <a href="/polls/add_step1/"><span class="btn btn-primary">Add New</span></a></div>
+                        <div class="panel-heading"><b>Polls created</b> <a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary">Add New</span></a></div>
                         <div class="panel-body">
                         <table class="table">
                         {% if question_list %}
@@ -27,18 +27,8 @@
                                 {% if question.question_owner == request.user %}
                                 <tr>
                                     <td>    
-                                    <div class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 
-                                            {{ question.question_text }}
-                                            <span class="caret"></span>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                                <li><a href="{% url 'polls:settings' question.id %}"><span class="glyphicon glyphicon-cog"></span> Edit</a></li>
-                                                <li><a href="{% url 'polls:delpoll' question.id %}"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
-                                            </ul>
-                                        </a>
-                                    </div>
+                                        <a href="{% url 'polls:settings' question.id %}">{{ question.question_text }}</a>
                                     </td>
-                                    
                                     <td>
                                         {% if question.status == 2 %}
                                         <a href="{% url 'polls:detail' question.id %}">Cast Vote</a>
@@ -50,12 +40,46 @@
                                         {% endif %}
                                     </td>
                                     {% if question.status == 1 %}
-                                        <td><a href="{% url 'polls:start' question.id %}"><span class="btn btn-success">Start Poll</span></a></td>
+                                        <td><span class="btn btn-success" data-toggle="modal" data-target="#confirm-start">Start Poll</span></td>
+                                    
+                                        <div class="modal fade" id="confirm-start" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        Confirm Start Poll
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure you want to start this poll? Once a poll is started, you cannot modify the settings or remove voters.
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a class="btn btn-success btn-ok" href="{% url 'polls:start' question.id %}">Yes</a>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     {% elif question.status == 2 %}
-                                        <td><a href="{% url 'polls:stop' question.id %}"><span class="btn btn-danger">Stop Poll</span></a></td>
+                                        <td><span class="btn btn-danger" data-toggle="modal" data-target="#confirm-stop">Stop Poll</span></td>
+                                    
+                                        <div class="modal fade" id="confirm-stop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        Confirm Stop Poll
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure you want to stop this poll? Once a poll is stopped, no more votes can be changed.
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a class="btn btn-danger btn-ok" href="{% url 'polls:stop' question.id %}">Yes</a>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     {% elif question.status == 3 %}
                                         <td>
-                                            <a href="/polls/{{ question.id }}/vote/results/" class="btn btn-primary">Get Vote Results</a>
+                                            <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">Get Vote Results</a>
                                         </td>
                                     {% endif %}
                                 </tr>

@@ -127,7 +127,7 @@ class Dictionary(models.Model):
 
     def sorted_values(self):
         """Sorts the Dictionary by value"""
-        return list(sorted(self.items(), key=lambda kv: (-kv[1], kv[0])))
+        return list(sorted(self.items(), key=lambda kv: (kv[1], kv[0])))
 
     def items(self):
         """Get a list of tuples of key, value for the items in this Dictionary.

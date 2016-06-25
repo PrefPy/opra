@@ -27,7 +27,7 @@
                                 {% if question.question_owner == request.user %}
                                 <tr>
                                     <td>    
-                                        <a href="{% url 'polls:settings' question.id %}">{{ question.question_text }}</a>
+                                        <a href="{% url 'polls:setting_step1' question.id %}">{{ question.question_text }}</a>
                                     </td>
                                     <td>
                                         {% if question.status == 2 %}

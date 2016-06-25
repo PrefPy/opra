@@ -5,7 +5,7 @@ from . import views
 app_name = 'polls'
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    
+    # Create a new poll
     url(r'^add_step1/$', views.AddStep1View, name='AddStep1'), 
     url(r'^(?P<pk>[0-9]+)/add_step2/$', views.AddStep2View.as_view(), name='AddStep2'), 
     url(r'^(?P<pk>[0-9]+)/add_step3/$', views.AddStep3View.as_view(), name='AddStep3'),
@@ -18,7 +18,13 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/addvoter/$', views.addVoter, name='addvoter'),
     url(r'^(?P<question_id>[0-9]+)/delvoter/$', views.removeVoter, name='delvoter'),
     
-    url(r'^(?P<pk>[0-9]+)/settings/$', views.SettingsView.as_view(), name='settings'),
+    #Setting created poll
+    url(r'^(?P<pk>[0-9]+)/setting_step1/$', views.SettingStep1View.as_view(), name='setting_step1'),
+    url(r'^(?P<pk>[0-9]+)/setting_step2/$', views.SettingStep2View.as_view(), name='setting_step2'),
+    url(r'^(?P<pk>[0-9]+)/setting_step3/$', views.SettingStep3View.as_view(), name='setting_step3'),
+    url(r'^(?P<pk>[0-9]+)/setting_step4/$', views.SettingStep4View.as_view(), name='setting_step4'),
+    url(r'^(?P<pk>[0-9]+)/setting_step5/$', views.SettingStep5View.as_view(), name='setting_step5'),
+    
     
     url(r'^(?P<question_id>[0-9]+)/start/$', views.startPoll, name='start'),  
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),

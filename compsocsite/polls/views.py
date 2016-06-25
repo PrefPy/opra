@@ -91,7 +91,7 @@ class AddStep4View(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
-    
+   
 
 def addChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -163,11 +163,69 @@ class ViewVotersView(generic.DetailView):
         return ctx
     
 # view for settings detail
-class SettingsView(generic.DetailView):
+class SettingStep1View(generic.DetailView):
     model = Question
-    template_name = 'polls/settings.html'
+    template_name = 'polls/setting_step1.html'
     def get_context_data(self, **kwargs):
-        ctx = super(SettingsView, self).get_context_data(**kwargs)
+        ctx = super(SettingStep1View, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        ctx['items'] = Item.objects.all()
+        ctx['groups'] = Group.objects.all()
+        return ctx
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+class SettingStep2View(generic.DetailView):
+    model = Question
+    template_name = 'polls/setting_step2.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(SettingStep2View, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        ctx['items'] = Item.objects.all()
+        ctx['groups'] = Group.objects.all()
+        return ctx
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+    
+class SettingStep3View(generic.DetailView):
+    model = Question
+    template_name = 'polls/setting_step3.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(SettingStep3View, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        ctx['items'] = Item.objects.all()
+        ctx['groups'] = Group.objects.all()
+        return ctx
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+    
+class SettingStep4View(generic.DetailView):
+    model = Question
+    template_name = 'polls/setting_step4.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(SettingStep4View, self).get_context_data(**kwargs)
+        ctx['users'] = User.objects.all()
+        ctx['items'] = Item.objects.all()
+        ctx['groups'] = Group.objects.all()
+        return ctx
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+class SettingStep5View(generic.DetailView):
+    model = Question
+    template_name = 'polls/setting_step5.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(SettingStep5View, self).get_context_data(**kwargs)
         ctx['users'] = User.objects.all()
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()

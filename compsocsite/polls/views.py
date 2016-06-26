@@ -27,6 +27,7 @@ class IndexView(generic.ListView):
         return ctx
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
+
 #the first step of creating new vote
 def AddStep1View(request):
     context = RequestContext(request)
@@ -91,8 +92,6 @@ class AddStep4View(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
-   
-
 def addChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     item_text = request.POST['choice']
@@ -134,8 +133,8 @@ class DetailView(generic.DetailView):
         if len(currentUserResponses) > 0:
             mostRecentResponse = currentUserResponses[0]
             selectionArray = []             
-            for d in mostRecentResponse.dictionary_set.all():               
-                selectionArray = d.values()
+            for d in mostRecentResponse.dictionary_set.all():   
+                selectionArray = d.sorted_values()
             ctx['currentSelection'] = selectionArray
         return ctx
     def get_queryset(self):
@@ -431,6 +430,7 @@ def setview(request, question_id):
     else:
         question.display_pref = 4
     return HttpResponseRedirect('/polls/%s/settings' % question_id)
+
 # function to process student submission
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

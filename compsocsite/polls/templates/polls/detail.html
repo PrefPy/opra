@@ -5,14 +5,14 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script>
 $(function() {
-    $( "#sortable1" ).sortable({
+    $("#sortable1").sortable({
         update: function(event, ui) {
             var order = $("#sortable1").sortable("toArray");
             $('#pref_order').val(order.join(","));
         }
     });
     
-    $( "ul.droptrue" ).sortable({
+    $("ul.droptrue").sortable({
       connectWith: "ul"
     });
     
@@ -28,7 +28,9 @@ $(function() {
     </div>
     <div class="col-md-9">
         <h1>{{ question.question_text }}</h1>
-        <p>{{ question.question_desc }}</p>
+        {% if question.question_desc %}
+            <p>{{ question.question_desc }}</p>
+        {% endif %}
         <p><b>Created by</b> {{ question.question_owner }}</p>
         <p>
             <b>Voters: </b>
@@ -55,18 +57,29 @@ $(function() {
         <div class="col-md-4">
             <p><b>Preference Order:</b></p>
             <ul id="sortable1" class="list-group well droptrue">
+                {% if currentSelection %}
+                    {% for selection in currentSelection %}
+                        {% for item in question.item_set.all %}
+                            {% if selection.0 == item %}
+                            <li class="list-group-item" id="item{{ forloop.counter }}"> {{ selection.0 }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
             </ul>
         </div>
         <div class="col-md-4">
             <p>Remaining Elements:</p>
             <ul id="sortable2" class="list-group well droptrue">
-                {% for item in question.item_set.all %}
-                <li class="list-group-item" id="item{{ forloop.counter }}">{{ item.item_text }}</li>
-                {% endfor %}
+                {% if currentSelection == None %}
+                    {% for item in question.item_set.all %}
+                    <li class="list-group-item" id="item{{ forloop.counter }}"> {{ item.item_text }}</li>
+                    {% endfor %}
+                {% endif %}
             </ul>
         </div>
     </div>
-    
+        
     <!-- submit button -->
     <input type="submit" value="Submit" class="btn btn-primary"/>
 </form>

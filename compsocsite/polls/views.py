@@ -382,17 +382,20 @@ def addVoter(request, question_id):
     creator_obj = User.objects.get(id=question.question_owner_id)
 
     newVoters = request.POST.getlist('voters')
+    email = request.POST.get('email') == 'email'
     title = question.question_text
     creator = creator_obj.username
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
-        mail.send_mail('You have been invited to vote on ' + title,
-            'Hello ' + voterObj.username + ',\n\n' + creator
-            + ' has invited you to vote on a poll. Please visit '
-            + request.build_absolute_uri(reverse('polls:detail', args=[question_id])) + ' to vote.\n\nSincerely,\nOPRAH Staff',
-            'oprahprogramtest@gmail.com',[voterObj.email],
-            fail_silently=True)
+        if email:
+            mail.send_mail('You have been invited to vote on ' + title,
+                'Hello ' + voterObj.username + ',\n\n' + creator
+                + ' has invited you to vote on a poll. Please visit '
+                + request.build_absolute_uri(reverse('polls:detail', args=[question_id]))
+                + ' to vote.\n\nSincerely,\nOPRAH Staff',
+                'oprahprogramtest@gmail.com',[voterObj.email],
+                fail_silently=True)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 #remove voters from the list

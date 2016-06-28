@@ -67,7 +67,12 @@
         </select>
         <br />
         <label for="email1">Email announcement</label>
-        <input type="checkbox" name="email" id="email1" value="email" checked="checked">
+        {% if question.send_email == True %}
+            <input type="checkbox" name="email" id="email1" value="email" checked="checked">
+        {% endif %}
+        {% if question.send_email != True %}
+            <input type="checkbox" name="email" id="email1" value="email">
+        {% endif %}
         <br />
         <input type="submit" class="btn btn-success" value="Invite">
     </form>      

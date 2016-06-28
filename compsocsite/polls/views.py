@@ -385,6 +385,9 @@ def addVoter(request, question_id):
     email = request.POST.get('email') == 'email'
     title = question.question_text
     creator = creator_obj.username
+    question.send_email = email
+    question.save()
+    print(question.send_email)
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)

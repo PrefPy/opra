@@ -21,6 +21,7 @@ class Question(models.Model):
     question_voters = models.ManyToManyField(User, related_name='voters')
     status = models.IntegerField(default=1)
     display_pref = models.IntegerField(default=1)
+    send_email = models.BooleanField(default=True)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):

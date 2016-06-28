@@ -114,36 +114,38 @@
           <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h3 class="page-header">{{ question.question_text }}</h3>
               {% if question.display_pref == 1 %}
-                    <!-- Everyone can see all information about this vote. -->
-                    <tb>
-                        {% for user in users %}
-                            {% if user in question.question_voters.all %}
-                            <p>{{ user.username }} : {{user.email}}</p>
-                            {% endif %}
-                        {% endfor %}
-                    </tb>
+                <!-- Everyone can see all information about this vote. -->
+                <table class="table table-bordered">
+                    {% for user in users %}
+                        {% if user in question.question_voters.all %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
               {% elif question.display_pref == 2 %}
-                    <p> Following is names of voters: </p>
-                    <tb>
-                        {% for user in users %}
-                            {% if user in question.question_voters.all %}
-                            <p>{{ user.username }}</p>
-                            {% endif %}
-                        {% endfor %}
-              </tb>
+                <b> Voter Names: </b>
+                <ul class="list-group">
+                    {% for user in users %}
+                        {% if user in question.question_voters.all %}
+                        <li class="list-group-item">{{ user.username }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
               {% elif question.display_pref == 3 %}
                     <!-- Only numbers of voters will be shown. -->
                     <p>There are a total of {{question.question_voters.count}} unique voters.</p>
               
               {% else %}
                     <!-- You can only see your own vote.-->
-                    <tb>
-                        {% for user in users %}
-                            {% if user == request.user %}
-                                <p>{{ user.username }} : {{user.email}}</p>
-                            {% endif %}
-                        {% endfor %}
-                    </tb>
+                <table class="table table-bordered">
+                    <tr>
+                        <td>{{ request.user.username }}</td>
+                        <td>{{ request.user.email }}</td>
+                    </tr>
+                </table>
               {% endif %}     
         </div>
       </div>

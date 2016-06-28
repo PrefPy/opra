@@ -432,7 +432,8 @@ def setview(request, question_id):
         question.display_pref = 3
     else:
         question.display_pref = 4
-    return HttpResponseRedirect('/polls/%s/settings' % question_id)
+    question.save()
+    return HttpResponseRedirect(reverse('polls:setting_step3', args=(question.id,)))
 
 # function to process student submission
 def vote(request, question_id):

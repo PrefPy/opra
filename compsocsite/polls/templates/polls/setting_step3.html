@@ -98,7 +98,7 @@
   border-radius: 50%;
 } 
 </style>
-    <div class="container-fluid">
+<div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
@@ -113,29 +113,24 @@
             <h3 class="page-header">Settings of {{ question.question_text }} </h3>
             {% if question.question_owner == request.user %}
                <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}" align="center">
-        {% csrf_token %}
-        <label for="viewpreferences">Visibility settings for this specific poll</label>
-        <select name="viewpreferences">
-            <option value="allpermit">Everyone can see all votes</option>
-            <option value="voternames">Only names of voters will be shown</option>
-            <option value="justnumber">Only numbers of voters will be shown</option>
-            <option value="nothing">Everyone can only see his/her own votes</option>
-        </select>         
-    </form>
-               <br/><br/>
-       
-    <div class="col-md-6 col-md-offset-3" align="center">
-        <form action= "/polls/{{question.id}}/setting_step3/">
-            <input type="submit" value="Submit" class="btn btn-primary" size="300">
-        </form>
-    </div>
-    {% else %}
-      <p>You are not the owner of this poll. Click <a href='{% url 'polls:pollinfo' question.id %}'>here</a> to access poll info page.</p>
+                    {% csrf_token %}
+                    <label for="viewpreferences">Visibility setting for this specific poll</label>
+                    <select name="viewpreferences" class="form-control">
+                        <option value="allpermit">Everyone can see all votes</option>
+                        <option value="voternames">Only names of voters will be shown</option>
+                        <option value="justnumber">Only numbers of voters will be shown</option>
+                        <option value="nothing">Everyone can only see his/her own votes</option>
+                    </select>  
+                   <br/><br/>
+                    <input type="submit" value="Submit" class="btn btn-primary" size="300">
+                </form>
+            {% else %}
+              <p>You are not the owner of this poll. Click <a href="{% url 'polls:pollinfo' question.id %}">here</a> to access the poll info page.</p>
               {% endif %}
-          </div>
-          
-      </div>
+        </div>
+        </div>      
 </div>
+ 
     
              
 {% endblock %}

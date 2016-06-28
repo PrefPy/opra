@@ -41,13 +41,29 @@ def addmember(request, group_id):
     context = RequestContext(request)
     if request.method == 'POST':
         group = get_object_or_404(Group, pk=group_id)
-        newMembers = request.POST.getlist('members')
+        newMembers = request.POST.getlist('newmembers')
         for member in newMembers:
             memberObj = User.objects.get(username=member)
             group.members.add(memberObj.id)
         return HttpResponseRedirect('/groups/%s/members' % group.id)
     return render_to_response('members.html', {}, context)  
 
+    
+    
+def removemember(request, group_id):
+    context = RequestContext(request)
+    group = get_object_or_404(Group, pk=group_id)
+    removemembers = request.POST.getlist('removemembers')
+    for member in removemembers:
+        memberObj = User.objects.get(username=member)
+        group.members.remove(memberObj.id)
+    return HttpResponseRedirect('/groups/%s/members' % group.id)
+
+def deletegroup(request, group_id):
+    group = get_object_or_404(Group, pk=group_id)
+    group.delete()
+    return HttpResponseRedirect('/polls')
+    
 class MembersView(generic.DetailView):
     model = Group
     template_name = 'groups/members.html'
@@ -73,4 +89,15 @@ def addgroupvoters(request, question_id):
                     + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
                     + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
                     'oprahprogramtest@gmail.com',[voterObj.email])
-    return HttpResponseRedirect('/polls/%s/settings' % question_id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+def removegroupvoters(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    removeGroups = request.POST.getlist('groups')
+    for group in removeGroups:
+        groupObj = Group.objects.get(name=group)
+        for voter in groupObj.members.all():
+            if voter in question.question_voters.all():
+                voterObj = User.objects.get(username=voter)
+                question.question_voters.remove(voterObj.id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

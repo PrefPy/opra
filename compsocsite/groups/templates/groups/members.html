@@ -1,30 +1,54 @@
 {% extends 'polls/base.html' %}
+
 {% block content %}
 <p>
 <h3>{{group.name}} members</h3>
-<select name="voters" class="form-control" multiple>
+    <form action="{% url 'groups:removemember' group.id %}" method="post">
+    {% csrf_token %}
+    <select id="removemembers" name="removemembers" class="form-control" multiple>
     {% for user in group.members.all %}
-        <option value="{{ user.username }}">{{ user.username }}</option>        
+        <option value="{{ user.username }}">{{ user.username }}</option>
     {% endfor %}
-</select>
+    </select>
+    <p></p>
+    <input type="submit" class="btn btn-danger" value="Remove">
+    </form>
 </p>
 
 <p>
     <b>Add Member: </b>
     <form action="{% url 'groups:addmember' group.id %}" method="post">
         {% csrf_token %}
-        <select name="members" class="form-control" multiple>
+        <select id="newmembers" name="newmembers" class="form-control" multiple>
         {% for user in users %}
             {% if user not in group.members.all %}
                  <option value="{{ user.username }}">{{ user.username }}</option>
             {% endif %}
         {% endfor %}
         </select>
-        <input type="submit" class="btn btn-success" value="Invite">
+        <p></p>
+        <input type="submit" class="btn btn-success" value="Add">
     </form>      
 </p>
 
+<span class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-trash"></span> Delete this group</span>
 
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Confirm Delete Group
+                    </div>
+                    <div class="modal-body">
+                        Do you want to delete this group?
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-danger btn-ok" href="{% url 'groups:deletegroup' group.id %}">Yes</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 {% endblock %}

@@ -163,10 +163,11 @@
             <input type="checkbox" id="email" name="email" value="email" checked="checked">
             <br />
             <input type="submit" class="btn btn-success" value="Invite">
+            <input type="submit" class="btn btn-danger" value="Remove" formaction="{% url 'groups:removegroupvoters' question.id %}">
         </form>
     </div>
     {% else %}
-      <p>You are not the owner of this poll. Click <a href='{% url 'polls:pollinfo' question.id %}'>here</a> to access poll info page.</p>
+      <p>You are not the owner of this poll. Click <a href="{% url 'polls:pollinfo' question.id %}">here</a> to access poll info page.</p>
        {% endif %}
         
           </div>

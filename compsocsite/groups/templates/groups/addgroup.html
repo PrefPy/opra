@@ -2,7 +2,7 @@
 
 {% block content %}
 <p>
-    <b>Add Group: </b>
+    <h1>Add Group</h1>
 
     <form action="{% url 'groups:addgroupfunc' %}" id="addgroupfunc" method="post">
         {% csrf_token %}

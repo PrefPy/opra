@@ -40,16 +40,15 @@
                                     <ul class="dropdown-menu">
                                          <li class="disabled"><a href="#">Signed in as {{ request.user.username }}</a></li>
                                         <li role="separator" class="divider"></li>
-                                        <li ><a href="/auth/settings/" align="center">Settings</a></li>
-                                        <li><a href="/auth/passwordpage" align="center">Change Password</a></li>
-                                        <li><a href="/auth/logout/" align="center">Logout</a></li>
+                                        <li ><a href="{% url 'appauth:settings' %}" align="center">Settings</a></li>
+                                        <li><a href="{% url 'appauth:logout' %}" align="center">Logout</a></li>
                                     </ul>
                                 </li> 
                             </ul>
                         {% else %}
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a href="/auth/register/"><span class="glyphicon glyphicon-user"></span> Sign Up </a></li>
-                                <li><a href="/auth/login/"> <span class="glyphicon glyphicon-log-in"></span> Login </a></li>
+                                <li><a href="{% url 'appauth:register' %}"><span class="glyphicon glyphicon-user"></span> Sign Up </a></li>
+                                <li><a href="{% url 'appauth:login' %}"> <span class="glyphicon glyphicon-log-in"></span> Login </a></li>
                             </ul>
                         {% endif %}
                 </div><!--/.container-fluid -->

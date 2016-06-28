@@ -18,8 +18,6 @@ from django.core.validators import validate_email
 def register(request):
     context = RequestContext(request)
     
-    # A boolean value for telling the template whether the registration was successful.
-    # Set to False initially. Code changes value to True when registration succeeds.
     registered = False
     
     # If it's a HTTP POST, we're interested in processing form data.
@@ -40,10 +38,7 @@ def register(request):
             profile.save()
             # Update our variable to tell the template registration was successful.
             registered = True
-        
-        # Invalid form or forms - mistakes or something else?
-        # Print problems to the terminal.
-        # They'll also be shown to the user.
+
         #else    print (user_form.errors)
 
 # Not a HTTP POST, so we render our form using two ModelForm instances.
@@ -51,7 +46,6 @@ def register(request):
     else:
         user_form = UserForm()
 
-    # Render the template depending on the context.
     return render_to_response(
                               'register.html',
                               {'user_form': user_form, 'registered': registered},
@@ -133,6 +127,7 @@ def changepassword(request):
     new = request.POST['newpassword']
     if user.check_password(old):
         user.set_password(new)
+        user.save()
         return HttpResponseRedirect('/polls/')
     else:
         return HttpResponse("The password you entered is wrong.")

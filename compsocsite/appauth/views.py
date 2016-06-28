@@ -86,6 +86,10 @@ def displaySettings(request):
     context = RequestContext(request)
     return render_to_response('settings.html', {}, context)
 
+def changePasswordView(request):
+    context = RequestContext(request)
+    return render_to_response('changepassword.html', {}, context)
+
 @login_required
 def updateSettings(request):
     context = RequestContext(request)
@@ -121,3 +125,14 @@ def user_logout(request):
     
     # Take the user back to the homepage.
     return HttpResponseRedirect('/polls/')
+    
+@login_required
+def changepassword(request):
+    user = request.user
+    old = request.POST['oldpassword']
+    new = request.POST['newpassword']
+    if user.check_password(old):
+        user.set_password(new)
+        return HttpResponseRedirect('/polls/')
+    else:
+        return HttpResponse("The password you entered is wrong.")

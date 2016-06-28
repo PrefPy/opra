@@ -4,7 +4,7 @@
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>
 
-        {% if cand_map %}
+        {% if cand_map and question.status == 3 %}
         <div class="panel panel-default">
             <!-- Default panel contents -->
             <div class="panel-heading">Poll Results</div>

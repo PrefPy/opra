@@ -3,9 +3,6 @@
 {% block content %}
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>
-
-        <a href="/polls/{{ question.id }}/vote/results/" class="btn btn-primary">Get Vote Results</a>
-        <hr />
         
         <ul>
         {% if question.question_owner == request.user %}

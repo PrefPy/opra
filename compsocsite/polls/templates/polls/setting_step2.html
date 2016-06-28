@@ -165,6 +165,8 @@
             <input type="submit" class="btn btn-success" value="Invite">
         </form>
     </div>
+    {% else %}
+      <p>You are not the owner of this poll. Click <a href='{% url 'polls:pollinfo' question.id %}'>here</a> to access poll info page.</p>
        {% endif %}
         
           </div>

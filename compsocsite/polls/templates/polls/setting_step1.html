@@ -137,6 +137,8 @@
             </form>
         </li>
     </ul>
+      {% else %}
+      <p>You are not the owner of this poll. Click <a href='{% url 'polls:pollinfo' question.id %}'>here</a> to access poll info page.</p>
        {% endif %}
         
           </div>

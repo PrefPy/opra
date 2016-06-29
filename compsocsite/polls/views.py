@@ -23,10 +23,6 @@ from django.conf import settings
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'question_list'
-    def get_context_data(self, **kwargs):
-        ctx = super(IndexView, self).get_context_data(**kwargs)
-        ctx['groups'] = Group.objects.all()
-        return ctx
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
 

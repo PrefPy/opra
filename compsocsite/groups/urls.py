@@ -4,6 +4,7 @@ from . import views
 
 app_name = 'groups'
 urlpatterns = [
+    url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^add/$', views.addGroupView.as_view(), name='addgroup'),
     url(r'^addgroupfunc/$', views.addgroup, name='addgroupfunc'),
     url(r'^delete/([0-9]+)/$', views.deletegroup, name='deletegroup'),

@@ -1,0 +1,39 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <h1>Welcome {{ request.user.username }}</h1>
+    <ul class="nav nav-tabs">
+        <li><a href="{% url 'polls:index' %}"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
+        <li class="active"><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
+    </ul>
+    <br />
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Groups created</b> 
+                <a href="{% url 'groups:addgroup' %}"><span class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></span></a>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                {% if groups %}
+                    <tbody> 
+                    {% for group in groups %}
+                        {% if request.user == group.owner %}
+                            <tr>
+                                <td>{{ group.name }}</td>
+                                <td><a href="{% url 'groups:members' group.id %}">View/Change members</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <tr><td>No groups present. <a href="{% url 'groups:addgroup' %}"><span class="btn btn-primary">Add Group</span></a></td></tr>
+                {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endif %}
+{% endblock %}

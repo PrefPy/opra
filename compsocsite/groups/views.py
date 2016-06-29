@@ -14,6 +14,16 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 
+class IndexView(generic.ListView):
+    template_name = 'groups/index.html'
+    context_object_name = 'group_list'
+    def get_context_data(self, **kwargs):
+        ctx = super(IndexView, self).get_context_data(**kwargs)
+        ctx['groups'] = Group.objects.all()
+        return ctx
+    def get_queryset(self):
+        return Question.objects.all().order_by('-pub_date')
+
 class addGroupView(generic.ListView):
     template_name = 'groups/addgroup.html'
     def get_context_data(self, **kwargs):

@@ -1,6 +1,8 @@
 {% extends 'polls/base.html' %}
 {% load staticfiles %}
 
+
+
 {% block content %}
 <style>
     p.sameline{
@@ -17,13 +19,13 @@
         
         <p class="sameline" style="color:grey;">
             <span class="glyphicon glyphicon-chevron-right"> </span>  
-            2. Options 
+            2. Choices
         </p>
     
         <p class="sameline">
         <span class="glyphicon glyphicon-chevron-right"> </span>
          3. Invite <span class="glyphicon glyphicon-chevron-right"> </span>
-         4. Setting 
+         4. Settings 
         </p>
     </div>
     
@@ -53,7 +55,7 @@
         <li  class="list-group-item">
             <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="text" name="choice" value="" size="50" />
+                <input type="text" name="choice" value="" size="50" autofocus/>
                 <button type="submit" class="btn btn-primary">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
@@ -66,13 +68,5 @@
             <input type="submit" value="Next" class="btn btn-primary" size="300">
         </form>
     </div>
-    
 </div>
-      
-    
-    
-    
-    <br/>
-
-    
 {% endblock %}

@@ -1,6 +1,10 @@
 {% extends 'polls/base.html' %}
 
 {% block extra_head %}
+ <meta charset="utf-8">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <style>
 
 /*
@@ -97,27 +101,24 @@
   display: inline-block;
   border-radius: 50%;
 } 
+    
+  #feedback { font-size: 1.4em; }
+  #selectable .ui-selecting { background: #FECA40; }
+  #selectable .ui-selected { background: #F39814; color: white; }
+  #selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+  #selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+  </style>
+  <script>
+  $(function() {
+    $( "#selectable" ).selectable();
+  });
+  </script>
+
 </style>
+
+{% endblock %}
+{% block content %}
+
 {% endblock %}
 
-{% block content %}
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li><a href="{% url 'polls:setting_step1' question.id %}">Choices</a></li>
-            <li><a href="{% url 'polls:setting_step2' question.id %}">Voters</a></li>
-            <li><a href="{% url 'polls:setting_step3' question.id %}">Poll Visibility</a></li>
-            <li><a href="{% url 'polls:setting_step4' question.id %}">Reminder Email</a></li>
-            <li><a href="{% url 'polls:setting_step5' question.id %}">Delete</a></li>
-          </ul>  
-        </div>
-          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-              {% block subcontent %}
-              {% endblock %}
-          </div>
-      </div>
-</div>
-    
-             
-{% endblock %}
+          

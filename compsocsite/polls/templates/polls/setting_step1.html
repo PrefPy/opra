@@ -1,33 +1,45 @@
 {% extends 'polls/settings_base.html' %}
 
-{% block subcontent %}
-<h3 class="page-header">Settings of {{ question.question_text }} </h3>
+{% block content %}
+
 {% if question.question_owner == request.user %}
-<ul class="list-group">
-    {% for item in items %}
-        {% if item.question == question %}
-            <li class="list-group-item ">
-            {{ item }} 
-            {% if question.status == 1 %}
-                <a href="{% url 'polls:delchoice' item.id %}">
-                    <div class="pull-right">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </div>
-                </a>
-            {% endif %}
-            </li>
-        {% endif %}
-    {% endfor %}
-    <li class="list-group-item">
-        <form action="{% url 'polls:addchoice' question.id %}" method="post" >
-        {% csrf_token %}
-        <input type="text" name="choice" value="" size="50" />
-        <button type="submit" class="btn btn-primary">
-            <span class="glyphicon glyphicon-plus"></span>
-        </button>
-        </form>
-    </li>
-</ul>
+<div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="{% url 'polls:setting_step1' question.id %}" >Choices</a></li>
+            <li><a href="{% url 'polls:setting_step2' question.id %}">Voters</a></li>
+            <li><a href="{% url 'polls:setting_step3' question.id %}">Poll Visibility</a></li>
+            <li><a href="{% url 'polls:setting_step4' question.id %}">Reminder Email</a></li>
+            <li><a href="{% url 'polls:setting_step5' question.id %}">Delete</a></li>
+          </ul>  
+        </div>
+          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+              <h3 class="page-header">Settings of {{ question.question_text }} </h3>
+              <ul class="list-group">
+                {% for item in items %}
+                  {% if item.question == question %}
+                  <li class="list-group-item ">
+                      {{ item }} 
+                      {% if question.status == 1 %}
+                      <a href="{% url 'polls:delchoice' item.id %}">
+                          <div class="pull-right">
+                            <span class="glyphicon glyphicon-remove"></span>
+                          </div>
+                    </a>
+                        {% endif %}
+                  </li>
+                  {% endif %}
+                {% endfor %}
+        <li class="list-group-item">
+            <form action="{% url 'polls:addchoice' question.id %}" method="post" >
+            {% csrf_token %}
+            <input type="text" name="choice" value="" size="50" />
+            <button type="submit" class="btn btn-primary">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+            </form>
+        </li>
+              </ul>
+    </div>
 {% else %}
     <p>You are not the owner of this poll. Click <a href="{% url 'polls:pollinfo' question.id %}">here</a> to access poll info page.</p>
 {% endif %}    

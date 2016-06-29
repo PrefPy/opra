@@ -19,7 +19,11 @@
 
                 <div class="col-md-6">
                     <div class="panel panel-default">
-                        <div class="panel-heading"><b>Polls created</b> <a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary">Add New</span></a></div>
+                        <div class="panel-heading"><b>Polls created </b> 
+                            <div class="panel-title pull-right">
+                            <a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></span></a>
+                            </div>
+                        </div>
                         <div class="panel-body">
                         <table class="table">
                         {% if question_list %}

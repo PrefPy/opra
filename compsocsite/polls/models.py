@@ -24,6 +24,7 @@ class Question(models.Model):
     status = models.IntegerField(default=1)
     display_pref = models.IntegerField(default=1)
     send_email = models.BooleanField(default=True)
+    poll_algorithm = models.IntegerField(default=1)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):

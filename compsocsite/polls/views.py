@@ -87,6 +87,7 @@ class AddStep4View(generic.DetailView):
         ctx['users'] = User.objects.all()
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
+        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
         return ctx
     def get_queryset(self):
         """
@@ -97,10 +98,18 @@ class AddStep4View(generic.DetailView):
 def addChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     item_text = request.POST['choice']
+    #check for empty strings    
+    if item_text == "":
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # check for duplicates
+    allChoices = question.item_set.all()
+    for choice in allChoices:
+        if item_text == choice.item_text:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    #save the choice    
     item = Item(question=question, item_text=item_text)
     item.image = request.FILES['docfile']
     item.save()
-    #return HttpResponseRedirect('/polls/%s/settings' % question.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def deleteChoice(request, choice_id):
@@ -109,7 +118,7 @@ def deleteChoice(request, choice_id):
     item.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-def deletePoll(request,question_id):
+def deletePoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.delete()
     return HttpResponseRedirect('/polls/')
@@ -313,7 +322,8 @@ class VoteResultsView(generic.DetailView):
         ctx['latest_responses'] = latest_responses
         ctx['previous_responses'] = previous_responses
         ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
-        ctx['vote_results'] = getVoteResults(latest_responses)        
+        ctx['vote_results'] = getVoteResults(latest_responses)   
+        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]   
         return ctx
 
 #get a list of options for this poll
@@ -377,8 +387,8 @@ def getVoteResults(latest_responses):
         return []
 
     scoreVectorList = []
-    scoreVectorList.append(MechanismBorda().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismPlurality().getCandScoresMap(pollProfile))  
+    scoreVectorList.append(MechanismBorda().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismVeto().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismKApproval(3).getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismSimplifiedBucklin().getCandScoresMap(pollProfile))
@@ -433,7 +443,14 @@ def sendEmail(request, question_id):
             'oprahprogramtest@gmail.com',[voter.email])
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-def setview(request, question_id):
+def setAlgorithm(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.poll_algorithm = request.POST['preferences']
+    print (question.poll_algorithm)
+    question.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def setVisibility(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     displayChoice = request.POST['viewpreferences']
     if displayChoice == "allpermit":
@@ -445,7 +462,7 @@ def setview(request, question_id):
     else:
         question.display_pref = 4
     question.save()
-    return HttpResponseRedirect(reverse('polls:setting_step3', args=(question.id,)))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # function to process student submission
 def vote(request, question_id):

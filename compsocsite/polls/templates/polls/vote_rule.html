@@ -4,7 +4,7 @@
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>
 
-        {% if cand_map and question.status == 3 %}
+        {% if cand_map and question.status == 3 %}    
         <div class="panel panel-default">
             <!-- Default panel contents -->
             <div class="panel-heading">Poll Results</div>
@@ -16,77 +16,25 @@
                             <th>{{ option }}</th>
                         {% endfor %}
                     </tr>
-                    <tr>
-                        <td>Borda</td>
-                        {{vote_results.0|largest}}
-                        {% for score in vote_results.0.values %}
-                            {% if score == vote_results.0.values|largest %}
-                                <td style="background-color: red">{{ score }}</td>
-                            {% else %}
-                                <td>{{score}}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td>Plurality</td>
-                        {% for score in vote_results.1.values %}
-                            {% if score == vote_results.1.values|largest %}
-                                <td style="background-color: red">{{ score }}</td>
-                            {% else %}
-                                <td>{{score}}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td>Veto</td>
-                        {% for score in vote_results.2.values %}
-                            {% if score == vote_results.2.values|largest %}
-                                <td style="background-color: red">{{ score }}</td>
-                            {% else %}
-                                <td>{{score}}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td>K-Approval (k = 3)</td>
-                        {% for score in vote_results.3.values %}
-                            {% if score == vote_results.3.values|largest %}
-                                <td style="background-color: red">{{ score }}</td>
-                            {% else %}
-                                <td>{{score}}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td>Simplified Bucklin</td>
-                        {% for score in vote_results.4.values %}
-                            {% if score == vote_results.4.values|smallest %}
-                                <td style="background-color: red">{{ score }}</td>
-                            {% else %}
-                                <td>{{score}}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td>Copeland</td>
-                        {% for score in vote_results.5.values %}
-                            {% if score == vote_results.5.values|largest %}
-                                <td style="background-color: red">{{ score }}</td>
-                            {% else %}
-                                <td>{{score}}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        <td>Maximin</td>
-                        {% for score in vote_results.6.values %}
-                            {% if score == vote_results.6.values|largest %}
-                                <td style="background-color: red">{{ score }}</td>
-                            {% else %}
-                                <td>{{score}}</td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
+                    
+                    {% for item in vote_results %}
+                        <tr>
+                            {% for algorithm in poll_algorithms %}
+                                {% if forloop.counter == forloop.parentloop.counter %}
+                                    <td {% if question.poll_algorithm == forloop.parentloop.counter %}class="info"{% endif %}>{{ algorithm }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            {% for score in item.values %}
+                                {% if score == item.values|smallest and forloop.parentloop.counter == 5 %}
+                                    <td class="success">{{ score }}</td>
+                                {% elif score == item.values|largest and forloop.parentloop.counter != 5 %}
+                                    <td class="success">{{ score }}</td>
+                                {% else %}
+                                    <td {% if question.poll_algorithm == forloop.parentloop.counter %}class="info"{% endif %}>{{ score }}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
                 </table>
             </div>
         </div>

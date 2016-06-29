@@ -84,10 +84,8 @@ class AddStep4View(generic.DetailView):
     template_name = 'polls/add_step4.html'
     def get_context_data(self, **kwargs):
         ctx = super(AddStep4View, self).get_context_data(**kwargs)
-        ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['view_preferences'] = ["Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
         return ctx
     def get_queryset(self):
         """
@@ -106,7 +104,7 @@ def addChoice(request, question_id):
     for choice in allChoices:
         if item_text == choice.item_text:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    #save the choice
+    #save the choice    
     item = Item(question=question, image=request.FILES.get('docfile'), item_text=item_text)
     item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -442,12 +440,12 @@ def sendEmail(request, question_id):
             'oprahprogramtest@gmail.com',[voter.email])
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-def setAlgorithm(request, question_id):
+def setInitialSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    question.poll_algorithm = request.POST['preferences']
-    print (question.poll_algorithm)
+    question.poll_algorithm = request.POST['pollpreferences']
+    question.display_pref = request.POST['viewpreferences']
     question.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect('/polls/')
 
 def setVisibility(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

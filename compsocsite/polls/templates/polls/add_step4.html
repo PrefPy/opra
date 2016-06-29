@@ -19,60 +19,42 @@
             3. Invite
         </p>
         <p class="sameline" style="color:grey;">
-        <span class="glyphicon glyphicon-chevron-right"> </span>
-         4. Settings 
+            <span class="glyphicon glyphicon-chevron-right"> </span>
+            4. Settings 
         </p>
     </div>
     
     <div class="progress">
-     <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-    <span class="sr-only">100% Complete</span>
-    </div>
+        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+            <span class="sr-only">100% Complete</span>
+        </div>
     </div>
     <br/>
     
-<h3>Voting Rule</h3>
-<div class="row">
-    <form class="form-group" method="post" action="{% url 'polls:setalgorithm' question.id %}">
-        {% csrf_token %}
-        <label for="preferences">Select a voting algorithm used to calculate the winner. If you're not sure, just leave it as is.</label>
-        <select name="preferences" class="form-control">
-        {% for item in poll_algorithms %}
-            <option value="{{ forloop.counter }}" {% if forloop.counter == question.poll_algorithm %}selected="selected"{% endif %}>
-                {{ item }}
-            </option>
-        {% endfor %}
-        </select>
-        <br />
-        <input type="submit" value="Update" class="btn btn-success">
-    </form>
-</div>
-    
-<h3>Poll Visibility Settings</h3>
-<div class="row">
-    <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}">
-        {% csrf_token %}
-        <label for="viewpreferences">Control the amount of information that is visible to voters.</label>
-        <select name="viewpreferences" class="form-control">
-            <option value="allpermit">Everyone can see all votes</option>
-            <option value="voternames">Only names of voters will be shown</option>
-            <option value="justnumber">Only numbers of voters will be shown</option>
-            <option value="nothing">Everyone can only see his/her own votes</option>
-        </select>
-        <br />
-        <input type="submit" value="Update" class="btn btn-success">
-    </form>
-</div>
+    <div class="row">
+        <form class="form-group" method="post" action="{% url 'polls:setinitial' question.id %}">
+            {% csrf_token %}
+            <label for="pollpreferences">Select a voting algorithm used to calculate the winner. If you're not sure, just leave it as is.</label>
+            <select name="pollpreferences" class="form-control">
+            {% for item in poll_algorithms %}
+                <option value="{{ forloop.counter }}">
+                    {{ item }}
+                </option>
+            {% endfor %}
+            </select>
+            <br />
 
- <br/><br/>
-    
- <div class="col-md-6 col-md-offset-3" align="center">
-        <form action= "/polls/">
+            <label for="viewpreferences">Control the amount of information that is visible to voters.</label>
+            <select name="viewpreferences" class="form-control">
+                {% for item in view_preferences %}
+                <option value="{{ forloop.counter }}">
+                    {{ item }}
+                </option>
+                {% endfor %}
+            </select>
+            <br />
             <input type="submit" value="Finish" class="btn btn-primary">
         </form>
     </div>
-    
 </div>
-
-    
 {% endblock %}

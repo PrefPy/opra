@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
@@ -15,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import mail
 from .prefpy.mechanism import *
 from groups.models import *
+from django.conf import settings
 
 
 # view for homepage - index of questions & results
@@ -96,6 +98,7 @@ def addChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     item_text = request.POST['choice']
     item = Item(question=question, item_text=item_text)
+    item.image = request.FILES['docfile']
     item.save()
     #return HttpResponseRedirect('/polls/%s/settings' % question.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

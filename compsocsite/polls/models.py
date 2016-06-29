@@ -6,6 +6,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import User
+import os
+from django.conf import settings
 
 # Models
 
@@ -30,11 +32,16 @@ class Question(models.Model):
     def get_voters(self):
         return ",".join([str(voter) for voter in self.question_voters.all()])
 
+#Helper function for image
+def get_image_path(instance, filename):
+    return 'items/'
+
 # item to rank in a question
 @python_2_unicode_compatible
 class Item(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     item_text = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='static/items/', blank=True, null=True)
     def __str__(self):
         return self.item_text
 

@@ -1,4 +1,5 @@
 {% extends 'polls/base.html' %}
+{% load staticfiles %}
 
 {% block content %}
 <style>
@@ -36,7 +37,9 @@
     {% for item in items %}
         {% if item.question == question %}
             <li class="list-group-item ">
-                {{ item }} 
+                {{ item }}
+                {{ item.image.url }}
+                <img src='/static/items/{{ item.image.url }}'/>
                 {% if question.status == 1 %}
                 <a href="{% url 'polls:delchoice' item.id %}">
                     <div class="pull-right">
@@ -48,12 +51,13 @@
         {% endif %}
     {% endfor %}
         <li  class="list-group-item">
-            <form action="{% url 'polls:addchoice' question.id %}" method="post" >
+            <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="text" name="choice" value="" size="50" />
                 <button type="submit" class="btn btn-primary">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
+                <input type="file" name="docfile" accept="image/*">
             </form>
         </li>
     </ul>

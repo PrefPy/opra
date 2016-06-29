@@ -133,5 +133,11 @@ EMAIL_PORT = 587
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/items/static/items/'
 LOGIN_URL = '/auth/login/'
+
+STATICFILES_DIRS = (
+    '/static/items/',
+    os.path.join(os.path.abspath(BASE_DIR), 'static', 'items'),
+)
+print(os.path.join(os.path.abspath(BASE_DIR), 'static', 'items'))

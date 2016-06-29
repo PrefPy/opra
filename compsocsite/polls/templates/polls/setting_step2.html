@@ -165,7 +165,12 @@
             </select>
             <br />
             <label for="email">Email announcement</label>
-            <input type="checkbox" id="email" name="email" value="email" checked="checked">
+            {% if question.send_email == True %}
+                <input type="checkbox" name="email" id="email" value="email" checked="checked">
+            {% endif %}
+            {% if question.send_email != True %}
+                <input type="checkbox" name="email" id="email" value="email">
+            {% endif %}
             <br />
             <input type="submit" class="btn btn-success" value="Invite">
             <input type="submit" class="btn btn-danger" value="Remove" formaction="{% url 'groups:removegroupvoters' question.id %}">

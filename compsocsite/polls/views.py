@@ -443,7 +443,7 @@ def sendEmail(request, question_id):
 def setAlgorithm(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['preferences']
-    print question.poll_algorithm
+    print (question.poll_algorithm)
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

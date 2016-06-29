@@ -56,7 +56,7 @@
     </form>
 </div>
 <div class="col-md-4">
-    <b>Add Members of A Group to Poll: </b>
+    <b>Add Group: </b>
     <form action="{% url 'groups:addgroupvoters' question.id %}" method="post">
         {% csrf_token %}
         <select name="groups" class="form-control" multiple>

@@ -129,6 +129,17 @@ def startPoll(request, question_id):
 def stopPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.status = 3
+    
+    all_responses = question.response_set.reverse()
+    (latest_responses, previous_responses) = categorizeResponses(all_responses)
+    vote_results = getVoteResults(latest_responses)   
+    current_result = vote_results[question.poll_algorithm - 1]
+    winnerStr = ""
+    item_set = list(question.item_set.all())
+    for index, score in current_result.items():
+        if (score == min(current_result.values()) and question.poll_algorithm - 1 == 5) or (score == max(current_result.values()) and question.poll_algorithm - 1 != 5):
+            winnerStr += item_set[index].item_text
+    question.winner = winnerStr
     question.save()
     return HttpResponseRedirect('/polls/')
     

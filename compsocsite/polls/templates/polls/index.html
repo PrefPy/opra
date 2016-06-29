@@ -83,6 +83,7 @@
                                         </div>
                                     {% elif question.status == 3 %}
                                         <td>
+                                            The winner is <b>{{question.winner}}</b> <br />
                                             <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">Get Vote Results</a>
                                         </td>
                                     {% endif %}
@@ -124,8 +125,7 @@
                                             <td>Polling in session</td>
                                         {% elif question.status == 3 %}
                                             <td>
-                                                Polling complete 
-                                                <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">Get Vote Results</a>
+                                                The winner is <b>{{question.winner}}</b> <br />
                                             </td>
                                         {% endif %}
                                     </tr>

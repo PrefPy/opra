@@ -8,6 +8,12 @@
     p.sameline{
         display:inline-block;
     }
+    img{
+        width:20px;
+    }
+    img:hover{
+        width:50px;
+    }
 </style>
 
 <div class="col-md-10 col-md-offset-1">
@@ -39,9 +45,10 @@
     {% for item in items %}
         {% if item.question == question %}
             <li class="list-group-item ">
+                {% if item.image %}
+                    <img src='/static/items/{{ item.image.url }}'/>
+                {% endif %}
                 {{ item }}
-                {{ item.image.url }}
-                <img src='/static/items/{{ item.image.url }}'/>
                 {% if question.status == 1 %}
                 <a href="{% url 'polls:delchoice' item.id %}">
                     <div class="pull-right">

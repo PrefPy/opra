@@ -106,9 +106,8 @@ def addChoice(request, question_id):
     for choice in allChoices:
         if item_text == choice.item_text:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    #save the choice    
-    item = Item(question=question, item_text=item_text)
-    item.image = request.FILES['docfile']
+    #save the choice
+    item = Item(question=question, image=request.FILES.get('docfile'), item_text=item_text)
     item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

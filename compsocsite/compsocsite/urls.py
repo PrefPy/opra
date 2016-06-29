@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 from django.conf import settings
+from django.views.static import serve
 
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/polls')),
@@ -24,5 +25,5 @@ urlpatterns = [
     url(r'^groups/', include('groups.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('appauth.urls')),
-    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes':True}),
+    url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, 'show_indexes':True}),
 ]

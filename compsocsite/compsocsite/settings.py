@@ -140,4 +140,3 @@ STATICFILES_DIRS = (
     '/static/items/',
     os.path.join(os.path.abspath(BASE_DIR), 'static', 'items'),
 )
-print(os.path.join(os.path.abspath(BASE_DIR), 'static', 'items'))

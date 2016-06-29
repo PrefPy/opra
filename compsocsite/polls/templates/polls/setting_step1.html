@@ -18,6 +18,9 @@
                 {% for item in items %}
                   {% if item.question == question %}
                   <li class="list-group-item ">
+                      {% if item.image %}
+                        <img src='/static/items/{{ item.image.url }}'/>
+                      {% endif %}
                       {{ item }} 
                       {% if question.status == 1 %}
                       <a href="{% url 'polls:delchoice' item.id %}">
@@ -30,9 +33,10 @@
                   {% endif %}
                 {% endfor %}
         <li class="list-group-item">
-            <form action="{% url 'polls:addchoice' question.id %}" method="post" >
+            <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="text" name="choice" value="" size="50" />
+            <input type="file" name="docfile" value="" accept="image/*">
             <button type="submit" class="btn btn-primary">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>

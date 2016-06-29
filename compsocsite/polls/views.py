@@ -109,7 +109,7 @@ def deleteChoice(request, choice_id):
 def deletePoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.delete()
-    return HttpResponseRedirect('/polls')
+    return HttpResponseRedirect('/polls/')
 
 def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -130,6 +130,9 @@ class DetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        tempOrderStr = self.request.GET.get('order', '')
+        if tempOrderStr == "null":
+            return ctx 
         if len(currentUserResponses) > 0:
             mostRecentResponse = currentUserResponses[0]
             selectionArray = []             
@@ -142,10 +145,12 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
+
 # view of participated polls
 class PollInfoView(generic.DetailView):
     model = Question
     template_name = 'polls/pollinfo.html'
+
 # subview for view of participated polls
 class ViewVotersView(generic.DetailView):
     model = Question
@@ -176,6 +181,7 @@ class SettingStep1View(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
+
 class SettingStep2View(generic.DetailView):
     model = Question
     template_name = 'polls/setting_step2.html'
@@ -220,6 +226,7 @@ class SettingStep4View(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
+
 class SettingStep5View(generic.DetailView):
     model = Question
     template_name = 'polls/setting_step5.html'
@@ -387,7 +394,6 @@ def addVoter(request, question_id):
     creator = creator_obj.username
     question.send_email = email
     question.save()
-    print(question.send_email)
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
@@ -449,10 +455,10 @@ def vote(request, question_id):
         prefOrder = orderStr.split(",")
         # the user must rank all preferences
         if len(prefOrder) != len(question.item_set.all()):
-            return HttpResponseRedirect('/polls/%s/' % question_id)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         # the user must rank all preferences
-        return HttpResponseRedirect('/polls/%s/' % question_id)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
     # make Response object to store data
     response = Response(question=question, user=request.user, timestamp=timezone.now())

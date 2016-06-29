@@ -53,37 +53,34 @@ $(function() {
 <div class="row">
 <form action="{% url 'polls:vote' question.id %}" method="post">
     {% csrf_token %}
-    <input type="hidden" id="pref_order" name="pref_order" value="" />
-    
-    <div class="row">
-        <div class="col-md-4">
-            <p><b>Preference Order:</b></p>
-            <ul id="sortable1" class="list-group well droptrue">
-                {% if currentSelection %}
-                    {% for selection in currentSelection %}
-                        {% for item in question.item_set.all %}
-                            {% if selection.0 == item %}
-                            <li class="list-group-item" id="item{{ forloop.counter }}"> {{ selection.0 }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                {% endif %}
-            </ul>
-        </div>
-        <div class="col-md-4">
-            <p>Remaining Elements:</p>
-            <ul id="sortable2" class="list-group well droptrue">
-                {% if currentSelection == None %}
+    <div class="col-md-4">
+        <p><b>Preference Order:</b></p>
+        <input type="hidden" id="pref_order" name="pref_order" value="" />
+        <ul id="sortable1" class="list-group well droptrue">
+            {% if currentSelection %}
+                {% for selection in currentSelection %}
                     {% for item in question.item_set.all %}
-                    <li class="list-group-item" id="item{{ forloop.counter }}"> {{ item.item_text }}</li>
+                        {% if selection.0 == item %}
+                        <li class="list-group-item" id="item{{ forloop.counter }}"> {{ selection.0 }}</li>
+                        {% endif %}
                     {% endfor %}
-                {% endif %}
-            </ul>
-        </div>
+                {% endfor %}
+            {% endif %}
+        </ul>
+        <!-- submit button -->
+        <input type="submit" value="Submit" class="btn btn-primary"/>
     </div>
-        
-    <!-- submit button -->
-    <input type="submit" value="Submit" class="btn btn-primary"/>
+    <div class="col-md-4">
+        <p>Remaining Elements:</p>
+        <ul id="sortable2" class="list-group well droptrue">
+            {% if currentSelection == None %}
+                {% for item in question.item_set.all %}
+                <li class="list-group-item" id="item{{ forloop.counter }}"> {{ item.item_text }}</li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+         <a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger">Cancel</a>
+    </div>
 </form>
 </div>
 

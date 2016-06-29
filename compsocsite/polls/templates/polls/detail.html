@@ -11,6 +11,8 @@ $(function() {
             $('#pref_order').val(order.join(","));
         }
     });
+
+    
     
     $("ul.droptrue").sortable({
       connectWith: "ul"
@@ -25,8 +27,8 @@ $(function() {
 
 {% if question.status == 2%}
 <div class="row">
-    <div class="col-md-3">
-        <a href="{{ question.image }}"><img src="{{ question.image }}" width="128" height="128" ></a>
+    <div class="col-md-2">
+        <a href="{{ question.image }}"><img src="{{ question.image }}" width="128" ></a>
     </div>
     <div class="col-md-9">
         <h1>{{ question.question_text }}</h1>
@@ -61,7 +63,12 @@ $(function() {
                 {% for selection in currentSelection %}
                     {% for item in question.item_set.all %}
                         {% if selection.0 == item %}
-                        <li class="list-group-item" id="item{{ forloop.counter }}"> {{ selection.0 }}</li>
+                        <li class="list-group-item" id="item{{ forloop.counter }}">
+                            {% if selection.0.image %}
+                                <img src='/static/items/{{ selection.0.image.url }}'/>
+                            {% endif %}
+                            {{ selection.0 }}
+                        </li>
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
@@ -75,7 +82,11 @@ $(function() {
         <ul id="sortable2" class="list-group well droptrue">
             {% if currentSelection == None %}
                 {% for item in question.item_set.all %}
-                <li class="list-group-item" id="item{{ forloop.counter }}"> {{ item.item_text }}</li>
+                <li class="list-group-item" id="item{{ forloop.counter }}">
+                    {% if item.image %}
+                        <img src='/static/items/{{ item.image.url }}'/>
+                    {% endif %}
+                    {{ item.item_text }}</li>
                 {% endfor %}
             {% endif %}
         </ul>

@@ -1,5 +1,7 @@
 {% extends 'polls/base.html' %}
 
+
+
 {% block content %}
 <style>
     p.sameline{
@@ -50,7 +52,7 @@
         <li  class="list-group-item">
             <form action="{% url 'polls:addchoice' question.id %}" method="post" >
                 {% csrf_token %}
-                <input type="text" name="choice" value="" size="50" />
+                <input type="text" name="choice" value="" size="50" autofocus/>
                 <button type="submit" class="btn btn-primary">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>

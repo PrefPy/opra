@@ -11,19 +11,16 @@
     <h2  align="center">Create a New Poll</h2>
     <br/>
     <div class="steps"  align="center">
-
-        <p class="sameline" > 1. General   
+        <p class="sameline" > 
+            1. General   
             <span class="glyphicon glyphicon-chevron-right"> </span>  
-            2. Options 
-
-    
-        <span class="glyphicon glyphicon-chevron-right"> </span>
-        3. Invite
+            2. Choices
+            <span class="glyphicon glyphicon-chevron-right"> </span>
+            3. Invite
         </p>
-        
         <p class="sameline" style="color:grey;">
         <span class="glyphicon glyphicon-chevron-right"> </span>
-         4. Setting 
+         4. Settings 
         </p>
     </div>
     
@@ -34,56 +31,36 @@
     </div>
     <br/>
     
-    <h3>Send Reminder Email:</h3>
-<div class="col-md-6">
-<p>
-    <form action="{% url 'polls:sendEmail' question.id %}" method="post">
+<h3>Voting Rule</h3>
+<div class="row">
+    <form class="form-group" method="post" action="{% url 'polls:setalgorithm' question.id %}">
         {% csrf_token %}
-        <label for="email_txt">Send email to group now:</label>
-        <br/>
-        <textarea class="form-control" maxlength="500" name="email_txt" id="email_txt">{{ question.reminder_text }}</textarea>
-        <br/>
+        <label for="preferences">Select a voting algorithm used to calculate the winner. If you're not sure, just leave it as is.</label>
+        <select name="preferences" class="form-control">
+        {% for item in poll_algorithms %}
+            <option value="{{ forloop.counter }}" {% if forloop.counter == question.poll_algorithm %}selected="selected"{% endif %}>
+                {{ item }}
+            </option>
+        {% endfor %}
+        </select>
+        <br />
+        <input type="submit" value="Update" class="btn btn-success">
     </form>
-</p>
 </div>
-
-<div class="col-md-6">
-<p>
-    <form action="{% url 'polls:sendEmail' question.id %}" method="post">
-        {% csrf_token %}
-        <label for="email_txt">Set reminder email:</label>
-        <br/>
-        <textarea class="form-control" maxlength="500" name="email_txt" id="email_txt">{{ question.reminder_text }}</textarea>
-        <br/>
-        <div class="col-md-6">
-            <label for="email_dte">Reminder date:</label>
-            <br/>
-            <input class="form-control" name="email_dte" id="email_dte" type="date"></input>
-            <br/>
-        </div>
     
-        <div class="col-md-6">
-            <label for="email_tme">Reminder time:</label>
-            <br/>
-            <input class="form-control" name="email_tme" id="email_tme" type="time"></input>
-            <br/>
-        </div>
-    </form>
-</p>
-</div>
-
-
-<h3>Poll Viewing Setting</h3>
-<div class="col-md-6">
+<h3>Poll Visibility Settings</h3>
+<div class="row">
     <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}">
         {% csrf_token %}
-        <label for="viewpreferences">Visibility settings for this specific poll</label>
-        <select name="viewpreferences">
+        <label for="viewpreferences">Control the amount of information that is visible to voters.</label>
+        <select name="viewpreferences" class="form-control">
             <option value="allpermit">Everyone can see all votes</option>
             <option value="voternames">Only names of voters will be shown</option>
             <option value="justnumber">Only numbers of voters will be shown</option>
             <option value="nothing">Everyone can only see his/her own votes</option>
         </select>
+        <br />
+        <input type="submit" value="Update" class="btn btn-success">
     </form>
 </div>
 
@@ -91,7 +68,7 @@
     
  <div class="col-md-6 col-md-offset-3" align="center">
         <form action= "/polls/">
-            <input type="submit" value="Finish" class="btn btn-primary" size="300">
+            <input type="submit" value="Finish" class="btn btn-primary">
         </form>
     </div>
     

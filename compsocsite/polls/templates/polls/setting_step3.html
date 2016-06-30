@@ -20,10 +20,10 @@
         {% csrf_token %}
         <label for="viewpreferences">Visibility setting for this specific poll</label>
         <select name="viewpreferences" class="form-control">
-            <option value="allpermit">Everyone can see all votes</option>
-            <option value="voternames">Only names of voters will be shown</option>
-            <option value="justnumber">Only numbers of voters will be shown</option>
-            <option value="nothing">Everyone can only see his/her own votes</option>
+            <option value="allpermit" {% if question.display_pref == 1 %} selected {% endif %} >Everyone can see all votes</option>
+            <option value="voternames" {% if question.display_pref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
+            <option value="justnumber" {% if question.display_pref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
+            <option value="nothing" {% if question.display_pref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>
         </select>  
         <br/><br/>
 

@@ -74,8 +74,8 @@
                 <p>You haven't voted on this poll yet.</p>
             {% endif %}
             <p></p>
-            <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses|length}} of them have voted.</p>
             {% if question.display_pref == 1 %}
+                <p>There are a total of {{question.question_voters.count}} unique voters. {{latest_responses|length}} of them have voted.</p>
                 <p>The owner allows everyone to see all votes cast.</p>
                 {% for response in latest_responses %}
                     {% if response.user == request.user %}

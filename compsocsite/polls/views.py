@@ -30,7 +30,7 @@ class IndexView(generic.ListView):
 def AddStep1View(request):
     context = RequestContext(request)
     if request.method == 'POST':
-        questionString = request.POST['questionTitle']
+        questionString = request.POST['questionTitle']   
         questionDesc = request.POST['desc']
         imageURL = request.POST['image']
         if imageURL != '':
@@ -451,6 +451,7 @@ def setInitialSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['pollpreferences']
     question.display_pref = request.POST['viewpreferences']
+
     question.save()
     return HttpResponseRedirect('/polls/')
 

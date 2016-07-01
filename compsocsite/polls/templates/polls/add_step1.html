@@ -1,4 +1,15 @@
 {% extends 'polls/base.html' %}
+{% block extra_head %}
+<script>
+function validateForm() {
+    var x = document.forms["add_step1"]["questionTitle"].value;
+    if (x == null || x == "") {
+        alert("Question Title must be filled out");
+        return false;
+    }
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <style>
@@ -33,11 +44,11 @@
     </div>
     <br/>
 
-    <form id="add_poll" method="post" action="/polls/add_step1/">
+    <form id="add_poll" method="post" action="/polls/add_step1/" name="add_step1" onsubmit="return validateForm()">
         {% csrf_token %}
         <label for="questionTitle">Title:</label> <br />
-        <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="20" size="100" />
-        <small class="text-muted">At most 20 characters</small> <br/><br/>
+        <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="20" size="100"/>
+        <small class="text-muted">Required: At most 20 characters</small> <br/><br/>
         <label for="desc">Question description:</label> <br />
         <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
         <label for="image">Image:</label> <br />

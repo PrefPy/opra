@@ -1,38 +1,4 @@
 {% extends 'polls/base.html' %}
-{% block extra_head %}
-  <meta charset="utf-8">
-  <title>jQuery UI Selectable - Default functionality</title>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-  <link rel="stylesheet" href="/resources/demos/style.css">
- 
-  <style>
-  #feedback { font-size: 1em; }
-  #selectable .ui-selecting { background: #FECA40; }
-  #selectable .ui-selected { background: #F39814; color: white; }
-  #selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-  #selectable li { margin: 6px; padding: 0.4em; font-size: 1em; height: 30px; }
-  </style>
-
-  <script>
-  $(function() {
-    $( "#selectable" ).selectable();
-  });
-    $("li .a-item").click(function () {
-  console.log("Executing command");
-});
-  </script>
-
- $("#sortable1").sortable({
-        update: function(event, ui) {
-            var order = $("#sortable1").sortable("toArray");
-            $('#pref_order').val(order.join(","));
-        }
-    });
-
-
-{% endblock %}
 
 {% block content %}
 <style>
@@ -81,13 +47,14 @@
             <label for="viewpreferences">Control the amount of information that is visible to voters.</label>
    
 
-            <select name="viewpreferences" class="form-control">
+            <select name="viewpreferences" class="form-control" size="{{view_preferences|length}}">
                 {% for item in view_preferences %}
                 <option value="{{ forloop.counter }}">
                     {{ item }}
                 </option>
                 {% endfor %}
             </select>
+
 
             
             <br />

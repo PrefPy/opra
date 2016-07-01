@@ -14,11 +14,24 @@
   #selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
   #selectable li { margin: 6px; padding: 0.4em; font-size: 1em; height: 30px; }
   </style>
+
   <script>
   $(function() {
     $( "#selectable" ).selectable();
   });
+    $("li .a-item").click(function () {
+  console.log("Executing command");
+});
   </script>
+
+ $("#sortable1").sortable({
+        update: function(event, ui) {
+            var order = $("#sortable1").sortable("toArray");
+            $('#pref_order').val(order.join(","));
+        }
+    });
+
+
 {% endblock %}
 
 {% block content %}
@@ -66,7 +79,8 @@
             <br />
 
             <label for="viewpreferences">Control the amount of information that is visible to voters.</label>
-            <!--
+   
+
             <select name="viewpreferences" class="form-control">
                 {% for item in view_preferences %}
                 <option value="{{ forloop.counter }}">
@@ -74,14 +88,8 @@
                 </option>
                 {% endfor %}
             </select>
-            -->
-              <ol name="viewpreferences" id="selectable">
-                {% for item in view_preferences %}
-                <li class="ui-widget-content">
-                    {{ item }}
-                  </li>
-                {% endfor %}
-            </ol>
+
+            
             <br />
             <div class="col-md-6 col-md-offset-3" align="center">
                 <input type="submit" value="Finish" class="btn btn-primary">

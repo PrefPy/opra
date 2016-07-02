@@ -130,6 +130,9 @@
                                 {% elif question.status == 3 %}
                                     <td>
                                         The winner is <b>{{question.winner}}</b> <br />
+                                        {% if question.display_pref == 1 %}
+                                        <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">Get Vote Results</a>
+                                        {% endif %}
                                     </td>
                                 {% endif %}
                             </tr>

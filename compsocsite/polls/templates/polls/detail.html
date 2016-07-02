@@ -8,7 +8,10 @@
 function moveToPref(id, text) {
 	var prefcolumn = $('#sortable1');
 	prefcolumn.append("<li class='list-group-item' id=" +id+ '>' + text + "</li>");
-	prefcolumn.sortable({ refresh: sortable1 })
+	prefcolumn.sortable({ refresh: sortable1 });
+    
+    var order = prefcolumn.sortable("toArray");
+    $('#pref_order').val(order.join(","));
 };
 
 $(function() {

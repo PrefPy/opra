@@ -77,7 +77,7 @@ $(function() {
                         {% if selection.0 == item %}
                         <li class="list-group-item" id="item{{ forloop.counter }}">
                             {% if selection.0.image %}
-                                <img src='/static/items/{{ selection.0.image.url }}'/>
+                                <img class="item" src='/static/items/{{ selection.0.image.url }}'/>
                             {% endif %}
                             {{ selection.0 }}
                         </li>
@@ -96,7 +96,7 @@ $(function() {
                 {% for item in question.item_set.all %}
                 <li class="list-group-item" onclick = "this.remove(); moveToPref('item{{ forloop.counter }}', '{{ item.item_text }}' ); return false;" id="item{{ forloop.counter }}">
                     {% if item.image %}
-                        <img src='/static/items/{{ item.image.url }}'/>
+                        <img class="item" src='/static/items/{{ item.image.url }}'/>
                     {% endif %}
                     {{ item.item_text }}</li>
                 {% endfor %}

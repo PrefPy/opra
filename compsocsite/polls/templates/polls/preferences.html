@@ -9,7 +9,13 @@
             {% if latest_responses|length > 0 %}
                 {% for response in latest_responses %}
                     <span class="list-group-item">
-                        <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
+                        {% if response.user.first_name == "" %}
+                            <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
+                        {% endif %}
+                        {% if response.user.first_name != "" %}
+                            <b>{{ response.user.first_name}} {{ response.user.last_name }}</b>
+                            (last voted on {{ response.timestamp }}) <br />
+                        {% endif %}
                         {% for d in response.dictionary_set.all %}
                             {% for item in d.sorted_values %}
                                 ({{ item.1 }}) {{ item.0 }}  

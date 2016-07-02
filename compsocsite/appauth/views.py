@@ -90,12 +90,18 @@ def updateSettings(request):
     
     if request.method == 'POST':
         updatedEmail = request.POST['email']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        if (first_name == "" and last_name != "") or (first_name != "" and last_name == ""):
+            return HttpResponse("Please enter both a first and last name")
 	
     try:
         validate_email(updatedEmail)
     except ValidationError as e:
         return HttpResponse("Invalid email")
     else:
+        request.user.first_name = first_name
+        request.user.last_name = last_name
         request.user.email = updatedEmail
         request.user.save()
     if request.method == 'POST':

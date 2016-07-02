@@ -19,8 +19,16 @@
             <form method="post" action="/auth/settings/update/">
                 {% csrf_token %}
                 <fieldset class="form-group">
+                    <label for="first_name">First Name (Optional)</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ request.user.first_name }}">
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="last_name">Last Name (Optional)</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ request.user.last_name }}">
+                </fieldset>
+                <fieldset class="form-group">
                     <label for="email">Email</label>
-                    <input type="text" class="form-control" name="email" value="{{ request.user.email }}">
+                    <input type="text" class="form-control" id="email" name="email" value="{{ request.user.email }}">
                 </fieldset>
                 <fieldset class="form-group">
                     <label for="viewpreferences">Visibility settings for polls you created</label>

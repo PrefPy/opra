@@ -4,26 +4,37 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script>
+
+function moveToPref(id, text) {
+	var prefcolumn = $('#sortable1');
+	prefcolumn.append("<li class='list-group-item' id=" +id+ '>' + text + "</li>");
+	prefcolumn.sortable({ refresh: sortable1 })
+};
+
 $(function() {
     $("#sortable1").sortable({
         update: function(event, ui) {
             var order = $("#sortable1").sortable("toArray");
             $('#pref_order').val(order.join(","));
         }
-    });
-
-    
+    });    
     
     $("ul.droptrue").sortable({
-      connectWith: "ul"
-    });
+        connectWith: "ul"
+      });
     
     $( "#sortable1, #sortable2" ).disableSelection();
 });
+
+
+
 </script>
+
 {% endblock %}
 
 {% block content %}
+
+
 
 {% if question.status == 2%}
 <div class="row">
@@ -55,6 +66,7 @@ $(function() {
 <div class="row">
 <form action="{% url 'polls:vote' question.id %}" method="post">
     {% csrf_token %}
+    
     <div class="col-md-4">
         <p><b>Preference Order:</b></p>
         <input type="hidden" id="pref_order" name="pref_order" value="" />
@@ -82,7 +94,7 @@ $(function() {
         <ul id="sortable2" class="list-group well droptrue">
             {% if currentSelection == None %}
                 {% for item in question.item_set.all %}
-                <li class="list-group-item" id="item{{ forloop.counter }}">
+                <li class="list-group-item" onclick = "this.remove(); moveToPref('item{{ forloop.counter }}', {{ item.item_text }} ); return false;" id="item{{ forloop.counter }}">
                     {% if item.image %}
                         <img src='/static/items/{{ item.image.url }}'/>
                     {% endif %}

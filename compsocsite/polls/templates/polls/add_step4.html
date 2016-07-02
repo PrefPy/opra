@@ -49,7 +49,7 @@
 
             <select name="viewpreferences" class="form-control">
                 {% for item in view_preferences %}
-                <option value="{{ forloop.counter }}">
+                <option value="{{ forloop.counter }}" {% if forloop.counter == preference %} selected {% endif %}>
                     {{ item }}
                 </option>
                 {% endfor %}

@@ -332,7 +332,8 @@ class VoteResultsView(generic.DetailView):
         ctx['previous_responses'] = previous_responses
         ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
         ctx['vote_results'] = getVoteResults(latest_responses)   
-        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]   
+        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['margin_victory'] = getMarginOfVictory(latest_responses)
         return ctx
 
 #get a list of options for this poll
@@ -403,7 +404,26 @@ def getVoteResults(latest_responses):
     scoreVectorList.append(MechanismSimplifiedBucklin().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismCopeland(1).getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismMaximin().getCandScoresMap(pollProfile))
+    
     return scoreVectorList
+
+def getMarginOfVictory(latest_responses):
+    pollProfile = getPollProfile(latest_responses)
+    if pollProfile == None:
+        return []
+    
+    #make sure no ties or incomplete results are in the votes
+    if pollProfile.getElecType() != "soc":
+        return []
+    
+    marginList = []
+    marginList.append(MechanismPlurality().getMov(pollProfile))  
+    marginList.append(MechanismBorda().getMov(pollProfile))
+    marginList.append(MechanismVeto().getMov(pollProfile))
+    marginList.append(MechanismKApproval(3).getMov(pollProfile))
+    marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
+    
+    return marginList
 
 #function to add voter to voter list (invite only)
 def addVoter(request, question_id):

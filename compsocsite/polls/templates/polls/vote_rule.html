@@ -16,6 +16,7 @@
                         {% for option in cand_map.values %}
                             <th>{{ option }}</th>
                         {% endfor %}
+                        <th>Margin of Victory</th>
                     </tr>
                     
                     {% for item in vote_results %}
@@ -34,6 +35,13 @@
                                     <td {% if question.poll_algorithm == forloop.parentloop.counter %}class="info"{% endif %}>{{ score }}</td>
                                 {% endif %}
                             {% endfor %}
+                            {% if forloop.counter < 5 %}
+                                <td>{{ margin_victory.0 }} </td>
+                            {% elif forloop.counter == 5 %}
+                                <td>{{ margin_victory.4 }}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 </table>

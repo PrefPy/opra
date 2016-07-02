@@ -94,7 +94,7 @@ $(function() {
         <ul id="sortable2" class="list-group well droptrue">
             {% if currentSelection == None %}
                 {% for item in question.item_set.all %}
-                <li class="list-group-item" onclick = "this.remove(); moveToPref('item{{ forloop.counter }}', {{ item.item_text }} ); return false;" id="item{{ forloop.counter }}">
+                <li class="list-group-item" onclick = "this.remove(); moveToPref('item{{ forloop.counter }}', '{{ item.item_text }}' ); return false;" id="item{{ forloop.counter }}">
                     {% if item.image %}
                         <img src='/static/items/{{ item.image.url }}'/>
                     {% endif %}

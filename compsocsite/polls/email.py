@@ -53,12 +53,12 @@ def sendEmail(request, question_id, type):
     if creator_obj.first_name != "":
         creator = creator_obj.first_name + " " + creator_obj.last_name
 
-    if type == 'invite' or type == remove:
+    if type == 'invite' or type == 'remove':
         voters = request.POST.getlist('voters')
     else:
         voters = question.question_voters.all()
     for voter in voters:
-        if type == 'invite' or type == remove:
+        if type == 'invite' or type == 'remove':
      	    voter = get_object_or_404(User, username=voter)
         name = voter.username
         if voter.first_name != "":

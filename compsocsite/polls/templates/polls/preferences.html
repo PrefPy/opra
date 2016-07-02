@@ -13,7 +13,8 @@
                             <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
                         {% endif %}
                         {% if response.user.first_name != "" %}
-                            <b>{{ response.user.first_name}} {{ response.user.last_name }}</b>
+                            <b>{{ response.user.first_name}} {{ response.user.last_name }} (<a href="mailto:{{ response.user.email }}">{{ response.user.email }}</a>)
+                            </b>
                             (last voted on {{ response.timestamp }}) <br />
                         {% endif %}
                         {% for d in response.dictionary_set.all %}

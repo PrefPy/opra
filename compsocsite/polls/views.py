@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 from .prefpy.mechanism import *
+from .email import sendEmail
 from groups.models import *
 from django.conf import settings
 
@@ -121,6 +122,8 @@ def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.status = 2
     question.save()
+    if question.emailStart:
+        sendEmail(request, question_id, 'start')
     return HttpResponseRedirect('/polls/')    
 
 def stopPoll(request, question_id):
@@ -432,21 +435,14 @@ def addVoter(request, question_id):
 
     newVoters = request.POST.getlist('voters')
     email = request.POST.get('email') == 'email'
-    title = question.question_text
-    creator = creator_obj.username
-    question.send_email = email
+    question.emailInvite = email
     question.save()
+    print(email)
+    if email:
+        sendEmail(request, question_id, 'invite')
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
-        if email:
-            mail.send_mail('You have been invited to vote on ' + title,
-                'Hello ' + voterObj.username + ',\n\n' + creator
-                + ' has invited you to vote on a poll. Please visit '
-                + request.build_absolute_uri(reverse('polls:detail', args=[question_id]))
-                + ' to vote.\n\nSincerely,\nOPRAH Staff',
-                'oprahprogramtest@gmail.com',[voterObj.email],
-                fail_silently=True)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 #remove voters from the list
@@ -457,19 +453,6 @@ def removeVoter(request, question_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.remove(voterObj.id)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-#function to send email
-def sendEmail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    creator_obj = User.objects.get(id=question.question_owner_id)
-    title = question.question_text
-    creator = creator_obj.username
-    voters = question.question_voters.all()
-    for voter in voters:
-        mail.send_mail('Reminder to vote on ' + title,
-            request.POST.get('email_txt'),
-            'oprahprogramtest@gmail.com',[voter.email])
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def setInitialSettings(request, question_id):

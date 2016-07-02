@@ -46,7 +46,7 @@
         </select>
         <br />
         <label for="email">Email announcement</label>
-        {% if question.send_email == True %}
+        {% if question.emailInvite == True %}
             <input type="checkbox" name="email" id="email" value="email" checked="checked">
         {% else %}
             <input type="checkbox" name="email" id="email" value="email">
@@ -68,10 +68,10 @@
         </select>
         <br />
         <label for="email">Email announcement</label>
-        {% if question.send_email == True %}
+        {% if question.emailInvite == True %}
             <input type="checkbox" name="email" id="email" value="email" checked="checked">
         {% endif %}
-        {% if question.send_email != True %}
+        {% if question.emailInvite != True %}
             <input type="checkbox" name="email" id="email" value="email">
         {% endif %}
         <br />

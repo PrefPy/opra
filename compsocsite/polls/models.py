@@ -23,7 +23,10 @@ class Question(models.Model):
     question_voters = models.ManyToManyField(User, related_name='voters')
     status = models.IntegerField(default=1)
     display_pref = models.IntegerField(default=1)
-    send_email = models.BooleanField(default=True)
+    emailInvite = models.BooleanField(default=True)
+    emailDelete = models.BooleanField(default=True)
+    emailStart = models.BooleanField(default=True)
+    emailStop = models.BooleanField(default=True)
     poll_algorithm = models.IntegerField(default=1)
     winner = models.CharField(max_length=200) 
     def __str__(self):

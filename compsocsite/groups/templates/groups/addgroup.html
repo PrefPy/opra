@@ -6,10 +6,11 @@
 
     <form action="{% url 'groups:addgroupfunc' %}" id="addgroupfunc" method="post">
         {% csrf_token %}
-        Group Name: <br />
-        <input type="text" name="groupName" value="" size="100" />
+        <label for="groupName">Group Name: </label><br />
+        <input type="text" name="groupName" class="form-control" value="" size="100" autofocus/>
         <br />
         
+        <label for="groupName">Select members by username: </label> <br />
         <select name="voters" class="form-control" multiple>
         {% for user in users %}
             <option value="{{ user.username }}">{{ user.username }}</option>

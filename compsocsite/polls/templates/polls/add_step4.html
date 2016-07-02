@@ -47,7 +47,7 @@
             <label for="viewpreferences">Control the amount of information that is visible to voters.</label>
    
 
-            <select name="viewpreferences" class="form-control" size="{{view_preferences|length}}">
+            <select name="viewpreferences" class="form-control">
                 {% for item in view_preferences %}
                 <option value="{{ forloop.counter }}">
                     {{ item }}

@@ -5,7 +5,7 @@
         <h1>{{ question.question_text }}</h1>
 
         {% if cand_map and question.status == 3 %}          
-        {% if question.question_owner == request.user %}
+        {% if question.question_owner == request.user or question.display_pref == 1 %}
         <div class="panel panel-default">
             <!-- Default panel contents -->
             <div class="panel-heading">Poll Results</div>

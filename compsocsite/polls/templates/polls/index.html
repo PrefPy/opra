@@ -40,12 +40,12 @@
                             </td>
                             <td>
                                 {% if question.status == 2 %}
-                                <a href="{% url 'polls:detail' question.id %}">Vote</a>
+                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success">Vote</a>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if question.status == 2 or question.status == 3 %}
-                                <a href="{% url 'polls:preferences' question.id %}">History</a>
+                                <a href="{% url 'polls:preferences' question.id %}" class='btn btn-info'>History</a>
                                 {% endif %}
                             </td>
                             {% if question.status == 1 %}
@@ -88,8 +88,9 @@
                                 </div>
                             {% elif question.status == 3 %}
                                     <td>
-                                        The winner is <b>{{question.winner}}</b> <br />
-                                        <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
+                                        The winner is <b>{{question.winner}}</b> <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a> 
+                                       
+                                        
                                     </td>
                     
                             {% endif %}
@@ -117,12 +118,12 @@
                                 </td>
                                 <td>
                                     {% if question.status == 2 %}
-                                    <a href="{% url 'polls:detail' question.id %}">Vote</a>
+                                    <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success">Vote</a>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if question.status == 2 or question.status == 3 %}
-                                    <a href="{% url 'polls:preferences' question.id %}">Vote</a>
+                                    <a href="{% url 'polls:preferences' question.id %}" class ="btn btn-info">History</a>
                                     {% endif %}
                                 </td>
                                 {% if question.status == 1 %}
@@ -131,10 +132,10 @@
                                     <td>Polling in session</td>
                                 {% elif question.status == 3 %}
                                     <td>
-                                        The winner is <b>{{question.winner}}</b> <br />
-                                        {% if question.display_pref == 1 %}
+                                        The winner is <b>{{question.winner}}</b> {% if question.display_pref == 1 %}
                                         <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
-                                        {% endif %}
+                                        {% endif %} 
+                                        
                                     </td>
                                 {% endif %}
                             </tr>

@@ -18,20 +18,44 @@
 !function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
 </script>
 
+<style>
+  #sortable1 { list-style-type: none; margin: 0; padding: 10px; width: 60%; }
+  #sortable1 li { display:block; margin: 5px 5px 5px 5px; padding: 5px;  }
+
+  #sortable2 { list-style-type: none; margin: 0px; padding: 5px;  width: 60%; background-color: #eee;}  
+	#sortable2 li { margin: 5px 5px 5px 5px; padding: 5px;}
+  html>body #sortable li { height: 1.5em; line-height: 0em; }
+  .ui-state-highlight { height: 1.5em; line-height: 0em; background-color: #aaa;}
+  </style>
+
 <script>
 
-function moveToPref(id, text) {
+function moveToPref(obj) {
 	var prefcolumn = $('#sortable1');
-	var newoption = $("<li class='list-group-item' id=" +id+ ">" + text + "</li>").draggable({connectToSortable: '#sortable1'})
-	prefcolumn.append(newoption);
+	var currentli = document.getElementById(obj.id);
+	prefcolumn.append(currentli);
 	prefcolumn.sortable('refresh');
     
     var order = prefcolumn.sortable("toArray");
     $('#pref_order').val(order.join(","));
 };
 
+function moveAll() {
+	var ul = document.getElementById('sortable2');
+	var items = ul.getElementsByTagName("li");
+	var len = items.length
+	var prefcolumn = $('#sortable1');
+	for (var i = 0; i < len; i++) {
+	prefcolumn.append(items[0]);		
+		
+	}
+prefcolumn.sortable('refresh');
+};
+
 $(function() {
     $("#sortable1").sortable({
+		placeholder: "ui-state-highlight",
+		containment: "parent",
         update: function(event, ui) {
             var order = $("#sortable1").sortable("toArray");
             $('#pref_order').val(order.join(","));
@@ -110,7 +134,7 @@ $(function() {
         <ul id="sortable2" class="list-group">
             {% if currentSelection == None %}
                 {% for item in question.item_set.all %}
-                <li class="list-group-item" onclick = "this.remove(); moveToPref('item{{ forloop.counter }}', '{{ item.item_text }}' ); return false;" id="item{{ forloop.counter }}">
+                <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
                     {% if item.image %}
                         <img class="item" src='/static/items/{{ item.image.url }}'/>
                     {% endif %}
@@ -118,7 +142,7 @@ $(function() {
                 {% endfor %}
             {% endif %}
         </ul>
-         
+       <a onclick = "moveAll(); return false;" class="btn btn-primary">Move all</a>  
     </div>
 </form>
 </div>

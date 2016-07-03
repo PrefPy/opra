@@ -20,10 +20,10 @@
 
 <style>
   #sortable1 { list-style-type: none; margin: 0; padding: 10px; width: 60%; }
-  #sortable1 li { display:block; margin: 5px 5px 5px 5px; padding: 5px;  }
+  #sortable1 li { display:block; margin: 5px 5px 5px 5px; padding: 5px; }
 
   #sortable2 { list-style-type: none; margin: 0px; padding: 5px;  width: 60%; background-color: #eee;}  
-	#sortable2 li { margin: 5px 5px 5px 5px; padding: 5px;}
+	#sortable2 li { margin: 5px 5px 5px 5px; padding: 5px;   }
   html>body #sortable li { height: 1.5em; line-height: 0em; }
   .ui-state-highlight { height: 1.5em; line-height: 0em; background-color: #aaa;}
   </style>
@@ -31,25 +31,53 @@
 <script>
 
 function moveToPref(obj) {
+	var time = 100
 	var prefcolumn = $('#sortable1');
 	var currentli = document.getElementById(obj.id);
-	prefcolumn.append(currentli);
-	prefcolumn.sortable('refresh');
-    
-    var order = prefcolumn.sortable("toArray");
-    $('#pref_order').val(order.join(","));
+	currentli.style.backgroundColor = "#aaa";
+	setTimeout(function () {	
+		prefcolumn.append(currentli);
+		setTimeout(function () {	
+				prefcolumn.append(currentli);
+				currentli.style.backgroundColor = "#fff";
+				prefcolumn.sortable('refresh');
+			    var order = prefcolumn.sortable("toArray");
+			    $('#pref_order').val(order.join(","));
+		    }, time)
+
+    }, time)
+	
 };
 
 function moveAll() {
+	var time = 100
 	var ul = document.getElementById('sortable2');
 	var items = ul.getElementsByTagName("li");
 	var len = items.length
 	var prefcolumn = $('#sortable1');
 	for (var i = 0; i < len; i++) {
-	prefcolumn.append(items[0]);		
+		items[i].style.backgroundColor = "#aaa";			
+		}
+	setTimeout(function () {	
+for (var i = 0; i < len; i++) {
+						prefcolumn.append(items[0]);				
+					}
+			setTimeout(function () {	
+					var ul = document.getElementById('sortable1');
+	var items = ul.getElementsByTagName("li");
+var len = items.length
+					for (var i = 0; i < len; i++) {
 		
-	}
-prefcolumn.sortable('refresh');
+		items[i].style.backgroundColor = "#fff";			
+		}
+					prefcolumn.sortable('refresh');
+				    var order = prefcolumn.sortable("toArray");
+				    $('#pref_order').val(order.join(","));
+			    }, time)
+	
+	    }, time)
+	
+
 };
 
 $(function() {

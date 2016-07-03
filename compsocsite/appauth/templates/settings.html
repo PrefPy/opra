@@ -41,6 +41,7 @@
                 </fieldset>
                 <fieldset class="form-group col-md-6">
                     <label for="emailInvite">Send email when inviting voters</label>
+                    <input type="checkbox" name="emailInvite" id="emailInvite" value="email" {% if request.user.userprofile.emailInvite %} checked {% endif %}>
                 </fieldset>
                 <fieldset class="form-group col-md-6">
                     <label for="emailStart">Send email when the poll starts</label>

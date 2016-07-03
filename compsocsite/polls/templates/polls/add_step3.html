@@ -50,8 +50,9 @@
         </select>  
         <br />
         <label for="email2">Email announcement</label>
-            <input type="checkbox" name="email" id="email2" value="email" {% if question.emailDelete == True or question.emailDelete == None %} checked {% endif %}>
+        <input type="checkbox" name="email" id="email2" value="email" {% if question.emailDelete == True or question.emailDelete == None %} checked {% endif %}>
         {% if question.status == 1 %}
+        <br />
         <input type="submit" class="btn btn-danger" value="Remove">
         {% endif %}
     </form> 
@@ -69,12 +70,7 @@
         </select>
         <br />
         <label for="email1">Email announcement</label>
-        {% if question.emailInvite == True %}
-            <input type="checkbox" name="email" id="email1" value="email" checked="checked">
-        {% endif %}
-        {% if question.emailInvite != True %}
-            <input type="checkbox" name="email" id="email1" value="email">
-        {% endif %}
+        <input type="checkbox" name="email" id="email1" value="email" {% if question.emailInvite == True %} checked {% endif %}>
         <br />
         <input type="submit" class="btn btn-success" value="Invite">
     </form>      
@@ -92,7 +88,7 @@
             </select>
             <br />
             <label for="email">Email announcement</label>
-                <input type="checkbox" name="email" id="email" value="email" {% if question.emailInvite == True or question.emailInvite == None %} checked {% endif %}>
+            <input type="checkbox" name="email" id="email" value="email" {% if question.emailInvite == True or question.emailInvite == None %} checked {% endif %}>
             <br />
             <input type="submit" class="btn btn-success" value="Invite">
         </form>

@@ -80,9 +80,15 @@ def displaySettings(request):
     context = RequestContext(request)
     return render_to_response('settings.html', {}, context)
 
+@login_required
 def changePasswordView(request):
     context = RequestContext(request)
     return render_to_response('changepassword.html', {}, context)
+
+@login_required
+def globalSettings(request):
+    context = RequestContext(request)
+    return render_to_response('globalSettings.html', {}, context)
 
 @login_required
 def updateSettings(request):
@@ -114,6 +120,10 @@ def updateSettings(request):
             request.user.userprofile.displayPref = 3
         else:
             request.user.userprofile.displayPref = 4
+        request.user.userprofile.emailInvite = request.POST.get('emailInvite') == 'email'
+        request.user.userprofile.emailDelete = request.POST.get('emailDelete') == 'email'
+        request.user.userprofile.emailStart = request.POST.get('emailStart') == 'email'
+        request.user.userprofile.emailStop = request.POST.get('emailStop') == 'email'
         request.user.userprofile.save()
 	
     return HttpResponseRedirect('/auth/settings/')    

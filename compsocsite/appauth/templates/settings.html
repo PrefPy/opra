@@ -39,6 +39,21 @@
                         <option value="nothing" {% if request.user.userprofile.displayPref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>
                     </select>
                 </fieldset>
+                <fieldset class="form-group col-md-6">
+                    <label for="emailInvite">Send email when inviting voters</label>
+                </fieldset>
+                <fieldset class="form-group col-md-6">
+                    <label for="emailStart">Send email when the poll starts</label>
+                    <input type="checkbox" name="emailStart" id="emailStart" value="email" {% if request.user.userprofile.emailStart %} checked {% endif %}>
+                </fieldset>
+                <fieldset class="form-group col-md-6">
+                    <label for="emailDelete">Send email when deleting voters</label>
+                    <input type="checkbox" name="emailDelete" id="emailDelete" value="email" {% if request.user.userprofile.emailDelete %} checked {% endif %}>
+                </fieldset>
+                <fieldset class="form-group col-md-6">
+                    <label for="emailStop">Send email when the poll stops</label>
+                    <input type="checkbox" name="emailStop" id="emailStop" value="email" {% if request.user.userprofile.emailStop %} checked {% endif %}>
+                </fieldset>
                 <input type="submit" class="btn btn-success" value="Save Changes">
             </form>
             </div>

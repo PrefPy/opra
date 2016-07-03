@@ -26,24 +26,27 @@
 	#sortable2 li { margin: 5px 5px 5px 5px; padding: 5px;   }
   html>body #sortable li { height: 1.5em; line-height: 0em; }
   .ui-state-highlight { height: 1.5em; line-height: 0em; background-color: #aaa;}
+  .greybackground{background-color: #aaa;}
   </style>
 
 <script>
+
+function submitPref(){
+	var prefcolumn = $('#sortable1');
+	var order = prefcolumn.sortable("toArray");
+    $('#pref_order').val(order.join(","));
+    return true;
+};
 
 function moveToPref(obj) {
 	var time = 100
 	var prefcolumn = $('#sortable1');
 	var currentli = document.getElementById(obj.id);
-	currentli.style.backgroundColor = "#aaa";
+	jQuery("#"+obj.id).addClass("greybackground");
 	setTimeout(function () {	
 		prefcolumn.append(currentli);
-		setTimeout(function () {	
-				prefcolumn.append(currentli);
-				currentli.style.backgroundColor = "#fff";
-				prefcolumn.sortable('refresh');
-			    var order = prefcolumn.sortable("toArray");
-			    $('#pref_order').val(order.join(","));
-		    }, time)
+		jQuery("#"+obj.id).removeClass("greybackground",time*2);
+		prefcolumn.sortable('refresh');
 
     }, time)
 	
@@ -56,25 +59,22 @@ function moveAll() {
 	var len = items.length
 	var prefcolumn = $('#sortable1');
 	for (var i = 0; i < len; i++) {
-		items[i].style.backgroundColor = "#aaa";			
-		}
+		jQuery("#"+items[i].id).addClass("greybackground");			
+	}
 	setTimeout(function () {	
-for (var i = 0; i < len; i++) {
-						prefcolumn.append(items[0]);				
-					}
+		for (var i = 0; i < len; i++) {
+			prefcolumn.append(items[0]);				
+		}
 			setTimeout(function () {	
 					var ul = document.getElementById('sortable1');
-	var items = ul.getElementsByTagName("li");
-var len = items.length
+					var items = ul.getElementsByTagName("li");
+					var len = items.length
+					
 					for (var i = 0; i < len; i++) {
-		
-		items[i].style.backgroundColor = "#fff";			
-		}
-					prefcolumn.sortable('refresh');
-				    var order = prefcolumn.sortable("toArray");
-				    $('#pref_order').val(order.join(","));
+						jQuery("#"+items[i].id).removeClass("greybackground",time*2);			
+					}
+					prefcolumn.sortable('refresh');		    
 			    }, time)
-	
 	    }, time)
 	
 
@@ -137,7 +137,7 @@ $(function() {
     
     <div class="col-md-4">
         <p><b>Preference Order:</b></p>
-        <input type="hidden" id="pref_order" name="pref_order" value="" />
+        <input type="hidden" id="pref_order" name="pref_order" value=""/>
         <ul id="sortable1" class="list-group well droptrue">
             {% if currentSelection %}
                 {% for selection in currentSelection %}
@@ -154,8 +154,9 @@ $(function() {
                 {% endfor %}
             {% endif %}
         </ul>
-        <!-- submit button -->
-        <input type="submit" value="Submit" class="btn btn-primary"/> <a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger">Clear</a>
+        <!-- submit button   -->
+        <input type="submit" value="Submit" onclick="return submitPref();" class="btn btn-primary"/>
+        <a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger">Clear</a>
     </div>
     <div class="col-md-4">
         <p><b>Remaining Elements:</b></p>
@@ -184,4 +185,5 @@ $(function() {
 <p>This poll has ended.</p>
 
 {% endif %}
+<a href="{% url 'polls:index' %}"> Return Home</a>
 {% endblock %}

@@ -1,10 +1,12 @@
-{% extends 'polls/base.html' %}
 
+<head>
+<meta http-equiv="refresh" content="2;url={% url 'polls:index' %}" />
+</head>
 {% block content %}
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>
 
-        <p>Thanks for voting on this question! Your professor will publish results soon.</p>
+        <p>Thanks for voting on this question! You will be redirected to Home in 3 seconds. </p>
 
         <a href = "{% url 'polls:index' %}"> Return home</a>
     </div>

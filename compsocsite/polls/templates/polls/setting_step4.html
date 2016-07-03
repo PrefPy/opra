@@ -9,14 +9,37 @@
             <li><a href="{% url 'polls:setting_step1' question.id %}" >Choices</a></li>
             <li><a href="{% url 'polls:setting_step2' question.id %}">Voters</a></li>
             <li><a href="{% url 'polls:setting_step3' question.id %}">Poll Visibility</a></li>
-            <li class="active"><a href="{% url 'polls:setting_step4' question.id %}">Reminder Email</a></li>
+            <li class="active"><a href="{% url 'polls:setting_step4' question.id %}">Email</a></li>
             <li><a href="{% url 'polls:setting_step5' question.id %}">Delete</a></li>
           </ul>  
 </div>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <h3 class="page-header">Settings of {{ question.question_text }} </h3>
-<div class="col-md-6">
+
+<div class="col-md-10">
+    <form action="{%url 'polls:emailSettings' question.id%}" method="post">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <label for="emailInvite">Send email when inviting voters</label>
+            <input type="checkbox" name="emailInvite" id="emailInvite" value="email" {% if question.emailInvite == True %} checked {% endif %}>
+        </div>
+        <div class="col-md-6">
+            <label for="emailDelete">Send email when deleting voters</label>
+            <input type="checkbox" name="emailDelete" id="emailDelete" value="email" {% if question.emailDelete %} checked {% endif %}>
+        </div>
+        <div class="col-md-6">
+            <label for="emailStart">Send email when the poll starts</label>
+            <input type="checkbox" name="emailStart" id="emailStart" value="email" {% if question.emailStart %} checked {% endif %}>
+        </div>
+        <div class="col-md-6">
+            <label for="emailStop">Send email when the poll stops</label>
+            <input type="checkbox" name="emailStop" id="emailStop" value="email" {% if question.emailStop %} checked {% endif %}>
+        </div>
+        <input type="submit" value="Save Settings" class="btn btn-success">
+    </form>
+</div>
+<!-- <div class="col-md-6">
     <form action="{% url 'polls:sendEmail' question.id %}" method="post">
         {% csrf_token %}
         <label for="email_txt">Send email to group now:</label>
@@ -48,7 +71,7 @@
         </div>
         <input type="submit" value="Set" class="btn btn-success">
     </form>
-</div>
+</div> -->
 </div>
 {% else %}
     <p>You are not the owner of this poll. Click <a href='{% url 'polls:pollinfo' question.id %}'>here</a> to access poll info page.</p>

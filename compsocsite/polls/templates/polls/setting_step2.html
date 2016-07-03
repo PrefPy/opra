@@ -9,7 +9,7 @@
             <li><a href="{% url 'polls:setting_step1' question.id %}" >Choices</a></li>
             <li class="active"><a href="{% url 'polls:setting_step2' question.id %}">Voters</a></li>
             <li><a href="{% url 'polls:setting_step3' question.id %}">Poll Visibility</a></li>
-            <li><a href="{% url 'polls:setting_step4' question.id %}">Reminder Email</a></li>
+            <li><a href="{% url 'polls:setting_step4' question.id %}">Email</a></li>
             <li><a href="{% url 'polls:setting_step5' question.id %}">Delete</a></li>
           </ul>  
 </div>
@@ -29,6 +29,8 @@
         </select>  
         <br />
         {% if question.status == 1 %}
+            <label for="email2">Email announcement</label>
+                <input type="checkbox" name="email" id="email2" value="email" {% if question.emailDelete == True or question.emailDelete == None %} checked {% endif %}>
             <input type="submit" class="btn btn-danger" value="Remove">
         {% endif %}
     </form> 

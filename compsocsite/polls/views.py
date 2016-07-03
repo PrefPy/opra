@@ -437,7 +437,6 @@ def addVoter(request, question_id):
     email = request.POST.get('email') == 'email'
     question.emailInvite = email
     question.save()
-    print(email)
     if email:
         sendEmail(request, question_id, 'invite')
     for voter in newVoters:
@@ -449,7 +448,12 @@ def addVoter(request, question_id):
 def removeVoter(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     
-    newVoters = request.POST.getlist('voters')    
+    newVoters = request.POST.getlist('voters')
+    email = request.POST.get('email') == 'email'
+    question.emailDelete = email
+    question.save()
+    if email:
+        sendEmail(request, question_id, 'remove')   
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.remove(voterObj.id)

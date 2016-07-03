@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
 from . import views
+from . import email
 
 app_name = 'polls'
 urlpatterns = [
@@ -35,6 +36,7 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/preferences/$', views.PreferenceView.as_view(), name='preferences'),
     url(r'^(?P<pk>[0-9]+)/results/$', views.ResultsView.as_view(), name='results'),
     url(r'^(?P<question_id>[0-9]+)/sendEmail/$', views.sendEmail, name='sendEmail'),
+    url(r'^(?P<question_id>[0-9]+)/emailSettings/$', email.emailSettings, name='emailSettings'),
     
     
     url(r'^(?P<pk>[0-9]+)/pollinfo/$', views.PollInfoView.as_view(), name='pollinfo'),

@@ -66,3 +66,12 @@ def sendEmail(request, question_id, type):
         mail.send_mail(switchSubject(type, title, creator),
             switchEmail(type, name, creator, request, question_id),
             'oprahprogramtest@gmail.com',[voter.email])
+
+def emailSettings(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.emailInvite = request.POST.get('emailInvite') == 'email'
+    question.emailDelete = request.POST.get('emailDelete') == 'email'
+    question.emailStart = request.POST.get('emailStart') == 'email'
+    question.emailStop = request.POST.get('emailStop') == 'email'
+    question.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

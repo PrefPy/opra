@@ -1,7 +1,10 @@
+{% extends 'polls/base.html' %}
 
+{% block extra_head %}
 <head>
 <meta http-equiv="refresh" content="2;url={% url 'polls:index' %}" />
 </head>
+{% endblock %}
 {% block content %}
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>

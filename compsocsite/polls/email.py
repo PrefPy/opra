@@ -26,18 +26,18 @@ def switchSubject(x, title, creator):
         'stop': title + ' has stopped',
     }.get(x, "A message from " + creator)
 
-def switchEmail(x, name, creator, request, question_id):
+def switchEmail(x, name, uname, creator, request, question_id):
     return {
         'invite': 'Hello ' + name + ',\n\n' + creator
-                + ' has invited you to vote on a poll. Please visit '
-                + request.build_absolute_uri(reverse('polls:detail', args=[question_id]))
-                + ' to vote.\n\nSincerely,\nOPRAH Staff',
+                + ' has invited you to vote on a poll. Please login at '
+                + request.build_absolute_uri(reverse('appauth:login')+'?name='+uname)
+                + ' to check out.\n\nSincerely,\nOPRAH Staff',
         'remove': 'Hello ' + name + ',\n\n' + creator
                 + ' has deleted you from a poll.\n\nSincerely,\nOPRAH Staff',
         'start': 'Hello ' + name + ',\n\n' + creator
                 + ' has started a poll. It is now available to vote on at '
                 + request.build_absolute_uri(reverse('polls:detail', args=[question_id]))
-                + ' to vote.\n\nSincerely,\nOPRAH Staff',
+                + ' \n\nSincerely,\nOPRAH Staff',
         'stop': 'Hello ' + name + ',\n\n' + creator
                 + ' has ended a poll. Please visit '
                 + request.build_absolute_uri(reverse('polls:index'))
@@ -61,10 +61,11 @@ def sendEmail(request, question_id, type):
         if type == 'invite' or type == 'remove':
      	    voter = get_object_or_404(User, username=voter)
         name = voter.username
+        uname = voter.username
         if voter.first_name != "":
             name = voter.first_name + " " + voter.last_name
         mail.send_mail(switchSubject(type, title, creator),
-            switchEmail(type, name, creator, request, question_id),
+            switchEmail(type, name, uname, creator, request, question_id),
             'oprahprogramtest@gmail.com',[voter.email])
 
 def emailSettings(request, question_id):

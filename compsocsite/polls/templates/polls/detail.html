@@ -71,7 +71,7 @@ function moveAll() {
 					var len = items.length
 					
 					for (var i = 0; i < len; i++) {
-						jQuery("#"+items[i].id).removeClass("greybackground",time*2);			
+						jQuery("#"+items[i].id).removeClass("greybackground",time);			
 					}
 					prefcolumn.sortable('refresh');		    
 			    }, time)
@@ -101,8 +101,6 @@ $(function() {
 {% endblock %}
 
 {% block content %}
-
-
 
 {% if question.status == 2%}
 <div class="row">

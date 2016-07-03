@@ -24,7 +24,7 @@
 
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading"><b>Polls created </b> 
+                <div class="panel-heading"><b>Created by you</b> 
                     <div class="panel-title pull-right">
                     <a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></span></a>
                     </div>
@@ -40,12 +40,12 @@
                             </td>
                             <td>
                                 {% if question.status == 2 %}
-                                <a href="{% url 'polls:detail' question.id %}">Cast Vote</a>
+                                <a href="{% url 'polls:detail' question.id %}">Vote</a>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if question.status == 2 or question.status == 3 %}
-                                <a href="{% url 'polls:preferences' question.id %}">View Vote</a>
+                                <a href="{% url 'polls:preferences' question.id %}">History</a>
                                 {% endif %}
                             </td>
                             {% if question.status == 1 %}
@@ -89,7 +89,7 @@
                             {% elif question.status == 3 %}
                                     <td>
                                         The winner is <b>{{question.winner}}</b> <br />
-                                        <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">Get Vote Results</a>
+                                        <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
                                     </td>
                     
                             {% endif %}
@@ -103,7 +103,7 @@
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading"><b>Polls participated in</b></div>
+                <div class="panel-heading"><b>Participated in</b></div>
                 <div class="panel-body">
                     <table class="table">
                     {% if question_list %}
@@ -117,12 +117,12 @@
                                 </td>
                                 <td>
                                     {% if question.status == 2 %}
-                                    <a href="{% url 'polls:detail' question.id %}">Cast Vote</a>
+                                    <a href="{% url 'polls:detail' question.id %}">Vote</a>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if question.status == 2 or question.status == 3 %}
-                                    <a href="{% url 'polls:preferences' question.id %}">View Vote</a>
+                                    <a href="{% url 'polls:preferences' question.id %}">Vote</a>
                                     {% endif %}
                                 </td>
                                 {% if question.status == 1 %}
@@ -133,7 +133,7 @@
                                     <td>
                                         The winner is <b>{{question.winner}}</b> <br />
                                         {% if question.display_pref == 1 %}
-                                        <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">Get Vote Results</a>
+                                        <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
                                         {% endif %}
                                     </td>
                                 {% endif %}

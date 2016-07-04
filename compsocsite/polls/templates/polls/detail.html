@@ -21,7 +21,6 @@
 <style>
   #sortable1,#sortable2 { list-style-type: none; margin: 0; padding: 10px;  background-color: #eee; }
   #sortable1 li, #sortable2 li { display:block; margin: 5px 5px 5px 5px; padding: 5px; }
-
      
 	 
   html>body #sortable li { height: 1.5em; line-height: 0em; }
@@ -115,10 +114,10 @@ $(function() {
 
 {% if question.status == 2%}
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <a href="{{ question.image }}"><img src="{{ question.image }}" width="128" ></a>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-3">
         <h1>{{ question.question_text }}</h1>
         {% if question.question_desc %}
             <p>{{ question.question_desc }}</p>
@@ -149,10 +148,10 @@ $(function() {
      	<div class="panel-heading">
         
         	<b>Your preferences:</b> 
-        	<button type="submit" onclick="submitPref();" style ="border: none" >
+        	<button type="submit" onclick="submitPref();" style ="border: none; background-color: Transparent;" >
    			 <i class="glyphicon glyphicon-floppy-save" style = "color:green"></i> 
 		</button>
-        <a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash" style='font-size:80%'></a>
+        <a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash" style='font-size:80%; color:red;'></a>
         <input type="hidden" id="pref_order" name="pref_order" value=""/>
         
        </div> 

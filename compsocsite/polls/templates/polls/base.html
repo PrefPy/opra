@@ -92,14 +92,16 @@
 			{% else %}
 				<div class="container" style ="font-size:100%">
 			{% endif %}
-        <div class="navbar-header" style ="font-size:100%; vertical-align: middle; margin-top: 12px;">
+        <div class="navbar-header" style ="font-size:100%; ">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-             <a class="navbar-brand" href="/polls/" style ="font-size:100%; "><span >OPRA: Welcome
+             <a class="navbar-brand" href="/polls/" style ="font-size:100%; {% if request.flavour == 'mobile' %} 
+	        		margin-top: 12pt;
+	        {% endif %} "><span >OPRA: Welcome
              	{% if user.is_authenticated %}
 			        {% if request.user.first_name == "" %}
 			            {{ request.user.username }}
@@ -133,9 +135,9 @@
                             </ul>
                         {% endif %}
                         
-                        
+                <a href="{% url 'polls:index' %}" class="glyphicon glyphicon-home navbar-right" style = "color:grey;margin-top: 12px;"></a>        
                 </div><!--/.container-fluid -->
-                 <a href="{% url 'polls:index' %}" class="glyphicon glyphicon-home navbar-right" style = "color:grey;margin-top: 12px;"></a>
+                 
             </nav>
 
             <div class=".col-md-12">

@@ -32,7 +32,7 @@
             padding-top: {% if request.flavour == "mobile" %} 
 	        100px
 	        {% else %}
-	        50px
+	        60px
 	        {% endif %};
 	        
 	        
@@ -75,6 +75,31 @@
 		   padding: 0 !important;
 		   margin: 0 !important;
 		}
+		
+		.greycolor{
+			color:grey;
+		}
+		
+		.greycolor:hover{
+			color:black;
+			cursor: pointer; cursor: hand;
+		}
+		.greencolor{
+			color:green;
+		}
+		.greencolor:hover{
+				color:darkgreen;
+				cursor: pointer; cursor: hand;
+		}
+		
+		.redcolor{
+				color:red;
+			}
+		.redcolor:hover{
+				color:darkred;
+				cursor: pointer; cursor: hand;
+		}
+		
         
     </style>
        
@@ -109,7 +134,7 @@
 			        {% if request.user.first_name != "" %}
 			            {{ request.user.first_name }}
 			        {% endif %}
-		        {% endif %}!             	
+		        {% endif %}            	
              	</span></a>
           </div>
                 
@@ -128,6 +153,7 @@
                                     </ul>
                                 </li> 
                             </ul>
+                        <a href="{% url 'polls:index' %}"><span class="glyphicon navbar-right glyphicon-home greycolor" style = "margin-top: 15px;"></span></a>
                         {% else %}
                             <ul class="nav navbar-nav navbar-right">
                                 <li><a href="{% url 'appauth:register' %}"><span class="glyphicon glyphicon-user"></span> Sign Up </a></li>
@@ -135,7 +161,7 @@
                             </ul>
                         {% endif %}
                         
-                <a href="{% url 'polls:index' %}" class="glyphicon glyphicon-home navbar-right" style = "color:grey;margin-top: 12px;"></a>        
+                        
                 </div><!--/.container-fluid -->
                  
             </nav>

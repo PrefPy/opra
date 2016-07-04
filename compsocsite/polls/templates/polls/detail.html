@@ -34,7 +34,11 @@
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	}
-        
+	
+	button:hover .greencolor{
+		color:darkgreen;
+	}
+
   </style>
 
 <script>
@@ -149,9 +153,9 @@ $(function() {
         
         	<b>Your preferences:</b> 
         	<button type="submit" onclick="submitPref();" style ="border: none; background-color: Transparent;" >
-   			 <i class="glyphicon glyphicon-floppy-save" style = "color:green"></i> 
+   			 <span class="glyphicon glyphicon-floppy-save greencolor" ></span> 
 		</button>
-        <a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash" style='font-size:80%; color:red;'></a>
+        <a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash redcolor"></a>
         <input type="hidden" id="pref_order" name="pref_order" value=""/>
         
        </div> 

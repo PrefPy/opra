@@ -2,7 +2,6 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-    <h1>Welcome {{ request.user.username }}</h1>
     <ul class="nav nav-tabs">
         <li><a href="{% url 'polls:index' %}"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
         <li class="active"><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>

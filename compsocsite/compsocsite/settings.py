@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'compsocsite',
     'appauth',
     'groups',
+    'django_mobile',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -52,6 +53,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_mobile.middleware.MobileDetectionMiddleware',
+    'django_mobile.middleware.SetFlavourMiddleware',
 ]
 
 ROOT_URLCONF = 'compsocsite.urls'
@@ -71,6 +74,14 @@ TEMPLATES = [
         },
     },
 ]
+
+TEMPLATE_LOADERS = [
+    'django_mobile.loader.Loader',
+    ]
+
+TEMPLATE_CONTEXT_PROCESSORS = [
+    'django_mobile.context_processors.flavour',
+    ]
 
 WSGI_APPLICATION = 'compsocsite.wsgi.application'
 

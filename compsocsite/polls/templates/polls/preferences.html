@@ -54,11 +54,11 @@ background: #aaa;}
             </div>
         {% else %} <!--question.question_owner != request.user-->
             {% if mostRecentResponse %}
-                <div class="btn-group">
+                <div>
                     <b>{{ mostRecentResponse.user.username }}</b> (last voted on {{ mostRecentResponse.timestamp }}) <br /> 
                     {% for d in mostRecentResponse.dictionary_set.all %}
                         {% for item in d.sorted_values %}
-                   <button type="button" class="btn btn-default">{{ item.1 }}) {{ item.0 }} </button>
+                   <button type="button" class="btn btn-default">({{ item.1 }}) {{ item.0 }} </button>
                         {% endfor %}
                     {% endfor %}
                 </div>
@@ -73,7 +73,7 @@ background: #aaa;}
                             <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
                             {% for d in response.dictionary_set.all %}
                                 {% for item in d.sorted_values %}
-                            <li class="list-group-item">   {{ item.1 }}) {{ item.0 }} </li>
+                            <li class="list-group-item">   ({{ item.1 }}) {{ item.0 }} </li>
                                 {% endfor %}
                             {% endfor %}
                         </ul>

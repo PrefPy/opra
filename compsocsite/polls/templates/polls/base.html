@@ -6,14 +6,27 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         {% block extra_head %}
+        
+        
         {% endblock %}
     </head>
     
     <style>
+    
         body {
             min-height: 1000px;
-            padding-top: 50px;
+            padding-top: {% if request.flavour == "mobile" %} 
+	        100px
+	        {% else %}
+	        50px
+	        {% endif %};
             padding-bottom: 20px;
+            font-size: {% if request.flavour == "mobile" %} 
+	        450%
+	        {% else %}
+	        medium
+	        {% endif %};
+            
         }
         img.item {
             width:20px;
@@ -34,7 +47,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-             <a class="navbar-brand" href="/polls/">OPRA</a>
+             <a class="navbar-brand" href="/polls/"><span style ="font-size:150%">OPRA</span></a>
                     </div>
                         {% if user.is_authenticated %}
                             <ul class="nav navbar-nav navbar-right">
@@ -57,13 +70,21 @@
                                 <li><a href="{% url 'appauth:login' %}"> <span class="glyphicon glyphicon-log-in"></span> Login </a></li>
                             </ul>
                         {% endif %}
+                        
+                        
                 </div><!--/.container-fluid -->
             </nav>
 
             <div class=".col-md-12">
                 {% block content %}
+                {% if request.flavour == "mobile" %} 
+	        			<script>
+	        			$('span').css("style","font-size:200%");
+	        			</script>
+	        		{% endif %};
                 {% endblock %}
             </div>      
         </div> <!-- /container -->
     </body>
+    
 </html>

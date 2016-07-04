@@ -7,9 +7,10 @@
 {% endblock %}
 {% block content %}
     <div class="col-md-12">
-        <h1>{{ question.question_text }}</h1>
+        
 
-        <p>Thanks for voting on this question! You will be redirected to Home in 3 seconds. </p>
+        <p>Thanks for voting on {{ question.question_text }}! </p>
+        <p>You will be redirected to Home in 3 seconds.</p> 
 
         <a href = "{% url 'polls:index' %}"> Return home</a>
     </div>

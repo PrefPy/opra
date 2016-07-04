@@ -19,14 +19,23 @@
 </script>
 
 <style>
-  #sortable1 { list-style-type: none; margin: 0; padding: 10px; width: 60%; }
-  #sortable1 li { display:block; margin: 5px 5px 5px 5px; padding: 5px; }
+  #sortable1,#sortable2 { list-style-type: none; margin: 0; padding: 10px;  background-color: #eee; }
+  #sortable1 li, #sortable2 li { display:block; margin: 5px 5px 5px 5px; padding: 5px; }
 
-  #sortable2 { list-style-type: none; margin: 0px; padding: 5px;  width: 60%; background-color: #eee;}  
-	#sortable2 li { margin: 5px 5px 5px 5px; padding: 5px;   }
+     
+	 
   html>body #sortable li { height: 1.5em; line-height: 0em; }
   .ui-state-highlight { height: 1.5em; line-height: 0em; background-color: #aaa;}
   .greybackground{background-color: #aaa;}
+        
+  .cliente{
+	 margin: 15px;
+	border: #cdcdcd medium solid;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	}
+        
   </style>
 
 <script>
@@ -35,7 +44,7 @@ function submitPref(){
 	var prefcolumn = $('#sortable1');
 	var order = prefcolumn.sortable("toArray");
     $('#pref_order').val(order.join(","));
-    return true;
+    $('#pref_order').submit();
 };
 
 function moveToPref(obj) {
@@ -102,12 +111,14 @@ $(function() {
 
 {% block content %}
 
+
+
 {% if question.status == 2%}
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-3">
         <a href="{{ question.image }}"><img src="{{ question.image }}" width="128" ></a>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-8">
         <h1>{{ question.question_text }}</h1>
         {% if question.question_desc %}
             <p>{{ question.question_desc }}</p>
@@ -133,15 +144,23 @@ $(function() {
 <form action="{% url 'polls:vote' question.id %}" method="post">
     {% csrf_token %}
     
-    <div class="col-md-4">
-        <p><b>Preference Order:</b></p>
+    <div class="col-md-6" >
+    <div class="panel panel-default">
+     	<div class="panel-heading">
+        
+        	<b>Your preferences:</b> 
+        <input type="submit" value="Submit" onclick="submitPref();" class="btn btn-success" style = "font-size:60%"/>
+        <a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger" style='font-size:60%'>Clear</a>
         <input type="hidden" id="pref_order" name="pref_order" value=""/>
-        <ul id="sortable1" class="list-group well droptrue">
+        
+       </div> 
+       <div class="panel-body">
+        <ul id="sortable1" class="list-group droptrue">
             {% if currentSelection %}
                 {% for selection in currentSelection %}
                     {% for item in question.item_set.all %}
                         {% if selection.0 == item %}
-                        <li class="list-group-item" id="item{{ forloop.counter }}">
+                        <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
                             {% if selection.0.image %}
                                 <img class="item" src='/static/items/{{ selection.0.image.url }}'/>
                             {% endif %}
@@ -152,12 +171,19 @@ $(function() {
                 {% endfor %}
             {% endif %}
         </ul>
-        <!-- submit button   -->
-        <input type="submit" value="Submit" onclick="return submitPref();" class="btn btn-primary"/>
-        <a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger">Clear</a>
+       </div> 
     </div>
-    <div class="col-md-4">
-        <p><b>Remaining Elements:</b></p>
+    </div>
+    
+    
+    
+        
+    <div class="col-md-6" >
+    <div class="panel panel-default">
+    		<div class="panel-heading">
+        <b>Remaining Options:</b> <a onclick = "moveAll(); return false;" class="btn btn-primary" style = "font-size:60%">Move all</a>
+        </div>
+        <div class="panel-body">
         <ul id="sortable2" class="list-group">
             {% if currentSelection == None %}
                 {% for item in question.item_set.all %}
@@ -169,7 +195,8 @@ $(function() {
                 {% endfor %}
             {% endif %}
         </ul>
-       <a onclick = "moveAll(); return false;" class="btn btn-primary">Move all</a>  
+         </div>
+    </div>
     </div>
 </form>
 </div>
@@ -184,4 +211,5 @@ $(function() {
 
 {% endif %}
 <a href="{% url 'polls:index' %}"> Return Home</a>
+
 {% endblock %}

@@ -19,18 +19,18 @@
         <br />
         {% if question_list == None %}
             <tr><td>No polls are currently available.</td></tr>
-            <tr><td><a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary">Add Poll</span></a></td></tr>
+            <tr><td><a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary" style='font-size:60%'>Add Poll</span></a></td></tr>
         {% endif %}
 
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading"><b>Created by you</b> 
                     <div class="panel-title pull-right">
-                    <a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></span></a>
+                    <a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary" style='font-size:60%'><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
                     </div>
                 </div>
                 <div class="panel-body">
-                <table class="table">
+                <table class="table" style='font-size:100%'>
                 {% if question_list %}
                     {% for question in question_list %}
                         {% if question.question_owner == request.user %}
@@ -40,16 +40,16 @@
                             </td>
                             <td>
                                 {% if question.status == 2 %}
-                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success">Vote</a>
+                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" style='font-size:60%'>Vote</a>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if question.status == 2 or question.status == 3 %}
-                                <a href="{% url 'polls:preferences' question.id %}" class='btn btn-info'>History</a>
+                                <a href="{% url 'polls:preferences' question.id %}" class='btn btn-info' style='font-size:60%'>History</a>
                                 {% endif %}
                             </td>
                             {% if question.status == 1 %}
-                                <td><span class="btn btn-success" data-toggle="modal" data-target="#confirm-start">Start Poll</span></td>
+                                <td><span class="btn btn-success" data-toggle="modal" data-target="#confirm-start" style='font-size:60%'>Start Poll</span></td>
 
                                 <div class="modal fade" id="confirm-start" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -68,7 +68,7 @@
                                     </div>
                                 </div>
                             {% elif question.status == 2 %}
-                                <td><span class="btn btn-danger" data-toggle="modal" data-target="#confirm-stop">Stop Poll</span></td>
+                                <td><span class="btn btn-danger" data-toggle="modal" data-target="#confirm-stop" style='font-size:60%'>Stop Poll</span></td>
 
                                 <div class="modal fade" id="confirm-stop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -88,7 +88,7 @@
                                 </div>
                             {% elif question.status == 3 %}
                                     <td>
-                                        The winner is <b>{{question.winner}}</b> <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a> 
+                                        Winner: <b>{{question.winner}}</b> <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary" style='font-size:60%'>More details</a> 
                                        
                                         
                                     </td>
@@ -102,11 +102,11 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" >
             <div class="panel panel-default">
                 <div class="panel-heading"><b>Participated in</b></div>
                 <div class="panel-body">
-                    <table class="table">
+                    <table class="table" style='font-size:100%'>
                     {% if question_list %}
                         {% for question in question_list %}
                             {% if question.question_owner != request.user and request.user in question.question_voters.all %}
@@ -118,22 +118,22 @@
                                 </td>
                                 <td>
                                     {% if question.status == 2 %}
-                                    <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success">Vote</a>
+                                    <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" style='font-size:60%'>Vote</a>
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if question.status == 2 or question.status == 3 %}
-                                    <a href="{% url 'polls:preferences' question.id %}" class ="btn btn-info">History</a>
+                                    <a href="{% url 'polls:preferences' question.id %}" class ="btn btn-info" style='font-size:60%'>History</a>
                                     {% endif %}
                                 </td>
                                 {% if question.status == 1 %}
                                     <td>Poll not started</td>
                                 {% elif question.status == 2 %}
-                                    <td>Polling in session</td>
+                                    <td>In session</td>
                                 {% elif question.status == 3 %}
                                     <td>
-                                        The winner is <b>{{question.winner}}</b> {% if question.display_pref == 1 %}
-                                        <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
+                                        Winner: <b>{{question.winner}}</b> {% if question.display_pref == 1 %}
+                                        <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary" style='font-size:60%'>More details</a>
                                         {% endif %} 
                                         
                                     </td>
@@ -152,7 +152,7 @@
       <div class="container">
         <h1>Welcome to OPRA</h1>
         <p>Polling platform that allows you to specify your preferences.</p>
-        <p><a class="btn btn-primary btn-lg" href="/auth/register/" role="button">Join us today &raquo;</a></p>
+        <p><a class="btn btn-primary btn-lg" href="/auth/register/" role="button" style='font-size:60%'>Join us today &raquo;</a></p>
       </div>
     </div>
     

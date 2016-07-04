@@ -167,7 +167,7 @@ class DetailView(generic.DetailView):
             return ctx['object'].item_set.all
         for resp in otherUserResponses:
             otherUser = resp.user
-            responses = Response.objects.all.filter(user=otherUser)
+            responses = Response.objects.all().filter(user=otherUser)
         return ctx['object'].item_set.all
 
     def get_context_data(self, **kwargs):

@@ -186,7 +186,7 @@ $(function() {
         <div class="panel-body">
         <ul id="sortable2" class="list-group">
             {% if currentSelection == None %}
-                {% for item in question.item_set.all %}
+                {% for item in items %}
                 <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
                     {% if item.image %}
                         <img class="item" src='/static/items/{{ item.image.url }}'/>

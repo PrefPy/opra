@@ -42,11 +42,15 @@ def AddStep1View(request):
         if imageURL != '':
             question = Question(question_text=questionString, question_desc=questionDesc,
                 image=imageURL, pub_date=timezone.now(), question_owner=request.user,
-                display_pref=request.user.userprofile.displayPref)
+                display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
+                emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
+                emailStop=request.user.userprofile.emailStop)
         else:
             question = Question(question_text=questionString, question_desc=questionDesc,
                 pub_date=timezone.now(), question_owner=request.user,
-                display_pref=request.user.userprofile.displayPref)
+                display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
+                emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
+                emailStop=request.user.userprofile.emailStop)
         question.save()
         return HttpResponseRedirect('/polls/%s/add_step2' % question.id)
     return render_to_response('polls/add_step1.html', {}, context)
@@ -156,18 +160,32 @@ def stopPoll(request, question_id):
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
+
+    def get_order(self, ctx):
+        otherUserResponses = self.object.response_set.reverse()
+        if len(otherUserResponses) == 0:
+            return ctx['object'].item_set.all
+        for resp in otherUserResponses:
+            otherUser = resp.user
+            responses = Response.objects.all.filter(user=otherUser)
+        return ctx['object'].item_set.all
+
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        print(self.object.response_set)
         tempOrderStr = self.request.GET.get('order', '')
         if tempOrderStr == "null":
-            return ctx 
+            ctx['items'] = self.get_order(ctx)
+            return ctx
         if len(currentUserResponses) > 0:
             mostRecentResponse = currentUserResponses[0]
             selectionArray = []             
             for d in mostRecentResponse.dictionary_set.all():   
                 selectionArray = d.sorted_values()
             ctx['currentSelection'] = selectionArray
+        else:
+            ctx['items'] = self.get_order(ctx)
         return ctx
     def get_queryset(self):
         """

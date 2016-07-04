@@ -149,8 +149,10 @@ $(function() {
      	<div class="panel-heading">
         
         	<b>Your preferences:</b> 
-        <input type="submit" value="Submit" onclick="submitPref();" class="btn btn-success" style = "font-size:60%"/>
-        <a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger" style='font-size:60%'>Clear</a>
+        	<button type="submit" onclick="submitPref();" style ="border: none" >
+   			 <i class="glyphicon glyphicon-floppy-save" style = "color:green"></i> 
+		</button>
+        <a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash" style='font-size:80%'></a>
         <input type="hidden" id="pref_order" name="pref_order" value=""/>
         
        </div> 
@@ -210,6 +212,6 @@ $(function() {
 <p>This poll has ended.</p>
 
 {% endif %}
-<a href="{% url 'polls:index' %}"> Return Home</a>
+
 
 {% endblock %}

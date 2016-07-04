@@ -5,12 +5,7 @@
 {% block content %}
 <body>
     {% if user.is_authenticated %}
-        {% if request.user.first_name == "" %}
-            <h1>Welcome {{ request.user.username }}</h1>
-        {% endif %}
-        {% if request.user.first_name != "" %}
-            <h1>Welcome {{ request.user.first_name }}</h1>
-        {% endif %}
+        
         <ul class="nav nav-tabs">
             <li class="active"><a href="{% url 'polls:index' %}"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
             <li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
@@ -25,8 +20,8 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading"><b>Created by you</b> 
-                    <div class="panel-title pull-right">
-                    <a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary" style='font-size:60%'><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
+                    <div class="panel-title pull-right" style='font-size:100%; margin-top:12px;'>
+                    <a href="{% url 'polls:AddStep1' %}" style='font-size:100%; '><span class="btn btn-primary" style='font-size:60%'><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -49,7 +44,8 @@
                                 {% endif %}
                             </td>
                             {% if question.status == 1 %}
-                                <td><span class="btn btn-success" data-toggle="modal" data-target="#confirm-start" style='font-size:60%'>Start Poll</span></td>
+                                <td><span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start" style="color:green"></span>
+                                 </td>
 
                                 <div class="modal fade" id="confirm-start" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -68,7 +64,8 @@
                                     </div>
                                 </div>
                             {% elif question.status == 2 %}
-                                <td><span class="btn btn-danger" data-toggle="modal" data-target="#confirm-stop" style='font-size:60%'>Stop Poll</span></td>
+                                <td>
+                                	<span class = "glyphicon glyphicon-stop"data-toggle="modal" data-target="#confirm-stop" style="color:red"></span></td>
 
                                 <div class="modal fade" id="confirm-stop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -88,7 +85,10 @@
                                 </div>
                             {% elif question.status == 3 %}
                                     <td>
-                                        Winner: <b>{{question.winner}}</b> <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary" style='font-size:60%'>More details</a> 
+                                        {{question.winner}} wins  
+                                        <a href="{% url 'polls:voteresults' question.id %}" >
+										<span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}" '>
+										</a> 
                                        
                                         
                                     </td>
@@ -132,8 +132,10 @@
                                     <td>In session</td>
                                 {% elif question.status == 3 %}
                                     <td>
-                                        Winner: <b>{{question.winner}}</b> {% if question.display_pref == 1 %}
-                                        <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary" style='font-size:60%'>More details</a>
+                                        {{question.winner}} wins {% if question.display_pref == 1 %}
+                                        <a href="{% url 'polls:voteresults' question.id %}">
+                                        <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
+                                        </a>
                                         {% endif %} 
                                         
                                     </td>
@@ -176,7 +178,8 @@
                                     {% elif question.status == 3 %}
                                         
                                             The winner is <b>{{question.winner}}</b> {% if question.display_pref == 1 %}
-                                            <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
+                                            <a href="{% url 'polls:voteresults' question.id %}">
+                                            	<span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}" ></span></a>
                                             {% endif %} 
                                         
                                     {% endif %}

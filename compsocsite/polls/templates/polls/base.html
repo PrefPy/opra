@@ -12,7 +12,21 @@
     </head>
     
     <style>
-    
+    		h1 {
+            font-size: {% if request.flavour == "mobile" %} 
+	        150%
+	        {% else %}
+	        medium
+	        {% endif %};
+	       }
+	       
+	    	div{
+	    		font-size:100% !important;
+	    }
+	    a {
+			    text-decoration: none !important;
+			}
+    		
         body {
             min-height: 1000px;
             padding-top: {% if request.flavour == "mobile" %} 
@@ -20,7 +34,15 @@
 	        {% else %}
 	        50px
 	        {% endif %};
+	        
+	        
             padding-bottom: 20px;
+            
+            margin-left: 0;
+			margin-right: 0;
+			padding-left: 5px;
+			padding-right: 5px;
+            
             font-size: {% if request.flavour == "mobile" %} 
 	        450%
 	        {% else %}
@@ -28,38 +50,78 @@
 	        {% endif %};
             
         }
+        
         img.item {
-            width:20px;
+            width:40px;
         }
         img.item:hover {
-            width:50px;
+            width:80px;
         }
+        
+        glyphicon-info-sign {  
+        	font-size:60%; 
+        	color:#56A5EC;
+        }
+        
+        glyphicon-play{
+		color:green;
+        }
+        
+        glyphicon-stop{
+        	color:red;
+        }
+        
+        nopadding {
+		   padding: 0 !important;
+		   margin: 0 !important;
+		}
+        
     </style>
        
     <body>
-        <div class="container">
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
+    	
+    	{% if request.flavour == "mobile" %} 
+	      <div style = "margin-left: 20px; margin-right: 20px;font-size:100%;">
+	{% else %}
+		<div class="container" style ="font-size:100%">
+	{% endif %}
+    
+    <nav class="navbar navbar-default navbar-fixed-top" style ="font-size:100%; vertical-align: middle;">
+      	{% if request.flavour == "mobile" %} 
+			      <div style = "margin-left: 20px; margin-right: 20px;font-size:100%;">
+			{% else %}
+				<div class="container" style ="font-size:100%">
+			{% endif %}
+        <div class="navbar-header" style ="font-size:100%; vertical-align: middle; margin-top: 12px;">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-             <a class="navbar-brand" href="/polls/"><span style ="font-size:150%">OPRA</span></a>
-                    </div>
+             <a class="navbar-brand" href="/polls/" style ="font-size:100%; "><span >OPRA: Welcome
+             	{% if user.is_authenticated %}
+			        {% if request.user.first_name == "" %}
+			            {{ request.user.username }}
+			        {% endif %}
+			        {% if request.user.first_name != "" %}
+			            {{ request.user.first_name }}
+			        {% endif %}
+		        {% endif %}!             	
+             	</span></a>
+          </div>
+                
                         {% if user.is_authenticated %}
                             <ul class="nav navbar-nav navbar-right">
                                  <li class="dropdown">
                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 
-                                        <span class="glyphicon glyphicon-user"> </span>
+                                        <span class="glyphicon glyphicon-cog"> </span>
                                         <span class="caret"></span>
                                     </a>
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu" style="font-size:100%">
                                          <li class="disabled"><a href="#">Signed in as {{ request.user.username }}</a></li>
                                         <li role="separator" class="divider"></li>
-                                        <li ><a href="{% url 'appauth:settings' %}" align="center">Settings</a></li>
+                                        <li ><a href="{% url 'appauth:settings' %}" align="center" ><span >Settings</span></a></li>
                                         <li><a href="{% url 'appauth:logout' %}" align="center">Logout</a></li>
                                     </ul>
                                 </li> 
@@ -73,18 +135,25 @@
                         
                         
                 </div><!--/.container-fluid -->
+                 <a href="{% url 'polls:index' %}" class="glyphicon glyphicon-home navbar-right" style = "color:grey;margin-top: 12px;"></a>
             </nav>
 
             <div class=".col-md-12">
-                {% block content %}
-                {% if request.flavour == "mobile" %} 
+            	{% if request.flavour == "mobile" %} 
 	        			<script>
 	        			$('span').css("style","font-size:200%");
 	        			</script>
-	        		{% endif %};
+	        		{% endif %}
+                {% block content %}
+                
+	        		
                 {% endblock %}
-            </div>      
-        </div> <!-- /container -->
+            </div> 
+       	
+	      </div> <!-- /container -->
+	             
+       
+        
     </body>
     
 </html>

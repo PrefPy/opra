@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'compsocsite',
     'appauth',
     'groups',
+    'multipolls',
 ]
 
 MIDDLEWARE_CLASSES = [

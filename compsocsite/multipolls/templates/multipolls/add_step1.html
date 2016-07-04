@@ -1,0 +1,62 @@
+{% extends 'polls/base.html' %}
+{% block extra_head %}
+<script>
+function validateForm() {
+    var x = document.forms["add_step1"]["mPollTitle"].value;
+    if (x == null || x == "") {
+        alert("M-Poll Title must be filled out");
+        return false;
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<style>
+    p.sameline{
+        display:inline-block;
+    }
+</style>
+
+<div class="col-md-10 col-md-offset-1">
+    <h2  align="center">Create a New Multi-Poll</h2>
+    <br/>
+    <div class="steps"  align="center">
+
+        <p class="sameline" style="color:grey;"> 
+            1. General  
+            <span class="glyphicon glyphicon-chevron-right"> </span>
+        </p>
+        <p class="sameline">
+            2. Polls 
+            <span class="glyphicon glyphicon-chevron-right"> </span>
+            3. Invite 
+        </p>
+    </div>
+    
+    
+    <div class="progress">
+        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 25%">
+            <span class="sr-only">33% Complete</span>
+        </div>
+    </div>
+    <br/>
+
+    <form id="add_poll" method="post" action="/multipolls/add_step1/" name="add_step1" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <label for="mPollTitle">Title:</label> <br />
+        <input type="text" class="form-control" id="mPollTitle" name="mPollTitle" value="" maxlength="20" size="100" autofocus/>
+        <small class="text-muted">Required (at most 20 characters) </small> <br/><br/>
+        
+        <label for="desc">M-Poll description:</label> <br />
+        <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
+        
+        <label for="n">Number of Polls:</label> <br />
+        <input type="number" class="form-control" id="n" name="n" value="" />
+        <br /><br />
+        <div class="col-md-6 col-md-offset-3" align="center">
+            <input type="submit" value="Next" class="btn btn-primary" size="300"/>
+        </div>
+    </form>
+</div>
+{% endblock %}

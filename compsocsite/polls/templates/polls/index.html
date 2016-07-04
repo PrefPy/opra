@@ -146,6 +146,51 @@
                 </div>
             </div>
         </div>
+        <hr />
+        <div class="col-md-6"style="clear:left;">
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>M-polls Created by you</b> 
+                    
+                    <div class="panel-title pull-right">
+                    <a href="{% url 'multipolls:AddStep1' %}"><span class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></span></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {% if multipolls %}
+                        {% for mpoll in multipolls %}
+                    <table class="table">
+                    
+                            {% if request.user == mpoll.owner %}
+                                <h4>{{mpoll.title}}</h4>
+                                <a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-primary">Progress</span></a>
+                                {% for question in mpoll.questions.all %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'polls:pollinfo' question.id %}"> 
+                                        {{ question.question_text }}
+                                        </a>
+                                    {% if question.status == 1 %}
+                                        Poll not started
+                                    {% elif question.status == 2 %}
+                                        Polling in session
+                                    {% elif question.status == 3 %}
+                                        
+                                            The winner is <b>{{question.winner}}</b> {% if question.display_pref == 1 %}
+                                            <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
+                                            {% endif %} 
+                                        
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                        
+                    </table>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
      {% else %}
        
     <div class="jumbotron">

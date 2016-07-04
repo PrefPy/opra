@@ -18,6 +18,7 @@ from .prefpy.mechanism import *
 from .email import sendEmail
 from groups.models import *
 from django.conf import settings
+from multipolls.models import *
 
 
 # view for homepage - index of questions & results
@@ -26,6 +27,10 @@ class IndexView(generic.ListView):
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
+    def get_context_data(self, **kwargs):
+        ctx = super(IndexView, self).get_context_data(**kwargs)
+        ctx['multipolls'] = MultiPoll.objects.all()
+        return ctx
 
 #the first step of creating new vote
 def AddStep1View(request):

@@ -13,6 +13,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
+from multipolls.models import *
 
 class IndexView(generic.ListView):
     template_name = 'groups/index.html'
@@ -92,26 +93,45 @@ def addgroupvoters(request, question_id):
     question.send_email = email
     question.save()
     for group in newGroups:
-        groupObj = Group.objects.get(name=group)
-        for voter in groupObj.members.all():
-            if voter not in question.question_voters.all():
-                voterObj = User.objects.get(username=voter)
-                question.question_voters.add(voterObj.id)
-                if email:
-                    mail.send_mail('You have been invited to vote on ' + title,
-                        'Hello ' + voterObj.username + ',\n\n' + creator
-                        + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
-                        + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
-                        'oprahprogramtest@gmail.com',[voterObj.email])
+        for cur in Group.objects.all():
+            if cur.owner == request.user and cur.name == group:
+                groupObj = cur
+                for voter in groupObj.members.all():
+                    if voter not in question.question_voters.all():
+                        voterObj = User.objects.get(username=voter)
+                        question.question_voters.add(voterObj.id)
+                        if email:
+                            mail.send_mail('You have been invited to vote on ' + title,
+                                'Hello ' + voterObj.username + ',\n\n' + creator
+                                + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
+                                + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
+                                'oprahprogramtest@gmail.com',[voterObj.email])
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 def removegroupvoters(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     removeGroups = request.POST.getlist('groups')
     for group in removeGroups:
-        groupObj = Group.objects.get(name=group)
-        for voter in groupObj.members.all():
-            if voter in question.question_voters.all():
-                voterObj = User.objects.get(username=voter)
-                question.question_voters.remove(voterObj.id)
+        for cur in Group.objects.all():
+            if cur.owner == request.user and cur.name == group:
+                groupObj = cur
+                for voter in groupObj.members.all():
+                    if voter in question.question_voters.all():
+                        voterObj = User.objects.get(username=voter)
+                        question.question_voters.remove(voterObj.id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+def addgroupvoterstompoll(request, multipoll_id):
+    multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
+    newGroups = request.POST.getlist('groups')
+    for group in newGroups:
+        for cur in Group.objects.all():
+            if cur.owner == request.user and cur.name == group:
+                groupObj = cur
+                for voter in groupObj.members.all():
+                    if voter not in multipoll.voters.all():
+                        voterObj = User.objects.get(username=voter)
+                        multipoll.voters.add(voterObj.id)
+                        for question in multipoll.questions.all():
+                            question.question_voters.add(voterObj.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

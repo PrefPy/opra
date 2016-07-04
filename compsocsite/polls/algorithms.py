@@ -64,4 +64,4 @@ def allocation_random_assignment(responses):
         student_response.allocation = myitem
         student_response.save()
         items.remove(myitem)
-	return
+        return

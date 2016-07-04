@@ -19,8 +19,7 @@ from .email import sendEmail
 from groups.models import *
 from django.conf import settings
 from multipolls.models import *
-from algorithms import *
-
+from .algorithms import *
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):

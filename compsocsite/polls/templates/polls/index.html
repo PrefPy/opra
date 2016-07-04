@@ -1,11 +1,7 @@
 {% extends 'polls/base.html' %}
 
-
-
 {% block content %}
-<body>
-    {% if user.is_authenticated %}
-        
+    {% if user.is_authenticated %}        
         <ul class="nav nav-tabs">
             <li class="active"><a href="{% url 'polls:index' %}"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
             <li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
@@ -85,12 +81,21 @@
                                 </div>
                             {% elif question.status == 3 %}
                                     <td>
-                                        {{question.winner}} wins  
-                                        <a href="{% url 'polls:voteresults' question.id %}" >
-										<span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}" '>
-										</a> 
-                                       
-                                        
+                                        {% if question.question_type == 1 %}
+                                            {{question.winner}} wins
+                                            <a href="{% url 'polls:voteresults' question.id %}" >
+                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
+                                            </a> 
+                                        {% elif question.question_type == 2 %}
+                                            Allocation Complete: <br />
+                                            {% for response in question.response_set.all %}
+                                                {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                                <br />
+                                            {% endfor %}
+                                            <a href="{% url 'polls:allocate_results' question.id %}" >
+                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                            </a> 
+                                        {% endif %}
                                     </td>
                     
                             {% endif %}
@@ -132,10 +137,22 @@
                                     <td>In session</td>
                                 {% elif question.status == 3 %}
                                     <td>
-                                        {{question.winner}} wins {% if question.display_pref == 1 %}
-                                        <a href="{% url 'polls:voteresults' question.id %}">
-                                        <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
-                                        </a>
+                                        {% if question.display_pref == 1 %}
+                                            {% if question.question_type == 1 %}
+                                                {{question.winner}} wins 
+                                                <a href="{% url 'polls:voteresults' question.id %}" >
+                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
+                                                </a> 
+                                            {% elif question.question_type == 2 %}
+                                                Allocation Complete: <br />
+                                                {% for response in question.response_set.all %}
+                                                    {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                                    <br />
+                                                {% endfor %}
+                                                <a href="{% url 'polls:allocate_results' question.id %}" >
+                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                                </a> 
+                                            {% endif %}
                                         {% endif %} 
                                         
                                     </td>
@@ -228,5 +245,4 @@
       </footer>
     </div> <!-- /container -->
 {% endif %}
-</body>
 {% endblock %}

@@ -30,7 +30,8 @@
         <br />
         {% if question.status == 1 %}
             <label for="email2">Email announcement</label>
-                <input type="checkbox" name="email" id="email2" value="email" {% if question.emailDelete == True or question.emailDelete == None %} checked {% endif %}>
+            <input type="checkbox" name="email" id="email2" value="email" {% if question.emailDelete == True or question.emailDelete == None %} checked {% endif %}>
+            <br />
             <input type="submit" class="btn btn-danger" value="Remove">
         {% endif %}
     </form> 

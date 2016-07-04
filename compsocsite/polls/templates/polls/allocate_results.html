@@ -1,0 +1,21 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    <div class="col-md-12">
+        <h1>{{ question.question_text }}</h1>
+
+        <ul>
+        {% for response in question.response_set.all %}
+            {{ response.user.username }}: {{ response.allocation.item_text }} (last Updated: {{ response.timestamp }}) <br />
+            {% for dict in response.dictionary_set.all %}
+                {% for item in dict.sorted_values %}
+                   <button type="button" class="btn btn-default"> {{ item.0 }}: {{ item.1 }} </button>
+                {% endfor %}
+            {% endfor %}
+            <br />
+        {% endfor %}
+        </ul>
+
+        <a href="{% url 'polls:index' %}"> Return Home</a>
+    </div>
+{% endblock %}

@@ -28,6 +28,7 @@ class Question(models.Model):
     emailStart = models.BooleanField(default=True)
     emailStop = models.BooleanField(default=True)
     poll_algorithm = models.IntegerField(default=1)
+    question_type = models.IntegerField(default=1)
     winner = models.CharField(max_length=200) 
     def __str__(self):
         return self.question_text

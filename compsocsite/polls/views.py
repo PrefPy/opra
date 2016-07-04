@@ -19,6 +19,7 @@ from .email import sendEmail
 from groups.models import *
 from django.conf import settings
 from multipolls.models import *
+from algorithms import *
 
 
 # view for homepage - index of questions & results
@@ -38,6 +39,7 @@ def AddStep1View(request):
     if request.method == 'POST':
         questionString = request.POST['questionTitle']   
         questionDesc = request.POST['desc']
+        questionType = request.POST['questiontype']
         imageURL = request.POST['image']
         if imageURL != '':
             question = Question(question_text=questionString, question_desc=questionDesc,
@@ -51,6 +53,7 @@ def AddStep1View(request):
                 display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
                 emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
                 emailStop=request.user.userprofile.emailStop)
+        question.question_type = questionType
         question.save()
         return HttpResponseRedirect('/polls/%s/add_step2' % question.id)
     return render_to_response('polls/add_step1.html', {}, context)
@@ -140,19 +143,21 @@ def stopPoll(request, question_id):
     question.status = 3
     
     all_responses = question.response_set.reverse()
-    if (len(all_responses)!=0): 
-        (latest_responses, previous_responses) = categorizeResponses(all_responses)
-        vote_results = getVoteResults(latest_responses)
-        current_result = vote_results[question.poll_algorithm - 1]
-        winnerStr = ""
-        item_set = list(question.item_set.all())
-        for index, score in current_result.items():
-            if (score == min(current_result.values()) and question.poll_algorithm - 1 == 5) or (score == max(current_result.values()) and question.poll_algorithm - 1 != 5):
-                winnerStr += item_set[index].item_text
-        question.winner = winnerStr
-    else:
-        question.winner = ""   
-         
+    if question.question_type == 1: #poll
+        if len(all_responses) != 0: 
+            (latest_responses, previous_responses) = categorizeResponses(all_responses)
+            vote_results = getVoteResults(latest_responses)
+            current_result = vote_results[question.poll_algorithm - 1]
+            winnerStr = ""
+            item_set = list(question.item_set.all())
+            for index, score in current_result.items():
+                if (score == min(current_result.values()) and question.poll_algorithm - 1 == 5) or (score == max(current_result.values()) and question.poll_algorithm - 1 != 5):
+                    winnerStr += item_set[index].item_text
+            question.winner = winnerStr
+        else:
+            question.winner = ""   
+    elif question.question_type == 2: #allocation
+        allocation_serial_dictatorship(question.response_set.all())
     question.save()
     return HttpResponseRedirect('/polls/')
     
@@ -290,9 +295,9 @@ class SettingStep5View(generic.DetailView):
         return Question.objects.filter(pub_date__lte=timezone.now())
 
 # view for results detail
-class ResultsView(generic.DetailView):
+class AllocateResultsView(generic.DetailView):
     model = Question
-    template_name = 'polls/results.html'
+    template_name = 'polls/allocate_results.html'
 
 # view for submission confirmation
 class ConfirmationView(generic.DetailView):
@@ -447,7 +452,8 @@ def getMarginOfVictory(latest_responses):
     marginList.append(MechanismBorda().getMov(pollProfile))
     marginList.append(MechanismVeto().getMov(pollProfile))
     marginList.append(MechanismKApproval(3).getMov(pollProfile))
-    marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
+    if len(latest_responses) > 1:
+        marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
     
     return marginList
 
@@ -484,7 +490,8 @@ def removeVoter(request, question_id):
 
 def setInitialSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    question.poll_algorithm = request.POST['pollpreferences']
+    if 'pollpreferences' in request.POST:
+        question.poll_algorithm = request.POST['pollpreferences']
     question.display_pref = request.POST['viewpreferences']
 
     question.save()

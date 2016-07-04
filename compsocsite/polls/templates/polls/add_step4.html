@@ -36,7 +36,7 @@
             {% csrf_token %}
             
             {% if question.question_type == 1 %}
-                <label for="pollpreferences">Select a voting algorithm used to calculate the winner. If you're not sure, just leave it as is.</label>
+                <label for="pollpreferences">Select a voting algorithm.</label>
                 <select name="pollpreferences" class="form-control">
                 {% for item in poll_algorithms %}
                     <option value="{{ forloop.counter }}">
@@ -47,7 +47,7 @@
             <br />
             {% endif %}
 
-            <label for="viewpreferences">Control the amount of information that is visible to voters.</label>
+            <label for="viewpreferences">Information visible to voters.</label>
    
 
             <select name="viewpreferences" class="form-control">
@@ -62,7 +62,7 @@
             
             <br />
             <div class="col-md-6 col-md-offset-3" align="center">
-                <input type="submit" value="Finish" class="btn btn-primary">
+                <input type="submit" value="Finish" class="btn btn-primary" style='font-size:60%'>
             </div>
         </form>
     </div>

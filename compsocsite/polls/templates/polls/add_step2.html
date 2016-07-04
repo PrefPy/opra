@@ -58,7 +58,7 @@
             </li>
         {% endif %}
     {% endfor %}
-        <li  class="list-group-item">
+        <li  class="list-group-item" >
             <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="col-lg-8">
@@ -74,7 +74,7 @@
     </ul>
     <div class="col-md-6 col-md-offset-3" align="center">
         <form action= "/polls/{{question.id}}/add_step3/">
-            <input type="submit" value="Next" class="btn btn-primary" size="300">
+            <input type="submit" value="Next" class="btn btn-primary" style='font-size:60%'>
         </form>
     </div>
 </div>

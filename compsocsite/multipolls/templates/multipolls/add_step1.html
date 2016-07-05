@@ -22,7 +22,6 @@ function validateForm() {
     <h2  align="center">Create a New Multi-Poll</h2>
     <br/>
     <div class="steps"  align="center">
-
         <p class="sameline" style="color:grey;"> 
             1. General  
             <span class="glyphicon glyphicon-chevron-right"> </span>
@@ -48,11 +47,11 @@ function validateForm() {
         <input type="text" class="form-control" id="mPollTitle" name="mPollTitle" value="" maxlength="20" size="100" autofocus/>
         <small class="text-muted">Required (at most 20 characters) </small> <br/><br/>
         
-        <label for="desc">M-Poll description:</label> <br />
+        <label for="desc">Multi-poll description:</label> <br />
         <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
         
         <label for="n">Number of Polls:</label> <br />
-        <input type="number" class="form-control" id="n" name="n" value="" />
+        <input type="number" class="form-control" id="n" name="n" value="1" />
         <br /><br />
         <div class="col-md-6 col-md-offset-3" align="center">
             <input type="submit" value="Next" class="btn btn-primary" size="300"/>

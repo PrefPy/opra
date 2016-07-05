@@ -165,6 +165,7 @@
 			update : function(event, ui) {
 				var order = $("#sortable1").sortable("toArray");
 				$('#pref_order').val(order.join(","));
+				enableSubmission();
 			}
 		});
 
@@ -264,6 +265,9 @@
 							{% if selection.0.image %}
 							<img class="item" src='/{{ selection.0.image.url }}'/>
 							{% endif %}
+		                    {% if item.imageURL != Null %}
+		                      <img class="item" src='{{ item.imageURL }}'/>
+		                    {% endif %}
 							{{ selection.0 }}
 						</li>
 						{% endif %}
@@ -315,8 +319,11 @@
 						{% for item in question.item_set.all %}
 						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
 							{% if item.image %}
-							<img class="item" src='/static/items/{{ item.image.url }}'/>
+								<img class="item" src='/{{ item.image.url }}'/>
 							{% endif %}
+		                    {% if item.imageURL != Null %}
+		                    	<img class="item" src='{{ item.imageURL }}'/>
+		                    {% endif %}
 							{{ item.item_text }}
 						</li>
 						{% endfor %}

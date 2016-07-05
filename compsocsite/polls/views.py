@@ -101,6 +101,7 @@ class AddStep4View(generic.DetailView):
         ctx = super(AddStep4View, self).get_context_data(**kwargs)
         ctx['preference'] = self.request.user.userprofile.displayPref
         ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]
         ctx['view_preferences'] = ["Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
         return ctx
     def get_queryset(self):
@@ -414,10 +415,8 @@ def removeVoter(request, question_id):
 
 def setInitialSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    if 'pollpreferences' in request.POST:
-        question.poll_algorithm = request.POST['pollpreferences']
+    question.poll_algorithm = request.POST['pollpreferences']
     question.display_pref = request.POST['viewpreferences']
-
     question.save()
     return HttpResponseRedirect('/polls/')
 

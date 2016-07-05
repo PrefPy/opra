@@ -23,7 +23,7 @@ from .algorithms import *
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
-    template_name = 'polls/index.html'
+    template_name = 'polls/index2.html'
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
@@ -32,6 +32,13 @@ class IndexView(generic.ListView):
         ctx['multipolls'] = MultiPoll.objects.all()
         return ctx
 
+class MainView(generic.ListView):
+    template_name = 'polls/index.html'
+    context_object_name = 'question_list'
+    def get_queryset(self):
+        return Question.objects.all().order_by('-pub_date')
+    
+    
 #the first step of creating new vote
 def AddStep1View(request):
     context = RequestContext(request)

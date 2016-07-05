@@ -1,0 +1,167 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}        
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="{% url 'polls:index' %}"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
+            <li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
+        </ul>
+
+        {% if question_list == None %}
+            <tr><td>No polls are currently available.</td></tr>
+            <tr><td><a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary" style='font-size:60%'>Add Poll</span></a></td></tr>
+        {% endif %}
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Created by you</b> 
+                    <div class="panel-title pull-right" style='font-size:100%; margin-top:12px;'>
+                    <a href="{% url 'polls:AddStep1' %}" style='font-size:100%; '><span class="btn btn-primary" style='font-size:60%'><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                <table class="table">
+                {% if question_list %}
+                    {% for question in question_list %}
+                        {% if question.question_owner == request.user %}
+                        <tr>
+                            <td>    
+                                <h3><a href="{% url 'polls:pollinfo' question.id %}">{{ question.question_text }}</a></h3>
+                            </td>
+                            <td>
+                                {% if question.status == 2 %}
+                                <h3><a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" role="button" style="margin:0;float:right">Vote</a></h3>
+                                {% endif %}
+                            </td>
+                            {% if question.status == 1 %}
+                                <td>
+                                    <button class="col-sm-4" style="height:2em;float:right">
+                                        <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start" style="color:green"></span>
+                                    </button>
+                                 </td>
+
+                                <div class="modal fade" id="confirm-start" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                Confirm Start Poll
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to start this poll? Once a poll is started, you cannot modify the settings or remove voters.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{% url 'polls:start' question.id %}">
+                                                    <button type="button" class="btn-large btn-success btn-ok">Yes</button>
+                                                </a>
+                                                <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% elif question.status == 2 %}
+                                <td>
+                                    <button class="col-sm-4" style="height:2em;float:right">
+                                        <span class = "glyphicon glyphicon-stop" data-toggle="modal" data-target="#confirm-stop" style="color:red"></span>
+                                    </button>
+                                </td>
+
+                                <div class="modal fade" id="confirm-stop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                Confirm Stop Poll
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to stop this poll? Once a poll is stopped, no more votes can be changed.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{% url 'polls:stop' question.id %}">
+                                                    <button type="button" class="btn-large btn-danger btn-ok">Yes</button>
+                                                </a>
+                                                <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% elif question.status == 3 %}
+                                    <td>
+                                        {% if question.question_type == 1 %}
+                                            <h3 style="float:right;margin:10px"><a href="{% url 'polls:voteresults' question.id %}" >
+                                                {{question.winner}} wins
+                                            </a></h3> 
+                                        {% elif question.question_type == 2 %}
+                                            Allocation Complete: <br />
+                                            {% for response in question.response_set.all %}
+                                                {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                                <br />
+                                            {% endfor %}
+                                            <a href="{% url 'polls:allocate_results' question.id %}" >
+                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                            </a> 
+                                        {% endif %}
+                                    </td>
+                    
+                            {% endif %}
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}    
+                </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" >
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Participated in</b></div>
+                <div class="panel-body">
+                    <table class="table" style='font-size:100%'>
+                    {% if question_list %}
+                        {% for question in question_list %}
+                            {% if question.question_owner != request.user and request.user in question.question_voters.all %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'polls:pollinfo' question.id %}"> 
+                                    {{ question.question_text }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if question.status == 2 %}
+                                    <a href="{% url 'polls:detail' question.id %}" class ="btn-large btn-success" style='font-size:60%;float:right'>Vote</a>
+                                    {% endif %}
+                                </td>
+                                {% if question.status == 1 %}
+                                    <td>Poll not started</td>
+                                {% elif question.status == 2 %}
+                                    <td>In session</td>
+                                {% elif question.status == 3 %}
+                                    <td>
+                                        {% if question.display_pref == 1 %}
+                                            {% if question.question_type == 1 %}
+                                                {{question.winner}} wins 
+                                                <a href="{% url 'polls:voteresults' question.id %}" >
+                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
+                                                </a> 
+                                            {% elif question.question_type == 2 %}
+                                                Allocation Complete: <br />
+                                                {% for response in question.response_set.all %}
+                                                    {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                                    <br />
+                                                {% endfor %}
+                                                <a href="{% url 'polls:allocate_results' question.id %}" >
+                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                                </a> 
+                                            {% endif %}
+                                        {% endif %} 
+                                        
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}    
+                    </table>
+                </div>
+            </div>
+        </div>
+{% endif %}
+        {% endblock %}

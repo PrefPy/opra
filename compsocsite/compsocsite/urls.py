@@ -20,7 +20,7 @@ from django.conf import settings
 from django.views.static import serve
 
 urlpatterns = [
-    url(r'^$', RedirectView.as_view(url='/polls')),
+    url(r'^$', RedirectView.as_view(url='/polls/main')),
     url(r'^polls/', include('polls.urls')),
     url(r'^groups/', include('groups.urls')),
     url(r'^admin/', admin.site.urls),

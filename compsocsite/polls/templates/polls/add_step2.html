@@ -45,7 +45,7 @@
         {% if item.question == question %}
             <li class="list-group-item ">
                 {% if item.image %}
-                    <img src='/static/items/{{ item.image.url }}'/>
+                    <img src='/{{ item.image }}'/>
                 {% endif %}
                 {{ item }}
                 {% if question.status == 1 %}

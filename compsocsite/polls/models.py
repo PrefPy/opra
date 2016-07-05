@@ -41,14 +41,14 @@ class Question(models.Model):
 
 #Helper function for image
 def get_image_path(instance, filename):
-    return 'items/'
+    return 'static/img/items/'
 
 # item to rank in a question
 @python_2_unicode_compatible
 class Item(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     item_text = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='static/items/', blank=True, null=True)
+    image = models.ImageField(upload_to='static/img/items/', blank=True, null=True)
     imageURL = models.CharField(max_length=500, blank=True, null=True)
     def __str__(self):
         return self.item_text

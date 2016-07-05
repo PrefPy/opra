@@ -25,11 +25,17 @@
                     {% for question in question_list %}
                         {% if question.question_owner == request.user %}
                         <tr>
+<<<<<<< HEAD
                             <td style="vertical-align:middle">    
                                 <a href="{% url 'polls:setting_step1' question.id %}">{{ question.question_text }}</a>
+=======
+                            <td>    
+                                <h3><a href="{% url 'polls:pollinfo' question.id %}">{{ question.question_text }}</a></h3>
+>>>>>>> e815960eeee1504d74b91e96e80aa38d4234e79d
                             </td>
                             <td style="vertical-align:middle">
                                 {% if question.status == 2 %}
+<<<<<<< HEAD
                                 <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" role="button" style="margin:0;float:right">Vote</a>
                                 {% endif %}
                             </td>
@@ -38,6 +44,16 @@
                                     
                                         <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start" style="color:green; float:right;"></span>
                                     
+=======
+                                <h3><a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" role="button" style="margin:0;float:right">Vote</a></h3>
+                                {% endif %}
+                            </td>
+                            {% if question.status == 1 %}
+                                <td>
+                                    <button class="col-sm-4" style="height:2em;float:right">
+                                        <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start" style="color:green"></span>
+                                    </button>
+>>>>>>> e815960eeee1504d74b91e96e80aa38d4234e79d
                                  </td>
 
                                 <div class="modal fade" id="confirm-start" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -59,10 +75,17 @@
                                     </div>
                                 </div>
                             {% elif question.status == 2 %}
+<<<<<<< HEAD
                                 <td style="vertical-align:middle">
                                 	
                                         <span class = "glyphicon glyphicon-stop" data-toggle="modal" data-target="#confirm-stop" style="color:red; float:right;"></span>
                                     
+=======
+                                <td>
+                                    <button class="col-sm-4" style="height:2em;float:right">
+                                        <span class = "glyphicon glyphicon-stop" data-toggle="modal" data-target="#confirm-stop" style="color:red"></span>
+                                    </button>
+>>>>>>> e815960eeee1504d74b91e96e80aa38d4234e79d
                                 </td>
 
                                 <div class="modal fade" id="confirm-stop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -127,11 +150,14 @@
                                 <td>
                                     {% if question.status == 2 %}
                                     <a href="{% url 'polls:detail' question.id %}" class ="btn-large btn-success" style='font-size:60%;float:right'>Vote</a>
+<<<<<<< HEAD
                                     {% endif %}
                                 </td>
                                 <td>
                                     {% if question.status == 2 or question.status == 3 %}
                                     <a href="{% url 'polls:preferences' question.id %}" class ="btn btn-info" style='font-size:60%'>History</a>
+=======
+>>>>>>> e815960eeee1504d74b91e96e80aa38d4234e79d
                                     {% endif %}
                                 </td>
                                 {% if question.status == 1 %}
@@ -168,8 +194,12 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
         <hr />
         <div class="col-md-6">
+=======
+        <div class="col-md-6"style="clear:left;">
+>>>>>>> e815960eeee1504d74b91e96e80aa38d4234e79d
             <div class="panel panel-default">
                 <div class="panel-heading" ><b>M-polls Created by you</b> 
                     
@@ -199,8 +229,7 @@
                                     {% elif question.status == 3 %}
                                         
                                             The winner is <b>{{question.winner}}</b> {% if question.display_pref == 1 %}
-                                            <a href="{% url 'polls:voteresults' question.id %}">
-                                            	<span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}" ></span></a>
+                                            <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
                                             {% endif %} 
                                         
                                     {% endif %}
@@ -215,6 +244,7 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
      {% else %}
        
     <div class="jumbotron" style='font-size:100%'>
@@ -248,5 +278,7 @@
         <p>&copy; 2016 Company, Inc.</p>
       </footer>
     </div> <!-- /container -->
+=======
+>>>>>>> e815960eeee1504d74b91e96e80aa38d4234e79d
 {% endif %}
-{% endblock %}
+        {% endblock %}

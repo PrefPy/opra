@@ -203,96 +203,24 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
-
-# view of participated polls
+    
+# view for settings detail
 class PollInfoView(generic.DetailView):
     model = Question
     template_name = 'polls/pollinfo.html'
-
-# subview for view of participated polls
-class ViewVotersView(generic.DetailView):
-    model = Question
-    template_name= 'polls/viewvoters.html'
     def get_context_data(self, **kwargs):
-        ctx = super(ViewVotersView, self).get_context_data(**kwargs)
+        ctx = super(PollInfoView, self).get_context_data(**kwargs)
         ctx['users'] = User.objects.all()
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
+        currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
+        ctx['history'] = currentUserResponses[1:]
+        
         all_responses = self.object.response_set.reverse()
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
         ctx['latest_responses'] = latest_responses
-        ctx['previous_responses'] = previous_responses 
-        return ctx
-    
-# view for settings detail
-class SettingStep1View(generic.DetailView):
-    model = Question
-    template_name = 'polls/setting_step1.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(SettingStep1View, self).get_context_data(**kwargs)
-        ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
-        return ctx
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
-
-class SettingStep2View(generic.DetailView):
-    model = Question
-    template_name = 'polls/setting_step2.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(SettingStep2View, self).get_context_data(**kwargs)
-        ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
-        return ctx
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
-    
-class SettingStep3View(generic.DetailView):
-    model = Question
-    template_name = 'polls/setting_step3.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(SettingStep3View, self).get_context_data(**kwargs)
-        ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
-        return ctx
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
-    
-class SettingStep4View(generic.DetailView):
-    model = Question
-    template_name = 'polls/setting_step4.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(SettingStep4View, self).get_context_data(**kwargs)
-        ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
-        return ctx
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
-
-class SettingStep5View(generic.DetailView):
-    model = Question
-    template_name = 'polls/setting_step5.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(SettingStep5View, self).get_context_data(**kwargs)
-        ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
+        ctx['previous_responses'] = previous_responses    
         return ctx
     def get_queryset(self):
         """
@@ -309,22 +237,6 @@ class AllocateResultsView(generic.DetailView):
 class ConfirmationView(generic.DetailView):
     model = Question
     template_name = 'polls/confirmation.html'
-
-# view that displays votes
-class PreferenceView(generic.DetailView):
-    model = Question
-    template_name = 'polls/preferences.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(PreferenceView, self).get_context_data(**kwargs)
-        currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
-        ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
-        ctx['history'] = currentUserResponses[1:]
-        
-        all_responses = self.object.response_set.reverse()
-        (latest_responses, previous_responses) = categorizeResponses(all_responses)
-        ctx['latest_responses'] = latest_responses
-        ctx['previous_responses'] = previous_responses    
-        return ctx
 
 #separate the user votes into two categories: (1)most recent (2)previous history
 def categorizeResponses(all_responses):

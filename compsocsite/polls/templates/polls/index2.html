@@ -20,26 +20,24 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                <table class="table" style='font-size:100%'>
+                <table class="table">
                 {% if question_list %}
                     {% for question in question_list %}
                         {% if question.question_owner == request.user %}
                         <tr>
-                            <td>    
+                            <td style="vertical-align:middle">    
                                 <a href="{% url 'polls:setting_step1' question.id %}">{{ question.question_text }}</a>
                             </td>
-                            <td>
+                            <td style="vertical-align:middle">
                                 {% if question.status == 2 %}
-                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" style='font-size:60%'>Vote</a>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if question.status == 2 or question.status == 3 %}
-                                <a href="{% url 'polls:preferences' question.id %}" class='btn btn-info' style='font-size:60%'>History</a>
+                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" role="button" style="margin:0;float:right">Vote</a>
                                 {% endif %}
                             </td>
                             {% if question.status == 1 %}
-                                <td><span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start" style="color:green"></span>
+                                <td style="vertical-align:middle">
+                                    
+                                        <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start" style="color:green; float:right;"></span>
+                                    
                                  </td>
 
                                 <div class="modal fade" id="confirm-start" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -52,15 +50,20 @@
                                                 Are you sure you want to start this poll? Once a poll is started, you cannot modify the settings or remove voters.
                                             </div>
                                             <div class="modal-footer">
-                                                <a class="btn btn-success btn-ok" href="{% url 'polls:start' question.id %}">Yes</a>
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                <a href="{% url 'polls:start' question.id %}">
+                                                    <button type="button" class="btn-large btn-success btn-ok">Yes</button>
+                                                </a>
+                                                <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             {% elif question.status == 2 %}
-                                <td>
-                                	<span class = "glyphicon glyphicon-stop redcolor" data-toggle="modal" data-target="#confirm-stop" ></span></td>
+                                <td style="vertical-align:middle">
+                                	
+                                        <span class = "glyphicon glyphicon-stop" data-toggle="modal" data-target="#confirm-stop" style="color:red; float:right;"></span>
+                                    
+                                </td>
 
                                 <div class="modal fade" id="confirm-stop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -72,8 +75,10 @@
                                                 Are you sure you want to stop this poll? Once a poll is stopped, no more votes can be changed.
                                             </div>
                                             <div class="modal-footer">
-                                                <a class="btn btn-danger btn-ok" href="{% url 'polls:stop' question.id %}">Yes</a>
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                <a href="{% url 'polls:stop' question.id %}">
+                                                    <button type="button" class="btn-large btn-danger btn-ok">Yes</button>
+                                                </a>
+                                                <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
                                             </div>
                                         </div>
                                     </div>
@@ -81,10 +86,9 @@
                             {% elif question.status == 3 %}
                                     <td>
                                         {% if question.question_type == 1 %}
-                                            {{question.winner}} wins
-                                            <a href="{% url 'polls:voteresults' question.id %}" >
-                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
-                                            </a> 
+                                            <h3 style="float:right;margin:10px"><a href="{% url 'polls:voteresults' question.id %}" >
+                                                {{question.winner}} wins
+                                            </a></h3> 
                                         {% elif question.question_type == 2 %}
                                             Allocation Complete: <br />
                                             {% for response in question.response_set.all %}
@@ -122,7 +126,7 @@
                                 </td>
                                 <td>
                                     {% if question.status == 2 %}
-                                    <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" style='font-size:60%'>Vote</a>
+                                    <a href="{% url 'polls:detail' question.id %}" class ="btn-large btn-success" style='font-size:60%;float:right'>Vote</a>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -165,12 +169,13 @@
             </div>
         </div>
         <hr />
-        <div class="col-md-6"style="clear:left;">
+        <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading"><b>M-polls Created by you</b> 
+                <div class="panel-heading" ><b>M-polls Created by you</b> 
                     
-                    <div class="panel-title pull-right">
-                    <a href="{% url 'multipolls:AddStep1' %}"><span class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></span></a>
+                    <div class="panel-title pull-right" style='font-size:100%; '>
+                    <a href="{% url 'multipolls:AddStep1' %}"  style='font-size:100%; '><span class="btn btn-primary" style ="font-size:60%;"><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
+                    
                     </div>
                 </div>
                 <div class="panel-body">
@@ -211,10 +216,6 @@
             </div>
         </div>
      {% else %}
-
-
-
-
        
     <div class="jumbotron" style='font-size:100%'>
       <div class="container" style='font-size:100%'>
@@ -225,7 +226,7 @@
     </div>
     
     <div class="container">
-
+      <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
           <h2>Heading</h2>
@@ -246,6 +247,6 @@
       <footer>
         <p>&copy; 2016 Company, Inc.</p>
       </footer>
-    </div>  
+    </div> <!-- /container -->
 {% endif %}
 {% endblock %}

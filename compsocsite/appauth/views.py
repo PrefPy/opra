@@ -134,7 +134,7 @@ def user_logout(request):
     logout(request)
     
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/polls/')
+    return HttpResponseRedirect('/polls/main')
     
 @login_required
 def changepassword(request):

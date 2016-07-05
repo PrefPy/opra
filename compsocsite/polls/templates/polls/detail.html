@@ -182,15 +182,13 @@
 		</div>
 		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
 			<p {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
-				{{ question.question_text }}
+				{{ question.question_text }}: Created by {{ question.question_owner }}
 			</p>
 			{% if question.question_desc %}
 			<p {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
 				{{ question.question_desc }}
 			</p>
 			{% endif %}
-			<p {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
-				<b>Created by</b> {{ question.question_owner }}
 			</p>
 			<!-- <p>
 			<b>Voters: </b>
@@ -206,8 +204,6 @@
 	</div>
 </div>
 
-
-
 {% if error_message %}
 <p>
 	<strong>{{ error_message }}</strong>
@@ -220,7 +216,7 @@
 		{% if request.flavour == "mobile" %}
 		<div class="col-md-6"  style = "border: 5px solid;border-radius: 25px;border-color:darkgrey;margin:20px;">
 		{% else %}
-		<div class="col-md-5"  style = "margin:10px;">
+		<div class="col-md-6"  style = "margin-top:12px;">
 		{% endif %}
 		
 		
@@ -282,7 +278,7 @@
 		{% if request.flavour == "mobile" %}
 		<div class="col-md-6"  style = "border: 5px solid;border-radius: 25px;border-color:darkgrey;margin:20px;">
 		{% else %}
-		<div class="col-md-5"  style = "margin:10px;">
+		<div class="col-md-6"  style = "margin-top:12px;">
 		{% endif %}
 		
 			<div class="panel panel-default" style = "border:0px;">

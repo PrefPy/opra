@@ -8,13 +8,13 @@
             {% if question.question_owner == request.user %}
             <li class="active"><a data-toggle="tab" href="#choices" >Choices</a></li>
             <li><a data-toggle="tab" href="#voters">Voters</a></li>
-            <li><a data-toggle="tab" href="#visibility">Poll Visibility</a></li>
+            <li><a data-toggle="tab" href="#visibility">Visibility</a></li>
             <li><a data-toggle="tab" href="#emailsetting">Email</a></li>
-            <li><a data-toggle="tab" href="#delete">Delete</a></li>
             {% else %}
             <li class="active"><a data-toggle="tab" href="#general">General Info</a></li>
             {% endif %}
-            <li><a data-toggle="tab" href="#historyinfo">Votes History</a></li>
+            <li><a data-toggle="tab" href="#historyinfo">History</a></li>
+            <li><a data-toggle="tab" href="#delete">Delete</a></li>
           </ul>  
         </div>
 
@@ -281,7 +281,7 @@
                 <br />
                 <br />
                 {% if previous_responses %}
-                <button data-toggle="collapse" data-target="#history" class="btn btn-info" >Show/Hide History</button>
+                <button data-toggle="collapse" data-target="#history" class="btn btn-info" >Show/Hide More History</button>
                 <div id="history" class="collapse">
                     <div class="well">
                     {% for response in previous_responses %}

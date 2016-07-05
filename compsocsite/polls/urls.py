@@ -5,7 +5,10 @@ from . import email
 
 app_name = 'polls'
 urlpatterns = [
+               
     url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^main$', views.MainView.as_view(), name='main'),
+   
     # Create a new poll
     url(r'^add_step1/$', views.AddStep1View, name='AddStep1'), 
     url(r'^(?P<pk>[0-9]+)/add_step2/$', views.AddStep2View.as_view(), name='AddStep2'), 

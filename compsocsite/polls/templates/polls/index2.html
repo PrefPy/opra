@@ -1,0 +1,251 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}        
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="{% url 'polls:index' %}"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
+            <li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
+        </ul>
+
+        {% if question_list == None %}
+            <tr><td>No polls are currently available.</td></tr>
+            <tr><td><a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary" style='font-size:60%'>Add Poll</span></a></td></tr>
+        {% endif %}
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Created by you</b> 
+                    <div class="panel-title pull-right" style='font-size:100%; margin-top:12px;'>
+                    <a href="{% url 'polls:AddStep1' %}" style='font-size:100%; '><span class="btn btn-primary" style='font-size:60%'><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                <table class="table" style='font-size:100%'>
+                {% if question_list %}
+                    {% for question in question_list %}
+                        {% if question.question_owner == request.user %}
+                        <tr>
+                            <td>    
+                                <a href="{% url 'polls:setting_step1' question.id %}">{{ question.question_text }}</a>
+                            </td>
+                            <td>
+                                {% if question.status == 2 %}
+                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" style='font-size:60%'>Vote</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if question.status == 2 or question.status == 3 %}
+                                <a href="{% url 'polls:preferences' question.id %}" class='btn btn-info' style='font-size:60%'>History</a>
+                                {% endif %}
+                            </td>
+                            {% if question.status == 1 %}
+                                <td><span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start" style="color:green"></span>
+                                 </td>
+
+                                <div class="modal fade" id="confirm-start" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                Confirm Start Poll
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to start this poll? Once a poll is started, you cannot modify the settings or remove voters.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a class="btn btn-success btn-ok" href="{% url 'polls:start' question.id %}">Yes</a>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% elif question.status == 2 %}
+                                <td>
+                                	<span class = "glyphicon glyphicon-stop redcolor" data-toggle="modal" data-target="#confirm-stop" ></span></td>
+
+                                <div class="modal fade" id="confirm-stop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                Confirm Stop Poll
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to stop this poll? Once a poll is stopped, no more votes can be changed.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a class="btn btn-danger btn-ok" href="{% url 'polls:stop' question.id %}">Yes</a>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% elif question.status == 3 %}
+                                    <td>
+                                        {% if question.question_type == 1 %}
+                                            {{question.winner}} wins
+                                            <a href="{% url 'polls:voteresults' question.id %}" >
+                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
+                                            </a> 
+                                        {% elif question.question_type == 2 %}
+                                            Allocation Complete: <br />
+                                            {% for response in question.response_set.all %}
+                                                {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                                <br />
+                                            {% endfor %}
+                                            <a href="{% url 'polls:allocate_results' question.id %}" >
+                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                            </a> 
+                                        {% endif %}
+                                    </td>
+                    
+                            {% endif %}
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}    
+                </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" >
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Participated in</b></div>
+                <div class="panel-body">
+                    <table class="table" style='font-size:100%'>
+                    {% if question_list %}
+                        {% for question in question_list %}
+                            {% if question.question_owner != request.user and request.user in question.question_voters.all %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'polls:pollinfo' question.id %}"> 
+                                    {{ question.question_text }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if question.status == 2 %}
+                                    <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" style='font-size:60%'>Vote</a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if question.status == 2 or question.status == 3 %}
+                                    <a href="{% url 'polls:preferences' question.id %}" class ="btn btn-info" style='font-size:60%'>History</a>
+                                    {% endif %}
+                                </td>
+                                {% if question.status == 1 %}
+                                    <td>Poll not started</td>
+                                {% elif question.status == 2 %}
+                                    <td>In session</td>
+                                {% elif question.status == 3 %}
+                                    <td>
+                                        {% if question.display_pref == 1 %}
+                                            {% if question.question_type == 1 %}
+                                                {{question.winner}} wins 
+                                                <a href="{% url 'polls:voteresults' question.id %}" >
+                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
+                                                </a> 
+                                            {% elif question.question_type == 2 %}
+                                                Allocation Complete: <br />
+                                                {% for response in question.response_set.all %}
+                                                    {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                                    <br />
+                                                {% endfor %}
+                                                <a href="{% url 'polls:allocate_results' question.id %}" >
+                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                                </a> 
+                                            {% endif %}
+                                        {% endif %} 
+                                        
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}    
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="col-md-6"style="clear:left;">
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>M-polls Created by you</b> 
+                    
+                    <div class="panel-title pull-right">
+                    <a href="{% url 'multipolls:AddStep1' %}"><span class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></span></a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {% if multipolls %}
+                        {% for mpoll in multipolls %}
+                    <table class="table">
+                    
+                            {% if request.user == mpoll.owner %}
+                                <h4>{{mpoll.title}}</h4>
+                                <a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-primary">Progress</span></a>
+                                {% for question in mpoll.questions.all %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'polls:pollinfo' question.id %}"> 
+                                        {{ question.question_text }}
+                                        </a>
+                                    {% if question.status == 1 %}
+                                        Poll not started
+                                    {% elif question.status == 2 %}
+                                        Polling in session
+                                    {% elif question.status == 3 %}
+                                        
+                                            The winner is <b>{{question.winner}}</b> {% if question.display_pref == 1 %}
+                                            <a href="{% url 'polls:voteresults' question.id %}">
+                                            	<span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}" ></span></a>
+                                            {% endif %} 
+                                        
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                        
+                    </table>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+     {% else %}
+
+
+
+
+       
+    <div class="jumbotron" style='font-size:100%'>
+      <div class="container" style='font-size:100%'>
+        <h1>Welcome to OPRA</h1>
+        <p>Polling platform that allows you to specify your preferences.</p>
+        <p style='font-size:100%'><a class="btn btn-primary btn-lg" href="/auth/register/" role="button" style='font-size:60%'>Join us today &raquo;</a></p>
+      </div>
+    </div>
+    
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+       </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; 2016 Company, Inc.</p>
+      </footer>
+    </div>  
+{% endif %}
+{% endblock %}

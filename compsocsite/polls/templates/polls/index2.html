@@ -51,10 +51,10 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                Confirm Start Poll
+                                                Confirm Start Poll {{ question.question_text }}
                                             </div>
                                             <div class="modal-body">
-                                                Are you sure you want to start this poll? Once a poll is started, you cannot modify the settings or remove voters.
+                                                Are you sure you want to start poll {{ question.question_text }}? Once a poll is started, you cannot modify the settings or remove voters.
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="{% url 'polls:start' question.id %}">

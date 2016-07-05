@@ -262,7 +262,7 @@
 						{% if selection.0 == item %}
 						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
 							{% if selection.0.image %}
-							<img class="item" src='/static/items/{{ selection.0.image.url }}'/>
+							<img class="item" src='/{{ selection.0.image.url }}'/>
 							{% endif %}
 							{{ selection.0 }}
 						</li>

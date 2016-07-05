@@ -47,6 +47,9 @@
                 {% if item.image %}
                     <img src='/{{ item.image }}'/>
                 {% endif %}
+                {% if item.imageURL != '' %}
+                    <img src='{{ item.imageURL }}'/>
+                {% endif %}
                 {{ item }}
                 {% if question.status == 1 %}
                 <a href="{% url 'polls:delchoice' item.id %}">

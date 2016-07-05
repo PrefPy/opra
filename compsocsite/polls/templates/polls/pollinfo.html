@@ -14,7 +14,9 @@
             <li class="active"><a data-toggle="tab" href="#general">General Info</a></li>
             {% endif %}
             <li><a data-toggle="tab" href="#historyinfo">History</a></li>
+            {% if question.question_owner == request.user %}
             <li><a data-toggle="tab" href="#delete">Delete</a></li>
+            {% endif %}
           </ul>  
         </div>
 

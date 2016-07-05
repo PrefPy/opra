@@ -59,8 +59,11 @@ function validateForm() {
             <option value="2">Allocation</option>
         </select>
         
-        <label for="image">Image:</label> <br />
-        <input type="text" class="form-control" id="image" name="image" value="" />
+        <label for="imageURL">Image:</label> <br />
+        <input type="text" class="form-control input-sm" id="imageURL" name="imageURL" value="" />
+
+        <label for="image" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
+        <input style="display:none" id="image" type="file" name="docfile" accept="image/*">
         <br /><br />
         <div class="col-md-6 col-md-offset-3" align="center" style='font-size:100%'>
             <input type="submit" value="Next" class="btn btn-primary" style='font-size:60%'/>

@@ -71,18 +71,11 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_mobile.context_processors.flavour',
             ],
         },
     },
 ]
-
-TEMPLATE_LOADERS = [
-    'django_mobile.loader.Loader',
-    ]
-
-TEMPLATE_CONTEXT_PROCESSORS = [
-    'django_mobile.context_processors.flavour',
-    ]
 
 WSGI_APPLICATION = 'compsocsite.wsgi.application'
 

@@ -46,10 +46,10 @@ def AddStep1View(request):
         questionString = request.POST['questionTitle']   
         questionDesc = request.POST['desc']
         questionType = request.POST['questiontype']
-        imageURL = request.POST['image']
+        imageURL = request.POST['imageURL']
         if imageURL != '':
             question = Question(question_text=questionString, question_desc=questionDesc,
-                image=imageURL, pub_date=timezone.now(), question_owner=request.user,
+                imageURL=imageURL, image=request.FILES.get('docfile'), pub_date=timezone.now(), question_owner=request.user,
                 display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
                 emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
                 emailStop=request.user.userprofile.emailStop)
@@ -112,7 +112,8 @@ class AddStep4View(generic.DetailView):
 def addChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     item_text = request.POST['choice']
-    #check for empty strings    
+    imageURL = request.POST['imageURL']
+    #check for empty strings
     if item_text == "":
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     # check for duplicates
@@ -120,8 +121,13 @@ def addChoice(request, question_id):
     for choice in allChoices:
         if item_text == choice.item_text:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    #save the choice    
-    item = Item(question=question, image=request.FILES.get('docfile'), item_text=item_text)
+    #save the choice
+    if request.FILES.get('docfile') != None:
+        item = Item(question=question, image=request.FILES.get('docfile'), item_text=item_text)
+    elif imageURL != '':
+        item = Item(question=question, imageURL=imageURL, item_text=item_text)
+    else:
+        item = Item(question=question, item_text=item_text)
     item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

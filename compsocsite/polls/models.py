@@ -16,10 +16,11 @@ from django.conf import settings
 class Question(models.Model):
     question_text = models.CharField(max_length=20)
     question_desc = models.CharField(max_length=500, null=True, blank=True)
-    image = models.CharField(max_length=500, default="https://pbs.twimg.com/media/B0eebrtIUAEVFad.jpg")
+    image = models.ImageField(upload_to='static/items/', blank=True, null=True)
+    imageURL = models.CharField(max_length=500, blank=True, null=True)
     pub_date = models.DateTimeField('date published')
     follow_up = models.OneToOneField('Question', on_delete=models.CASCADE, null = True, blank = True)
-    question_owner = models.ForeignKey(User, null = True)
+    question_owner = models.ForeignKey(User, null=True)
     question_voters = models.ManyToManyField(User, related_name='voters')
     status = models.IntegerField(default=1)
     display_pref = models.IntegerField(default=1)
@@ -48,6 +49,7 @@ class Item(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     item_text = models.CharField(max_length=200)
     image = models.ImageField(upload_to='static/items/', blank=True, null=True)
+    imageURL = models.CharField(max_length=500, blank=True, null=True)
     def __str__(self):
         return self.item_text
 

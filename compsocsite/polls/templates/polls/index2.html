@@ -78,7 +78,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="{% url 'polls:stop' question.id %}">
-                                                    <button type="button" class="btn-large btn-danger btn-ok">Yes</button>
+                                                    <button type="button" class="btn-large  btn-ok btn-danger" style="font-size:100%;">Yes</button>
                                                 </a>
                                                 <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
                                             </div>
@@ -88,9 +88,9 @@
                             {% elif question.status == 3 %}
                                     <td>
                                         {% if question.question_type == 1 %}
-                                            <h3 style="float:right;margin:10px"><a href="{% url 'polls:voteresults' question.id %}" >
+                                            <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
                                                 {{question.winner}} wins
-                                            </a></h3> 
+                                            </a> 
                                         {% elif question.question_type == 2 %}
                                             Allocation Complete: <br />
                                             {% for response in question.response_set.all %}

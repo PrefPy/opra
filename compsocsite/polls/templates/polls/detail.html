@@ -61,12 +61,14 @@
 		list-style-type: none;
 		margin: 0;
 		padding: 10px;
-		background-color: #eee;
 	}
 	#sortable1 li, #sortable2 li {
 		display: block;
 		margin: 5px 5px 5px 5px;
 		padding: 5px;
+		background: linear-gradient(to bottom, #ffffff 0%,#aaaaaa 100%);
+		border-radius: 25px;
+		padding-left:50px;
 	}
 
 	html > body #sortable li {
@@ -76,7 +78,8 @@
 	.ui-state-highlight {
 		height: 1.5em;
 		line-height: 0em;
-		background-color: #aaa;
+		background: none!important;
+		background-color: #999 !important;
 	}
 	.greybackground {
 		background-color: #aaa;
@@ -93,6 +96,7 @@
 	button:hover .greencolor {
 		color: darkgreen;
 	}
+	
 
 </style>
 
@@ -214,25 +218,30 @@
 		{% csrf_token %}
 		
 		{% if request.flavour == "mobile" %}
-		<div class="col-md-6"  style = "border: 5px solid;border-radius: 25px;border-color:darkgrey;margin:20px;">
+		<div class="col-md-6"  style = "margin-top:12px;">
 		{% else %}
 		<div class="col-md-6"  style = "margin-top:12px;">
 		{% endif %}
 		
 		
-			<div class="panel panel-default" style = "border:0px;">
+			<div class="panel panel-default" style = "border:3px solid;border-color:darkgrey; border-radius: 0 0px 25px 25px;">
 				<div class="panel-heading" >
 					<b>Your preferences:</b>
 					
 					
 					{% if request.flavour == "mobile" %}
 					
-						<button id="submitbutton" type="submit" onclick="submitPref();" style ="border: none; border-radius:30px;float: right; width:30%; height:1.25em; margin:0; display: none;" >
-							<span class="glyphicon glyphicon-upload greencolor" style="font-size:80%;">Submit</span>
+						<button id="submitbutton" type="submit" onclick="submitPref();" style ="border: none; border-radius:30px;float: right; width:30%; height:1.25em; margin:0; display: none;background: linear-gradient(to bottom, lightgreen 0%,darkgreen 100%);" >
+							<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
 						</button>
+						
+						<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
+							Submit
+							</button>
+							
 							{% else %}
-							<a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger">Clear</a>
-							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
+							<a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger" style = "background: linear-gradient(to bottom, orangered 0%,darkred 100%);">Clear</a>
+							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none; background: linear-gradient(to bottom, lightgreen 0%,darkgreen 100%);">
 							Submit
 							</button>
 					{% endif %}
@@ -264,8 +273,8 @@
 				
 				{% if request.flavour == "mobile" %}
 						
-					<button onclick="javascript:window.location.href='/polls/{{ question.id }}/?order=null'; return false;" style = "border-radius: 25px;">
-					<a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash redcolor">Clear</a>
+					<button onclick="javascript:window.location.href='/polls/{{ question.id }}/?order=null'; return false;" style = "margin-bottom:0;border-radius: 25px;background: linear-gradient(to bottom, orangered 0%,darkred 100%);">
+					<a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
 				</button>
 							
 					{% endif %}
@@ -276,21 +285,21 @@
 
 
 		{% if request.flavour == "mobile" %}
-		<div class="col-md-6"  style = "border: 5px solid;border-radius: 25px;border-color:darkgrey;margin:20px;">
+		<div class="col-md-6"  style = " margin-top:12px;">
 		{% else %}
-		<div class="col-md-6"  style = "margin-top:12px;">
+		<div class="col-md-6"  style = " margin-top:12px;">
 		{% endif %}
 		
-			<div class="panel panel-default" style = "border:0px;">
+			<div class="panel panel-default" style = "border:3px solid;border-color:darkgrey;">
 				<div class="panel-heading">
 					<b>Remaining Options:</b>
 					
 					{% if request.flavour == "mobile" %}
-						<button onclick="moveAll(); return false;" style ="border: none; border-radius:25px;float: right; width:30%; height:1.25em; margin:0;" >
-					<span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center;">All</span>
+						<button onclick="moveAll(); return false;" style ="border: none; border-radius:25px;float: right; width:30%; height:1.25em; margin:0;background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);" >
+					<span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>
 				</button>
 							{% else %}
-							<button onclick="moveAll(); return false;" class="btn btn-primary" >
+							<button onclick="moveAll(); return false;" class="btn btn-primary" style ="background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);" >
 					Move All
 				</button>
 					{% endif %}

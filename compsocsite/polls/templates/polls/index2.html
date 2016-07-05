@@ -12,15 +12,21 @@
             <tr><td><a href="{% url 'polls:AddStep1' %}"><span class="btn btn-primary" style='font-size:60%'>Add Poll</span></a></td></tr>
         {% endif %}
 
-        <div class="col-md-6" style=" margin-top:12px;">
-            <div class="panel panel-default">
-                <div class="panel-heading"><b>Created by you</b> 
-                    <div class="panel-title pull-right" style='font-size:100%;'>
-                    <a href="{% url 'polls:AddStep1' %}" style='font-size:100%; '><span class="btn btn-primary" style='font-size:60%'><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                <table class="table">
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default"> <!-- for created by you section-->
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Created by you
+        </a>
+          <div class="panel-title pull-right" style='font-size:100%;'>
+            <a href="{% url 'polls:AddStep1' %}" style='font-size:100%; '><span class="btn btn-primary" style='font-size:60%'><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
+          </div>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+              <table class="table">
                 {% if question_list %}
                     {% for question in question_list %}
                         {% if question.question_owner == request.user %}
@@ -109,14 +115,22 @@
                     {% endfor %}
                 {% endif %}    
                 </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6" style = "margin-top:12px;">
-            <div class="panel panel-default">
-                <div class="panel-heading"><b>Participated in</b></div>
-                <div class="panel-body">
-                    <table class="table" style='font-size:100%'>
+      </div>
+    </div>
+  </div> <!-- end for created by you section-->
+    
+    
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Participated in
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+         <table class="table" style='font-size:100%'>
                     {% if question_list %}
                         {% for question in question_list %}
                             {% if question.question_owner != request.user and request.user in question.question_voters.all %}
@@ -162,56 +176,67 @@
                         {% endfor %}
                     {% endif %}    
                     </table>
-                </div>
-            </div>
-        </div>
+      </div>
+    </div>
+  </div> <!-- end for participated in section-->
+    
+    
+    
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+       <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
+          Multi-polls created by you
+        </a>
+          <div class="panel-title pull-right" style='font-size:100%;'>
+            <a href="{% url 'multipolls:AddStep1' %}" style='font-size:100%; '>
+                <span class="btn btn-primary" style='font-size:60%'>
+                    <span class="glyphicon glyphicon-plus" style ="font-size:100%"></span>
+                </span>
+            </a>
+          </div>
+      </h4> 
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+        {% if multipolls %}
+        <table class="table">
+            {% for mpoll in multipolls %}
+                    {% if request.user == mpoll.owner %}
+                        <h4>{{mpoll.title}}</h4>
+                        <a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-primary">Progress</span></a>
+                            {% for question in mpoll.questions.all %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'polls:pollinfo' question.id %}"> 
+                                    {{ question.question_text }}
+                                    </a>
+                                {% if question.status == 1 %}
+                                    Poll not started
+                                {% elif question.status == 2 %}
+                                    Polling in session
+                                {% elif question.status == 3 %}
 
-        <div class="col-md-6"style="clear:left;margin-top:12px;">
+                                    The winner is <b>{{question.winner}}</b> 
+                                    {% if question.display_pref == 1 %}
+                                    <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
+                                    {% endif %} 
 
-            <div class="panel panel-default">
-                <div class="panel-heading" ><b>M-polls Created by you</b> 
-                    
-                    <div class="panel-title pull-right" style='font-size:100%; '>
-                    <a href="{% url 'multipolls:AddStep1' %}"  style='font-size:100%; '><span class="btn btn-primary" style ="font-size:60%;"><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
-                    
-                    </div>
-                </div>
-                <div class="panel-body">
-                    {% if multipolls %}
-                        {% for mpoll in multipolls %}
-                    <table class="table">
-                    
-                            {% if request.user == mpoll.owner %}
-                                <h4>{{mpoll.title}}</h4>
-                                <a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-primary">Progress</span></a>
-                                {% for question in mpoll.questions.all %}
-                                <tr>
-                                    <td>
-                                        <a href="{% url 'polls:pollinfo' question.id %}"> 
-                                        {{ question.question_text }}
-                                        </a>
-                                    {% if question.status == 1 %}
-                                        Poll not started
-                                    {% elif question.status == 2 %}
-                                        Polling in session
-                                    {% elif question.status == 3 %}
-                                        
-                                            The winner is <b>{{question.winner}}</b> {% if question.display_pref == 1 %}
-                                            <a href="{% url 'polls:voteresults' question.id %}" class="btn btn-primary">More details</a>
-                                            {% endif %} 
-                                        
-                                    {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            {% endif %}
-                        
-                    </table>
-                    {% endfor %}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+                                {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                {%endif%}    
+
+            {% endfor %} <!--end for mpoll in multipolls-->
+        </table>
+        {% endif %}
+      </div>
+    </div>
+  </div> <!-- end for M-polls created by you-->
+    
+</div>
 
 {% endif %}
-        {% endblock %}
+{% endblock %}

@@ -136,22 +136,29 @@ def addVoter(request, multipoll_id):
     
 def progress(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
+    #poll hasn't started
     if multipoll.status == 0:
         question = multipoll.questions.all()[0]
+        #start the first question
         question.status = 2
         question.save()
         multipoll.status = 1
         multipoll.save()
+    #run the polls one at a time    
     elif multipoll.status < multipoll.number:
         question1 = multipoll.questions.all()[multipoll.status-1]
         question2 = multipoll.questions.all()[multipoll.status]
+        #end the previous poll and start a new poll        
         question1.status = 3
         question2.status = 2
         question1.save()
         question2.save()
+        #move to the next poll
         multipoll.status += 1
         multipoll.save()
+    #all the polls have ended
     else:
+        #end the last poll
         question = multipoll.questions.all()[multipoll.status-1]
         question.status = 3
         question.save()

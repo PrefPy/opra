@@ -45,7 +45,7 @@ def addgroup(request):
         for member in newMembers:
             memberObj = User.objects.get(username=member)
             group.members.add(memberObj.id)
-        return HttpResponseRedirect('/groups/%s/members' % group.id)
+        return HttpResponseRedirect(reverse('groups:members', args=(group.id,)))
     return render_to_response('groups/addgroup.html', {}, context)
 
 def addmember(request, group_id):
@@ -56,7 +56,7 @@ def addmember(request, group_id):
         for member in newMembers:
             memberObj = User.objects.get(username=member)
             group.members.add(memberObj.id)
-        return HttpResponseRedirect('/groups/%s/members' % group.id)
+        return HttpResponseRedirect(reverse('groups:members', args=(group.id,)))
     return render_to_response('members.html', {}, context)  
 
     
@@ -68,12 +68,12 @@ def removemember(request, group_id):
     for member in removemembers:
         memberObj = User.objects.get(username=member)
         group.members.remove(memberObj.id)
-    return HttpResponseRedirect('/groups/%s/members' % group.id)
+    return HttpResponseRedirect(reverse('groups:members', args=(group.id,)))
 
 def deletegroup(request, group_id):
     group = get_object_or_404(Group, pk=group_id)
     group.delete()
-    return HttpResponseRedirect('/polls')
+    return HttpResponseRedirect(reverse('polls:index'))
     
 class MembersView(generic.DetailView):
     model = Group

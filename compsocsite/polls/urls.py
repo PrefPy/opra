@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.contrib.auth.decorators import login_required
 
 from . import views
 from . import email
@@ -6,8 +7,8 @@ from . import email
 app_name = 'polls'
 urlpatterns = [
                
-    url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^main$', views.MainView.as_view(), name='main'),
+    url(r'^$', login_required(views.IndexView.as_view()), name='index'),
+    url(r'^main$', views.MainView.as_view(), name='index_guest'),
    
     # Create a new poll
     url(r'^add_step1/$', views.AddStep1View, name='AddStep1'), 

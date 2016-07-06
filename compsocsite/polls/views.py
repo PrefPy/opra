@@ -155,24 +155,35 @@ def stopPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.status = 3
     
-    all_responses = question.response_set.reverse()
     if question.question_type == 1: #poll
-        if len(all_responses) != 0: 
-            (latest_responses, previous_responses) = categorizeResponses(all_responses)
-            vote_results = getVoteResults(latest_responses)
-            current_result = vote_results[question.poll_algorithm - 1]
-            winnerStr = ""
-            item_set = list(question.item_set.all())
-            for index, score in current_result.items():
-                if (score == min(current_result.values()) and question.poll_algorithm - 1 == 5) or (score == max(current_result.values()) and question.poll_algorithm - 1 != 5):
-                    winnerStr += item_set[index].item_text
-            question.winner = winnerStr
-        else:
-            question.winner = ""   
+        question.winner = getPollWinner(question)    
     elif question.question_type == 2: #allocation
         allocation_serial_dictatorship(question.response_set.all())
     question.save()
     return HttpResponseRedirect(reverse('polls:index'))
+
+def getPollWinner(question):
+    all_responses = question.response_set.reverse()
+    if len(all_responses) == 0:
+        return ""
+
+    (latest_responses, previous_responses) = categorizeResponses(all_responses)
+    vote_results = getVoteResults(latest_responses)
+    indexVoteResults = question.poll_algorithm - 1
+    current_result = vote_results[indexVoteResults]
+    
+    winnerStr = ""
+    item_set = list(question.item_set.all())
+    for index, score in current_result.items():
+        # index 5 uses Simplified Bucklin, where score is rank. A low score means it has a high rank (e.g. rank 1 > rank 2), so the best score is the minimum.
+        # All other indices rank score from highest to lowest, so the best score would be the maximum.  
+        if (score == min(current_result.values()) and indexVoteResults == 5) or (score == max(current_result.values()) and indexVoteResults != 5):
+            #add a comma to separate the winners            
+            if winnerStr != "":
+                winnerStr += ", "
+            #add the winner
+            winnerStr += item_set[index].item_text
+    return winnerStr
     
 # view for question detail
 class DetailView(generic.DetailView):

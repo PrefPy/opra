@@ -10,6 +10,10 @@ import random
 # order of the timestamps on the responses for novel questions, and reverse
 # order of the timestamps on the original question for follow-up questions.
 def allocation_serial_dictatorship(responses):
+    #make sure there is at least one response    
+    if len(responses) == 0:
+        return
+    
     item_set = responses[0].question.item_set.all()
     student_response_order = responses
 
@@ -51,6 +55,10 @@ def allocation_serial_dictatorship(responses):
 # This is a toy algorithm present for testing certain system functionality. It will simply allocate a random item
 # to each user in the response set.
 def allocation_random_assignment(responses):
+    #make sure there is at least one response    
+    if len(responses) == 0:
+        return    
+
     item_set = responses[0].question.item_set.all()
     student_response_order = responses
     items = []

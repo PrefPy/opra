@@ -179,29 +179,29 @@ class MechanismPosScoring(Mechanism):
             winnerScore = candScoresMap[winner]
             candScore = candScoresMap[cand]
             votesNeeded = 0
+        
 
             for i in range(0, len(scoreEffects)):
                 scoreEffect = scoreEffects[i] 
                 ttlChange = scoreEffect[0] + scoreEffect[1]
 
                 # Check if changing all instances of the current vote can change the winner.
-            if (ttlChange*scoreEffect[2] >= winnerScore-candScore):
-                votesNeeded += math.ceil(float(winnerScore-candScore)/float(ttlChange))
-                break
-
-            # Otherwise, update the election simulation with the effects of the current votes.
-            else:
-                votesNeeded += scoreEffect[2]
-                winnerScore -= scoreEffect[1]*scoreEffect[2]
-                candScore += scoreEffect[0]*scoreEffect[2]
-
-            # If the number of votes needed to make the current candidate the winner is greater than
-            # the lowest number of votes needed to make some candidate the winner, we can stop 
-            # trying.
-            if votesNeeded > mov:
-                break
-        
-        mov = min(mov,votesNeeded)
+                if (ttlChange*scoreEffect[2] >= winnerScore-candScore):
+                    votesNeeded += math.ceil(float(winnerScore-candScore)/float(ttlChange))
+                    break
+    
+                # Otherwise, update the election simulation with the effects of the current votes.
+                else:
+                    votesNeeded += scoreEffect[2]
+                    winnerScore -= scoreEffect[1]*scoreEffect[2]
+                    candScore += scoreEffect[0]*scoreEffect[2]
+    
+                # If the number of votes needed to make the current candidate the winner is greater than
+                # the lowest number of votes needed to make some candidate the winner, we can stop 
+                # trying.
+                if votesNeeded > mov:
+                    break
+            mov = min(mov,votesNeeded)
         return int(mov)
 
 class MechanismPlurality(MechanismPosScoring):
@@ -413,7 +413,7 @@ class MechanismCopeland(Mechanism):
 
     def __init__(self, alpha):
         self.maximizeCandScore = True
-        self.alpha = True
+        self.alpha = 0.5
 
     def getCandScoresMap(self, profile):
         """
@@ -438,20 +438,20 @@ class MechanismCopeland(Mechanism):
         preferenceCounts = profile.getPreferenceCounts()
 
         # For each pair of candidates, calculate the number of votes in which one beat the other.
-        for i in range(0, len(profile.preferences)):
-            wmgMap = profile.preferences[i].wmgMap
-            for cand1, cand2 in itertools.combinations(wmgMap.keys(), 2):
-                if cand2 in wmgMap[cand1].keys():
-                    if wmgMap[cand1][cand2] > 0:
-                        copelandScores[cand1] += 1.0*preferenceCounts[i]
-                    elif wmgMap[cand1][cand2] < 0:
-                        copelandScores[cand2] += 1.0*preferenceCounts[i]
-            
-                    #If a pair of candidates is tied, we add alpha to their score for each vote.
-                    else:
-                        copelandScores[cand1] += alpha*preferenceCounts[i]
-                        copelandScores[cand2] += alpha*preferenceCounts[i]
-
+        # for i in range(0, len(profile.preferences)):
+        wmgMap = profile.getWmg()
+        for cand1, cand2 in itertools.combinations(wmgMap.keys(), 2):
+            if cand2 in wmgMap[cand1].keys():
+                if wmgMap[cand1][cand2] > 0:
+                    copelandScores[cand1] += 1.0
+                elif wmgMap[cand1][cand2] < 0:
+                    copelandScores[cand2] += 1.0
+        
+                # If a pair of candidates is tied, we add alpha to their score for each vote.
+                else:
+                    copelandScores[cand1] += self.alpha
+                    copelandScores[cand2] += self.alpha
+                    
         return copelandScores
 
 class MechanismMaximin(Mechanism):
@@ -491,3 +491,5 @@ class MechanismMaximin(Mechanism):
                 maximinScores[cand2] = min(maximinScores[cand2], wmg[cand2][cand1])
 
         return maximinScores
+
+print("test")    

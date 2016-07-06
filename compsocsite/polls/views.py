@@ -370,15 +370,15 @@ def getMarginOfVictory(latest_responses):
     #make sure no ties or incomplete results are in the votes
     if pollProfile.getElecType() != "soc":
         return []
-    
+    print(MechanismPlurality().getMov(pollProfile))
     marginList = []
     marginList.append(MechanismPlurality().getMov(pollProfile))  
     marginList.append(MechanismBorda().getMov(pollProfile))
     marginList.append(MechanismVeto().getMov(pollProfile))
     marginList.append(MechanismKApproval(3).getMov(pollProfile))
-    if len(latest_responses) > 1:
-        marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
-    
+    #if len(latest_responses) > 1:
+     #   marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
+    marginList.append("-")
     return marginList
 
 #function to add voter to voter list (invite only)

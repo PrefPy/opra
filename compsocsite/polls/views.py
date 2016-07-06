@@ -61,7 +61,7 @@ def AddStep1View(request):
                 emailStop=request.user.userprofile.emailStop)
         question.question_type = questionType
         question.save()
-        return HttpResponseRedirect('/polls/%s/add_step2' % question.id)
+        return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
     return render_to_response('polls/add_step1.html', {}, context)
 
 class AddStep2View(generic.DetailView):
@@ -101,6 +101,7 @@ class AddStep4View(generic.DetailView):
         ctx = super(AddStep4View, self).get_context_data(**kwargs)
         ctx['preference'] = self.request.user.userprofile.displayPref
         ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]
         ctx['view_preferences'] = ["Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
         return ctx
     def get_queryset(self):
@@ -140,7 +141,7 @@ def deleteChoice(request, choice_id):
 def deletePoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.delete()
-    return HttpResponseRedirect('/polls/')
+    return HttpResponseRedirect(reverse('polls:index'))
 
 def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -148,7 +149,7 @@ def startPoll(request, question_id):
     question.save()
     if question.emailStart:
         sendEmail(request, question_id, 'start')
-    return HttpResponseRedirect('/polls/')    
+    return HttpResponseRedirect(reverse('polls:index'))    
 
 def stopPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -171,7 +172,7 @@ def stopPoll(request, question_id):
     elif question.question_type == 2: #allocation
         allocation_serial_dictatorship(question.response_set.all())
     question.save()
-    return HttpResponseRedirect('/polls/')
+    return HttpResponseRedirect(reverse('polls:index'))
     
 # view for question detail
 class DetailView(generic.DetailView):
@@ -414,12 +415,10 @@ def removeVoter(request, question_id):
 
 def setInitialSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    if 'pollpreferences' in request.POST:
-        question.poll_algorithm = request.POST['pollpreferences']
+    question.poll_algorithm = request.POST['pollpreferences']
     question.display_pref = request.POST['viewpreferences']
-
     question.save()
-    return HttpResponseRedirect('/polls/')
+    return HttpResponseRedirect(reverse('polls:index'))
 
 def setVisibility(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

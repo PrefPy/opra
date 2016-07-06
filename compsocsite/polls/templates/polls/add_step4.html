@@ -36,7 +36,7 @@
             {% csrf_token %}
             
             {% if question.question_type == 1 %}
-                <label for="pollpreferences">Select a voting algorithm.</label>
+                <label for="pollpreferences">Select a voting algorithm</label>
                 <select name="pollpreferences" class="form-control">
                 {% for item in poll_algorithms %}
                     <option value="{{ forloop.counter }}">
@@ -44,7 +44,17 @@
                     </option>
                 {% endfor %}
                 </select>
-            <br />
+                <br />
+            {% elif question.question_type == 2 %}
+                <label for="pollpreferences">Select an allocation method</label>
+                <select name="pollpreferences" class="form-control">
+                {% for item in alloc_methods %}
+                    <option value="{{ forloop.counter }}">
+                        {{ item }}
+                    </option>
+                {% endfor %}
+                </select>
+                <br />
             {% endif %}
 
             <label for="viewpreferences">Information visible to voters.</label>

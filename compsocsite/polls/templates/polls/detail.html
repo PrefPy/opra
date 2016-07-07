@@ -57,7 +57,7 @@
 </script>
 <script>
 	function submitPref() {
-		var prefcolumn = $('#sortable1');
+		var prefcolumn = $('#left-sortable');
 		var order = prefcolumn.sortable("toArray");
 		$('#pref_order').val(order.join(","));
 		$('#pref_order').submit();
@@ -69,14 +69,14 @@
 
 	function moveToPref(obj) {
 		var time = 100
-		var prefcolumn = $('#sortable1');
+		var prefcolumn = $('#left-sortable');
 		var currentli = document.getElementById(obj.id);
 		jQuery("#" + obj.id).addClass("greybackground");
 		setTimeout(function() {
 			prefcolumn.append(currentli);
 			jQuery("#" + obj.id).removeClass("greybackground", time * 2);
 			prefcolumn.sortable('refresh');
-			if ($('#sortable2 li').length == 0){
+			if ($('#right-sortable li').length == 0){
 				enableSubmission();	
 			}
 		}, time);
@@ -86,10 +86,10 @@
 
 	function moveAll() {
 		var time = 100;
-		var ul = document.getElementById('sortable2');
+		var ul = document.getElementById('right-sortable');
 		var items = ul.getElementsByTagName("li");
 		var len = items.length;
-		var prefcolumn = $('#sortable1');
+		var prefcolumn = $('#left-sortable');
 		for (var i = 0; i < len; i++) {
 			jQuery("#" + items[i].id).addClass("greybackground");
 		}
@@ -98,7 +98,7 @@
 				prefcolumn.append(items[0]);
 			}
 			setTimeout(function() {
-				var ul = document.getElementById('sortable1');
+				var ul = document.getElementById('left-sortable');
 				var items = ul.getElementsByTagName("li");
 				var len = items.length;
 
@@ -112,11 +112,11 @@
 	};
 
 	$(function() {
-		$("#sortable1").sortable({
+		$("#left-sortable").sortable({
 			placeholder : "ui-state-highlight",
 			containment : "parent",
 			update : function(event, ui) {
-				var order = $("#sortable1").sortable("toArray");
+				var order = $("#left-sortable").sortable("toArray");
 				$('#pref_order').val(order.join(","));
 				enableSubmission();
 			}
@@ -126,7 +126,7 @@
 			connectWith : "ul"
 		});
 
-		$("#sortable1, #sortable2").disableSelection();
+		$("#left-sortable, #right-sortable").disableSelection();
 	}); 
 </script>
 
@@ -201,7 +201,7 @@
 				</div>
 
 				<div class="panel-body" >
-					<ul id="sortable1" class="list-group droptrue">
+					<ul id="left-sortable" class="list-group droptrue">
 						{% if currentSelection %}
 						{% for selection in currentSelection %}
 						{% for item in question.item_set.all %}
@@ -252,7 +252,7 @@
 					{% endif %}
 				</div>
 				<div class="panel-body">
-					<ul id="sortable2" class="list-group">
+					<ul id="right-sortable" class="list-group">
 						{% if currentSelection == None %}
 						{% for item in question.item_set.all %}
 						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
@@ -274,15 +274,15 @@
 </div>
 
 <script>
-	var wholeHeight1 = $('#sortable1')[0].scrollHeight;
-	var wholeHeight2 = $('#sortable2')[0].scrollHeight;
+	var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
+	var wholeHeight2 = $('#right-sortable')[0].scrollHeight;
 	if (wholeHeight1 > wholeHeight2) {
-		$('#sortable2').css("height", wholeHeight1);
+		$('#right-sortable').css("height", wholeHeight1);
 	} else {
-		$('#sortable1').css("height", wholeHeight2);
+		$('#left-sortable').css("height", wholeHeight2);
 	}
-	$('#sortable1').sortable('refresh');
-	$('#sortable2').sortable('refresh');
+	$('#left-sortable').sortable('refresh');
+	$('#right-sortable').sortable('refresh');
 
 </script>
 

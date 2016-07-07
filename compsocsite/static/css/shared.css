@@ -83,12 +83,12 @@ nopadding {
 }
 
 /* Ranking UI */
-#sortable1, #sortable2 {
+#left-sortable, #right-sortable {
     list-style-type: none;
     margin: 0;
     padding: 10px;
 }
-#sortable1 li, #sortable2 li {
+#left-sortable li, #right-sortable li {
     display: block;
     margin: 5px 5px 5px 5px;
     padding: 5px;

@@ -23,50 +23,13 @@
     </ul>  
 </div>
 
-        <div class="tab-content">
-          {% if question.question_owner == request.user %}
-          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="choices">
-              <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
-              <ul class="list-group">
-                {% for item in items %}
-                  {% if item.question == question %}
-                  <li class="list-group-item ">
-                      {% if item.image %}  
-                        <img src='/{{ item.image }}'/>
-                      {% endif %}
-                      {% if item.imageURL != Null %}
-                        <img src='{{ item.imageURL }}'/>
-                      {% endif %}
-                      {{ item }} 
-                      {% if question.status == 1 %}
-                      <a href="{% url 'polls:delchoice' item.id %}">
-                          <div class="pull-right">
-                            <span class="glyphicon glyphicon-remove"></span>
-                          </div>
-                    </a>
-                        {% endif %}
-                  </li>
-                  {% endif %}
-                {% endfor %}
-        <li class="list-group-item">
-            <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="col-lg-8">
-                    <input type="text" class="form-control" name="choice" value="" size="50" placeholder="Option name" autofocus/>
-                </div>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" name="imageURL" value="" size="50" placeholder="Paste Image URL" autofocus/>
-                </div>
-                <label for="image" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
-                <input style="display:none" id="image" type="file" name="docfile" accept="image/*">
-                <button type="submit" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
-            </form>
-        </li>
-              </ul>
+<div class="tab-content">
+{% if question.question_owner == request.user %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="choices">
+        <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
+        
+        {% include 'polls/_add_choice.html' %}
     </div>
-
 
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="voters">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>

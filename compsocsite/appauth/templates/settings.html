@@ -9,6 +9,7 @@
             <div class="list-group">
                 <a href="{% url 'appauth:settings' %}" class="list-group-item active">Profile</a>
                 <a href="{% url 'appauth:passwordpage' %}" class="list-group-item">Account</a>
+                <a href="{% url 'appauth:globalSettings' %}" class="list-group-item">Global</a>
             </div>
         </div>
     </div>
@@ -16,7 +17,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">Profile Settings</div>
             <div class="panel-body">
-            <form method="post" action="/auth/settings/update/">
+            <form method="post" action="{% url 'appauth:updateSettings' %}">
                 {% csrf_token %}
                 <fieldset class="form-group">
                     <label for="first_name">First Name (Optional)</label>
@@ -29,31 +30,6 @@
                 <fieldset class="form-group">
                     <label for="email">Email</label>
                     <input type="text" class="form-control" id="email" name="email" value="{{ request.user.email }}">
-                </fieldset>
-                <fieldset class="form-group" style="font-size:100%;">
-                    <label for="viewpreferences">Visibility settings for polls you created</label>
-                    <select name="viewpreferences" class="form-control" >
-                        <option value="allpermit"  {% if request.user.userprofile.displayPref == 1 %} selected {% endif %} >Everyone can see all votes </option>
-                        <option value="voternames" {% if request.user.userprofile.displayPref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
-                        <option value="justnumber" {% if request.user.userprofile.displayPref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
-                        <option value="nothing" {% if request.user.userprofile.displayPref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>
-                    </select>
-                </fieldset>
-                <fieldset class="form-group col-md-6">
-                    <label for="emailInvite">Send email when inviting voters</label>
-                    <input type="checkbox" name="emailInvite" id="emailInvite" value="email" {% if request.user.userprofile.emailInvite %} checked {% endif %}>
-                </fieldset>
-                <fieldset class="form-group col-md-6">
-                    <label for="emailStart">Send email when the poll starts</label>
-                    <input type="checkbox" name="emailStart" id="emailStart" value="email" {% if request.user.userprofile.emailStart %} checked {% endif %}>
-                </fieldset>
-                <fieldset class="form-group col-md-6">
-                    <label for="emailDelete">Send email when deleting voters</label>
-                    <input type="checkbox" name="emailDelete" id="emailDelete" value="email" {% if request.user.userprofile.emailDelete %} checked {% endif %}>
-                </fieldset>
-                <fieldset class="form-group col-md-6">
-                    <label for="emailStop">Send email when the poll stops</label>
-                    <input type="checkbox" name="emailStop" id="emailStop" value="email" {% if request.user.userprofile.emailStop %} checked {% endif %}>
                 </fieldset>
                 <input type="submit" class="btn btn-success" value="Save Changes" style='font-size:60%'>
             </form>

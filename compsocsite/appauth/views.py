@@ -98,7 +98,7 @@ def updateSettings(request):
         updatedEmail = request.POST['email']
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
-        if first_name == "" or last_name == "":
+        if (first_name == "" and last_name != "") or (first_name != "" and last_name == ""):
             return HttpResponse("Please enter both a first and last name")
 	
     try:
@@ -110,6 +110,12 @@ def updateSettings(request):
         request.user.last_name = last_name
         request.user.email = updatedEmail
         request.user.save()
+	
+    return HttpResponseRedirect(reverse('appauth:settings'))
+
+@login_required
+def updateGlobalSettings(request):
+    context = RequestContext(request)
     if request.method == 'POST':
         displayChoice = request.POST['viewpreferences']
         if displayChoice == "allpermit":
@@ -125,8 +131,8 @@ def updateSettings(request):
         request.user.userprofile.emailStart = request.POST.get('emailStart') == 'email'
         request.user.userprofile.emailStop = request.POST.get('emailStop') == 'email'
         request.user.userprofile.save()
-	
-    return HttpResponseRedirect(reverse('appauth:settings'))    
+        
+    return HttpResponseRedirect(reverse('appauth:globalSettings'))
 
 @login_required
 def user_logout(request):

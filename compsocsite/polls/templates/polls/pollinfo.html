@@ -4,21 +4,24 @@
 
 
 <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            {% if question.question_owner == request.user %}
+    <ul class="nav nav-sidebar">
+        {% if question.question_owner == request.user %}
             <li class="active"><a data-toggle="tab" href="#choices" >Choices</a></li>
             <li><a data-toggle="tab" href="#voters">Voters</a></li>
+            <li><a data-toggle="tab" href="#algorithm">Algorithms</a></li>
             <li><a data-toggle="tab" href="#visibility">Visibility</a></li>
             <li><a data-toggle="tab" href="#emailsetting">Email</a></li>
-            {% else %}
+        {% else %}
             <li class="active"><a data-toggle="tab" href="#general">General Info</a></li>
-            {% endif %}
-            <li><a data-toggle="tab" href="#historyinfo">History</a></li>
-            {% if question.question_owner == request.user %}
+        {% endif %}
+            
+        <li><a data-toggle="tab" href="#historyinfo">History</a></li>
+        
+        {% if question.question_owner == request.user %}
             <li><a data-toggle="tab" href="#delete">Delete</a></li>
-            {% endif %}
-          </ul>  
-        </div>
+        {% endif %}
+    </ul>  
+</div>
 
         <div class="tab-content">
           {% if question.question_owner == request.user %}
@@ -135,7 +138,50 @@
 </div>
 </div>
 
-
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="algorithm">
+    <h3 class="page-header">Algorithm for {{ question.question_text }} </h3>
+        {% if question.status == 1 %}
+            <form class="form-group" method="post" action="{% url 'polls:setAlgorithm' question.id %}" align="center">
+                {% csrf_token %}
+                {% if question.question_type == 1 %}
+                    <label for="pollpreferences">Select a voting algorithm</label>
+                    <select name="pollpreferences" class="form-control">
+                    {% for item in poll_algorithms %}
+                        <option value="{{ forloop.counter }}" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
+                            {{ item }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                {% elif question.question_type == 2 %}
+                    <label for="pollpreferences">Select an allocation method</label>
+                    <select name="pollpreferences" class="form-control">
+                    {% for item in alloc_methods %}
+                        <option value="{{ forloop.counter }}" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
+                            {{ item }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                {% endif %}
+                <br/><br/>
+                <input type="submit" value="Submit" class="btn btn-success">
+            </form>
+        {% else %}
+            {% if question.question_type == 1 %}
+                {% for item in poll_algorithms %}
+                    {% if question.poll_algorithm == forloop.counter %}
+                        Poll Algorithm:　{{ item }}
+                    {% endif %}
+                {% endfor %}
+            {% elif question.question_type == 2 %}
+                {% for item in alloc_methods %}
+                    {% if question.poll_algorithm == forloop.counter %}
+                        {{ item }}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+</div>
+            
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="visibility">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
    <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}" align="center">

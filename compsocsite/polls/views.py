@@ -231,6 +231,8 @@ class PollInfoView(generic.DetailView):
         ctx['users'] = User.objects.all()
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
+        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]        
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
         ctx['history'] = currentUserResponses[1:]
@@ -430,6 +432,13 @@ def setInitialSettings(request, question_id):
     question.display_pref = request.POST['viewpreferences']
     question.save()
     return HttpResponseRedirect(reverse('polls:index'))
+
+def setAlgorithm(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.poll_algorithm = request.POST['pollpreferences']
+    print (question.poll_algorithm)
+    question.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def setVisibility(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

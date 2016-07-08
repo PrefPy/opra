@@ -38,7 +38,7 @@
                             </td>
                             <td style="vertical-align:middle">
                                 {% if question.status == 2 %}
-                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-success" role="button" style="margin:0;float:right">Vote</a>
+                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button" >Vote</a>
                                 {% endif %}
                             </td>
                             {% if question.status == 1 %}
@@ -131,7 +131,7 @@
     </div>
     <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
       <div class="panel-body">
-         <table class="table" style='font-size:100%'>
+         <table class="table" >
                     {% if question_list %}
                         {% for question in question_list %}
                             {% if question.question_owner != request.user and request.user in question.question_voters.all %}
@@ -143,7 +143,8 @@
                                 </td>
                                 <td>
                                     {% if question.status == 2 %}
-                                    <a href="{% url 'polls:detail' question.id %}" class ="btn-large btn-success" style='font-size:60%;float:right'>Vote</a>
+                                    
+                                    <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button">Vote</a>
                                     {% endif %}
                                 </td>
                                 {% if question.status == 1 %}
@@ -191,8 +192,8 @@
         </a>
           <div class="panel-title pull-right" style='font-size:100%;'>
             <a href="{% url 'multipolls:AddStep1' %}" style='font-size:100%; '>
-                <span class="btn btn-primary" style='font-size:60%'>
-                    <span class="glyphicon glyphicon-plus" style ="font-size:100%"></span>
+                <span class="btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span>
                 </span>
             </a>
           </div>
@@ -205,7 +206,7 @@
             {% for mpoll in multipolls %}
                     {% if request.user == mpoll.owner %}
                         <h4>{{mpoll.title}}</h4>
-                        <a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-primary">Progress</span></a>
+                        <a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-dark">Progress</span></a>
                             {% for question in mpoll.questions.all %}
                             <tr>
                                 <td>

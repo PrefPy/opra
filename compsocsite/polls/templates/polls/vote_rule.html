@@ -45,6 +45,10 @@
                         </tr>
                     {% endfor %}
                 </table>
+                <h2>Previous Winners</h2>
+                {% for winner in previous_winners %}
+                    <p>{{ winner }}</p>
+                {% endfor %}
             </div>
         </div>
         {% endif %}

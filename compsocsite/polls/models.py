@@ -30,7 +30,7 @@ class Question(models.Model):
     emailStop = models.BooleanField(default=True)
     poll_algorithm = models.IntegerField(default=1)
     question_type = models.IntegerField(default=1)
-    winner = models.CharField(max_length=200) 
+    winner = models.CharField(max_length=200)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):
@@ -64,6 +64,16 @@ class Response(models.Model):
         return "Response of student " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:
         ordering = ['timestamp'] 
+
+# a winner at a certain point in time
+@python_2_unicode_compatible
+class OldWinner(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    response = models.ForeignKey(Response, on_delete=models.CASCADE)
+    def __str__(self):
+        return (str(self.response.timestamp.time()) + ": " + self.item.item_text
+            + " was the winner with " + self.response.user.username + "'s vote.")
         
 # Dictionary Helper Models - from https://djangosnippets.org/snippets/2451/
 # Models include modifications to be used specifically for holding student preferences - these changes are marked with comments

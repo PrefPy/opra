@@ -162,7 +162,7 @@ def stopPoll(request, question_id):
     question.status = 3
     
     if question.question_type == 1: #poll
-        question.winner = getPollWinner(question)    
+        question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
         allocation_serial_dictatorship(question.response_set.all())
     question.save()
@@ -362,6 +362,7 @@ class VoteResultsView(generic.DetailView):
         ctx['vote_results'] = getVoteResults(latest_responses)   
         ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
         ctx['margin_victory'] = getMarginOfVictory(latest_responses)
+        ctx['previous_winners'] = OldWinner.objects.all().filter(question=self.object)
         return ctx
 
 #get a list of options for this poll
@@ -548,4 +549,11 @@ def vote(request, question_id):
             d[item] = rank
         d.save()
         item_num += 1
+
+    #get current winner
+    winning_string = getPollWinner(question)
+    winning_item = get_object_or_404(Item, item_text=winning_string, question=question)
+    old_winner = OldWinner(question=question, item=winning_item, response=response)
+    old_winner.save()
+
     return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))

@@ -1,9 +1,10 @@
 {% extends 'polls/base.html' %}
 
 {% block extra_head %}
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<!--<script src="//code.jquery.com/jquery-1.10.2.js"></script>-->
+<!--<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
 <script src='/static/js/shared.js'></script>
+<script src='/static/js/exp.js'></script>
 {% if request.flavour == "mobile" %}
 <script src='/static/js/mobile.js'></script>
 {% else %}
@@ -92,7 +93,7 @@
 						{% for selection in currentSelection %}
 						{% for item in question.item_set.all %}
 						{% if selection.0 == item %}
-						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
+						<li class="list-group-item"  id="item{{ forloop.counter }}">
 							{% if selection.0.image %}
 				                <img class="item" src='/{{ selection.0.image.url }}'/>
 							{% endif %}

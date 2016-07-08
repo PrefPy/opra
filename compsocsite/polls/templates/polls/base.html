@@ -176,11 +176,16 @@
 						</div><!--/.container-fluid -->
 
 				</nav>
-
-				<div class="container-fluid" style="padding: 50px 10px;">
-					{% block content %}
-					{% endblock %}
-				</div>
+                     
+                     
+            {% if user.is_authenticated %}
+				<div class="container-fluid" style="padding: 60px 20px;">
+            {% else%}
+                <div name="MainPage">
+            {% endif %}
+            {% block content %}
+            {% endblock %}
+                    </div>
 
 
 	</body>

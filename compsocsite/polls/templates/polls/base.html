@@ -10,14 +10,22 @@
     <title>OPRA</title>
 
     <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'polls/css/stylish-portfolio.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/stylish-portfolio.css' %}" />
 
     <!-- Custom Fonts -->
     
-    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+        
+        <link rel="stylesheet" href="{% static 'css/shared.css' %}">
+		{% if request.flavour == "mobile" %}
+		<link rel="stylesheet" href="{% static 'css/mobile.css' %}">
+		
+		<!--link rel="stylesheet" href="{% static 'css/desktop.css' %}"-->
+		{% endif %}
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,7 +40,6 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://use.fontawesome.com/5f5c1e4fb0.js"></script>
     
-
     <!-- Custom Theme JavaScript -->
     <script>
     // Scrolls to the selected menu item on the page
@@ -99,13 +106,7 @@
         
         
         
-		<link rel="stylesheet" href="{% static 'css/shared.css' %}">
-		{% if request.flavour == "mobile" %}
-		<link rel="stylesheet" href="{% static 'css/mobile.css' %}">
 		
-		<!--link rel="stylesheet" href="{% static 'css/desktop.css' %}"-->
-		{% endif %}
-
 		{% block extra_head %}
 
 		{% endblock %}
@@ -114,39 +115,34 @@
     
 	<body>
 
-		{% if request.flavour == "mobile" %}
-		<div style = "margin-left: 20px; margin-right: 20px;font-size:100%;">
-        {% else %}
-			<div class="container" style ="font-size:100%">
-				{% endif %}
-
-				 <nav  class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
+				 <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
 					{% if request.flavour == "mobile" %}
 					<div style = "margin-left: 20px; margin-right: 20px">
-						{% else %}
-						<div class="container-fluid">
-							{% endif %}
-							<div class="navbar-header">
-                                <!-- Brand and toggle get grouped for better mobile display -->
-								 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                                     
-                                <span class="sr-only">Toggle navigation</span>
-								</button>
-								<a class="navbar-brand" href="/polls/" style ="font-size: 150%; color:black; {% if request.flavour == 'mobile' %}
-								margin-top: 12pt;
-								{% endif %} "><span> Welcome
-									{% if user.is_authenticated %}
-									{% if request.user.first_name == "" %}
-									{{ request.user.username }}
-									{% endif %}
-									{% if request.user.first_name != "" %}
-									{{ request.user.first_name }}
-									{% endif %}
-									{% endif %} </span></a>
-							</div>
+				    {% else %}
+				    <div class="container-fluid">
+				    {% endif %}
+                        <div class="navbar-header">
+                            <!-- Brand and toggle get grouped for better mobile display -->
+                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+
+                            <span class="sr-only">Toggle navigation</span>
+                            </button>
+                            <a class="navbar-brand" href="/polls/" style ="font-size: 150%; color:black; {% if request.flavour == 'mobile' %}
+                            margin-top: 12pt;
+                            {% endif %} "><span> Welcome
+                                {% if user.is_authenticated %}
+                                {% if request.user.first_name == "" %}
+                                {{ request.user.username }}
+                                {% endif %}
+                                {% if request.user.first_name != "" %}
+                                {{ request.user.first_name }}
+                                {% endif %}
+                                {% endif %} </span></a>
+                        </div>
 
 							{% if user.is_authenticated %}
 							<ul class="nav navbar-nav navbar-right">
+                                <li><a href="{% url 'polls:index' %}"><span class="glyphicon navbar-right glyphicon-home greycolor"></span></a> </li>
 								<li class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
 									<ul class="dropdown-menu" style="font-size:100%; color: black;">
@@ -163,7 +159,9 @@
 									</ul>
 								</li>
 							</ul>
-							<a href="{% url 'polls:index' %}"><span class="glyphicon navbar-right glyphicon-home greycolor" style = "margin-top: 15px;"></span></a>
+                            
+							
+             
 							{% else %}
 							<ul class="nav navbar-nav navbar-right">
 								<li>
@@ -179,15 +177,10 @@
 
 				</nav>
 
-				<div class=".col-md-12" style="padding: 50px 15px;">
-
+				<div class=".col-md-12" style="padding: 50px 10px;">
 					{% block content %}
-
 					{% endblock %}
 				</div>
-
-			</div>
-			<!-- /container -->
 
 
 	</body>

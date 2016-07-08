@@ -362,7 +362,19 @@ class VoteResultsView(generic.DetailView):
         ctx['vote_results'] = getVoteResults(latest_responses)   
         ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
         ctx['margin_victory'] = getMarginOfVictory(latest_responses)
-        ctx['previous_winners'] = OldWinner.objects.all().filter(question=self.object)
+        previous_winners = OldWinner.objects.all().filter(question=self.object)
+        ctx['previous_winners'] = []
+        for pw in previous_winners:
+            obj = {}
+            responses = self.object.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp])
+            (lr, pr) = categorizeResponses(responses)
+            obj['title'] = str(pw)
+            obj['latest_responses'] = lr
+            obj['previous_responses'] = pr
+            obj['candMap'] = getCandidateMap(lr[0]) if (len(lr) > 0) else None
+            obj['vote_results'] = getVoteResults(lr)
+            obj['margin_victory'] = getMarginOfVictory(lr)
+            ctx['previous_winners'].append(obj)
         return ctx
 
 #get a list of options for this poll

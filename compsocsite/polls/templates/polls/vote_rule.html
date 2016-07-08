@@ -45,9 +45,45 @@
                         </tr>
                     {% endfor %}
                 </table>
-                <h2>Previous Winners</h2>
-                {% for winner in previous_winners %}
-                    <p>{{ winner }}</p>
+                <h1>Previous Winners</h1>
+                {% for pw in previous_winners %}
+            <div class="panel-heading">{{pw.title}}</div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>Poll Mechanism</th>
+                        {% for option in pw.cand_map.values %}
+                            <th>{{ option }}</th>
+                        {% endfor %}
+                        <th>Margin of Victory</th>
+                    </tr>
+                    
+                    {% for item in pw.vote_results %}
+                        <tr>
+                            {% for algorithm in poll_algorithms %}
+                                {% if forloop.counter == forloop.parentloop.counter %}
+                                    <td {% if question.poll_algorithm == forloop.parentloop.counter %}class="info"{% endif %}>{{ algorithm }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            {% for score in item.values %}
+                                {% if score == item.values|smallest and forloop.parentloop.counter == 5 %}
+                                    <td class="success">{{ score }}</td>
+                                {% elif score == item.values|largest and forloop.parentloop.counter != 5 %}
+                                    <td class="success">{{ score }}</td>
+                                {% else %}
+                                    <td {% if question.poll_algorithm == forloop.parentloop.counter %}class="info"{% endif %}>{{ score }}</td>
+                                {% endif %}
+                            {% endfor %}
+                            {% if forloop.counter < 5 %}
+                                <td>{{ previous_winners.margin_victory.0 }} </td>
+                            {% elif forloop.counter == 5 %}
+                                <td>{{ previous_winners.margin_victory.4 }}</td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
                 {% endfor %}
             </div>
         </div>

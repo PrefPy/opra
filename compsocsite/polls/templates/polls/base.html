@@ -114,8 +114,12 @@
     
     
 	<body>
-
-				 <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
+                {% if user.is_authenticated %}
+				 <nav class="navbar navbar-default navbar-fixed-top" style="background-color:#377BB5; border-color: transparent;">
+                {%else%}
+                 <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
+                {%endif%}
+                     
 					{% if request.flavour == "mobile" %}
 					<div style = "margin-left: 20px; margin-right: 20px">
 				    {% else %}
@@ -127,9 +131,17 @@
 
                             <span class="sr-only">Toggle navigation</span>
                             </button>
-                            <a class="navbar-brand" href="/polls/" style ="font-size: 150%; color:black; {% if request.flavour == 'mobile' %}
+                            
+                            <a class="navbar-brand" href="/polls/" style ="font-size: 150%; {% if request.flavour == 'mobile' %}
                             margin-top: 12pt;
-                            {% endif %} "><span> Welcome
+                            {% endif %}
+                            {% if user.is_authenticated %}
+                            color:white;
+                            {%else%}
+                            color:black;
+                            {% endif %}">
+                                
+                                <span> Welcome
                                 {% if user.is_authenticated %}
                                 {% if request.user.first_name == "" %}
                                 {{ request.user.username }}
@@ -142,10 +154,10 @@
 
 							{% if user.is_authenticated %}
 							<ul class="nav navbar-nav navbar-right">
-                                <li><a href="{% url 'polls:index' %}"><span class="glyphicon navbar-right glyphicon-home greycolor"></span></a> </li>
-								<li class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
-									<ul class="dropdown-menu" style="font-size:100%; color: black;">
+                                <li ><a href="{% url 'polls:index' %}" style="color:white;"><span class="glyphicon navbar-right glyphicon-home"></span></a> </li>
+								<li class="dropdown" >
+									<a class="dropdown-toggle" data-toggle="dropdown" style="color:white;"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
+									<ul class="dropdown-menu" style="font-size:100%;">
 										<li class="disabled">
 											<a href="#">Signed in as {{ request.user.username }}</a>
 										</li>
@@ -179,7 +191,7 @@
                      
                      
             {% if user.is_authenticated %}
-				<div class="container-fluid" style="padding: 60px 20px;">
+				<div class="container-fluid" style="padding: 70px 20px;">
             {% else%}
                 <div name="MainPage">
             {% endif %}

@@ -47,9 +47,15 @@ def AddStep1View(request):
         questionDesc = request.POST['desc']
         questionType = request.POST['questiontype']
         imageURL = request.POST['imageURL']
-        if imageURL != '':
+        if request.FILES.get('docfile') != None:
             question = Question(question_text=questionString, question_desc=questionDesc,
-                imageURL=imageURL, image=request.FILES.get('docfile'), pub_date=timezone.now(), question_owner=request.user,
+                image=request.FILES.get('docfile'), pub_date=timezone.now(), question_owner=request.user,
+                display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
+                emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
+                emailStop=request.user.userprofile.emailStop)
+        elif imageURL != '':
+            question = Question(question_text=questionString, question_desc=questionDesc,
+                imageURL=imageURL, pub_date=timezone.now(), question_owner=request.user,
                 display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
                 emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
                 emailStop=request.user.userprofile.emailStop)
@@ -180,17 +186,70 @@ class DetailView(generic.DetailView):
 
     def get_order(self, ctx):
         otherUserResponses = self.object.response_set.reverse()
+        preferences = []
         if len(otherUserResponses) == 0:
             return ctx['object'].item_set.all
         for resp in otherUserResponses:
+            user=self.request.user
             otherUser = resp.user
-            responses = Response.objects.all().filter(user=otherUser)
-        return ctx['object'].item_set.all
+            questions = Question.objects.all().filter(question_voters=otherUser).filter(question_voters=user)
+            KT = 0
+            num = 0
+            prefGraph = {}
+            dictionary = get_object_or_404(Dictionary, response=resp)
+            for q in questions:
+                userResponse = q.response_set.filter(user=user).reverse()
+                otherUserResponse = q.response_set.filter(user=otherUser).reverse()
+                if len(userResponse) > 0 and len(otherUserResponse) > 0:
+                    num = num + 1
+                    userResponse = get_object_or_404(Dictionary, response=userResponse[0])
+                    otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
+                    KT += getKendallTauScore(userResponse, otherUserResponse)
+                    print(getKendallTauScore(userResponse, otherUserResponse))
+            KT /= num
+            if KT == 0:
+                KT = .25
+            else:
+                KT = 1/(1 + KT)
+
+            candMap = {}
+            counter = 0
+            for item in dictionary.items():
+                candMap[counter] = item[0]
+                counter += 1
+
+            for cand1Index in candMap:
+                tempDict = {}
+                for cand2Index in candMap:
+                    if cand1Index == cand2Index:
+                        continue
+                    
+                    cand1 = candMap[cand1Index]
+                    cand2 = candMap[cand2Index]
+                    cand1Rank = dictionary.get(cand1)
+                    cand2Rank = dictionary.get(cand2)
+                    #lower number is better (i.e. rank 1 is better than rank 2)
+                    if cand1Rank < cand2Rank:
+                        tempDict[cand2Index] = 1
+                    elif cand2Rank < cand1Rank:
+                        tempDict[cand2Index] = -1
+                    else:
+                        tempDict[cand2Index] = 0
+                prefGraph[cand1Index] = tempDict
+            preferences.append(Preference(prefGraph, KT))
+        pollProfile = Profile(candMap, preferences)
+
+        pref = MechanismBorda().getCandScoresMap(pollProfile)
+        l = list(sorted(pref.items(), key=lambda kv: (kv[1], kv[0])))
+        final_list = []
+        for p in reversed(l):
+            final_list.append(candMap[p[0]])
+        print(final_list)
+        return final_list
 
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
-        print(self.object.response_set)
         tempOrderStr = self.request.GET.get('order', '')
         if tempOrderStr == "null":
             ctx['items'] = self.get_order(ctx)

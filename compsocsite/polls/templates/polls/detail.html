@@ -184,9 +184,15 @@
 {% if question.status == 2%}
 <div class="grid">
 	<div class="row">
+		{% if question.image != Null and question.image != '' %}
 		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
 			<a href="{{ question.image }}"><img src="{{ question.image }}" width="150" ></a>
 		</div>
+		{% elif question.imageFile %}
+		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+			<a href="/{{ question.image }}"><img src="/{{ question.image }}" width="150" ></a>
+		</div>
+		{% endif %}
 		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
 			<p {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
 				{{ question.question_text }}: Created by {{ question.question_owner }}
@@ -316,7 +322,7 @@
 				<div class="panel-body">
 					<ul id="sortable2" class="list-group">
 						{% if currentSelection == None %}
-						{% for item in question.item_set.all %}
+						{% for item in items %}
 						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
 							{% if item.image %}
 								<img class="item" src='/{{ item.image.url }}'/>

@@ -491,3 +491,29 @@ class MechanismMaximin(Mechanism):
                 maximinScores[cand2] = min(maximinScores[cand2], wmg[cand2][cand1])
 
         return maximinScores
+
+def getKendallTauScore(myResponse, otherResponse):
+    """
+    Returns the Kendall Tau Score
+    """
+    # variables
+    kt = 0
+    list1 = myResponse.values()
+    list2 = otherResponse.values()
+
+    #runs through list1
+    for itr1 in range(0, len(list1) - 1):
+        #runs through list2
+        for itr2 in range(itr1 + 1, len(list2)):
+            # checks if there is a discrepancy. If so, adds
+            if ((list1[itr1] > list1[itr2]
+                and list2[itr1] < list2[itr2])
+            or (list1[itr1] < list1[itr2]
+                and list2[itr1] > list2[itr2])):
+
+                kt += 1
+    # normalizes between 0 and 1
+    kt = (kt * 2) / (len(list1) * (len(list1) - 1))
+
+    #returns found value
+    return kt

@@ -16,7 +16,7 @@ from django.conf import settings
 class Question(models.Model):
     question_text = models.CharField(max_length=20)
     question_desc = models.CharField(max_length=500, null=True, blank=True)
-    image = models.ImageField(upload_to='static/items/', blank=True, null=True)
+    image = models.ImageField(upload_to='static/img/items/', blank=True, null=True)
     imageURL = models.CharField(max_length=500, blank=True, null=True)
     pub_date = models.DateTimeField('date published')
     follow_up = models.OneToOneField('Question', on_delete=models.CASCADE, null = True, blank = True)

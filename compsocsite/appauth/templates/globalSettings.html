@@ -17,14 +17,14 @@
         <div class="panel panel-default">
             <div class="panel-heading">Global Settings</div>
             <div class="panel-body">
-                <form class="form-group" method="post" action="" align="center">
+                <form class="form-group" method="post" action="{% url 'appauth:updateGlobalSettings' %}" align="center" style="font-size:100%;">
                     {% csrf_token %}
                     <label for="viewpreferences">Visibility setting for all future polls</label>
                     <select name="viewpreferences" class="form-control">
-                        <option value="allpermit" {% if question.display_pref == 1 %} selected {% endif %} >Everyone can see all votes</option>
-                        <option value="voternames" {% if question.display_pref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
-                        <option value="justnumber" {% if question.display_pref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
-                        <option value="nothing" {% if question.display_pref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>
+                        <option value="allpermit" {% if request.user.userprofile.displayPref == 1 %} selected {% endif %} >Everyone can see all votes</option>
+                        <option value="voternames" {% if request.user.userprofile.displayPref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
+                        <option value="justnumber" {% if request.user.userprofile.displayPref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
+                        <option value="nothing" {% if request.user.userprofile.displayPref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>
                     </select>
                     <br/>
                     <div class="col-md-6">

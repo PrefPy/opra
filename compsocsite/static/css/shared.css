@@ -82,3 +82,96 @@ nopadding {
 	font-size: 60% !important;
 }
 
+/* Ranking UI */
+#left-sortable, #right-sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+}
+#left-sortable li, #right-sortable li {
+    display: block;
+    margin: 5px 5px 5px 5px;
+    padding: 5px;
+    background: linear-gradient(to bottom, #ffffff 0%,#aaaaaa 100%);
+    border-radius: 25px;
+    padding-left:50px;
+}
+
+html > body #sortable li {
+    height: 1.5em;
+    line-height: 0em;
+}
+.ui-state-highlight {
+    height: 1.5em;
+    line-height: 0em;
+    background: none!important;
+    background-color: #999 !important;
+}
+
+.greybackground {
+    background: none!important;
+    background-color: #aaa !important;
+}
+
+.cliente {
+    margin: 15px;
+    border: #cdcdcd medium solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+button:hover .greencolor {
+    color: darkgreen;
+}
+
+.margin-panel-top {
+    margin-top: 12px;
+}
+	
+.panel-border {
+    border: 3px solid;
+    border-color: darkgrey; 
+    border-radius: 0 0px 25px 25px;
+}
+
+.btn-danger.reset-button {
+    background: linear-gradient(to bottom, orangered 0%, darkred 100%);
+}
+
+.reset-button-mobile {
+    margin-bottom: 0;
+    border-radius: 25px;
+    background: linear-gradient(to bottom, orangered 0%,darkred 100%);
+}
+
+.btn-success.submit-button {
+    float: right; 
+    display: none; 
+    background: linear-gradient(to bottom, lightgreen 0%, darkgreen 100%);
+}
+
+.submit-button-mobile {
+    border: none; 
+    border-radius: 30px;
+    float: right; 
+    width: 30%; 
+    height: 1.25em; 
+    margin: 0; 
+    display: none;
+    background: linear-gradient(to bottom, lightgreen 0%,darkgreen 100%);
+}
+
+.btn-primary.move-all-button {
+    background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);
+}
+
+.move-all-button-mobile {
+    border: none; 
+    border-radius: 25px;
+    float: right; 
+    width: 30%; 
+    height: 1.25em; 
+    margin: 0;
+    background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);
+}

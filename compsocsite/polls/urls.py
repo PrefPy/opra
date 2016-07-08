@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.contrib.auth.decorators import login_required
 
 from . import views
 from . import email
@@ -6,8 +7,8 @@ from . import email
 app_name = 'polls'
 urlpatterns = [
                
-    url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^main$', views.MainView.as_view(), name='main'),
+    url(r'^$', login_required(views.IndexView.as_view()), name='index'),
+    url(r'^main$', views.MainView.as_view(), name='index_guest'),
    
     # Create a new poll
     url(r'^add_step1/$', views.AddStep1View, name='AddStep1'), 
@@ -28,6 +29,7 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
     url(r'^(?P<question_id>[0-9]+)/stop/$', views.stopPoll, name='stop'),
     url(r'^(?P<question_id>[0-9]+)/settings/initial$', views.setInitialSettings, name='setinitial'),    
+    url(r'^(?P<question_id>[0-9]+)/settings/algorithm$', views.setAlgorithm, name='setAlgorithm'),
     url(r'^(?P<question_id>[0-9]+)/settings/visibility$', views.setVisibility, name='setview'),
     url(r'^(?P<pk>[0-9]+)/vote/results/$', views.VoteResultsView.as_view(), name='voteresults'),
     url(r'^(?P<pk>[0-9]+)/confirmation/$', views.ConfirmationView.as_view(), name='confirmation'),

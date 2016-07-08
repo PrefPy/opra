@@ -1,49 +1,138 @@
 {% load staticfiles %}
 <html>
 	<head>
+   <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-		<title>OPRA</title>
+    <title>OPRA</title>
 
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-		<!-- Plugin JavaScript -->
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/css/stylish-portfolio.css' %}" />
 
+    <!-- Custom Fonts -->
+    
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+   <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/5f5c1e4fb0.js"></script>
+    
+
+    <!-- Custom Theme JavaScript -->
+    <script>
+    // Scrolls to the selected menu item on the page
+    $(function() {
+        $('a[href*=#]:not([href=#])').click(function() {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+    });
+    //#to-top button appears after scrolling
+    var fixed = false;
+    $(document).scroll(function() {
+        if ($(this).scrollTop() > 250) {
+            if (!fixed) {
+                fixed = true;
+                // $('#to-top').css({position:'fixed', display:'block'});
+                $('#to-top').show("slow", function() {
+                    $('#to-top').css({
+                        position: 'fixed',
+                        display: 'block'
+                    });
+                });
+            }
+        } else {
+            if (fixed) {
+                fixed = false;
+                $('#to-top').hide("slow", function() {
+                    $('#to-top').css({
+                        display: 'none'
+                    });
+                });
+            }
+        }
+    });
+    // Disable Google Maps scrolling
+    // See http://stackoverflow.com/a/25904582/1607849
+    // Disable scroll zooming and bind back the click event
+    var onMapMouseleaveHandler = function(event) {
+        var that = $(this);
+        that.on('click', onMapClickHandler);
+        that.off('mouseleave', onMapMouseleaveHandler);
+        that.find('iframe').css("pointer-events", "none");
+    }
+    var onMapClickHandler = function(event) {
+            var that = $(this);
+            // Disable the click handler until the user leaves the map area
+            that.off('click', onMapClickHandler);
+            // Enable scrolling zoom
+            that.find('iframe').css("pointer-events", "auto");
+            // Handle the mouse leave event
+            that.on('mouseleave', onMapMouseleaveHandler);
+        }
+        // Enable map zooming with mouse scroll when the user clicks the map
+    $('.map').on('click', onMapClickHandler);
+    </script>
+        
+        
+        
 		<link rel="stylesheet" href="{% static 'css/shared.css' %}">
 		{% if request.flavour == "mobile" %}
 		<link rel="stylesheet" href="{% static 'css/mobile.css' %}">
-		{% else %}
-		<link rel="stylesheet" href="{% static 'css/desktop.css' %}">
+		
+		<!--link rel="stylesheet" href="{% static 'css/desktop.css' %}"-->
 		{% endif %}
 
 		{% block extra_head %}
 
 		{% endblock %}
 	</head>
+    
+    
 	<body>
 
 		{% if request.flavour == "mobile" %}
 		<div style = "margin-left: 20px; margin-right: 20px;font-size:100%;">
-			{% else %}
+        {% else %}
 			<div class="container" style ="font-size:100%">
 				{% endif %}
 
-				<nav class="navbar navbar-default navbar-fixed-top">
+				 <nav  class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
 					{% if request.flavour == "mobile" %}
 					<div style = "margin-left: 20px; margin-right: 20px">
 						{% else %}
-						<div class="container">
+						<div class="container-fluid">
 							{% endif %}
 							<div class="navbar-header">
-								<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-									<span class="sr-only">Toggle navigation</span>
-									<span class="icon-bar"></span>
-									<span class="icon-bar"></span>
-									<span class="icon-bar"></span>
+                                <!-- Brand and toggle get grouped for better mobile display -->
+								 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                     
+                                <span class="sr-only">Toggle navigation</span>
 								</button>
-								<a class="navbar-brand" href="/polls/" style ="font-size:100%; {% if request.flavour == 'mobile' %}
+								<a class="navbar-brand" href="/polls/" style ="font-size: 150%; color:black; {% if request.flavour == 'mobile' %}
 								margin-top: 12pt;
 								{% endif %} "><span> Welcome
 									{% if user.is_authenticated %}
@@ -60,7 +149,7 @@
 							<ul class="nav navbar-nav navbar-right">
 								<li class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
-									<ul class="dropdown-menu" style="font-size:100%">
+									<ul class="dropdown-menu" style="font-size:100%; color: black;">
 										<li class="disabled">
 											<a href="#">Signed in as {{ request.user.username }}</a>
 										</li>
@@ -78,10 +167,10 @@
 							{% else %}
 							<ul class="nav navbar-nav navbar-right">
 								<li>
-									<a href="{% url 'appauth:register' %}"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
+									<a href="{% url 'appauth:register' %}" style="color:black;"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
 								</li>
 								<li>
-									<a href="{% url 'appauth:login' %}"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
+									<a href="{% url 'appauth:login' %}" style="color:black;"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
 								</li>
 							</ul>
 							{% endif %}
@@ -90,7 +179,7 @@
 
 				</nav>
 
-				<div class=".col-md-12">
+				<div class=".col-md-12" style="padding: 50px 15px;">
 
 					{% block content %}
 
@@ -99,6 +188,7 @@
 
 			</div>
 			<!-- /container -->
+
 
 	</body>
 

@@ -3,185 +3,18 @@
 {% block extra_head %}
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
-<script>
-	/*!
-	 * jQuery UI Touch Punch 0.2.3
-	 *
-	 * Copyright 2011–2014, Dave Furfero
-	 * Dual licensed under the MIT or GPL Version 2 licenses.
-	 *
-	 * Depends:
-	 *  jquery.ui.widget.js
-	 *  jquery.ui.mouse.js
-	 */! function(a) {
-		function f(a, b) {
-			if (!(a.originalEvent.touches.length > 1)) {
-				a.preventDefault();
-				var c = a.originalEvent.changedTouches[0],
-				    d = document.createEvent("MouseEvents");
-				d.initMouseEvent(b, !0, !0, window, 1, c.screenX, c.screenY, c.clientX, c.clientY, !1, !1, !1, !1, 0, null), a.target.dispatchEvent(d)
-			}
-		}
-
-		if (a.support.touch = "ontouchend" in document, a.support.touch) {
-			var e,
-			    b = a.ui.mouse.prototype,
-			    c = b._mouseInit,
-			    d = b._mouseDestroy;
-			b._touchStart = function(a) {
-				var b = this;
-				!e && b._mouseCapture(a.originalEvent.changedTouches[0]) && ( e = !0, b._touchMoved = !1, f(a, "mouseover"), f(a, "mousemove"), f(a, "mousedown"))
-			}, b._touchMove = function(a) {
-				e && (this._touchMoved = !0, f(a, "mousemove"))
-			}, b._touchEnd = function(a) {
-				e && (f(a, "mouseup"), f(a, "mouseout"), this._touchMoved || f(a, "click"),
-				e = !1)
-			}, b._mouseInit = function() {
-				var b = this;
-				b.element.bind({
-					touchstart : a.proxy(b, "_touchStart"),
-					touchmove : a.proxy(b, "_touchMove"),
-					touchend : a.proxy(b, "_touchEnd")
-				}), c.call(b)
-			}, b._mouseDestroy = function() {
-				var b = this;
-				b.element.unbind({
-					touchstart : a.proxy(b, "_touchStart"),
-					touchmove : a.proxy(b, "_touchMove"),
-					touchend : a.proxy(b, "_touchEnd")
-				}), d.call(b)
-			}
-		}
-	}(jQuery); 
-</script>
-
-<style>
-	#sortable1, #sortable2 {
-		list-style-type: none;
-		margin: 0;
-		padding: 10px;
-	}
-	#sortable1 li, #sortable2 li {
-		display: block;
-		margin: 5px 5px 5px 5px;
-		padding: 5px;
-		background: linear-gradient(to bottom, #ffffff 0%,#aaaaaa 100%);
-		border-radius: 25px;
-		padding-left:50px;
-	}
-
-	html > body #sortable li {
-		height: 1.5em;
-		line-height: 0em;
-	}
-	.ui-state-highlight {
-		height: 1.5em;
-		line-height: 0em;
-		background: none!important;
-		background-color: #999 !important;
-	}
-	
-	.greybackground {
-		background: none!important;
-		background-color: #aaa !important;
-	}
-
-	.cliente {
-		margin: 15px;
-		border: #cdcdcd medium solid;
-		border-radius: 10px;
-		-moz-border-radius: 10px;
-		-webkit-border-radius: 10px;
-	}
-
-	button:hover .greencolor {
-		color: darkgreen;
-	}
-	
-
-</style>
-
-<script>
-	function submitPref() {
-		var prefcolumn = $('#sortable1');
-		var order = prefcolumn.sortable("toArray");
-		$('#pref_order').val(order.join(","));
-		$('#pref_order').submit();
-	};
-
-	function enableSubmission() {
-		$('#submitbutton').css("display","inline");
-	}
-
-	function moveToPref(obj) {
-		var time = 100
-		var prefcolumn = $('#sortable1');
-		var currentli = document.getElementById(obj.id);
-		jQuery("#" + obj.id).addClass("greybackground");
-		setTimeout(function() {
-			prefcolumn.append(currentli);
-			jQuery("#" + obj.id).removeClass("greybackground", time * 2);
-			prefcolumn.sortable('refresh');
-			if ($('#sortable2 li').length == 0){
-				enableSubmission();	
-			}
-		}, time);
-		
-		
-	};
-
-	function moveAll() {
-		var time = 100;
-		var ul = document.getElementById('sortable2');
-		var items = ul.getElementsByTagName("li");
-		var len = items.length;
-		var prefcolumn = $('#sortable1');
-		for (var i = 0; i < len; i++) {
-			jQuery("#" + items[i].id).addClass("greybackground");
-		}
-		setTimeout(function() {
-			for (var i = 0; i < len; i++) {
-				prefcolumn.append(items[0]);
-			}
-			setTimeout(function() {
-				var ul = document.getElementById('sortable1');
-				var items = ul.getElementsByTagName("li");
-				var len = items.length;
-
-				for (var i = 0; i < len; i++) {
-					jQuery("#" + items[i].id).removeClass("greybackground", time);
-				}
-				prefcolumn.sortable('refresh');
-			}, time)
-		}, time)
-		enableSubmission();
-	};
-
-	$(function() {
-		$("#sortable1").sortable({
-			placeholder : "ui-state-highlight",
-			containment : "parent",
-			update : function(event, ui) {
-				var order = $("#sortable1").sortable("toArray");
-				$('#pref_order').val(order.join(","));
-				enableSubmission();
-			}
-		});
-
-		$("ul.droptrue").sortable({
-			connectWith : "ul"
-		});
-
-		$("#sortable1, #sortable2").disableSelection();
-	}); 
-</script>
+<script src='/static/js/shared.js'></script>
+{% if request.flavour == "mobile" %}
+<script src='/static/js/mobile.js'></script>
+{% else %}
+<script src='/static/js/desktop.js'></script>
+{% endif %}
 
 {% endblock %}
 
 {% block content %}
 
-{% if question.status == 2%}
+{% if question.status == 2 %}
 <div class="grid">
 	<div class="row">
 		{% if question.image != Null and question.image != '' %}
@@ -227,52 +60,44 @@
 		{% csrf_token %}
 		
 		{% if request.flavour == "mobile" %}
-		<div class="col-md-6"  style = "margin-top:12px;">
+		<div class="col-md-6 margin-panel-top">
 		{% else %}
-		<div class="col-md-6"  style = "margin-top:12px;">
+        <div class="col-md-6 margin-panel-top">
 		{% endif %}
 		
 		
-			<div class="panel panel-default" style = "border:3px solid;border-color:darkgrey; border-radius: 0 0px 25px 25px;">
+			<div class="panel panel-default panel-border">
 				<div class="panel-heading" >
 					<b>Your preferences:</b>
-					
-					
-					{% if request.flavour == "mobile" %}
-					
-						<button id="submitbutton" type="submit" onclick="submitPref();" style ="border: none; border-radius:30px;float: right; width:30%; height:1.25em; margin:0; display: none;background: linear-gradient(to bottom, lightgreen 0%,darkgreen 100%);" >
+				    {% if request.flavour == "mobile" %}
+						<button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
 							<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
 						</button>
 						
 						<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
 							Submit
-							</button>
-							
-							{% else %}
-							<a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger" style = "background: linear-gradient(to bottom, orangered 0%,darkred 100%);">Clear</a>
-							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none; background: linear-gradient(to bottom, lightgreen 0%,darkgreen 100%);">
-							Submit
+				        </button>	
+				    {% else %}
+							<a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger reset-button">Clear</a>
+							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
+				                Submit
 							</button>
 					{% endif %}
-
-						
-
-						<input type="hidden" id="pref_order" name="pref_order" value=""/>
-
-						</div>
+				    <input type="hidden" id="pref_order" name="pref_order" value=""/>
+				</div>
 
 				<div class="panel-body" >
-					<ul id="sortable1" class="list-group droptrue">
+					<ul id="left-sortable" class="list-group droptrue">
 						{% if currentSelection %}
 						{% for selection in currentSelection %}
 						{% for item in question.item_set.all %}
 						{% if selection.0 == item %}
 						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
 							{% if selection.0.image %}
-							<img class="item" src='/{{ selection.0.image.url }}'/>
+				                <img class="item" src='/{{ selection.0.image.url }}'/>
 							{% endif %}
 		                    {% if item.imageURL != Null %}
-		                      <img class="item" src='{{ item.imageURL }}'/>
+                                <img class="item" src='{{ item.imageURL }}'/>
 		                    {% endif %}
 							{{ selection.0 }}
 						</li>
@@ -284,43 +109,36 @@
 				</div>
 				
 				{% if request.flavour == "mobile" %}
-						
-					<button onclick="javascript:window.location.href='/polls/{{ question.id }}/?order=null'; return false;" style = "margin-bottom:0;border-radius: 25px;background: linear-gradient(to bottom, orangered 0%,darkred 100%);">
-					<a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
-				</button>
-							
-					{% endif %}
-					
-				
+					<button onclick="javascript:window.location.href='/polls/{{ question.id }}/?order=null'; return false;" class="reset-button-mobile">
+				        <a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+				    </button>		
+				{% endif %}
 			</div>
 		</div>
 
 
 		{% if request.flavour == "mobile" %}
-		<div class="col-md-6"  style = " margin-top:12px;">
+		<div class="col-md-6 margin-panel-top">
 		{% else %}
-		<div class="col-md-6"  style = " margin-top:12px;">
+		<div class="col-md-6 margin-panel-top">
 		{% endif %}
 		
-			<div class="panel panel-default" style = "border:3px solid;border-color:darkgrey;border-radius: 0 0px 25px 25px;">
+			<div class="panel panel-default panel-border">
 				<div class="panel-heading">
 					<b>Remaining Options:</b>
 					
 					{% if request.flavour == "mobile" %}
-						<button onclick="moveAll(); return false;" style ="border: none; border-radius:25px;float: right; width:30%; height:1.25em; margin:0;background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);" >
+						<button onclick="moveAll(); return false;" class="move-all-button-mobile">
 					<span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>
-				</button>
-							{% else %}
-							<button onclick="moveAll(); return false;" class="btn btn-primary" style ="background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);" >
-					Move All
-				</button>
+				        </button>
+				    {% else %}
+				        <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
+					       Move All
+				        </button>
 					{% endif %}
-					
-					
-					
 				</div>
 				<div class="panel-body">
-					<ul id="sortable2" class="list-group">
+					<ul id="right-sortable" class="list-group">
 						{% if currentSelection == None %}
 						{% for item in items %}
 						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
@@ -342,15 +160,15 @@
 </div>
 
 <script>
-	var wholeHeight1 = $('#sortable1')[0].scrollHeight;
-	var wholeHeight2 = $('#sortable2')[0].scrollHeight;
+	var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
+	var wholeHeight2 = $('#right-sortable')[0].scrollHeight;
 	if (wholeHeight1 > wholeHeight2) {
-		$('#sortable2').css("height", wholeHeight1);
+		$('#right-sortable').css("height", wholeHeight1);
 	} else {
-		$('#sortable1').css("height", wholeHeight2);
+		$('#left-sortable').css("height", wholeHeight2);
 	}
-	$('#sortable1').sortable('refresh');
-	$('#sortable2').sortable('refresh');
+	$('#left-sortable').sortable('refresh');
+	$('#right-sortable').sortable('refresh');
 
 </script>
 

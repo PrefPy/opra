@@ -37,67 +37,9 @@
     <br/>
     
     <h3>Voters</h3>
-    <div class="col-md-4">
-    <b>Current Voters: </b>
-    <form action="{% url 'polls:delvoter' question.id %}" method="post">
-        {% csrf_token %}
-        <select name="voters" class="form-control" multiple>
-        {% for user in users %}
-            {% if user in question.question_voters.all %}
-                 <option value="{{ user.username }}">{{ user.username }}</option>
-            {% endif %}
-        {% endfor %}
-        </select>  
-        <br />
-        <label for="email2">Email announcement</label>
-        <input type="checkbox" name="email" id="email2" value="email" {% if question.emailDelete == True or question.emailDelete == None %} checked {% endif %}>
-        {% if question.status == 1 %}
-        <br />
-        <input type="submit" class="btn btn-danger" value="Remove" style='font-size:60%'>
-        {% endif %}
-    </form> 
-    </div>     
-    <div class="col-md-4">
-    <b>Add Voter: </b>
-    <form action="{% url 'polls:addvoter' question.id %}" method="post">
-        {% csrf_token %}
-        <select name="voters" class="form-control" multiple>
-        {% for user in users %}
-            {% if user not in question.question_voters.all %}
-                 <option value="{{ user.username }}">{{ user.username }}</option>
-            {% endif %}
-        {% endfor %}
-        </select>
-        <br />
-        <label for="email1">Email announcement</label>
-        <input type="checkbox" name="email" id="email1" value="email" {% if question.emailInvite == True %} checked {% endif %}>
-        <br />
-        <input type="submit" class="btn btn-success" value="Invite" style='font-size:60%'>
-    </form>      
-    </div>
-    <div class="col-md-4">
-        <b>Add Group: </b>
-        <form action="{% url 'groups:addgroupvoters' question.id %}" method="post">
-            {% csrf_token %}
-            <select name="groups" class="form-control" multiple>
-                {% for group in groups %}
-                    {% if group.owner == request.user %}
-                        <option value="{{group.name}}">{{group.name}}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-            <br />
-            <label for="email">Email announcement</label>
-            <input type="checkbox" name="email" id="email" value="email" {% if question.emailInvite == True or question.emailInvite == None %} checked {% endif %}>
-            <br />
-            <input type="submit" class="btn btn-success" value="Invite" style='font-size:60%'>
-        </form>
-    </div>
-    
-    
+    {% include 'polls/_invite_voters.html' %}
 
-
- <br/> <br/>
+    <br/> <br/>
    <div class="col-md-6 col-md-offset-3" align="center">
         <form action= "/polls/{{question.id}}/add_step4/">
             <input type="submit" value="Next" class="btn btn-primary" style='font-size:60%'>

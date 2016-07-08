@@ -64,7 +64,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/polls/')
+                return HttpResponseRedirect(reverse('polls:index'))
             return HttpResponse("Your account is disabled.")
         else:
             print ("Invalid login details")
@@ -110,6 +110,12 @@ def updateSettings(request):
         request.user.last_name = last_name
         request.user.email = updatedEmail
         request.user.save()
+	
+    return HttpResponseRedirect(reverse('appauth:settings'))
+
+@login_required
+def updateGlobalSettings(request):
+    context = RequestContext(request)
     if request.method == 'POST':
         displayChoice = request.POST['viewpreferences']
         if displayChoice == "allpermit":
@@ -125,8 +131,8 @@ def updateSettings(request):
         request.user.userprofile.emailStart = request.POST.get('emailStart') == 'email'
         request.user.userprofile.emailStop = request.POST.get('emailStop') == 'email'
         request.user.userprofile.save()
-	
-    return HttpResponseRedirect('/auth/settings/')    
+        
+    return HttpResponseRedirect(reverse('appauth:globalSettings'))
 
 @login_required
 def user_logout(request):
@@ -134,7 +140,7 @@ def user_logout(request):
     logout(request)
     
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/polls/main')
+    return HttpResponseRedirect(reverse('polls:index_guest'))
     
 @login_required
 def changepassword(request):
@@ -144,6 +150,6 @@ def changepassword(request):
     if user.check_password(old):
         user.set_password(new)
         user.save()
-        return HttpResponseRedirect('/polls/')
+        return HttpResponseRedirect(reverse('polls:index'))
     else:
         return HttpResponse("The password you entered is wrong.")

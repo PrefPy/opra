@@ -4,138 +4,83 @@
 
 
 <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            {% if question.question_owner == request.user %}
+    <ul class="nav nav-sidebar">
+        {% if question.question_owner == request.user %}
             <li class="active"><a data-toggle="tab" href="#choices" >Choices</a></li>
             <li><a data-toggle="tab" href="#voters">Voters</a></li>
+            <li><a data-toggle="tab" href="#algorithm">Algorithms</a></li>
             <li><a data-toggle="tab" href="#visibility">Visibility</a></li>
             <li><a data-toggle="tab" href="#emailsetting">Email</a></li>
-            {% else %}
+        {% else %}
             <li class="active"><a data-toggle="tab" href="#general">General Info</a></li>
-            {% endif %}
-            <li><a data-toggle="tab" href="#historyinfo">History</a></li>
-            {% if question.question_owner == request.user %}
+        {% endif %}
+            
+        <li><a data-toggle="tab" href="#historyinfo">History</a></li>
+        
+        {% if question.question_owner == request.user %}
             <li><a data-toggle="tab" href="#delete">Delete</a></li>
-            {% endif %}
-          </ul>  
-        </div>
+        {% endif %}
+    </ul>  
+</div>
 
-        <div class="tab-content">
-          {% if question.question_owner == request.user %}
-          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="choices">
-              <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
-              <ul class="list-group">
-                {% for item in items %}
-                  {% if item.question == question %}
-                  <li class="list-group-item ">
-                      {% if item.image %}  
-                        <img src='/{{ item.image }}'/>
-                      {% endif %}
-                      {% if item.imageURL != Null %}
-                        <img src='{{ item.imageURL }}'/>
-                      {% endif %}
-                      {{ item }} 
-                      {% if question.status == 1 %}
-                      <a href="{% url 'polls:delchoice' item.id %}">
-                          <div class="pull-right">
-                            <span class="glyphicon glyphicon-remove"></span>
-                          </div>
-                    </a>
-                        {% endif %}
-                  </li>
-                  {% endif %}
-                {% endfor %}
-        <li class="list-group-item">
-            <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="col-lg-8">
-                    <input type="text" class="form-control" name="choice" value="" size="50" placeholder="Option name" autofocus/>
-                </div>
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" name="imageURL" value="" size="50" placeholder="Paste Image URL" autofocus/>
-                </div>
-                <label for="image" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
-                <input style="display:none" id="image" type="file" name="docfile" accept="image/*">
-                <button type="submit" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
-            </form>
-        </li>
-              </ul>
+<div class="tab-content">
+{% if question.question_owner == request.user %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="choices">
+        <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
+        
+        {% include 'polls/_add_choice.html' %}
     </div>
 
-
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="voters">
-    <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
-<div class="col-md-4">
-    <b>Current Voters: </b>
-    <form action="{% url 'polls:delvoter' question.id %}" method="post">
-        {% csrf_token %}
-        <select name="voters" class="form-control" multiple>
-            {% for user in users %}
-                {% if user in question.question_voters.all %}
-                    <option value="{{ user.username }}">{{ user.username }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>  
-        <br />
+        <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
+
+        {% include 'polls/_invite_voters.html' %}
+    </div>
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="algorithm">
+    <h3 class="page-header">Algorithm for {{ question.question_text }} </h3>
         {% if question.status == 1 %}
-            <label for="email2">Email announcement</label>
-            <input type="checkbox" name="email" id="email2" value="email" {% if question.emailDelete == True or question.emailDelete == None %} checked {% endif %}>
-            <br />
-            <input type="submit" class="btn btn-danger" value="Remove">
-        {% endif %}
-    </form> 
-</div>     
-<div class="col-md-4">
-    <b>Add Voter: </b>
-    <form action="{% url 'polls:addvoter' question.id %}" method="post">
-        {% csrf_token %}
-        <select name="voters" class="form-control" multiple>
-            {% for user in users %}
-                {% if user not in question.question_voters.all %}
-                    <option value="{{ user.username }}">{{ user.username }}</option>
+            <form class="form-group" method="post" action="{% url 'polls:setAlgorithm' question.id %}" align="center">
+                {% csrf_token %}
+                {% if question.question_type == 1 %}
+                    <label for="pollpreferences">Select a voting algorithm</label>
+                    <select name="pollpreferences" class="form-control">
+                    {% for item in poll_algorithms %}
+                        <option value="{{ forloop.counter }}" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
+                            {{ item }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                {% elif question.question_type == 2 %}
+                    <label for="pollpreferences">Select an allocation method</label>
+                    <select name="pollpreferences" class="form-control">
+                    {% for item in alloc_methods %}
+                        <option value="{{ forloop.counter }}" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
+                            {{ item }}
+                        </option>
+                    {% endfor %}
+                    </select>
                 {% endif %}
-            {% endfor %}
-        </select>
-        <br />
-        <label for="email">Email announcement</label>
-        {% if question.emailInvite == True %}
-            <input type="checkbox" name="email" id="email" value="email" checked="checked">
+                <br/><br/>
+                <input type="submit" value="Submit" class="btn btn-success">
+            </form>
         {% else %}
-            <input type="checkbox" name="email" id="email" value="email">
+            {% if question.question_type == 1 %}
+                {% for item in poll_algorithms %}
+                    {% if question.poll_algorithm == forloop.counter %}
+                        Poll Algorithm:　{{ item }}
+                    {% endif %}
+                {% endfor %}
+            {% elif question.question_type == 2 %}
+                {% for item in alloc_methods %}
+                    {% if question.poll_algorithm == forloop.counter %}
+                        {{ item }}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         {% endif %}
-        <br />
-        <input type="submit" class="btn btn-success" value="Invite">
-    </form>
 </div>
-<div class="col-md-4">
-    <b>Add Group: </b>
-    <form action="{% url 'groups:addgroupvoters' question.id %}" method="post">
-        {% csrf_token %}
-        <select name="groups" class="form-control" multiple>
-            {% for group in groups %}
-                {% if group.owner == request.user %}
-                    <option value="{{group.name}}">{{group.name}}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-        <br />
-        <label for="email">Email announcement</label>
-        {% if question.emailInvite == True %}
-            <input type="checkbox" name="email" id="email" value="email" checked="checked">
-        {% endif %}
-        {% if question.emailInvite != True %}
-            <input type="checkbox" name="email" id="email" value="email">
-        {% endif %}
-        <br />
-        <input type="submit" class="btn btn-success" value="Invite">
-        <input type="submit" class="btn btn-danger" value="Remove" formaction="{% url 'groups:removegroupvoters' question.id %}">
-    </form>
-</div>
-</div>
-
-
+            
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="visibility">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
    <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}" align="center">

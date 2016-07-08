@@ -67,7 +67,7 @@ def AddStep1View(request):
                 emailStop=request.user.userprofile.emailStop)
         question.question_type = questionType
         question.save()
-        return HttpResponseRedirect('/polls/%s/add_step2' % question.id)
+        return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
     return render_to_response('polls/add_step1.html', {}, context)
 
 class AddStep2View(generic.DetailView):
@@ -107,6 +107,7 @@ class AddStep4View(generic.DetailView):
         ctx = super(AddStep4View, self).get_context_data(**kwargs)
         ctx['preference'] = self.request.user.userprofile.displayPref
         ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]
         ctx['view_preferences'] = ["Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
         return ctx
     def get_queryset(self):
@@ -146,7 +147,7 @@ def deleteChoice(request, choice_id):
 def deletePoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.delete()
-    return HttpResponseRedirect('/polls/')
+    return HttpResponseRedirect(reverse('polls:index'))
 
 def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -154,30 +155,41 @@ def startPoll(request, question_id):
     question.save()
     if question.emailStart:
         sendEmail(request, question_id, 'start')
-    return HttpResponseRedirect('/polls/')    
+    return HttpResponseRedirect(reverse('polls:index'))    
 
 def stopPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.status = 3
     
-    all_responses = question.response_set.reverse()
     if question.question_type == 1: #poll
-        if len(all_responses) != 0: 
-            (latest_responses, previous_responses) = categorizeResponses(all_responses)
-            vote_results = getVoteResults(latest_responses)
-            current_result = vote_results[question.poll_algorithm - 1]
-            winnerStr = ""
-            item_set = list(question.item_set.all())
-            for index, score in current_result.items():
-                if (score == min(current_result.values()) and question.poll_algorithm - 1 == 5) or (score == max(current_result.values()) and question.poll_algorithm - 1 != 5):
-                    winnerStr += item_set[index].item_text
-            question.winner = winnerStr
-        else:
-            question.winner = ""   
+        question.winner = getPollWinner(question)    
     elif question.question_type == 2: #allocation
         allocation_serial_dictatorship(question.response_set.all())
     question.save()
-    return HttpResponseRedirect('/polls/')
+    return HttpResponseRedirect(reverse('polls:index'))
+
+def getPollWinner(question):
+    all_responses = question.response_set.reverse()
+    if len(all_responses) == 0:
+        return ""
+
+    (latest_responses, previous_responses) = categorizeResponses(all_responses)
+    vote_results = getVoteResults(latest_responses)
+    indexVoteResults = question.poll_algorithm - 1
+    current_result = vote_results[indexVoteResults]
+    
+    winnerStr = ""
+    item_set = list(question.item_set.all())
+    for index, score in current_result.items():
+        # index 5 uses Simplified Bucklin, where score is rank. A low score means it has a high rank (e.g. rank 1 > rank 2), so the best score is the minimum.
+        # All other indices rank score from highest to lowest, so the best score would be the maximum.  
+        if (score == min(current_result.values()) and indexVoteResults == 5) or (score == max(current_result.values()) and indexVoteResults != 5):
+            #add a comma to separate the winners            
+            if winnerStr != "":
+                winnerStr += ", "
+            #add the winner
+            winnerStr += item_set[index].item_text
+    return winnerStr
     
 # view for question detail
 class DetailView(generic.DetailView):
@@ -278,6 +290,8 @@ class PollInfoView(generic.DetailView):
         ctx['users'] = User.objects.all()
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
+        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]        
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
         ctx['history'] = currentUserResponses[1:]
@@ -429,15 +443,15 @@ def getMarginOfVictory(latest_responses):
     #make sure no ties or incomplete results are in the votes
     if pollProfile.getElecType() != "soc":
         return []
-    
+    print(MechanismPlurality().getMov(pollProfile))
     marginList = []
     marginList.append(MechanismPlurality().getMov(pollProfile))  
     marginList.append(MechanismBorda().getMov(pollProfile))
     marginList.append(MechanismVeto().getMov(pollProfile))
     marginList.append(MechanismKApproval(3).getMov(pollProfile))
-    if len(latest_responses) > 1:
-        marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
-    
+    #if len(latest_responses) > 1:
+     #   marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
+    marginList.append("-")
     return marginList
 
 #function to add voter to voter list (invite only)
@@ -473,12 +487,17 @@ def removeVoter(request, question_id):
 
 def setInitialSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    if 'pollpreferences' in request.POST:
-        question.poll_algorithm = request.POST['pollpreferences']
+    question.poll_algorithm = request.POST['pollpreferences']
     question.display_pref = request.POST['viewpreferences']
-
     question.save()
-    return HttpResponseRedirect('/polls/')
+    return HttpResponseRedirect(reverse('polls:index'))
+
+def setAlgorithm(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.poll_algorithm = request.POST['pollpreferences']
+    print (question.poll_algorithm)
+    question.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def setVisibility(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

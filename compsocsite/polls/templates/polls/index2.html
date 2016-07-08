@@ -43,18 +43,18 @@
                             {% if question.status == 1 %}
                                 <td style="vertical-align:middle">
                                     
-                                        <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start" style="color:green; float:right;"></span>
+                                        <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start{{ question.id }}" style="color:green; float:right;"></span>
                                   
                                  </td>
 
-                                <div class="modal fade" id="confirm-start" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="confirm-start{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                Confirm Start Poll
+                                                Confirm Start Poll {{ question.question_text }}
                                             </div>
                                             <div class="modal-body">
-                                                Are you sure you want to start this poll? Once a poll is started, you cannot modify the settings or remove voters.
+                                                Are you sure you want to start poll {{ question.question_text }}? Once a poll is started, you cannot modify the settings or remove voters.
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="{% url 'polls:start' question.id %}">
@@ -69,11 +69,11 @@
 
                                 <td style="vertical-align:middle">
                                 	
-                                        <span class = "glyphicon glyphicon-stop" data-toggle="modal" data-target="#confirm-stop" style="color:red; float:right;"></span>
+                                        <span class = "glyphicon glyphicon-stop" data-toggle="modal" data-target="#confirm-stop{{ question.id }}" style="color:red; float:right;"></span>
                            
                                 </td>
 
-                                <div class="modal fade" id="confirm-stop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="confirm-stop{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">

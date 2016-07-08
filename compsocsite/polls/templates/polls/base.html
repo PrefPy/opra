@@ -22,8 +22,8 @@
         <link rel="stylesheet" href="{% static 'css/shared.css' %}">
 		{% if request.flavour == "mobile" %}
 		<link rel="stylesheet" href="{% static 'css/mobile.css' %}">
-		
-		<!--link rel="stylesheet" href="{% static 'css/desktop.css' %}"-->
+		{% else % }
+		<link rel="stylesheet" href="{% static 'css/desktop.css' %}">
 		{% endif %}
 
 
@@ -177,7 +177,7 @@
 
 				</nav>
 
-				<div class=".col-md-12" style="padding: 50px 10px;">
+				<div class="container-fluid" style="padding: 50px 10px;">
 					{% block content %}
 					{% endblock %}
 				</div>

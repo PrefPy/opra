@@ -218,7 +218,9 @@ class DetailView(generic.DetailView):
                     otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
                     KT += getKendallTauScore(userResponse, otherUserResponse)
                     print(getKendallTauScore(userResponse, otherUserResponse))
-            KT /= num
+            
+            if num != 0:
+                KT /= num
             if KT == 0:
                 KT = .25
             else:

@@ -203,17 +203,6 @@ class DetailView(generic.DetailView):
             
             prefGraph = {}
             dictionary = get_object_or_404(Dictionary, response=resp)
-<<<<<<< HEAD
-            for q in questions:
-                userResponse = q.response_set.filter(user=user).reverse()
-                otherUserResponse = q.response_set.filter(user=otherUser).reverse()
-                if len(userResponse) > 0 and len(otherUserResponse) > 0:
-                    num = num + 1
-                    userResponse = get_object_or_404(Dictionary, response=userResponse[0])
-                    otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
-                    KT += getKendallTauScore(userResponse, otherUserResponse)
-=======
->>>>>>> origin/master
             
             candMap = {}
             counter = 0

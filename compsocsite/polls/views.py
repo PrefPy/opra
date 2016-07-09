@@ -47,17 +47,16 @@ def AddStep1View(request):
         questionDesc = request.POST['desc']
         questionType = request.POST['questiontype']
         imageURL = request.POST['imageURL']
+        # create a new question using information from the form and inherit settings from the user's preferences
         question = Question(question_text=questionString, question_desc=questionDesc,
             pub_date=timezone.now(), question_owner=request.user,
             display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
             emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
             emailStop=request.user.userprofile.emailStop)
-        print "image = ", request.FILES.get('docfile')
         if request.FILES.get('docfile') != None:
             question.image = request.FILES.get('docfile')
         elif imageURL != '':
-            question.imageURL = imageURL
-
+            question.imageURL = imageURL 
         question.question_type = questionType
         question.save()
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
@@ -121,19 +120,19 @@ def addChoice(request, question_id):
     for choice in allChoices:
         if item_text == choice.item_text:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    #save the choice
+    # create the choice
+    item = Item(question=question, item_text=item_text)
+    # if the user uploaded an image or set a URL, add it to the item
     if request.FILES.get('docfile') != None:
-        item = Item(question=question, image=request.FILES.get('docfile'), item_text=item_text)
+        item.image = request.FILES.get('docfile')
     elif imageURL != '':
-        item = Item(question=question, imageURL=imageURL, item_text=item_text)
-    else:
-        item = Item(question=question, item_text=item_text)
+        item.imageURL = imageURL 
+    # save the choice
     item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def deleteChoice(request, choice_id):
     item = get_object_or_404(Item, pk=choice_id)
-    question = item.question
     item.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -144,16 +143,19 @@ def deletePoll(request, question_id):
 
 def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    # set the poll to start
     question.status = 2
     question.save()
+    # send notification email
     if question.emailStart:
         sendEmail(request, question_id, 'start')
     return HttpResponseRedirect(reverse('polls:index'))    
 
 def stopPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    # set the status to stop
     question.status = 3
-    
+    # get winner or allocation, and save it
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
@@ -195,30 +197,13 @@ class DetailView(generic.DetailView):
         if len(otherUserResponses) == 0:
             return ctx['object'].item_set.all
         for resp in otherUserResponses:
-            user=self.request.user
+            user = self.request.user
             otherUser = resp.user
-            questions = Question.objects.all().filter(question_voters=otherUser).filter(question_voters=user)
-            KT = 0
-            num = 0
+            KT = getKTScore(user, otherUser)
+            
             prefGraph = {}
             dictionary = get_object_or_404(Dictionary, response=resp)
-            for q in questions:
-                userResponse = q.response_set.filter(user=user).reverse()
-                otherUserResponse = q.response_set.filter(user=otherUser).reverse()
-                if len(userResponse) > 0 and len(otherUserResponse) > 0:
-                    num = num + 1
-                    userResponse = get_object_or_404(Dictionary, response=userResponse[0])
-                    otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
-                    KT += getKendallTauScore(userResponse, otherUserResponse)
-                    print(getKendallTauScore(userResponse, otherUserResponse))
             
-            if num != 0:
-                KT /= num
-            if KT == 0:
-                KT = .25
-            else:
-                KT = 1/(1 + KT)
-
             candMap = {}
             counter = 0
             for item in dictionary.items():
@@ -261,6 +246,7 @@ class DetailView(generic.DetailView):
         if tempOrderStr == "null":
             ctx['items'] = self.get_order(ctx)
             return ctx
+        # check if the user submitted a vote earlier and display that for modification
         if len(currentUserResponses) > 0:
             mostRecentResponse = currentUserResponses[0]
             selectionArray = []             
@@ -268,6 +254,7 @@ class DetailView(generic.DetailView):
                 selectionArray = d.sorted_values()
             ctx['currentSelection'] = selectionArray
         else:
+            # no history so display the list of choices
             ctx['items'] = self.get_order(ctx)
         return ctx
     def get_queryset(self):
@@ -275,6 +262,28 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
+
+def getKTScore(user, otherUser):
+    KT = 0
+    num = 0
+    questions = Question.objects.all().filter(question_voters=otherUser).filter(question_voters=user)
+    for q in questions:
+        userResponse = q.response_set.filter(user=user).reverse()
+        otherUserResponse = q.response_set.filter(user=otherUser).reverse()
+        if len(userResponse) > 0 and len(otherUserResponse) > 0:
+            num = num + 1
+            userResponse = get_object_or_404(Dictionary, response=userResponse[0])
+            otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
+            KT += getKendallTauScore(userResponse, otherUserResponse)
+            print(getKendallTauScore(userResponse, otherUserResponse))
+    
+    if num != 0:
+        KT /= num
+    if KT == 0:
+        KT = .25
+    else:
+        KT = 1/(1 + KT)
+    return KT    
     
 # view for settings detail
 class PollInfoView(generic.DetailView):
@@ -374,6 +383,7 @@ class VoteResultsView(generic.DetailView):
             ctx['previous_winners'].append(obj)
         return ctx
 
+# get a list of algorithms supported by the system
 def getListPollAlgorithms():
     return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
 
@@ -501,6 +511,7 @@ def getShadeValues(scoreVectorList):
         shadeValues.append(newRow)
     return shadeValues
 
+# find the minimum number of votes needed to change the poll results
 def getMarginOfVictory(latest_responses):
     pollProfile = getPollProfile(latest_responses)
     if pollProfile == None:
@@ -526,11 +537,13 @@ def addVoter(request, question_id):
     creator_obj = User.objects.get(id=question.question_owner_id)
 
     newVoters = request.POST.getlist('voters')
+    # send an invitation email
     email = request.POST.get('email') == 'email'
     question.emailInvite = email
     question.save()
     if email:
         sendEmail(request, question_id, 'invite')
+    # add each voter to the question by username
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)

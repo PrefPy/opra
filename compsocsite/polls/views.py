@@ -217,7 +217,6 @@ class DetailView(generic.DetailView):
                     userResponse = get_object_or_404(Dictionary, response=userResponse[0])
                     otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
                     KT += getKendallTauScore(userResponse, otherUserResponse)
-                    print(getKendallTauScore(userResponse, otherUserResponse))
             
             if num != 0:
                 KT /= num
@@ -619,9 +618,7 @@ def vote(request, question_id):
         item_num += 1
 
     #get current winner
-    winning_string = getPollWinner(question)
-    winning_item = get_object_or_404(Item, item_text=winning_string, question=question)
-    old_winner = OldWinner(question=question, item=winning_item, response=response)
+    old_winner = OldWinner(question=question, response=response)
     old_winner.save()
 
     return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))

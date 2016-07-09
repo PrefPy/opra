@@ -44,7 +44,7 @@ function validateForm() {
     </div>
     <br/>
 
-    <form id="add_poll" method="post" action="/polls/add_step1/" name="add_step1" onsubmit="return validateForm() " style="font-size:100%">
+    <form id="add_poll" method="post" action="/polls/add_step1/" name="add_step1" onsubmit="return validateForm() " style="font-size:100%" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="questionTitle">Title:</label> <br />
         <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="20" size="100" autofocus/>

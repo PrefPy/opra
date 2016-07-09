@@ -17,13 +17,13 @@
 {% if question.status == 2 %}
 <div class="grid">
 	<div class="row">
-		{% if question.image != Null and question.image != '' %}
+		{% if question.imageURL != Null and question.imageURL != '' %}
 		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-			<a href="{{ question.image }}"><img src="{{ question.image }}" width="150" ></a>
+			<a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
 		</div>
-		{% elif question.imageFile %}
+		{% elif question.image %}
 		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-			<a href="/{{ question.image }}"><img src="/{{ question.image }}" width="150" ></a>
+			<a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
 		</div>
 		{% endif %}
 		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>

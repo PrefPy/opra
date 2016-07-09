@@ -47,24 +47,17 @@ def AddStep1View(request):
         questionDesc = request.POST['desc']
         questionType = request.POST['questiontype']
         imageURL = request.POST['imageURL']
+        question = Question(question_text=questionString, question_desc=questionDesc,
+            pub_date=timezone.now(), question_owner=request.user,
+            display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
+            emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
+            emailStop=request.user.userprofile.emailStop)
+        print "image = ", request.FILES.get('docfile')
         if request.FILES.get('docfile') != None:
-            question = Question(question_text=questionString, question_desc=questionDesc,
-                image=request.FILES.get('docfile'), pub_date=timezone.now(), question_owner=request.user,
-                display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
-                emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
-                emailStop=request.user.userprofile.emailStop)
+            question.image = request.FILES.get('docfile')
         elif imageURL != '':
-            question = Question(question_text=questionString, question_desc=questionDesc,
-                imageURL=imageURL, pub_date=timezone.now(), question_owner=request.user,
-                display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
-                emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
-                emailStop=request.user.userprofile.emailStop)
-        else:
-            question = Question(question_text=questionString, question_desc=questionDesc,
-                pub_date=timezone.now(), question_owner=request.user,
-                display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
-                emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
-                emailStop=request.user.userprofile.emailStop)
+            question.imageURL = imageURL
+
         question.question_type = questionType
         question.save()
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
@@ -106,7 +99,7 @@ class AddStep4View(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(AddStep4View, self).get_context_data(**kwargs)
         ctx['preference'] = self.request.user.userprofile.displayPref
-        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]
         ctx['view_preferences'] = ["Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
         return ctx
@@ -292,7 +285,7 @@ class PollInfoView(generic.DetailView):
         ctx['users'] = User.objects.all()
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
-        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]        
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
@@ -364,7 +357,7 @@ class VoteResultsView(generic.DetailView):
         voteResults = getVoteResults(latest_responses) 
         ctx['vote_results'] = voteResults
         ctx['shade_values'] = getShadeValues(voteResults)
-        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['margin_victory'] = getMarginOfVictory(latest_responses)
         
         previous_winners = OldWinner.objects.all().filter(question=self.object)
@@ -380,6 +373,9 @@ class VoteResultsView(generic.DetailView):
             obj['margin_victory'] = getMarginOfVictory(lr)
             ctx['previous_winners'].append(obj)
         return ctx
+
+def getListPollAlgorithms():
+    return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
 
 #get a list of options for this poll
 def getCandidateMap(response):

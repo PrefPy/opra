@@ -361,9 +361,12 @@ class VoteResultsView(generic.DetailView):
         ctx['latest_responses'] = latest_responses
         ctx['previous_responses'] = previous_responses
         ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
-        ctx['vote_results'] = getVoteResults(latest_responses)   
+        voteResults = getVoteResults(latest_responses) 
+        ctx['vote_results'] = voteResults
+        ctx['shade_values'] = getShadeValues(voteResults)
         ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
         ctx['margin_victory'] = getMarginOfVictory(latest_responses)
+        
         previous_winners = OldWinner.objects.all().filter(question=self.object)
         ctx['previous_winners'] = []
         for pw in previous_winners:
@@ -449,6 +452,54 @@ def getVoteResults(latest_responses):
     
     return scoreVectorList
 
+# return lighter (+lum) or darker (-lum) color as a hex string
+# pass original hex string and luminosity factor, e.g. -0.1 = 10% darker
+def colorLuminance(hexVal, lum):
+    #convert to decimal and change luminosity
+    rgb = "#"
+    for i in range(0, 3): 
+	c = int(hexVal[i * 2 : i * 2 + 2], 16)
+	c = round(min(max(0, c + (c * float(lum))), 255))
+	c = hex(int(c))
+	rgb += ("00" + str(c))[len(str(c)):]
+    return rgb
+
+# get a range of colors from green to red 
+def getShadeValues(scoreVectorList):
+    shadeValues = []
+
+    for row in scoreVectorList:
+        sortedRow = sorted(set(list(row.values())))
+        highestRank = len(sortedRow) - 1
+        
+        newRow = []
+        for index in row:
+            rank = sortedRow.index(row[index])
+            
+            if highestRank == 0:
+                newRow.append("#6cbf6c")
+            elif highestRank == 1:
+                if rank == 0:
+                    newRow.append("#dc6460")
+                else:
+                    newRow.append("#6cbf6c")
+            else:
+                midRank = highestRank / 2
+		
+		colorStr = ""
+		luminance = 1 - (abs(midRank - rank) / float(midRank))
+		luminance /= 2.0
+		
+		#the 5th row is Simplified Bucklin (lower score is better so reverse the colorings for this row)
+		counter = len(shadeValues)
+		if (rank <= midRank and counter != 4) or (rank > midRank and counter == 4):
+		    colorStr = colorLuminance("dc6460", luminance)
+		else:
+		    colorStr = colorLuminance("6cbf6c", luminance)
+		newRow.append(colorStr)
+        shadeValues.append(newRow)
+    return shadeValues
+
 def getMarginOfVictory(latest_responses):
     pollProfile = getPollProfile(latest_responses)
     if pollProfile == None:
@@ -509,7 +560,6 @@ def setInitialSettings(request, question_id):
 def setAlgorithm(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['pollpreferences']
-    print (question.poll_algorithm)
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

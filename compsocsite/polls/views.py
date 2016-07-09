@@ -629,8 +629,13 @@ def vote(request, question_id):
 
     #get current winner
     winning_string = getPollWinner(question)
-    winning_item = get_object_or_404(Item, item_text=winning_string, question=question)
-    old_winner = OldWinner(question=question, item=winning_item, response=response)
-    old_winner.save()
+    try:
+        winning_item = Item.objects.get(item_text=winning_string, question=question)
+    except Item.DoesNotExist:
+        winning_item = None
+    
+    if winning_item != None:
+        old_winner = OldWinner(question=question, item=winning_item, response=response)
+        old_winner.save()    
 
     return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))

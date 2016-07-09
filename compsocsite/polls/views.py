@@ -458,10 +458,10 @@ def colorLuminance(hexVal, lum):
     #convert to decimal and change luminosity
     rgb = "#"
     for i in range(0, 3): 
-	c = int(hexVal[i * 2 : i * 2 + 2], 16)
-	c = round(min(max(0, c + (c * float(lum))), 255))
-	c = hex(int(c))
-	rgb += ("00" + str(c))[len(str(c)):]
+        c = int(hexVal[i * 2 : i * 2 + 2], 16)
+        c = round(min(max(0, c + (c * float(lum))), 255))
+        c = hex(int(c))
+        rgb += ("00" + str(c))[len(str(c)):]
     return rgb
 
 # get a range of colors from green to red 
@@ -471,32 +471,37 @@ def getShadeValues(scoreVectorList):
     for row in scoreVectorList:
         sortedRow = sorted(set(list(row.values())))
         highestRank = len(sortedRow) - 1
-        
+
         newRow = []
+        greenColor = "6cbf6c"
+        redColor = "dc6460"
         for index in row:
             rank = sortedRow.index(row[index])
-            
+
             if highestRank == 0:
-                newRow.append("#6cbf6c")
-            elif highestRank == 1:
-                if rank == 0:
-                    newRow.append("#dc6460")
-                else:
-                    newRow.append("#6cbf6c")
+                # must be the winner
+                newRow.append("#" + greenColor)
             else:
+                # at the midpoint, change colors
                 midRank = highestRank / 2
-		
-		colorStr = ""
-		luminance = 1 - (abs(midRank - rank) / float(midRank))
-		luminance /= 2.0
-		
-		#the 5th row is Simplified Bucklin (lower score is better so reverse the colorings for this row)
-		counter = len(shadeValues)
-		if (rank <= midRank and counter != 4) or (rank > midRank and counter == 4):
-		    colorStr = colorLuminance("dc6460", luminance)
-		else:
-		    colorStr = colorLuminance("6cbf6c", luminance)
-		newRow.append(colorStr)
+                # color is a hex value
+                colorStr = ""
+                # make the colors closer to the end darker (lower value) and toward the middle lighter (higher value) 
+                luminance = 0
+                if midRank != 0:
+                    luminance = 1 - (abs(midRank - rank) / float(midRank))
+                    luminance /= 2.0
+
+                #the 5th row is Simplified Bucklin (lower score is better so reverse the colorings for this row)
+                counter = len(shadeValues)
+                # check if the ranking is above or below the midpoint and assign colors accordingly
+                if (rank <= midRank and counter != 4) or (rank > midRank and counter == 4):
+                    colorStr = colorLuminance(redColor, luminance)
+                else:
+                    colorStr = colorLuminance(greenColor, luminance)
+
+                newRow.append(colorStr)
+
         shadeValues.append(newRow)
     return shadeValues
 

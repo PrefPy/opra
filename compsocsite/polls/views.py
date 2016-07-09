@@ -373,7 +373,6 @@ class VoteResultsView(generic.DetailView):
             obj['title'] = str(pw)
             obj['latest_responses'] = lr
             obj['previous_responses'] = pr
-            obj['candMap'] = getCandidateMap(lr[0]) if (len(lr) > 0) else None
             obj['vote_results'] = getVoteResults(lr)
             obj['margin_victory'] = getMarginOfVictory(lr)
             ctx['previous_winners'].append(obj)

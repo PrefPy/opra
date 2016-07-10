@@ -29,6 +29,9 @@
                             <td style="vertical-align:middle">
                                 {% if question.status == 2 %}
                                 <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button" >Vote</a>
+                                {% if question.display_pref == 0 %}
+                                <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" >Current Winners</a>
+                                {% endif %}
                                 {% endif %}
                             </td>
                             {% if question.status == 1 %}

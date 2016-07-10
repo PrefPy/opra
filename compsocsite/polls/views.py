@@ -100,7 +100,7 @@ class AddStep4View(generic.DetailView):
         ctx['preference'] = self.request.user.userprofile.displayPref
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]
-        ctx['view_preferences'] = ["Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
+        ctx['view_preferences'] = ["Everyone can see all votes at all times", "Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
         return ctx
     def get_queryset(self):
         """
@@ -668,7 +668,9 @@ def setAlgorithm(request, question_id):
 def setVisibility(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     displayChoice = request.POST['viewpreferences']
-    if displayChoice == "allpermit":
+    if displayChoice == "always":
+        question.display_pref = 0
+    elif displayChoice == "allpermit":
         question.display_pref = 1
     elif displayChoice == "voternames":
         question.display_pref = 2

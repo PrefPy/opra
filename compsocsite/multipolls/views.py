@@ -22,12 +22,14 @@ def AddStep1(request):
         number = int(number1)
         title = request.POST['mPollTitle']
         description = request.POST['desc']
+        questionType = request.POST['questiontype']
         multipoll = MultiPoll(number=number, pos=0, status=0, title=title, description=description, owner=request.user)
         multipoll.save()
         for x in range(0, number):
             question = Question(question_text="Multipoll Issue", question_desc="",
                     image="", pub_date=timezone.now(), question_owner=request.user,
                     display_pref=request.user.userprofile.displayPref, m_poll=True)
+            question.question_type = questionType
             question.save()
             m = MultiPollQuestion(multipoll=multipoll,question=question,order=x)
             m.save()

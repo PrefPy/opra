@@ -23,10 +23,11 @@
 						<div class="panel-heading" data-toggle="collapse" href="#collapse{{ forloop.counter }}" style = "padding-top:0;padding-bottom:0;">
 							<table class="panel-title">
 								<tr style = "margin:0; padding:0">
-									<td><h4 >{{mpoll.title}}</h4></td>
+									<td><h4>{{ mpoll.title }}</h4></td>
 									{% if mpoll.status == 0 %}
 
-									<td style="vertical-align:middle;"><span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}" style="float:right;"></span>
+									<td style="vertical-align:middle;">
+                                        <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}" style="float:right;"></span>
 									<div class="modal fade" id="confirm-startmpoll{{ mpoll.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 										<div class="modal-dialog">
 											<div class="modal-content">
@@ -40,14 +41,22 @@
 													<a href="{% url 'multipolls:start' mpoll.id %}">
 													<button type="button" class="btn-large btn-success btn-ok">
 														Yes
-													</button> </a>
+													</button> 
+                                                    </a>
 													<button type="button" class="btn-large btn-default" data-dismiss="modal">
 														Cancel
 													</button>
 												</div>
 											</div>
 										</div>
-									</div> {% elif mpoll.status != mpoll.number|add:"1" %} <td><a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-primary" style = "float:right">Progress</span></a></td>
+									</div> 
+                                    </td>
+                                    {% elif mpoll.status != mpoll.number|add:"1" %} 
+                                    <td>
+                                        <a href="{% url 'multipolls:progress' mpoll.id %}">
+                                            <span class="btn btn-primary" style = "float:right">Progress</span>
+                                        </a>
+                                    </td>
 									{% endif %}
 								</tr>
 							</table>
@@ -76,10 +85,8 @@
 									</td>
 								</tr>
 								{% endfor %}
-
+                            </table>
 						</div>
-
-						</table>
 					</div>
 				</div>
 			</div>

@@ -15,16 +15,23 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/stylish-portfolio.css' %}" />
 
+
     <!-- Custom Fonts -->
     
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
         
-        <link rel="stylesheet" href="{% static 'css/shared.css' %}">
-		{% if request.flavour == "mobile" %}
-		<link rel="stylesheet" href="{% static 'css/mobile.css' %}">
-		{% else % }
-		<link rel="stylesheet" href="{% static 'css/desktop.css' %}">
-		{% endif %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/shared.css' %}"/>
+
+
+	<!-- Somehow else does not work, had to use two "if"'s 
+	{% if request.flavour == "mobile" %}
+	<link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
+	{% endif %}
+	{% if request.flavour == "full" %}
+	<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
+	{% endif %}
+	-->
+
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -39,6 +46,8 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://use.fontawesome.com/5f5c1e4fb0.js"></script>
+    
+    
     
     <!-- Custom Theme JavaScript -->
     <script>
@@ -108,32 +117,31 @@
         
 		
 		{% block extra_head %}
+		
 
 		{% endblock %}
 	</head>
-    
+ 
     
 	<body>
+		
+		
                 {% if user.is_authenticated %}
 				 <nav class="navbar navbar-default navbar-fixed-top" style="background-color:#377BB5; border-color: transparent;">
-                {%else%}
+                {% else %}
                  <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
                 {%endif%}
                      
 					{% if request.flavour == "mobile" %}
-					<div style = "margin-left: 20px; margin-right: 20px">
+					<div style = "margin-left: 20px; margin-right: 20px;">
 				    {% else %}
 				    <div class="container-fluid">
 				    {% endif %}
-                        <div class="navbar-header">
-                            <!-- Brand and toggle get grouped for better mobile display -->
-                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-
-                            <span class="sr-only">Toggle navigation</span>
-                            </button>
+                        <div class="navbar-header" style = "overflow: hidden;float:left;">
+                            
                             
                             <a class="navbar-brand" href="/polls/" style ="font-size: 150%; {% if request.flavour == 'mobile' %}
-                            margin-top: 12pt;
+                            margin-top: 12pt; 
                             {% endif %}
                             {% if user.is_authenticated %}
                             color:white;
@@ -150,12 +158,12 @@
                                 {{ request.user.first_name }}
                                 {% endif %}
                                 {% endif %} </span></a>
-                        </div>
-
+                           </div>   
+                        
 							{% if user.is_authenticated %}
-							<ul class="nav navbar-nav navbar-right">
-                                <li ><a href="{% url 'polls:index' %}" style="color:white;"><span class="glyphicon navbar-right glyphicon-home"></span></a> </li>
-								<li class="dropdown" >
+							<ul class="nav navbar-nav navbar-right" style = "float:right;display:inline;">
+                                <li style = "display:inline;"><a href="{% url 'polls:index' %}" style="color:white;"><span class="glyphicon navbar-right glyphicon-home"></span></a></li>
+								<li class="dropdown" style = "float:auto;display:inline;">
 									<a class="dropdown-toggle" data-toggle="dropdown" style="color:white;"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
 									<ul class="dropdown-menu" style="font-size:100%;">
 										<li class="disabled">
@@ -192,12 +200,12 @@
                      
             {% if user.is_authenticated %}
 				<div class="container-fluid" style="padding: 70px 20px;">
-            {% else%}
+            {% else %}
                 <div name="MainPage">
             {% endif %}
             {% block content %}
             {% endblock %}
-                    </div>
+              	</div>
 
 
 	</body>

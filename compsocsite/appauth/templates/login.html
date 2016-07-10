@@ -46,7 +46,7 @@ window.location = "{% url 'polls:index' %}";
 
 {% endif %}
 
-    <div class="col-md-4 col-md-offset-4" align="center">
+    <div class="col-md-4 col-md-offset-4" align="center" style="padding: 60px 20px;">
         <h3 >Login to OPRA</h3>
         <br/>
         <form id="login_form" method="post" action="/auth/login/">
@@ -68,7 +68,7 @@ window.location = "{% url 'polls:index' %}";
             		$('#username').focus();
             }
             </script>
-            <input type="submit" value="Login" class="btn btn-primary" style='font-size:60%' />
+            <input type="submit" value="Login" class="btn btn-primary"  />
         </form>
         </div>
 {% endblock %}

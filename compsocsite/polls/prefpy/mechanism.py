@@ -500,6 +500,9 @@ def getKendallTauScore(myResponse, otherResponse):
     kt = 0
     list1 = myResponse.values()
     list2 = otherResponse.values()
+    
+    if len(list1) <= 1:
+        return kt
 
     #runs through list1
     for itr1 in range(0, len(list1) - 1):

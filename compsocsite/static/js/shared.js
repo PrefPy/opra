@@ -1,4 +1,4 @@
-function submitPref() {
+ function submitPref() {
 	var prefcolumn = $('#left-sortable');
 	var order = prefcolumn.sortable("toArray");
 	$('#pref_order').val(order.join(","));
@@ -12,6 +12,9 @@ function enableSubmission() {
 function moveToPref(obj) {
 	var time = 100
 	var prefcolumn = $('#left-sortable');
+    $('#left-sortable li').each(function(){
+        $(this).removeAttr('onclick')
+    });
 	var currentli = document.getElementById(obj.id);
 	jQuery("#" + obj.id).addClass("greybackground");
 	setTimeout(function() {
@@ -49,23 +52,21 @@ function moveAll() {
 			prefcolumn.sortable('refresh');
 		}, time)
 	}, time)
+    $('#left-sortable li').each(function(){
+        $(this).removeAttr('onclick')
+    });
 	enableSubmission();
 };
 
 $(function() {
+    $("list-group-item").sortable();
 	$("#left-sortable").sortable({
-		placeholder : "ui-state-highlight",
-		containment : "parent",
-		update : function(event, ui) {
-			var order = $("#left-sortable").sortable("toArray");
-			$('#pref_order').val(order.join(","));
-			enableSubmission();
-		}
+		//placeholder : "ui-sortable-placeholder",
+		containment : "document",
+        connectWith : "#right-sortable",
+        
 	});
 
-	$("ul.droptrue").sortable({
-		connectWith : "ul"
-	});
 
 	$("#left-sortable, #right-sortable").disableSelection();
 });

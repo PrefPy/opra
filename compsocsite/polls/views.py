@@ -721,6 +721,13 @@ def vote(request, question_id):
 
     return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))
 
+def dependencyRedirect(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if question.multipollquestion_set.all()[0].order == question.multipoll_set.all()[0].status-1:
+        return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+    else:
+        return HttpResponseRedirect(reverse('polls:dependencyview', args=(question.id,)))
+
 def chooseDependency(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     dependencies = []

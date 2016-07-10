@@ -11,6 +11,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
+from polls.views import getPollWinner
 # Create your views here.
 
 
@@ -152,6 +153,10 @@ def progress(request, multipoll_id):
         question = multipoll.questions.all()[multipoll.status-1]
         #end the previous poll   
         question.status = 3
+        if question.question_type == 1: #poll
+            question.winner = getPollWinner(question)
+        elif question.question_type == 2: #allocation
+            allocation_serial_dictatorship(question.response_set.all())
         question.save()
         #move to the next poll
         multipoll.status += 1
@@ -172,6 +177,10 @@ def progress(request, multipoll_id):
         #end the last poll
         question = multipoll.questions.all()[multipoll.status-1]
         question.status = 3
+        if question.question_type == 1: #poll
+            question.winner = getPollWinner(question)
+        elif question.question_type == 2: #allocation
+            allocation_serial_dictatorship(question.response_set.all())
         question.save()
         multipoll.status += 1
         multipoll.save()

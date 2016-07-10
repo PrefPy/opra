@@ -21,8 +21,11 @@
           Created by you
         </a>
           <div class="panel-title pull-right" style='font-size:100%;'>
-            <a href="{% url 'polls:AddStep1' %}" style='font-size:100%; '><span class="btn btn-blueadd" style='font-size:60%'><span class="glyphicon glyphicon-plus" style ="font-size:100%"></span></span></a>
+            <a href="{% url 'polls:AddStep1' %}" style='font-size:60%;' class="btn btn-blueadd">
+                    <span class="glyphicon glyphicon-plus"></span>
+            </a>
           </div>
+          
       </h4>
     </div>
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
@@ -42,11 +45,14 @@
                                 {% endif %}
                             </td>
                             {% if question.status == 1 %}
+
                                 <td style="vertical-align:middle">
-                                    
-                                        <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start{{ question.id }}" style="color:green; float:right;"></span>
-                                  
-                                 </td>
+                                   
+                                    <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start{{ question.id }}"></span> 
+                                 
+                  
+                                </td>
+                            
 
                                 <div class="modal fade" id="confirm-start{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -191,7 +197,7 @@
           Multi-polls created by you
         </a>
           <div class="panel-title pull-right" style='font-size:100%;'>
-            <a href="{% url 'multipolls:AddStep1' %}" style='font-size:60%; ' class="btn btn-blueadd">
+            <a href="{% url 'multipolls:AddStep1' %}" style='font-size:60%;' class="btn btn-blueadd">
                     <span class="glyphicon glyphicon-plus"></span>
             </a>
           </div>

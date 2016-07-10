@@ -73,3 +73,17 @@ ul.example li.placeholder:before {
   position: absolute;
   /** Define arrowhead **/
 }
+
+/* image */
+img.item {
+	width: 40px;
+}
+
+img.item:hover {
+	width: 80px;
+}
+
+.glyphicon-play .green{
+  style="color:green; 
+  float:right;
+}

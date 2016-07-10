@@ -10,7 +10,7 @@
         <hr />
         <h2 align="center">Please choose your dependencies</h2>
         {% for poll in question.multipoll_set.all.0.questions.all %}
-            {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order %}
+            {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
             <div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>
             <p><input type="checkbox" name="polls" value="{{poll.id}}" align="center" class="form-control"> </p>
             {% endif %}

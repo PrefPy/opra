@@ -47,10 +47,10 @@
                             {% if question.status == 1 %}
 
                                 <td style="vertical-align:middle">
-                                   
-                                    <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-start{{ question.id }}"></span> 
-                                 
-                  
+                                   <div class="start-icon">
+                                    <i class="fa fa-play" aria-hidden="true" data-toggle="modal" data-target="#confirm-start{{ question.id }}"></i>
+                                    </div>
+                                    
                                 </td>
                             
 
@@ -75,9 +75,9 @@
                             {% elif question.status == 2 %}
 
                                 <td style="vertical-align:middle">
-                                	
-                                        <span class = "glyphicon glyphicon-stop" data-toggle="modal" data-target="#confirm-stop{{ question.id }}" style="color:red; float:right;"></span>
-                           
+                                    <div class="stop-icon">
+                                    <i class="fa fa-stop" aria-hidden="true" data-toggle="modal" data-target="#confirm-stop{{ question.id }}"></i>
+                                    </div>
                                 </td>
 
                                 <div class="modal fade" id="confirm-stop{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -213,12 +213,12 @@
                         {% if mpoll.status == 0 %}
                         <tr>
                         <td style="vertical-align:middle">
-                                    
-                                        <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}" style="color:green; float:right;"></span>
+                            <div class="start-icon">
+                                <i class="fa fa-play" aria-hidden="true" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}"></i>
+                            </div>
                                   
-                                 </td>
-                             </tr>
-
+                         </td>
+                        </tr>
                                 <div class="modal fade" id="confirm-startmpoll{{ mpoll.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">

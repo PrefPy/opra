@@ -17,15 +17,18 @@
 <div>
     <form action="{% url 'polls:assignpreference' combination.id %}" method="post">
         {% csrf_token %}
-
+        <div style="clear:both" class="col-md-12">
         {% for poll in combination.dependent_questions.all %}
+            <div class="col-md-4 margin-panel-top">
+                <h4>{{poll.question_text}}</h4>
             <select name="{{poll.id}}" class="form-control">
             {% for item in poll.item_set.all %}
                 <option value="{{item.item_text}}">{{item.item_text}}</option>
             {% endfor %}
             </select>
+            </div>
         {% endfor %}
-        
+        </div>
         {% if request.flavour == "mobile" %}
         <div class="col-md-6 margin-panel-top">
         {% else %}

@@ -1,60 +1,164 @@
-.ui-sortable {
-	background-color: lightgray;
-	-webkit-box-shadow:  0px 0px 10px 1px rgba(0, 0, 0, .1);
-    box-shadow:  0px 0px 10px 1px rgba(0, 0, 0, .1);
-    list-style-type: none; 
-    padding: 0; 
-}
-.ui-sortable li.ui-state-default { 
-	margin: 0; 
-	height: 45px;
-	line-height: 48px;
-	font-size: 1.4em; 
-	color: #fff;
-	outline: 0;
-	padding: 0;
-	margin: 0;
-	text-indent: 15px;
-	background: rgb(78,82,91);
-	background: -moz-linear-gradient(top,  rgb(78,82,91) 0%, rgb(57,61,68) 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(78,82,91)), color-stop(100%,rgb(57,61,68)));
-	background: -webkit-linear-gradient(top,  rgb(78,82,91) 0%,rgb(57,61,68) 100%);
-	background: -o-linear-gradient(top,  rgb(78,82,91) 0%,rgb(57,61,68) 100%);
-	background: -ms-linear-gradient(top,  rgb(78,82,91) 0%,rgb(57,61,68) 100%);
-	background: linear-gradient(to bottom,  rgb(78,82,91) 0%,rgb(57,61,68) 100%);
-	border-top: 1px solid rgba(255,255,255,.2);
-	border-bottom: 1px solid rgba(0,0,0,.5);
-	text-shadow: -1px -1px 0px rgba(0,0,0,.5);
-	font-size: 1.1em;
-	position: relative;
-	cursor: pointer;
-}
-.ui-sortable li.ui-state-default:first-child {
-	border-top: 0; 
-}
-.ui-sortable li.ui-state-default:last-child {
-	border-bottom: 0;
+* {
+	font-size: 100%;
 }
 
-.ui-sortable-placeholder {
-	border: #aaa;
-	height: 45px;
-	width: 344px;
-	background: #ccc;
+
+a {
+	font-size: 100%;
+	text-decoration: none !important;
 }
-.ui-sortable li.ui-state-default:after {
-	content: "\f0c9";
-	display: inline-block;
-	font-family: "FontAwesome";
-	position: absolute;
-	right: 18px;
-	top: 9px;
-	text-align: center;
-	line-height: 35px;
-	color: rgba(255,255,255,.2);
-	text-shadow: 0px 0px 0px rgba(0,0,0,0);
-	cursor: move;
+
+button {
+	outline:none;
 }
+
+glyphicon-info-sign {
+	font-size: 60%;
+	color: #56A5EC;
+}
+
+glyphicon-play {
+	color: green;
+}
+
+glyphicon-stop {
+	color: red;
+}
+
+nopadding {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.greycolor {
+	color: grey;
+}
+
+.greycolor:hover {
+	color: black;
+	cursor: pointer;
+	cursor: hand;
+}
+.greencolor {
+	color: green;
+}
+.greencolor:hover {
+	color: darkgreen;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.bluecolor {
+	color: blue;
+}
+.bluecolor:hover {
+	color: darkblue;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.redcolor {
+	color: red;
+}
+.redcolor:hover {
+	color: darkred;
+	cursor: pointer;
+	cursor: hand;
+}
+
+/* Ranking UI */
+#left-sortable, #right-sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+}
+#left-sortable li, #right-sortable li {
+    display: block;
+    margin: 5px 5px 5px 5px;
+    padding: 5px;
+    background: linear-gradient(to bottom, #ffffff 0%,#aaaaaa 100%);
+    border-radius: 25px;
+    padding-left:50px;
+}
+
+html > body #sortable li {
+    height: 1.5em;
+    line-height: 0em;
+}
+.ui-state-highlight {
+    height: 1.5em;
+    line-height: 0em;
+    background: none!important;
+    background-color: #999 !important;
+}
+
+.greybackground {
+    background: none!important;
+    background-color: #aaa !important;
+}
+
+.cliente {
+    margin: 15px;
+    border: #cdcdcd medium solid;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+button:hover .greencolor {
+    color: darkgreen;
+}
+
+.margin-panel-top {
+    margin-top: 12px;
+}
+	
+.panel-border {
+    border: 3px solid;
+    border-color: darkgrey; 
+    border-radius: 0 0px 25px 25px;
+}
+
+.btn-danger.reset-button {
+    background: linear-gradient(to bottom, orangered 0%, darkred 100%);
+}
+
+.reset-button-mobile {
+    margin-bottom: 0;
+    border-radius: 25px;
+    background: linear-gradient(to bottom, orangered 0%,darkred 100%);
+}
+
+.btn-success.submit-button {
+    display: none; 
+    background: linear-gradient(to bottom, lightgreen 0%, darkgreen 100%);
+}
+
+.submit-button-mobile {
+    border: none; 
+    border-radius: 30px;
+    float: right; 
+    width: 30%; 
+    height: 1.25em; 
+    margin: 0; 
+    display: none;
+    background: linear-gradient(to bottom, lightgreen 0%,darkgreen 100%);
+}
+
+.btn-primary.move-all-button {
+    background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);
+}
+
+.move-all-button-mobile {
+    border: none; 
+    border-radius: 25px;
+    float: right; 
+    width: 30%; 
+    height: 1.25em; 
+    margin: 0;
+    background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);
+}
+
 body.dragging, body.dragging * {
   cursor: move !important;
 }
@@ -74,14 +178,17 @@ ul.example li.placeholder:before {
   /** Define arrowhead **/
 }
 
+
+/* image */
+img.item {
+	width: 40px;
+}
+
+img.item:hover {
+	width: 80px;
+}
+
 div{
 	font-size:100% !important;
 }
 
-.glyphicon-play:hover {
-	cursor: pointer; cursor: hand;	
-}
-
-.glyphicon-stop:hover {
-	cursor: pointer; cursor: hand;	
-}

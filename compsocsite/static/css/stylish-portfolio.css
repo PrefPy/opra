@@ -25,9 +25,8 @@ body {
 }
 
 /* Custom Button Styles */
-
+    
 .btn-dark {
-    border-radius: 0;
     color: #fff;
     background-color: rgba(0,0,0,0.4);
 }
@@ -52,7 +51,6 @@ body {
 }
 
 .btn-blueadd{
-  border-radius: 0;
   color: white;
   background-color: #377BB5;
 }
@@ -65,8 +63,9 @@ body {
 .btn-blueadd span{
   color:white;
 }
-  
-}
+
+
+
 
 /* Custom Horizontal Rule */
 
@@ -183,3 +182,30 @@ img.item {
 img.item:hover {
 	width: 80px;
 }
+
+
+.stop-icon{
+  font-size:.8em;
+  color:red;
+  cursor:pointer;
+  float:right;
+}
+.stop-icon:hover .fa-stop:before{
+  content:&quot;f05d&quot;;
+  color:red;
+  opacity:0.4;
+  
+}
+.start-icon{
+  font-size:.8em;
+  color:green;
+  cursor:pointer;
+  float:right;
+}
+.start-icon:hover .fa-play:before{
+  content:&quot;f05d&quot;;
+  color:green;
+  opacity:0.4;
+  
+}
+

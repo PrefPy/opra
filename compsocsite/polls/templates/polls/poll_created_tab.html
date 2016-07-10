@@ -1,0 +1,114 @@
+<!-- The polls created by you included in index2 --->
+<div class="panel panel-default"> <!-- for created by you section-->
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button"  data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Created by you
+        </a>
+          <div class="panel-title pull-right" style='font-size:100%;'>
+            <a href="{% url 'polls:AddStep1' %}" style='font-size:60%;' class="btn btn-blueadd">
+                    <span class="glyphicon glyphicon-plus"></span>
+            </a>
+          </div>
+          
+      </h4>
+    </div>
+
+    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+              <table class="table">
+                {% if question_list %}
+                    {% for question in question_list %}
+                        {% if question.question_owner == request.user and question.m_poll == False %}
+                        <tr>
+
+                            
+                            <td>    
+                                <a href="{% url 'polls:pollinfo' question.id %}">{{ question.question_text }}</a>
+                            </td>
+                            <td style="vertical-align:middle">
+                                {% if question.status == 2 %}
+                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button" >Vote</a>
+                                {% endif %}
+                            </td>
+                            {% if question.status == 1 %}
+
+                                <td style="vertical-align:middle">
+                                   <div class="start-icon">
+                                    <i class="fa fa-play" aria-hidden="true" data-toggle="modal" data-target="#confirm-start{{ question.id }}"></i>
+                                    </div>
+                                    
+                                </td>
+                            
+
+                                <div class="modal fade" id="confirm-start{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                Confirm Start Poll {{ question.question_text }}
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to start poll {{ question.question_text }}? Once a poll is started, you cannot modify the settings or remove voters.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{% url 'polls:start' question.id %}">
+                                                    <button type="button" class="btn-large btn-success btn-ok">Yes</button>
+                                                </a>
+                                                <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% elif question.status == 2 %}
+
+                                <td style="vertical-align:middle">
+                                    <div class="stop-icon">
+                                    <i class="fa fa-stop" aria-hidden="true" data-toggle="modal" data-target="#confirm-stop{{ question.id }}"></i>
+                                    </div>
+                                </td>
+
+                                <div class="modal fade" id="confirm-stop{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                Confirm Stop Poll
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to stop this poll? Once a poll is stopped, no more votes can be changed.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{% url 'polls:stop' question.id %}">
+                                                    <button type="button" class="btn-large  btn-ok btn-danger" style="font-size:100%;">Yes</button>
+                                                </a>
+                                                <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% elif question.status == 3 %}
+                                    <td>
+                                        {% if question.question_type == 1 %}
+                                            <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
+                                                {{question.winner}} wins
+                                            </a> 
+                                        {% elif question.question_type == 2 %}
+                                            Allocation Complete: <br />
+                                            {% for response in question.response_set.all %}
+                                                {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                                <br />
+                                            {% endfor %}
+                                            <a href="{% url 'polls:allocate_results' question.id %}" >
+                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                            </a> 
+                                        {% endif %}
+                                    </td>
+                    
+                            {% endif %}
+                        </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}    
+                </table>
+      </div>
+    </div>
+  </div> <!-- end for created by you section-->

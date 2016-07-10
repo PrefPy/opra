@@ -1,0 +1,94 @@
+<!-- The M-poll tab included in index2 --->
+<div class="panel panel-default">
+	<div class="panel-heading" role="tab" id="headingThree">
+		<h4 class="panel-title">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseOne"> 
+                Multi-polls created by you 
+            </a>
+		<div class="panel-title pull-right" style='font-size:100%;'>
+			<a href="{% url 'multipolls:AddStep1' %}" style='font-size:60%;' class="btn btn-blueadd"> <span class="glyphicon glyphicon-plus"></span> </a>
+		</div>
+        </h4>
+	</div>
+	<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+
+		<div class="panel-group">
+
+			<div class="panel-body">
+				{% if multipolls %}
+				{% for mpoll in multipolls %}
+				{% if request.user == mpoll.owner %}
+				<div class="panel-group">
+					<div class="panel panel-default">
+						<div class="panel-heading" data-toggle="collapse" href="#collapse{{ forloop.counter }}" style = "padding-top:0;padding-bottom:0;">
+							<table class="panel-title">
+								<tr style = "margin:0; padding:0">
+									<td><h4 >{{mpoll.title}}</h4></td>
+									{% if mpoll.status == 0 %}
+
+									<td style="vertical-align:middle;"><span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}" style="float:right;"></span>
+									<div class="modal fade" id="confirm-startmpoll{{ mpoll.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													Confirm Start Multi-Poll {{ mpoll.title }}
+												</div>
+												<div class="modal-body">
+													Are you sure you want to start multi-poll {{ mpoll.title }}? Once a poll is started, you cannot modify the settings or remove voters.
+												</div>
+												<div class="modal-footer">
+													<a href="{% url 'multipolls:start' mpoll.id %}">
+													<button type="button" class="btn-large btn-success btn-ok">
+														Yes
+													</button> </a>
+													<button type="button" class="btn-large btn-default" data-dismiss="modal">
+														Cancel
+													</button>
+												</div>
+											</div>
+										</div>
+									</div> {% elif mpoll.status != mpoll.number|add:"1" %} <td><a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-primary" style = "float:right">Progress</span></a></td>
+									{% endif %}
+								</tr>
+							</table>
+						</div>
+						<div id="collapse{{ forloop.counter }}" class="panel-collapse collapse">
+							<table style="width: 100%">
+
+								{% for question in mpoll.questions.all %}
+								<tr>
+									<td><a href="{% url 'polls:pollinfo' question.id %}"> {{ question.question_text }} </a> 
+									</td>
+									
+									<td> {% if question.status == 2 %} <a href="{% url 'polls:dependency' question.id %}" class ="btn btn-dark" style='float:middle'>Vote</a> {% endif %} </td>
+									<td>{% if question.status == 1 %}
+									Poll not started
+									{% elif question.status == 2 %}
+									Polling in session
+									{% elif question.status == 3 and question.display_pref == 1 %}
+	
+									winner is  <a href="{% url 'polls:voteresults' question.id %}">{{question.winner}}</a>
+									 
+									{% elif question.status == 3 and question.display_pref != 1 %}
+									winner is  {{question.winner}}
+									
+									{% endif %} 
+									</td>
+								</tr>
+								{% endfor %}
+
+						</div>
+
+						</table>
+					</div>
+				</div>
+			</div>
+			{%endif%}
+			{% endfor %} <!--end for mpoll in multipolls-->
+
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+<!-- end for M-polls created by you-->

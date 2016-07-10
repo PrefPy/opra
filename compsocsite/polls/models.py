@@ -31,6 +31,7 @@ class Question(models.Model):
     poll_algorithm = models.IntegerField(default=1)
     question_type = models.IntegerField(default=1)
     winner = models.CharField(max_length=200)
+    m_poll = models.BooleanField(default=False)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):
@@ -56,7 +57,7 @@ class Item(models.Model):
 # all information pertaining to a response that a student made to a question
 @python_2_unicode_compatible
 class Response(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, null = True)
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
@@ -74,7 +75,15 @@ class OldWinner(models.Model):
     def __str__(self):
         return (str(self.response.timestamp.time()) + ": " + self.item.item_text
             + " was the winner with " + self.response.user.username + "'s vote.")
-        
+
+class Combination(models.Model):
+    target_question = models.ForeignKey(Question)
+    dependent_questions = models.ManyToManyField(Question,related_name="dependent_questions")
+    user = models.ForeignKey(User)
+    dependencies = models.ManyToManyField(Item)
+    response = models.OneToOneField(Response,null=True, blank=True)
+
+
 # Dictionary Helper Models - from https://djangosnippets.org/snippets/2451/
 # Models include modifications to be used specifically for holding student preferences - these changes are marked with comments
 
@@ -85,7 +94,6 @@ class Dictionary(models.Model):
     """
     name = models.CharField(max_length=255)
     response = models.ForeignKey(Response, default=None, on_delete=models.CASCADE) # added to original model
-
     @staticmethod
     def getDict(name):
         """Get the Dictionary of the given name.

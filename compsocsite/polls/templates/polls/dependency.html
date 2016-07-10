@@ -1,0 +1,24 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+
+    
+    <form method="post" action="{% url 'polls:choosedependency' question.id %}" style="font-size:100%">
+        {% csrf_token %}
+
+        <h1 align="center">You are currently voting on {{question.question_text}} in Multi-Poll {{question.multipoll_set.all.0.title}}</h1>
+        <hr />
+        <h2 align="center">Please choose your dependencies</h2>
+        {% for poll in question.multipoll_set.all.0.questions.all %}
+            {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order %}
+            <div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>
+            <p><input type="checkbox" name="polls" value="{{poll.id}}" align="center" class="form-control"> </p>
+            {% endif %}
+        {% endfor%}
+
+
+        <div class="col-md-6 col-md-offset-3" align="center" style='font-size:100%'>
+            <input type="submit" value="Next" class="btn btn-primary" style='font-size:60%'/>
+        </div>
+    </form>
+{% endblock %}

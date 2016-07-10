@@ -280,6 +280,94 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
+       
+class DependencyView(generic.DetailView):
+    model = Question
+    template_name = 'polls/dependency.html'
+    
+class DependencyDetailView(generic.DetailView):
+    model = Combination
+    template_name = 'polls/dependencydetail.html'
+    
+    def get_order(self, ctx):
+        otherUserResponses = self.object.target_question.response_set.reverse()
+        preferences = []
+        if len(otherUserResponses) == 0:
+            return self.object.target_question.item_set.all
+        for resp in otherUserResponses:
+            user=self.request.user
+            otherUser = resp.user
+            questions = Question.objects.all().filter(question_voters=otherUser).filter(question_voters=user)
+            KT = 0
+            num = 0
+            prefGraph = {}
+            dictionary = get_object_or_404(Dictionary, response=resp)
+            for q in questions:
+                userResponse = q.response_set.filter(user=user).reverse()
+                otherUserResponse = q.response_set.filter(user=otherUser).reverse()
+                if len(userResponse) > 0 and len(otherUserResponse) > 0:
+                    num = num + 1
+                    userResponse = get_object_or_404(Dictionary, response=userResponse[0])
+                    otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
+                    KT += getKendallTauScore(userResponse, otherUserResponse)
+                    print(getKendallTauScore(userResponse, otherUserResponse))
+            KT /= num
+            if KT == 0:
+                KT = .25
+            else:
+                KT = 1/(1 + KT)
+
+            candMap = {}
+            counter = 0
+            for item in dictionary.items():
+                candMap[counter] = item[0]
+                counter += 1
+
+            for cand1Index in candMap:
+                tempDict = {}
+                for cand2Index in candMap:
+                    if cand1Index == cand2Index:
+                        continue
+                    
+                    cand1 = candMap[cand1Index]
+                    cand2 = candMap[cand2Index]
+                    cand1Rank = dictionary.get(cand1)
+                    cand2Rank = dictionary.get(cand2)
+                    #lower number is better (i.e. rank 1 is better than rank 2)
+                    if cand1Rank < cand2Rank:
+                        tempDict[cand2Index] = 1
+                    elif cand2Rank < cand1Rank:
+                        tempDict[cand2Index] = -1
+                    else:
+                        tempDict[cand2Index] = 0
+                prefGraph[cand1Index] = tempDict
+            preferences.append(Preference(prefGraph, KT))
+        pollProfile = Profile(candMap, preferences)
+
+        pref = MechanismBorda().getCandScoresMap(pollProfile)
+        l = list(sorted(pref.items(), key=lambda kv: (kv[1], kv[0])))
+        final_list = []
+        for p in reversed(l):
+            final_list.append(candMap[p[0]])
+        print(final_list)
+        return final_list
+    def get_context_data(self,**kwargs):
+        ctx = super(DependencyDetailView, self).get_context_data(**kwargs)
+        ctx['question'] = self.get_object().target_question
+        currentUserResponses = self.object.target_question.response_set.filter(user=self.request.user).reverse()
+        tempOrderStr = self.request.GET.get('order', '')
+        if tempOrderStr == "null":
+            ctx['items'] = self.get_order(ctx)
+            return ctx
+        if len(currentUserResponses) > 0:
+            mostRecentResponse = currentUserResponses[0]
+            selectionArray = []             
+            for d in mostRecentResponse.dictionary_set.all():   
+                selectionArray = d.sorted_values()
+            ctx['currentSelection'] = selectionArray
+        else:
+            ctx['items'] = self.get_order(ctx)
+        return ctx
     
 # view for settings detail
 class PollInfoView(generic.DetailView):
@@ -556,4 +644,61 @@ def vote(request, question_id):
     old_winner = OldWinner(question=question, item=winning_item, response=response)
     old_winner.save()
 
+    return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))
+
+def chooseDependency(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    dependencies = []
+    l = request.POST.getlist('polls')
+    for poll in l:
+        i = int(poll)
+        dependencies.append(poll)
+    combination = Combination(target_question=question, user=request.user)
+    combination.save()
+    if len(dependencies) > 0:
+        for poll in dependencies:
+            combination.dependent_questions.add(poll)
+            combination.save()
+    return HttpResponseRedirect(reverse('polls:dependencydetail', args=(combination.id,)))
+    
+def assignPreference(request, combination_id):
+    combination = get_object_or_404(Combination, pk=combination_id)
+    question = get_object_or_404(Question, pk=combination.target_question.id)
+    for poll in combination.dependent_questions.all():
+        s = str(poll.id)
+        itemtxt = request.POST[s]
+        item = poll.item_set.get(item_text=itemtxt)
+        combination.dependencies.add(item.id)
+        combination.save()
+    orderStr = request.POST["pref_order"]
+    prefOrder = []    
+    if orderStr != "":
+        prefOrder = orderStr.split(",")
+        # the user must rank all preferences
+        if len(prefOrder) != len(question.item_set.all()):
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        # the user must rank all preferences
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # make Response object to store data
+    response = Response( user=request.user, timestamp=timezone.now())
+    response.save()
+    combination.response = response
+    combination.save()
+    d = response.dictionary_set.create(name = response.user.username + " Predicting Preferences")
+
+    # find ranking student gave for each item under the question
+    item_num = 1
+    for item in question.item_set.all():
+        arrayIndex = prefOrder.index("item" + str(item_num))
+        if arrayIndex == -1:
+            # set value to lowest possible rank
+            d[item] = question.item_set.all().count()
+        else:
+            # add 1 to array index, since rank starts at 1
+            rank = (prefOrder.index("item" + str(item_num))) + 1
+            # add pref to response dict
+            d[item] = rank
+        d.save()
+        item_num += 1
     return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))

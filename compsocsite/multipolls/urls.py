@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^(?P<multipoll_id>[0-9]+)/delvoter/$', views.removeVoter, name='delvoter'),
     url(r'^(?P<multipoll_id>[0-9]+)/progress/$', views.progress, name='progress'), 
     url(r'^(?P<multipoll_id>[0-9]+)/setquestion/$', views.setQuestion, name='setquestion'), 
+    url(r'^(?P<multipoll_id>[0-9]+)/start/$', views.start, name='start'), 
 ]

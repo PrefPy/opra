@@ -1,5 +1,18 @@
 <!-- The polls created by you included in index2 --->
-
+<div class="panel panel-default"> <!-- for created by you section-->
+    <div class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+      <h4 class="panel-title">
+        <a role="button" >
+          Created by you
+        </a>
+          <div class="panel-title pull-right" style='font-size:100%;'>
+            <a href="{% url 'polls:AddStep1' %}" style='font-size:60%;' class="btn btn-blueadd">
+                    <span class="glyphicon glyphicon-plus"></span>
+            </a>
+          </div>
+          
+      </h4>
+    </div>
 
     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">

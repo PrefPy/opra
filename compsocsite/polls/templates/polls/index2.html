@@ -15,20 +15,7 @@
 
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-default"> <!-- for created by you section-->
-    <div class="panel-heading" role="tab" id="headingOne">
-      <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Created by you
-        </a>
-          <div class="panel-title pull-right" style='font-size:100%;'>
-            <a href="{% url 'polls:AddStep1' %}" style='font-size:60%;' class="btn btn-blueadd">
-                    <span class="glyphicon glyphicon-plus"></span>
-            </a>
-          </div>
-          
-      </h4>
-    </div>
+  
   {% include "polls/poll_created_tab.html" %}
   {% include "polls/poll_participated_tab.html" %}
   {% include "polls/m_poll_tab.html" %}

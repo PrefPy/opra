@@ -74,6 +74,7 @@ ul.example li.placeholder:before {
   /** Define arrowhead **/
 }
 
+<<<<<<< HEAD
 /* image */
 img.item {
 	width: 40px;
@@ -86,4 +87,16 @@ img.item:hover {
 .glyphicon-play .green{
   style="color:green; 
   float:right;
+=======
+div{
+	font-size:100% !important;
+}
+
+.glyphicon-play:hover {
+	cursor: pointer; cursor: hand;	
+}
+
+.glyphicon-stop:hover {
+	cursor: pointer; cursor: hand;	
+>>>>>>> origin/master
 }

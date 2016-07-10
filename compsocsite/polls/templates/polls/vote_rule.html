@@ -1,5 +1,6 @@
 {% extends 'polls/base.html' %}
 {% load poll_extra %}
+
 {% block content %}
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>
@@ -23,18 +24,22 @@
                         <tr>
                             {% for algorithm in poll_algorithms %}
                                 {% if forloop.counter == forloop.parentloop.counter %}
+                                    <!-- Poll Algorithm -->
                                     <td {% if question.poll_algorithm == forloop.parentloop.counter %}class="info"{% endif %}>{{ algorithm }}</td>
                                 {% endif %}
                             {% endfor %}
+                            
                             {% for score in item.values %}
-                                {% if score == item.values|smallest and forloop.parentloop.counter == 5 %}
-                                    <td class="success">{{ score }}</td>
-                                {% elif score == item.values|largest and forloop.parentloop.counter != 5 %}
-                                    <td class="success">{{ score }}</td>
-                                {% else %}
-                                    <td {% if question.poll_algorithm == forloop.parentloop.counter %}class="info"{% endif %}>{{ score }}</td>
-                                {% endif %}
+                                    {% for row in shade_values %}
+                                    {% for color in row %}
+                            {% if forloop.counter == forloop.parentloop.parentloop.counter and forloop.parentloop.counter == forloop.parentloop.parentloop.parentloop.counter %}
+                                    <td style='background-color: {{color}}'>{{ score }}</td>
+                            {% endif %}
+                                    {% endfor %}
+                                    {% endfor %}
                             {% endfor %}
+                            
+                            <!-- margin of victory column -->
                             {% if forloop.counter < 5 %}
                                 <td>{{ margin_victory.0 }} </td>
                             {% elif forloop.counter == 5 %}
@@ -47,12 +52,11 @@
                 </table>
                 <h1>Previous Winners</h1>
                 {% for pw in previous_winners %}
-            <div class="panel-heading">{{pw.title}}</div>
-            <div class="panel-body">
+            <div class="panel-heading">{{ pw.title }}</div>
                 <table class="table">
                     <tr>
                         <th>Poll Mechanism</th>
-                        {% for option in pw.cand_map.values %}
+                        {% for option in cand_map.values %}
                             <th>{{ option }}</th>
                         {% endfor %}
                         <th>Margin of Victory</th>

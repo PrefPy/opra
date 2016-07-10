@@ -11,6 +11,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
+from polls.views import getPollWinner
 # Create your views here.
 
 
@@ -26,7 +27,7 @@ def AddStep1(request):
         for x in range(0, number):
             question = Question(question_text="Multipoll Issue", question_desc="",
                     image="", pub_date=timezone.now(), question_owner=request.user,
-                    display_pref=request.user.userprofile.displayPref)
+                    display_pref=request.user.userprofile.displayPref, m_poll=True)
             question.save()
             m = MultiPollQuestion(multipoll=multipoll,question=question,order=x)
             m.save()
@@ -80,6 +81,8 @@ class SetVotersView(generic.DetailView):
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
         return ctx
+        
+
 
 def setQuestion(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
@@ -134,33 +137,50 @@ def addVoter(request, multipoll_id):
             question.question_voters.add(voterObj.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
+def start(request, multipoll_id):
+    multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
+    multipoll.status = 1
+    for question in multipoll.questions.all():
+        question.status = 2
+        question.save()
+    multipoll.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
 def progress(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
     #poll hasn't started
-    if multipoll.status == 0:
-        question = multipoll.questions.all()[0]
-        #start the first question
-        question.status = 2
+    if multipoll.status < multipoll.number:
+        question = multipoll.questions.all()[multipoll.status-1]
+        #end the previous poll   
+        question.status = 3
+        if question.question_type == 1: #poll
+            question.winner = getPollWinner(question)
+        elif question.question_type == 2: #allocation
+            allocation_serial_dictatorship(question.response_set.all())
         question.save()
-        multipoll.status = 1
-        multipoll.save()
-    #run the polls one at a time    
-    elif multipoll.status < multipoll.number:
-        question1 = multipoll.questions.all()[multipoll.status-1]
-        question2 = multipoll.questions.all()[multipoll.status]
-        #end the previous poll and start a new poll        
-        question1.status = 3
-        question2.status = 2
-        question1.save()
-        question2.save()
         #move to the next poll
         multipoll.status += 1
         multipoll.save()
+        #This part is for checking conditional preferences
+        poll = multipoll.questions.all()[multipoll.status-1]
+        for combination in poll.combination_set.all():
+            flag = True
+            for item in combination.dependencies.all():
+                if item.item_text not in item.question.winner:
+                    flag = False
+            if flag == True:
+                response = combination.response
+                response.question = poll
+                response.save()
     #all the polls have ended
     else:
         #end the last poll
         question = multipoll.questions.all()[multipoll.status-1]
         question.status = 3
+        if question.question_type == 1: #poll
+            question.winner = getPollWinner(question)
+        elif question.question_type == 2: #allocation
+            allocation_serial_dictatorship(question.response_set.all())
         question.save()
         multipoll.status += 1
         multipoll.save()

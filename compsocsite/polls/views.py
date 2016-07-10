@@ -47,24 +47,16 @@ def AddStep1View(request):
         questionDesc = request.POST['desc']
         questionType = request.POST['questiontype']
         imageURL = request.POST['imageURL']
+        # create a new question using information from the form and inherit settings from the user's preferences
+        question = Question(question_text=questionString, question_desc=questionDesc,
+            pub_date=timezone.now(), question_owner=request.user,
+            display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
+            emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
+            emailStop=request.user.userprofile.emailStop)
         if request.FILES.get('docfile') != None:
-            question = Question(question_text=questionString, question_desc=questionDesc,
-                image=request.FILES.get('docfile'), pub_date=timezone.now(), question_owner=request.user,
-                display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
-                emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
-                emailStop=request.user.userprofile.emailStop)
+            question.image = request.FILES.get('docfile')
         elif imageURL != '':
-            question = Question(question_text=questionString, question_desc=questionDesc,
-                imageURL=imageURL, pub_date=timezone.now(), question_owner=request.user,
-                display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
-                emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
-                emailStop=request.user.userprofile.emailStop)
-        else:
-            question = Question(question_text=questionString, question_desc=questionDesc,
-                pub_date=timezone.now(), question_owner=request.user,
-                display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
-                emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
-                emailStop=request.user.userprofile.emailStop)
+            question.imageURL = imageURL 
         question.question_type = questionType
         question.save()
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
@@ -106,7 +98,7 @@ class AddStep4View(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(AddStep4View, self).get_context_data(**kwargs)
         ctx['preference'] = self.request.user.userprofile.displayPref
-        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]
         ctx['view_preferences'] = ["Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
         return ctx
@@ -128,19 +120,19 @@ def addChoice(request, question_id):
     for choice in allChoices:
         if item_text == choice.item_text:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    #save the choice
+    # create the choice
+    item = Item(question=question, item_text=item_text)
+    # if the user uploaded an image or set a URL, add it to the item
     if request.FILES.get('docfile') != None:
-        item = Item(question=question, image=request.FILES.get('docfile'), item_text=item_text)
+        item.image = request.FILES.get('docfile')
     elif imageURL != '':
-        item = Item(question=question, imageURL=imageURL, item_text=item_text)
-    else:
-        item = Item(question=question, item_text=item_text)
+        item.imageURL = imageURL 
+    # save the choice
     item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def deleteChoice(request, choice_id):
     item = get_object_or_404(Item, pk=choice_id)
-    question = item.question
     item.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -151,16 +143,19 @@ def deletePoll(request, question_id):
 
 def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    # set the poll to start
     question.status = 2
     question.save()
+    # send notification email
     if question.emailStart:
         sendEmail(request, question_id, 'start')
     return HttpResponseRedirect(reverse('polls:index'))    
 
 def stopPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    # set the status to stop
     question.status = 3
-    
+    # get winner or allocation, and save it
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
@@ -201,6 +196,86 @@ class DetailView(generic.DetailView):
         preferences = []
         if len(otherUserResponses) == 0:
             return ctx['object'].item_set.all
+        for resp in otherUserResponses:
+            user = self.request.user
+            otherUser = resp.user
+            KT = getKTScore(user, otherUser)
+            
+            prefGraph = {}
+            dictionary = get_object_or_404(Dictionary, response=resp)
+            
+            candMap = {}
+            counter = 0
+            for item in dictionary.items():
+                candMap[counter] = item[0]
+                counter += 1
+
+            for cand1Index in candMap:
+                tempDict = {}
+                for cand2Index in candMap:
+                    if cand1Index == cand2Index:
+                        continue
+                    
+                    cand1 = candMap[cand1Index]
+                    cand2 = candMap[cand2Index]
+                    cand1Rank = dictionary.get(cand1)
+                    cand2Rank = dictionary.get(cand2)
+                    #lower number is better (i.e. rank 1 is better than rank 2)
+                    if cand1Rank < cand2Rank:
+                        tempDict[cand2Index] = 1
+                    elif cand2Rank < cand1Rank:
+                        tempDict[cand2Index] = -1
+                    else:
+                        tempDict[cand2Index] = 0
+                prefGraph[cand1Index] = tempDict
+            preferences.append(Preference(prefGraph, KT))
+        pollProfile = Profile(candMap, preferences)
+
+        pref = MechanismBorda().getCandScoresMap(pollProfile)
+        l = list(sorted(pref.items(), key=lambda kv: (kv[1], kv[0])))
+        final_list = []
+        for p in reversed(l):
+            final_list.append(candMap[p[0]])
+        print(final_list)
+        return final_list
+
+    def get_context_data(self, **kwargs):
+        ctx = super(DetailView, self).get_context_data(**kwargs)
+        currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        tempOrderStr = self.request.GET.get('order', '')
+        if tempOrderStr == "null":
+            ctx['items'] = self.get_order(ctx)
+            return ctx
+        # check if the user submitted a vote earlier and display that for modification
+        if len(currentUserResponses) > 0:
+            mostRecentResponse = currentUserResponses[0]
+            selectionArray = []             
+            for d in mostRecentResponse.dictionary_set.all():   
+                selectionArray = d.sorted_values()
+            ctx['currentSelection'] = selectionArray
+        else:
+            # no history so display the list of choices
+            ctx['items'] = self.get_order(ctx)
+        return ctx
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+       
+class DependencyView(generic.DetailView):
+    model = Question
+    template_name = 'polls/dependency.html'
+    
+class DependencyDetailView(generic.DetailView):
+    model = Combination
+    template_name = 'polls/dependencydetail.html'
+    
+    def get_order(self, ctx):
+        otherUserResponses = self.object.target_question.response_set.reverse()
+        preferences = []
+        if len(otherUserResponses) == 0:
+            return self.object.target_question.item_set.all
         for resp in otherUserResponses:
             user=self.request.user
             otherUser = resp.user
@@ -258,10 +333,10 @@ class DetailView(generic.DetailView):
             final_list.append(candMap[p[0]])
         print(final_list)
         return final_list
-
-    def get_context_data(self, **kwargs):
-        ctx = super(DetailView, self).get_context_data(**kwargs)
-        currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+    def get_context_data(self,**kwargs):
+        ctx = super(DependencyDetailView, self).get_context_data(**kwargs)
+        ctx['question'] = self.get_object().target_question
+        currentUserResponses = self.object.target_question.response_set.filter(user=self.request.user).reverse()
         tempOrderStr = self.request.GET.get('order', '')
         if tempOrderStr == "null":
             ctx['items'] = self.get_order(ctx)
@@ -275,11 +350,28 @@ class DetailView(generic.DetailView):
         else:
             ctx['items'] = self.get_order(ctx)
         return ctx
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
+
+def getKTScore(user, otherUser):
+    KT = 0
+    num = 0
+    questions = Question.objects.all().filter(question_voters=otherUser).filter(question_voters=user)
+    for q in questions:
+        userResponse = q.response_set.filter(user=user).reverse()
+        otherUserResponse = q.response_set.filter(user=otherUser).reverse()
+        if len(userResponse) > 0 and len(otherUserResponse) > 0:
+            num = num + 1
+            userResponse = get_object_or_404(Dictionary, response=userResponse[0])
+            otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
+            KT += getKendallTauScore(userResponse, otherUserResponse)
+            print(getKendallTauScore(userResponse, otherUserResponse))
+    
+    if num != 0:
+        KT /= num
+    if KT == 0:
+        KT = .25
+    else:
+        KT = 1/(1 + KT)
+    return KT    
     
 # view for settings detail
 class PollInfoView(generic.DetailView):
@@ -290,7 +382,7 @@ class PollInfoView(generic.DetailView):
         ctx['users'] = User.objects.all()
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
-        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]        
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
@@ -359,9 +451,12 @@ class VoteResultsView(generic.DetailView):
         ctx['latest_responses'] = latest_responses
         ctx['previous_responses'] = previous_responses
         ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
-        ctx['vote_results'] = getVoteResults(latest_responses)   
-        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        voteResults = getVoteResults(latest_responses) 
+        ctx['vote_results'] = voteResults
+        ctx['shade_values'] = getShadeValues(voteResults)
+        ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['margin_victory'] = getMarginOfVictory(latest_responses)
+        
         previous_winners = OldWinner.objects.all().filter(question=self.object)
         ctx['previous_winners'] = []
         for pw in previous_winners:
@@ -371,11 +466,14 @@ class VoteResultsView(generic.DetailView):
             obj['title'] = str(pw)
             obj['latest_responses'] = lr
             obj['previous_responses'] = pr
-            obj['candMap'] = getCandidateMap(lr[0]) if (len(lr) > 0) else None
             obj['vote_results'] = getVoteResults(lr)
             obj['margin_victory'] = getMarginOfVictory(lr)
             ctx['previous_winners'].append(obj)
         return ctx
+
+# get a list of algorithms supported by the system
+def getListPollAlgorithms():
+    return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
 
 #get a list of options for this poll
 def getCandidateMap(response):
@@ -448,6 +546,60 @@ def getVoteResults(latest_responses):
     
     return scoreVectorList
 
+# return lighter (+lum) or darker (-lum) color as a hex string
+# pass original hex string and luminosity factor, e.g. -0.1 = 10% darker
+def colorLuminance(hexVal, lum):
+    #convert to decimal and change luminosity
+    rgb = "#"
+    for i in range(0, 3): 
+        c = int(hexVal[i * 2 : i * 2 + 2], 16)
+        c = round(min(max(0, c + (c * float(lum))), 255))
+        c = hex(int(c))
+        rgb += ("00" + str(c))[len(str(c)):]
+    return rgb
+
+# get a range of colors from green to red 
+def getShadeValues(scoreVectorList):
+    shadeValues = []
+
+    for row in scoreVectorList:
+        sortedRow = sorted(set(list(row.values())))
+        highestRank = len(sortedRow) - 1
+
+        newRow = []
+        greenColor = "6cbf6c"
+        redColor = "dc6460"
+        for index in row:
+            rank = sortedRow.index(row[index])
+
+            if highestRank == 0:
+                # must be the winner
+                newRow.append("#" + greenColor)
+            else:
+                # at the midpoint, change colors
+                midRank = highestRank / 2
+                # color is a hex value
+                colorStr = ""
+                # make the colors closer to the end darker (lower value) and toward the middle lighter (higher value) 
+                luminance = 0
+                if midRank != 0:
+                    luminance = 1 - (abs(midRank - rank) / float(midRank))
+                    luminance /= 2.0
+
+                #the 5th row is Simplified Bucklin (lower score is better so reverse the colorings for this row)
+                counter = len(shadeValues)
+                # check if the ranking is above or below the midpoint and assign colors accordingly
+                if (rank <= midRank and counter != 4) or (rank > midRank and counter == 4):
+                    colorStr = colorLuminance(redColor, luminance)
+                else:
+                    colorStr = colorLuminance(greenColor, luminance)
+
+                newRow.append(colorStr)
+
+        shadeValues.append(newRow)
+    return shadeValues
+
+# find the minimum number of votes needed to change the poll results
 def getMarginOfVictory(latest_responses):
     pollProfile = getPollProfile(latest_responses)
     if pollProfile == None:
@@ -473,11 +625,13 @@ def addVoter(request, question_id):
     creator_obj = User.objects.get(id=question.question_owner_id)
 
     newVoters = request.POST.getlist('voters')
+    # send an invitation email
     email = request.POST.get('email') == 'email'
     question.emailInvite = email
     question.save()
     if email:
         sendEmail(request, question_id, 'invite')
+    # add each voter to the question by username
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
@@ -508,7 +662,6 @@ def setInitialSettings(request, question_id):
 def setAlgorithm(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['pollpreferences']
-    print (question.poll_algorithm)
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -563,9 +716,71 @@ def vote(request, question_id):
         item_num += 1
 
     #get current winner
-    winning_string = getPollWinner(question)
-    winning_item = get_object_or_404(Item, item_text=winning_string, question=question)
-    old_winner = OldWinner(question=question, item=winning_item, response=response)
+    old_winner = OldWinner(question=question, response=response)
     old_winner.save()
 
+    return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))
+
+def dependencyRedirect(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if question.multipollquestion_set.all()[0].order == question.multipoll_set.all()[0].status-1:
+        return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+    else:
+        return HttpResponseRedirect(reverse('polls:dependencyview', args=(question.id,)))
+
+def chooseDependency(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    dependencies = []
+    l = request.POST.getlist('polls')
+    for poll in l:
+        i = int(poll)
+        dependencies.append(poll)
+    combination = Combination(target_question=question, user=request.user)
+    combination.save()
+    if len(dependencies) > 0:
+        for poll in dependencies:
+            combination.dependent_questions.add(poll)
+            combination.save()
+    return HttpResponseRedirect(reverse('polls:dependencydetail', args=(combination.id,)))
+    
+def assignPreference(request, combination_id):
+    combination = get_object_or_404(Combination, pk=combination_id)
+    question = get_object_or_404(Question, pk=combination.target_question.id)
+    for poll in combination.dependent_questions.all():
+        s = str(poll.id)
+        itemtxt = request.POST[s]
+        item = poll.item_set.get(item_text=itemtxt)
+        combination.dependencies.add(item.id)
+        combination.save()
+    orderStr = request.POST["pref_order"]
+    prefOrder = []    
+    if orderStr != "":
+        prefOrder = orderStr.split(",")
+        # the user must rank all preferences
+        if len(prefOrder) != len(question.item_set.all()):
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        # the user must rank all preferences
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # make Response object to store data
+    response = Response( user=request.user, timestamp=timezone.now())
+    response.save()
+    combination.response = response
+    combination.save()
+    d = response.dictionary_set.create(name = response.user.username + " Predicting Preferences")
+
+    # find ranking student gave for each item under the question
+    item_num = 1
+    for item in question.item_set.all():
+        arrayIndex = prefOrder.index("item" + str(item_num))
+        if arrayIndex == -1:
+            # set value to lowest possible rank
+            d[item] = question.item_set.all().count()
+        else:
+            # add 1 to array index, since rank starts at 1
+            rank = (prefOrder.index("item" + str(item_num))) + 1
+            # add pref to response dict
+            d[item] = rank
+        d.save()
+        item_num += 1
     return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))

@@ -33,7 +33,7 @@
               <table class="table">
                 {% if question_list %}
                     {% for question in question_list %}
-                        {% if question.question_owner == request.user %}
+                        {% if question.question_owner == request.user and question.m_poll == False %}
                         <tr>
 
                             <td>    
@@ -161,10 +161,9 @@
                                     <td>
                                         {% if question.display_pref == 1 %}
                                             {% if question.question_type == 1 %}
-                                                {{question.winner}} wins 
-                                                <a href="{% url 'polls:voteresults' question.id %}" >
-                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
-                                                </a> 
+                                                <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
+                                                {{question.winner}} wins
+                                            </a> 
                                             {% elif question.question_type == 2 %}
                                                 Allocation Complete: <br />
                                                 {% for response in question.response_set.all %}
@@ -206,11 +205,44 @@
     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
       <div class="panel-body">
         {% if multipolls %}
-        <table class="table">
+        
             {% for mpoll in multipolls %}
+            <table class="table">
                     {% if request.user == mpoll.owner %}
                         <h4>{{mpoll.title}}</h4>
-                        <a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-dark">Progress</span></a>
+                        {% if mpoll.status == 0 %}
+                        <tr>
+                        <td style="vertical-align:middle">
+                                    
+                                        <span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}" style="color:green; float:right;"></span>
+                                  
+                                 </td>
+                             </tr>
+
+                                <div class="modal fade" id="confirm-startmpoll{{ mpoll.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                Confirm Start Multi-Poll {{ mpoll.title }}
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to start multi-poll {{ mpoll.title }}? Once a poll is started, you cannot modify the settings or remove voters.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="{% url 'multipolls:start' mpoll.id %}">
+                                                    <button type="button" class="btn-large btn-success btn-ok">Yes</button>
+                                                </a>
+                                                <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        {% else%}
+                        {% if mpoll.status != mpoll.number|add:"1" %}
+                        <tr>
+                        <a href="{% url 'multipolls:progress' mpoll.id %}"><span class="btn btn-primary">Progress</span></a>
+                        </tr>
+                        {% endif %}
                             {% for question in mpoll.questions.all %}
                             <tr>
                                 <td>
@@ -230,13 +262,19 @@
 
                                 {% endif %}
                                 </td>
+                                <td>
+                                    {% if question.status == 2 %}
+                                    <a href="{% url 'polls:dependency' question.id %}" class ="btn-large btn-success" style='font-size:60%;float:right'>Vote</a>
+                                    {% endif %}
+                                </td>
                             </tr>
                             {% endfor %}
+                        {% endif %}
 
                 {%endif%}    
-
+                </table>
             {% endfor %} <!--end for mpoll in multipolls-->
-        </table>
+        
         {% endif %}
       </div>
     </div>

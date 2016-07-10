@@ -1,0 +1,147 @@
+{% extends 'polls/base.html' %}
+{% block extra_head %}
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src='/static/js/shared.js'></script>
+{% if request.flavour == "mobile" %}
+<script src='/static/js/mobile.js'></script>
+{% else %}
+<script src='/static/js/desktop.js'></script>
+{% endif %}
+
+{% endblock %}
+{% load staticfiles %}
+{% block content %}
+
+
+<div>
+    <form action="{% url 'polls:assignpreference' combination.id %}" method="post">
+        {% csrf_token %}
+        <div style="clear:both" class="col-md-12">
+        {% for poll in combination.dependent_questions.all %}
+            <div class="col-md-4 margin-panel-top">
+                <h4>{{poll.question_text}}</h4>
+            <select name="{{poll.id}}" class="form-control">
+            {% for item in poll.item_set.all %}
+                <option value="{{item.item_text}}">{{item.item_text}}</option>
+            {% endfor %}
+            </select>
+            </div>
+        {% endfor %}
+        </div>
+        {% if request.flavour == "mobile" %}
+        <div class="col-md-6 margin-panel-top">
+        {% else %}
+        <div class="col-md-6 margin-panel-top">
+        {% endif %}
+        
+        
+            <div class="panel panel-default panel-border">
+                <div class="panel-heading" >
+                    <b>Your preferences:</b>
+                    {% if request.flavour == "mobile" %}
+                        <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+                            <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+                        </button>
+                        
+                        <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
+                            Submit
+                        </button>   
+                    {% else %}
+                            <a href="/polls/{{ question.id }}/?order=null" class="btn btn-danger reset-button">Clear</a>
+                            <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
+                                Submit
+                            </button>
+                    {% endif %}
+                    <input type="hidden" id="pref_order" name="pref_order" value=""/>
+                </div>
+
+                <div class="panel-body" >
+                    <ul id="left-sortable" class="list-group droptrue">
+                        {% if currentSelection %}
+                        {% for selection in currentSelection %}
+                        {% for item in question.item_set.all %}
+                        {% if selection.0 == item %}
+                        <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
+                            {% if selection.0.image %}
+                                <img class="item" src='/{{ selection.0.image.url }}'/>
+                            {% endif %}
+                            {% if item.imageURL != Null %}
+                                <img class="item" src='{{ item.imageURL }}'/>
+                            {% endif %}
+                            {{ selection.0 }}
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                        {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                {% if request.flavour == "mobile" %}
+                    <button onclick="javascript:window.location.href='/polls/{{ question.id }}/?order=null'; return false;" class="reset-button-mobile">
+                        <a href="/polls/{{ question.id }}/?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+                    </button>       
+                {% endif %}
+            </div>
+        </div>
+
+
+        {% if request.flavour == "mobile" %}
+        <div class="col-md-6 margin-panel-top">
+        {% else %}
+        <div class="col-md-6 margin-panel-top">
+        {% endif %}
+        
+            <div class="panel panel-default panel-border">
+                <div class="panel-heading">
+                    <b>Remaining Options:</b>
+                    
+                    {% if request.flavour == "mobile" %}
+                        <button onclick="moveAll(); return false;" class="move-all-button-mobile">
+                    <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>
+                        </button>
+                    {% else %}
+                        <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
+                           Move All
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="panel-body">
+                    <ul id="right-sortable" class="list-group">
+                        {% if currentSelection == None %}
+                        {% for item in items %}
+                        <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
+                            {% if item.image %}
+                                <img class="item" src='/{{ item.image.url }}'/>
+                            {% endif %}
+                            {% if item.imageURL != Null %}
+                                <img class="item" src='{{ item.imageURL }}'/>
+                            {% endif %}
+                            {{ item.item_text }}
+                        </li>
+                        {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+<script>
+    var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
+    var wholeHeight2 = $('#right-sortable')[0].scrollHeight;
+    if (wholeHeight1 > wholeHeight2) {
+        $('#right-sortable').css("height", wholeHeight1);
+    } else {
+        $('#left-sortable').css("height", wholeHeight2);
+    }
+    $('#left-sortable').sortable('refresh');
+    $('#right-sortable').sortable('refresh');
+
+</script>
+
+  
+{% endblock %}

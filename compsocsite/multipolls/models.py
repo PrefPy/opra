@@ -30,3 +30,4 @@ class MultiPollQuestion(models.Model):
     def __str__(self):
         return ""
     
+

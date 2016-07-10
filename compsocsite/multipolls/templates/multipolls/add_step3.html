@@ -59,16 +59,23 @@
     {% endfor %}
         <li  class="list-group-item">
             <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="col-lg-8">
-                    <input type="text" class="form-control" name="choice" value="" size="50" placeholder="Option name" autofocus/>
-                </div>
-                    <label for="image" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
-                    <input style="display:none" id="image" type="file" name="docfile" accept="image/*">
-                    <button type="submit" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-            </form>
+            {% csrf_token %}
+
+            <div class="col-lg-8">
+                <input type="text" class="form-control" name="choice" value="" size="50" placeholder="Option name" autofocus/>
+            </div>
+
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="imageURL" value="" size="50" placeholder="Paste Image URL"/>
+            </div>
+
+            <label for="image" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
+            <input style="display:none" id="image" type="file" name="docfile" accept="image/*">
+
+            <button type="submit" class="btn btn-primary">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </form>
         </li>
     </ul>
     <div class="col-md-6 col-md-offset-3" align="center">

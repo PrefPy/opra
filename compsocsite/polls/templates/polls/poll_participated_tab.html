@@ -1,0 +1,61 @@
+<!-- The polls participated tab included in index2 --->
+
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Participated in
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+         <table class="table" >
+                    {% if question_list %}
+                        {% for question in question_list %}
+                            {% if question.question_owner != request.user and request.user in question.question_voters.all %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'polls:pollinfo' question.id %}"> 
+                                    {{ question.question_text }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if question.status == 2 %}
+                                    
+                                    <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button">Vote</a>
+                                    {% endif %}
+                                </td>
+                                {% if question.status == 1 %}
+                                    <td>Poll not started</td>
+                                {% elif question.status == 2 %}
+                                    <td>In session</td>
+                                {% elif question.status == 3 %}
+                                    <td>
+                                        {% if question.display_pref == 1 %}
+                                            {% if question.question_type == 1 %}
+                                                <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
+                                                {{question.winner}} wins
+                                            </a> 
+                                            {% elif question.question_type == 2 %}
+                                                Allocation Complete: <br />
+                                                {% for response in question.response_set.all %}
+                                                    {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                                    <br />
+                                                {% endfor %}
+                                                <a href="{% url 'polls:allocate_results' question.id %}" >
+                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                                </a> 
+                                            {% endif %}
+                                        {% endif %} 
+                                        
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}    
+                    </table>
+      </div>
+    </div>
+  </div> <!-- end for participated in section-->

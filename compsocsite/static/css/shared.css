@@ -73,3 +73,15 @@ ul.example li.placeholder:before {
   position: absolute;
   /** Define arrowhead **/
 }
+
+div{
+	font-size:100% !important;
+}
+
+.glyphicon-play:hover {
+	cursor: pointer; cursor: hand;	
+}
+
+.glyphicon-stop:hover {
+	cursor: pointer; cursor: hand;	
+}

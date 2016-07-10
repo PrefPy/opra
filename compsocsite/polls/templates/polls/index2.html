@@ -155,10 +155,9 @@
                                     <td>
                                         {% if question.display_pref == 1 %}
                                             {% if question.question_type == 1 %}
-                                                {{question.winner}} wins 
-                                                <a href="{% url 'polls:voteresults' question.id %}" >
-                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:voteresults' question.id %}"></span>
-                                                </a> 
+                                                <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
+                                                {{question.winner}} wins
+                                            </a> 
                                             {% elif question.question_type == 2 %}
                                                 Allocation Complete: <br />
                                                 {% for response in question.response_set.all %}

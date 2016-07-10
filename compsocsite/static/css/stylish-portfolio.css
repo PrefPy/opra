@@ -25,9 +25,8 @@ body {
 }
 
 /* Custom Button Styles */
-
+    
 .btn-dark {
-    border-radius: 0;
     color: #fff;
     background-color: rgba(0,0,0,0.4);
 }
@@ -52,7 +51,6 @@ body {
 }
 
 .btn-blueadd{
-  border-radius: 0;
   color: white;
   background-color: #377BB5;
 }
@@ -66,10 +64,7 @@ body {
   color:white;
 }
 
-.btn-primary{
-  border-radius: 0;
-  border-color: transparent;
-}
+
 
 
 /* Custom Horizontal Rule */
@@ -187,9 +182,6 @@ img.item {
 img.item:hover {
 	width: 80px;
 }
-
-
-
 
 
 .stop-icon{

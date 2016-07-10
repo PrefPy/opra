@@ -188,19 +188,7 @@ img.item:hover {
 	width: 80px;
 }
 
-.glyphicon-play .green{
-  style="color:green; 
-  float:right;
-}
-
 div{
 	font-size:100% !important;
 }
 
-.glyphicon-play:hover {
-	cursor: pointer; cursor: hand;	
-}
-
-.glyphicon-stop:hover {
-	cursor: pointer; cursor: hand;	
-}

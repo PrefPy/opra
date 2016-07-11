@@ -130,7 +130,6 @@ def removeVoter(request, multipoll_id):
     
 def addVoter(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
-
     newVoters = request.POST.getlist('voters')
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)

@@ -124,7 +124,7 @@ def removeVoter(request, multipoll_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         multipoll.voters.remove(voterObj.id)
-        for question in multipoll.questions:
+        for question in multipoll.questions.all():
             question.question_voters.remove(voterObj.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
@@ -135,7 +135,7 @@ def addVoter(request, multipoll_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         multipoll.voters.add(voterObj.id)
-        for question in multipoll.questions:
+        for question in multipoll.questions.all():
             question.question_voters.add(voterObj.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     

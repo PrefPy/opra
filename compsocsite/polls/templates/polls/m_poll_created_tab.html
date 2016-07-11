@@ -23,7 +23,14 @@
 									<td><h4 data-toggle="collapse" href="#collapse{{ forloop.counter }}" style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;">{{ mpoll.title }}</h4></td>
 									{% if mpoll.status == 0 %}
 
-									<td style="vertical-align:middle;"><span class = "glyphicon glyphicon-play" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}" style="float:right;"></span>
+									<td style="vertical-align:middle">
+                                    <div class="start-icon">
+                                    <i class="fa fa-play" aria-hidden="true" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}"></i>
+                                    </div>    
+                                    </td>
+                                        
+                                        
+                                        
 									<div class="modal fade" id="confirm-startmpoll{{ mpoll.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 										<div class="modal-dialog">
 											<div class="modal-content">
@@ -61,7 +68,8 @@
 									<td><a href="{% url 'polls:pollinfo' question.id %}"> <span style = "font-size: 100%;">{{ question.question_text }} </span></a></td>
 
 									<td style="float:middle;"> {% if question.status == 2 %} <a href="{% url 'polls:dependency' question.id %}" class ="btn btn-dark" style='float:middle'>Vote</a> {% endif %} </td>
-									<td>{% if question.status == 1 %}
+									<td>
+                                    {% if question.status == 1 %}
 									Poll not started
 									{% elif question.status == 2 %}
 									Polling in session

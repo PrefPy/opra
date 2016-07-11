@@ -1,24 +1,51 @@
 {% extends 'polls/base.html' %}
 
-{% block content %}
+{% block extra_head %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+{% endblock %}
 
-    
+{% block content %}
+<div class="container-fluid">
+  <ol class="breadcrumb">
+  <li><a href="#">Multi-Poll</a></li>
+  <li><a href="#">{{question.multipoll_set.all.0.title}}</a></li>
+  <li class="active"> {{question.question_text}}</li> 
+  </ol>
     <form method="post" action="{% url 'polls:choosedependency' question.id %}" style="font-size:100%">
         {% csrf_token %}
-
-        <h1 align="center">You are currently voting on {{question.question_text}} in Multi-Poll {{question.multipoll_set.all.0.title}}</h1>
+        <h3>You are currently voting on {{question.question_text}} </h3>
         <hr />
-        <h2 align="center">Please choose your dependencies</h2>
+    
+        <h4 align="center">Please choose your dependencies</h4>
+
+        <ul class="list-group">
         {% for poll in question.multipoll_set.all.0.questions.all %}
             {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
-            <div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>
-            <p><input type="checkbox" name="polls" value="{{poll.id}}" align="center" class="form-control"> </p>
+
+            <li class="list-group-item">
+                <div class="radio" align="center">
+                <label for="{{poll.id}}" data-toggle="tooltip" data-placement="right" title="More info about {{poll.question_text}}: Help users to choose if has may possibile dependencies"> {{poll.question_text}} </label>
+                    <p><input type="radio" name="polls" value="{{poll.id}}" id="{{poll.id}}"></p>
+                </div>  
+            </li>
+        
+            <!--<div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>
+            <p><input type="checkbox" name="polls" value="{{poll.id}}" align="center" class="form-control"> </p>-->
+                
             {% endif %}
         {% endfor%}
+        </ul></br>
 
 
-        <div class="col-md-6 col-md-offset-3" align="center" style='font-size:100%'>
-            <input type="submit" value="Next" class="btn btn-primary" style='font-size:60%'/>
+        <div align="center" style='font-size:100%'>
+            <input type="submit" value="Next" class="btn btn-primary"/>
         </div>
     </form>
+</div>
 {% endblock %}

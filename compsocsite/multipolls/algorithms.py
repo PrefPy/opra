@@ -3,19 +3,29 @@ import operator
 import random
 
 # ALLOCATION ALGORITHM FUNCTIONS HERE:
+def allocation(question):
+    print("Question type",question.question_type)
+    if question.question_type == 2:
+        #SD early first
+        allocation_serial_dictatorship(question.response_set.all(), early_first = 1)
+    elif question.question_type == 1:
+        #SD late first
+        allocation_serial_dictatorship(question.response_set.all(), early_first = 0)
 
 # Serial dictatorship algorithm to allocate items to students for a given question.
 # It takes as an argument the response set to run the algorithm on.
 # The order of the serial dictatorship will be decided by increasing
 # order of the timestamps on the responses for novel questions, and reverse
 # order of the timestamps on the original question for follow-up questions.
-def allocation_serial_dictatorship(responses):
+def allocation_serial_dictatorship(responses, early_first = 1):
     #make sure there is at least one response    
+    print("Responses",responses)
     if len(responses) == 0:
         return
     
     item_set = responses[0].question.item_set.all()
     student_response_order = responses
+    
 
     # it's a follow-up question, so run it in reverse order of timestamp from original question
     if responses[0].question.follow_up != None:
@@ -28,7 +38,10 @@ def allocation_serial_dictatorship(responses):
         for r in responses:
             temp = r.question.follow_up.response_set.filter(student = r.student)[0] # this assumes the same user set responded to questions 1 and 2
             r.timestamp = temp.timestamp
-        response_set.sort(key = operator.attrgetter('timestamp'), reverse = True)
+        if early_first:
+            response_set.sort(key = operator.attrgetter('timestamp'), reverse = True)
+        else: 
+            response_set.sort(key = operator.attrgetter('timestamp'), reverse = False)
         student_response_order = response_set
     items = []
     # here we acquire copies of each item to use for allocation

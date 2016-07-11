@@ -71,6 +71,7 @@ class AddStep4View(generic.DetailView):
         ctx['groups'] = Group.objects.all()
         ctx['preference'] = self.request.user.userprofile.displayPref
         ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+        ctx['alloc_methods'] = ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
         ctx['view_preferences'] = ["Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
         return ctx
         
@@ -157,8 +158,10 @@ def progress(request, multipoll_id):
         question.status = 3
         if question.question_type == 1: #poll
             question.winner = getPollWinner(question)
+            print("voting responses",question.response_set.all())
         elif question.question_type == 2: #allocation
-            allocation_serial_dictatorship(question.response_set.all())
+            print("allocation responses",question.response_set.all())
+            allocation(question)
         question.save()
         #move to the next poll
         multipoll.status += 1

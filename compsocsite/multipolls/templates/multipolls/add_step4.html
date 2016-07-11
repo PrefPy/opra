@@ -34,14 +34,27 @@
     <div class="row">
         <form class="form-group" method="post" action="{% url 'multipolls:setinitial' multipoll.id %}">
             {% csrf_token %}
-            <label for="pollpreferences">Select a voting algorithm used to calculate the winner. If you're not sure, just leave it as is.</label>
-            <select name="pollpreferences" class="form-control">
-            {% for item in poll_algorithms %}
-                <option value="{{ forloop.counter }}">
-                    {{ item }}
-                </option>
-            {% endfor %}
-            </select>
+            {% if question.question_type == 1 %}
+                <label for="pollpreferences">Select a voting algorithm</label>
+                <select name="pollpreferences" class="form-control">
+                {% for item in poll_algorithms %}
+                    <option value="{{ forloop.counter }}">
+                        {{ item }}
+                    </option>
+                {% endfor %}
+                </select>
+                <br />
+            {% elif question.question_type == 2 %}
+                <label for="pollpreferences">Select an allocation method</label>
+                <select name="pollpreferences" class="form-control">
+                {% for item in alloc_methods %}
+                    <option value="{{ forloop.counter }}">
+                        {{ item }}
+                    </option>
+                {% endfor %}
+                </select>
+                <br />
+            {% endif %}
             <br />
 
             <label for="viewpreferences">Control the amount of information that is visible to voters.</label>

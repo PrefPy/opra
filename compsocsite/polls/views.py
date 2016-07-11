@@ -160,7 +160,7 @@ def stopPoll(request, question_id):
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
-        allocation_serial_dictatorship(question.response_set.all())
+        allocation(question)
     question.save()
     return HttpResponseRedirect(reverse('polls:index'))
 
@@ -384,7 +384,7 @@ class PollInfoView(generic.DetailView):
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
-        ctx['alloc_methods'] = ["Allocation by time", "Manually allocate"]        
+        ctx['alloc_methods'] = ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]        
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
         ctx['history'] = currentUserResponses[1:]

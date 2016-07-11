@@ -30,6 +30,7 @@ class IndexView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
         ctx['multipolls'] = MultiPoll.objects.all()
+        #ctx['multipolls'] = MultiPoll.objects.all().order_by('-pub_date')
         return ctx
 
 class MainView(generic.ListView):

@@ -17,6 +17,7 @@ class MultiPoll(models.Model):
     voters = models.ManyToManyField(User)
     pos = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
+    #pub_date = models.DateTimeField('date published')
     def __str__(self):
         return ""
 

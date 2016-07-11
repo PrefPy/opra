@@ -65,11 +65,22 @@
 									Poll not started
 									{% elif question.status == 2 %}
 									Polling in session
-									{% elif question.status == 3 and question.display_pref == 1 %}
+									{% elif question.status == 3 and question.display_pref == 1 and question.question_type == 1 %}
 
 									winner is <a href="{% url 'polls:voteresults' question.id %}">{{question.winner}}</a> 
-									{% elif question.status == 3 and question.display_pref != 1 %}
+									{% elif question.status == 3 and question.display_pref != 1 and question.question_type == 1 %}
 									winner is  {{question.winner}}
+									
+									
+                                        {% elif question.question_type == 2 %}
+                                            <a href="{% url 'polls:allocate_results' question.id %}" > Allocation Complete:
+                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                            </a>   <br />
+                                            {% for response in question.response_set.all %}
+                                                {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                                <br />
+                                            {% endfor %}
+                                            
 
 									{% endif %} </td>
 								</tr>

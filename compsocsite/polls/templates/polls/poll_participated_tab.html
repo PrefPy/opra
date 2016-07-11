@@ -1,5 +1,4 @@
 <!-- The polls participated tab included in index2 -->
-
 <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingTwo">
       <h4 class="panel-title">
@@ -13,7 +12,7 @@
          <table class="table" >
                     {% if question_list %}
                         {% for question in question_list %}
-                            {% if question.question_owner != request.user and request.user in question.question_voters.all %}
+                            {% if question.question_owner != request.user and request.user in question.question_voters.all and question.m_poll == False %}
                             <tr>
                                 <td>
                                     <a href="{% url 'polls:pollinfo' question.id %}"> 

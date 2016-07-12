@@ -22,16 +22,16 @@ $(document).ready(function(){
         <h3>You are currently voting on {{question.question_text}} </h3>
         <hr />
     
-        <h4 align="center">Please choose your dependencies</h4>
+        <h4 align="center">Your preferences over {{question.question_text}} depends on:</h4>
 
         <ul class="list-group">
         {% for poll in question.multipoll_set.all.0.questions.all %}
             {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
 
             <li class="list-group-item">
-                <div class="radio" align="center">
+                <div class="checkbox" align="center">
                 <label for="{{poll.id}}" data-toggle="tooltip" data-placement="right" title="More info about {{poll.question_text}}: Help users to choose if has may possibile dependencies"> {{poll.question_text}} </label>
-                    <p><input type="radio" name="polls" value="{{poll.id}}" id="{{poll.id}}"></p>
+                    <input type="radio" name="polls" value="{{poll.id}}" id="{{poll.id}}">
                 </div>  
             </li>
         

@@ -168,15 +168,28 @@ def progress(request, multipoll_id):
         multipoll.save()
         #This part is for checking conditional preferences
         poll = multipoll.questions.all()[multipoll.status-1]
-        for combination in poll.combination_set.all():
-            flag = True
-            for item in combination.dependencies.all():
-                if item.item_text not in item.question.winner:
-                    flag = False
-            if flag == True:
-                response = combination.response
-                response.question = poll
-                response.save()
+        if poll.question_type == 1:
+            for combination in poll.combination_set.all():
+                flag = True
+                for item in combination.dependencies.all():
+                    if item.item_text not in item.question.winner:
+                        flag = False
+                if flag == True:
+                    response = combination.response
+                    response.question = poll
+                    response.save()
+        else:
+            user = request.user
+            for combination in poll.combination_set.all():
+                flag = True
+                for item in combination.dependencies.all():
+                    latest_response = item.question.response_set.all().filter(user=user)[0]
+                    if latest_response.allocation != item:
+                        flag = False
+                if flag == True:
+                    response = combination.response
+                    response.question = poll
+                    response.save()
     #all the polls have ended
     else:
         #end the last poll

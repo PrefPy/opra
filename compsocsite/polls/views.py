@@ -40,11 +40,17 @@ class RegularPollsView(generic.ListView):
         return Question.objects.all()
     def get_context_data(self, **kwargs):
         ctx = super(RegularPollsView, self).get_context_data(**kwargs)
-        ctx['polls_created'] = Question.objects.filter(question_owner = self.request.user, m_poll = False)
-        # sort the list by date (most recent should be at the top)
-        participated = self.request.user.poll_participated.filter(m_poll = False).exclude(question_owner = self.request.user)
-        ctx['polls_participated'] = participated.order_by('-pub_date')
+        # sort the lists by date (most recent should be at the top)
+        ctx['polls_created'] = Question.objects.filter(question_owner = self.request.user, m_poll = False).order_by('-pub_date')
+        ctx['polls_participated'] = self.request.user.poll_participated.filter(m_poll = False).exclude(question_owner = self.request.user).order_by('-pub_date')
         return ctx
+
+# the original query will return data from earliest to latest
+# reverse the list so that the data is from latest to earliest
+def reverseListOrder(query):
+    listQuery = list(query)
+    listQuery.reverse()
+    return listQuery
 
 class MultiPollsView(generic.ListView):
     template_name = 'polls/m_polls.html'
@@ -53,11 +59,9 @@ class MultiPollsView(generic.ListView):
         return Question.objects.all()
     def get_context_data(self, **kwargs):
         ctx = super(MultiPollsView, self).get_context_data(**kwargs)
-        ctx['multipolls_created'] = MultiPoll.objects.filter(owner = self.request.user)
-        # the list is ordered from earliest to latest, but reverse so that the most recent is at the top
-        participated = list(self.request.user.multipoll_participated.exclude(owner = self.request.user))
-        participated.reverse() 
-        ctx['multipolls_participated'] = participated
+    
+        ctx['multipolls_created'] = reverseListOrder(MultiPoll.objects.filter(owner = self.request.user))
+        ctx['multipolls_participated'] = reverseListOrder(self.request.user.multipoll_participated.exclude(owner = self.request.user))
         return ctx
 
 class MainView(generic.ListView):
@@ -94,9 +98,7 @@ class AddStep2View(generic.DetailView):
     template_name = 'polls/add_step2.html'
     def get_context_data(self, **kwargs):
         ctx = super(AddStep2View, self).get_context_data(**kwargs)
-        ctx['users'] = User.objects.all()
         ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
         return ctx
     def get_queryset(self):
         """
@@ -110,7 +112,6 @@ class AddStep3View(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(AddStep3View, self).get_context_data(**kwargs)
         ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
         return ctx
     def get_queryset(self):
@@ -126,7 +127,7 @@ class AddStep4View(generic.DetailView):
         ctx = super(AddStep4View, self).get_context_data(**kwargs)
         ctx['preference'] = self.request.user.userprofile.displayPref
         ctx['poll_algorithms'] = getListPollAlgorithms()
-        ctx['alloc_methods'] = ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
+        ctx['alloc_methods'] = getAllocMethods()
         ctx['view_preferences'] = ["Everyone can see all votes at all times", "Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
         return ctx
     def get_queryset(self):
@@ -304,28 +305,13 @@ class DependencyDetailView(generic.DetailView):
         if len(otherUserResponses) == 0:
             return self.object.target_question.item_set.all
         for resp in otherUserResponses:
-            user=self.request.user
+            user = self.request.user
             otherUser = resp.user
-            questions = Question.objects.all().filter(question_voters=otherUser).filter(question_voters=user)
-            KT = 0
-            num = 0
-            prefGraph = {}
+            KT = getKTScore(user, otherUser)
+            
+            prefGraph = {}          
             dictionary = get_object_or_404(Dictionary, response=resp)
-            for q in questions:
-                userResponse = q.response_set.filter(user=user).reverse()
-                otherUserResponse = q.response_set.filter(user=otherUser).reverse()
-                if len(userResponse) > 0 and len(otherUserResponse) > 0:
-                    num = num + 1
-                    userResponse = get_object_or_404(Dictionary, response=userResponse[0])
-                    otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
-                    KT += getKendallTauScore(userResponse, otherUserResponse)
-                    print(getKendallTauScore(userResponse, otherUserResponse))
-            KT /= num
-            if KT == 0:
-                KT = .25
-            else:
-                KT = 1/(1 + KT)
-
+            
             candMap = {}
             counter = 0
             for item in dictionary.items():
@@ -390,7 +376,6 @@ def getKTScore(user, otherUser):
             userResponse = get_object_or_404(Dictionary, response=userResponse[0])
             otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
             KT += getKendallTauScore(userResponse, otherUserResponse)
-            print(getKendallTauScore(userResponse, otherUserResponse))
     
     if num != 0:
         KT /= num
@@ -410,7 +395,7 @@ class PollInfoView(generic.DetailView):
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
-        ctx['alloc_methods'] = ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]        
+        ctx['alloc_methods'] = getAllocMethods()     
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
         ctx['history'] = currentUserResponses[1:]
@@ -501,6 +486,10 @@ class VoteResultsView(generic.DetailView):
 # get a list of algorithms supported by the system
 def getListPollAlgorithms():
     return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+
+# get a list of allocation methods
+def getAllocMethods():
+    return ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
 
 #get a list of options for this poll
 def getCandidateMap(response):
@@ -652,7 +641,7 @@ def addVoter(request, question_id):
     creator_obj = User.objects.get(id=question.question_owner_id)
 
     newVoters = request.POST.getlist('voters')
-    # send an invitation email
+    # send an invitation email 
     email = request.POST.get('email') == 'email'
     question.emailInvite = email
     question.save()
@@ -679,6 +668,7 @@ def removeVoter(request, question_id):
         question.question_voters.remove(voterObj.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# called when creating the poll
 def setInitialSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['pollpreferences']
@@ -686,6 +676,7 @@ def setInitialSettings(request, question_id):
     question.save()
     return HttpResponseRedirect(reverse('polls:index'))
 
+# set the poll algorithm or allocation method using an integer
 def setAlgorithm(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['pollpreferences']
@@ -708,19 +699,27 @@ def setVisibility(request, question_id):
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+#function to get preference order from a string 
+def getPrefOrder(orderStr, question):
+    # empty string
+    if orderStr == "":
+        return None
+    
+    prefOrder = orderStr.split(",")
+    # the user hasn't ranked all the preferences yet
+    if len(prefOrder) != len(question.item_set.all()):
+        return None
+    
+    return prefOrder
+
 # function to process student submission
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
 
     # get the preference order
     orderStr = request.POST["pref_order"]
-    prefOrder = []    
-    if orderStr != "":
-        prefOrder = orderStr.split(",")
-        # the user must rank all preferences
-        if len(prefOrder) != len(question.item_set.all()):
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    else:
+    prefOrder = getPrefOrder(orderStr, question)
+    if prefOrder == None:
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
@@ -782,17 +781,13 @@ def assignPreference(request, combination_id):
         combination.dependencies.add(item.id)
         combination.save()
     orderStr = request.POST["pref_order"]
-    prefOrder = []    
-    if orderStr != "":
-        prefOrder = orderStr.split(",")
-        # the user must rank all preferences
-        if len(prefOrder) != len(question.item_set.all()):
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    else:
+    prefOrder = getPrefOrder(orderStr, question)
+    if prefOrder == None:
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     # make Response object to store data
-    response = Response( user=request.user, timestamp=timezone.now())
+    response = Response(user=request.user, timestamp=timezone.now())
     response.save()
     combination.response = response
     combination.save()

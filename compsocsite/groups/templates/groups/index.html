@@ -2,16 +2,12 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-    <ul class="nav nav-tabs">
-        <li><a href="{% url 'polls:index' %}"><span class="glyphicon glyphicon-list-alt"></span> Polls</a></li>
-        <li class="active"><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
-    </ul>
-    <br />
-    <div class="col-md-6">
+<br/><br/>
+    <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <b>Groups created</b> 
-                <a href="{% url 'groups:addgroup' %}"><span class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span></span></a>
+                <a href="{% url 'groups:addgroup' %}"><span class="btn btn-yellow"><span class="glyphicon glyphicon-plus" ></span></span></a>
             </div>
             <div class="panel-body">
                 <table class="table">

@@ -53,6 +53,11 @@
     
     <!-- Custom Theme JavaScript -->
     <script>
+    //tooltip 
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
     // Scrolls to the selected menu item on the page
     $(function() {
         $('a[href*=#]:not([href=#])').click(function() {

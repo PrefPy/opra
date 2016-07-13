@@ -50,17 +50,17 @@ body {
     background-color: rgba(255,255,255,0.8);
 }
 
-.btn-blueadd{
+.btn-yellow{
   color: white;
   background-color: #b57137;
 }
-.btn-blueadd:hover,
-.btn-blueadd:focus,
-.btn-blueadd:active {
+.btn-yellow:hover,
+.btn-yellow:focus,
+.btn-yellow:active {
     color: #333;
     background-color: rgba(181,113,55,0.8);
 }
-.btn-blueadd span{
+.btn-yellow span{
   color:white;
 }
 

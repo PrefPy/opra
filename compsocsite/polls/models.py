@@ -21,7 +21,7 @@ class Question(models.Model):
     pub_date = models.DateTimeField('date published')
     follow_up = models.OneToOneField('Question', on_delete=models.CASCADE, null = True, blank = True)
     question_owner = models.ForeignKey(User, null=True)
-    question_voters = models.ManyToManyField(User, related_name='voters')
+    question_voters = models.ManyToManyField(User, related_name='poll_participated')
     status = models.IntegerField(default=1)
     display_pref = models.IntegerField(default=1)
     emailInvite = models.BooleanField(default=True)

@@ -37,22 +37,27 @@ class RegularPollsView(generic.ListView):
     template_name = 'polls/regular_polls.html'
     context_object_name = 'question_list'
     def get_queryset(self):
-        return Question.objects.all().order_by('-pub_date')
+        return Question.objects.all()
     def get_context_data(self, **kwargs):
         ctx = super(RegularPollsView, self).get_context_data(**kwargs)
-        ctx['multipolls'] = MultiPoll.objects.all()
-        #ctx['multipolls'] = MultiPoll.objects.all().order_by('-pub_date')
+        ctx['polls_created'] = Question.objects.filter(question_owner = self.request.user, m_poll = False)
+        # sort the list by date (most recent should be at the top)
+        participated = self.request.user.poll_participated.filter(m_poll = False).exclude(question_owner = self.request.user)
+        ctx['polls_participated'] = participated.order_by('-pub_date')
         return ctx
 
 class MultiPollsView(generic.ListView):
     template_name = 'polls/m_polls.html'
     context_object_name = 'question_list'
     def get_queryset(self):
-        return Question.objects.all().order_by('-pub_date')
+        return Question.objects.all()
     def get_context_data(self, **kwargs):
         ctx = super(MultiPollsView, self).get_context_data(**kwargs)
-        ctx['multipolls'] = MultiPoll.objects.all()
-        #ctx['multipolls'] = MultiPoll.objects.all().order_by('-pub_date')
+        ctx['multipolls_created'] = MultiPoll.objects.filter(owner = self.request.user)
+        # the list is ordered from earliest to latest, but reverse so that the most recent is at the top
+        participated = list(self.request.user.multipoll_participated.exclude(owner = self.request.user))
+        participated.reverse() 
+        ctx['multipolls_participated'] = participated
         return ctx
 
 class MainView(generic.ListView):

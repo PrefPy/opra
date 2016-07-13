@@ -24,173 +24,166 @@
 </div>
 -->
 
-
-
-<!-- The polls created by you included in index2 --->
+<!-- polls created by you is included in index2 --->
 <!-- for created by you section-->
-    <div class="container" >
+<div class="container" >
     <div name="created" class="panel panel-default">
         <div class="panel-body">
         <table style = "width:100%;" class="table" name="created">
-            
-            <thead><tr><th>
-		      Regular polls created by you		
-			<a href="{% url 'polls:AddStep1' %}" style='font-size:60%; float:right;' class="btn btn-yellow">
-                    <span class="glyphicon glyphicon-plus"></span>
-            </a></th></tr></thead>
+            <thead>
+                <tr>
+                    <th>
+		                  Regular polls created by you		
+                            <a href="{% url 'polls:AddStep1' %}" style='font-size:60%; float:right;' class="btn btn-yellow">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                            </a>
+                    </th>
+                </tr>
+            </thead>
 
-                {% if question_list %}
-                    {% for question in question_list %}
-                        {% if question.question_owner == request.user and question.m_poll == False %}
-                        <tr>
-                            <td>    
-                                <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="More info about {{poll.question_text}}: Help users to choose if has may possibile dependencies">{{ question.question_text }}</a>
-                            </td>
-                            <td style="vertical-align:middle">
-                                {% if question.status == 2 %}
-                                <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button" >Vote</a>
-                                {% if question.display_pref == 0 and question.question_type == 1%}
+            {% for question in polls_created %}
+                <tr>
+                    <td>    
+                        <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="More info about {{question.question_text}}: Help users to choose if has may possibile dependencies">{{ question.question_text }}</a>
+                    </td>
+                    <td style="vertical-align:middle">
+                        {% if question.status == 2 %}
+                            <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button" >Vote</a>
+                            {% if question.display_pref == 0 and question.question_type == 1 %}
                                 <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" >Current Winners</a>
-                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    {% if question.status == 1 %}
+                        <td style="vertical-align:middle">
+                            <div class="start-icon">
+                            <i class="fa fa-play" aria-hidden="true" data-toggle="modal" data-target="#confirm-start{{ question.id }}"></i>
+                            </div>
+                        </td>
+
+                        <div class="modal fade" id="confirm-start{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        Confirm Start Poll {{ question.question_text }}
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to start poll {{ question.question_text }}? Once a poll is started, you cannot modify the settings or remove voters.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="{% url 'polls:start' question.id %}">
+                                            <button type="button" class="btn-large btn-success btn-ok">Yes</button>
+                                        </a>
+                                        <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif question.status == 2 %}
+                        <td style="vertical-align:middle">
+                            <div class="stop-icon">
+                            <i class="fa fa-stop" aria-hidden="true" data-toggle="modal" data-target="#confirm-stop{{ question.id }}"></i>
+                            </div>
+                        </td>
+
+                        <div class="modal fade" id="confirm-stop{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        Confirm Stop Poll
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to stop this poll? Once a poll is stopped, no more votes can be changed.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="{% url 'polls:stop' question.id %}">
+                                            <button type="button" class="btn-large  btn-ok btn-danger" style="font-size:100%;">Yes</button>
+                                        </a>
+                                        <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif question.status == 3 %}
+                            <td>
+                                {% if question.question_type == 1 %}
+                                    <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
+                                        {{question.winner}} wins
+                                    </a> 
+                                {% elif question.question_type == 2 %}
+                                    Allocation Complete: <br />
+                                    {% for response in question.response_set.all %}
+                                        {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                        <br />
+                                    {% endfor %}
+                                    <a href="{% url 'polls:allocate_results' question.id %}" >
+                                        <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                    </a> 
                                 {% endif %}
                             </td>
-                            {% if question.status == 1 %}
 
-                                <td style="vertical-align:middle">
-                                   <div class="start-icon">
-                                    <i class="fa fa-play" aria-hidden="true" data-toggle="modal" data-target="#confirm-start{{ question.id }}"></i>
-                                    </div>
-                                    
-                                </td>
-                            
-
-                                <div class="modal fade" id="confirm-start{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                Confirm Start Poll {{ question.question_text }}
-                                            </div>
-                                            <div class="modal-body">
-                                                Are you sure you want to start poll {{ question.question_text }}? Once a poll is started, you cannot modify the settings or remove voters.
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a href="{% url 'polls:start' question.id %}">
-                                                    <button type="button" class="btn-large btn-success btn-ok">Yes</button>
-                                                </a>
-                                                <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% elif question.status == 2 %}
-
-                                <td style="vertical-align:middle">
-                                    <div class="stop-icon">
-                                    <i class="fa fa-stop" aria-hidden="true" data-toggle="modal" data-target="#confirm-stop{{ question.id }}"></i>
-                                    </div>
-                                </td>
-
-                                <div class="modal fade" id="confirm-stop{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                Confirm Stop Poll
-                                            </div>
-                                            <div class="modal-body">
-                                                Are you sure you want to stop this poll? Once a poll is stopped, no more votes can be changed.
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a href="{% url 'polls:stop' question.id %}">
-                                                    <button type="button" class="btn-large  btn-ok btn-danger" style="font-size:100%;">Yes</button>
-                                                </a>
-                                                <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% elif question.status == 3 %}
-                                    <td>
-                                        {% if question.question_type == 1 %}
-                                            <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
-                                                {{question.winner}} wins
-                                            </a> 
-                                        {% elif question.question_type == 2 %}
-                                            Allocation Complete: <br />
-                                            {% for response in question.response_set.all %}
-                                                {{ response.user.username }}: {{ response.allocation.item_text }} 
-                                                <br />
-                                            {% endfor %}
-                                            <a href="{% url 'polls:allocate_results' question.id %}" >
-                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
-                                            </a> 
-                                        {% endif %}
-                                    </td>
-                    
-                            {% endif %}
-                        </tr>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}    
-                </table>
-    </div>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+        </div>    
+    </div><!-- end for created by you section-->
         
-        </div>
-<!-- end for created by you section-->
-<div name="participated" class="panel panel-default">
-<div class="panel-body">
-         <table class="table" >
-             <thead><tr><th>
-		   Participated in		
-			</th></tr></thead>
-                    {% if question_list %}
-                        {% for question in question_list %}
-                            {% if question.question_owner != request.user and request.user in question.question_voters.all and question.m_poll == False %}
-                            <tr>
-                                <td>
-                                    <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="More info about {{poll.question_text}}: Help users to choose if has may possibile dependencies"> 
-                                    {{ question.question_text }}
-                                    </a>
-                                </td>
-                                <td>
-                                    {% if question.status == 2 %}
-                                    <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button">Vote</a>
-                                    {% if question.display_pref == 0 %}
-                                    <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" >Current Winners</a>
-                                    {% endif %}
-                                    {% endif %}
-                                </td>
-                                {% if question.status == 1 %}
-                                    <td>Poll not started</td>
-                                {% elif question.status == 2 %}
-                                    <td>In session</td>
-                                {% elif question.status == 3 %}
-                                    <td>
-                                        {% if question.display_pref == 1 %}
-                                            {% if question.question_type == 1 %}
-                                                <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
-                                                {{question.winner}} wins
-                                            </a> 
-                                            {% elif question.question_type == 2 %}
-                                                Allocation Complete: <br />
-                                                {% for response in question.response_set.all %}
-                                                    {{ response.user.username }}: {{ response.allocation.item_text }} 
-                                                    <br />
-                                                {% endfor %}
-                                                <a href="{% url 'polls:allocate_results' question.id %}" >
-                                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
-                                                </a> 
-                                            {% endif %}
-                                        {% endif %} 
-                                        
-                                    </td>
-                                {% endif %}
-                            </tr>
+    <div name="participated" class="panel panel-default">
+        <div class="panel-body">
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th>
+                        Participated in		
+                    </th>
+                </tr>
+            </thead>
+
+            {% for question in polls_participated %}
+            <tr>
+                <td>
+                    <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="More info about {{poll.question_text}}: Help users to choose if has may possibile dependencies"> 
+                    {{ question.question_text }}
+                    </a>
+                </td>
+                <td>
+                    {% if question.status == 2 %}
+                        <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button">Vote</a>
+                        {% if question.display_pref == 0 %}
+                            <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" >Current Winners</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                {% if question.status == 1 %}
+                    <td>Poll not started</td>
+                {% elif question.status == 2 %}
+                    <td>In session</td>
+                {% elif question.status == 3 %}
+                    <td>
+                        {% if question.display_pref == 1 %}
+                            {% if question.question_type == 1 %}
+                                <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
+                                {{question.winner}} wins
+                            </a> 
+                            {% elif question.question_type == 2 %}
+                                Allocation Complete: <br />
+                                {% for response in question.response_set.all %}
+                                    {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                    <br />
+                                {% endfor %}
+                                <a href="{% url 'polls:allocate_results' question.id %}" >
+                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                </a> 
                             {% endif %}
-                        {% endfor %}
-                    {% endif %}    
-                    </table>
-   
-</div><!-- end for participated in section-->
-</div>
+                        {% endif %} 
+
+                    </td>
+                {% endif %}
+                </tr>
+            {% endfor %} 
+        </table>
+        </div><!-- end for participated in section-->
+    </div>
 </div>
 {% endblock %}

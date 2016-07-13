@@ -9,6 +9,9 @@ urlpatterns = [
                
     url(r'^$', login_required(views.IndexView.as_view()), name='index'),
     url(r'^main$', views.MainView.as_view(), name='index_guest'),
+    #Two main types of polls
+    url(r'^regular_polls$',views.RegularPollsView.as_view(), name='regular_polls'),
+    url(r'^m_polls$',views.MultiPollsView.as_view(), name='m_polls'),
    
     # Create a new poll
     url(r'^add_step1/$', views.AddStep1View, name='AddStep1'), 

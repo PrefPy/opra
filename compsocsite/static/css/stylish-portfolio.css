@@ -52,13 +52,13 @@ body {
 
 .btn-blueadd{
   color: white;
-  background-color: #377BB5;
+  background-color: #b57137;
 }
 .btn-blueadd:hover,
 .btn-blueadd:focus,
 .btn-blueadd:active {
     color: #333;
-    background-color: rgba(55,123,181,0.8);
+    background-color: rgba(181,113,55,0.8);
 }
 .btn-blueadd span{
   color:white;

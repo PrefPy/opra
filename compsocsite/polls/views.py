@@ -33,6 +33,30 @@ class IndexView(generic.ListView):
         #ctx['multipolls'] = MultiPoll.objects.all().order_by('-pub_date')
         return ctx
 
+class RegularPollsView(generic.ListView):
+    template_name = 'polls/regular_polls.html'
+    context_object_name = 'question_list'
+    def get_queryset(self):
+        return Question.objects.all().order_by('-pub_date')
+    def get_context_data(self, **kwargs):
+        ctx = super(RegularPollsView, self).get_context_data(**kwargs)
+        ctx['multipolls'] = MultiPoll.objects.all()
+        #ctx['multipolls'] = MultiPoll.objects.all().order_by('-pub_date')
+        return ctx
+
+class MultiPollsView(generic.ListView):
+    template_name = 'polls/m_polls.html'
+    context_object_name = 'question_list'
+    def get_queryset(self):
+        return Question.objects.all().order_by('-pub_date')
+    def get_context_data(self, **kwargs):
+        ctx = super(MultiPollsView, self).get_context_data(**kwargs)
+        ctx['multipolls'] = MultiPoll.objects.all()
+        #ctx['multipolls'] = MultiPoll.objects.all().order_by('-pub_date')
+        return ctx
+
+
+
 class MainView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'question_list'

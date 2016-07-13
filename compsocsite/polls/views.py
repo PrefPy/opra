@@ -55,15 +55,12 @@ class MultiPollsView(generic.ListView):
         #ctx['multipolls'] = MultiPoll.objects.all().order_by('-pub_date')
         return ctx
 
-
-
 class MainView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
-    
-    
+        
 #the first step of creating new vote
 def AddStep1View(request):
     context = RequestContext(request)
@@ -174,7 +171,7 @@ def startPoll(request, question_id):
     # send notification email
     if question.emailStart:
         sendEmail(request, question_id, 'start')
-    return HttpResponseRedirect(reverse('polls:index'))    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
 
 def stopPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -186,7 +183,7 @@ def stopPoll(request, question_id):
     elif question.question_type == 2: #allocation
         allocation(question)
     question.save()
-    return HttpResponseRedirect(reverse('polls:index'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def getPollWinner(question):
     all_responses = question.response_set.reverse()

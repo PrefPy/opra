@@ -28,8 +28,9 @@
 
 <!-- The polls created by you included in index2 --->
 <!-- for created by you section-->
-    <div class="container">
-    <div name="created">
+    <div class="container" >
+    <div name="created" class="panel panel-default">
+        <div class="panel-body">
         <table style = "width:100%;" class="table" name="created">
             
             <thead><tr><th>
@@ -42,10 +43,8 @@
                     {% for question in question_list %}
                         {% if question.question_owner == request.user and question.m_poll == False %}
                         <tr>
-
-                            
                             <td>    
-                                <a href="{% url 'polls:pollinfo' question.id %}">{{ question.question_text }}</a>
+                                <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="More info about {{poll.question_text}}: Help users to choose if has may possibile dependencies">{{ question.question_text }}</a>
                             </td>
                             <td style="vertical-align:middle">
                                 {% if question.status == 2 %}
@@ -134,9 +133,11 @@
                 {% endif %}    
                 </table>
     </div>
+        
+        </div>
 <!-- end for created by you section-->
-<div name="participated">
-
+<div name="participated" class="panel panel-default">
+<div class="panel-body">
          <table class="table" >
              <thead><tr><th>
 		   Participated in		
@@ -146,7 +147,7 @@
                             {% if question.question_owner != request.user and request.user in question.question_voters.all and question.m_poll == False %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'polls:pollinfo' question.id %}"> 
+                                    <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="More info about {{poll.question_text}}: Help users to choose if has may possibile dependencies"> 
                                     {{ question.question_text }}
                                     </a>
                                 </td>
@@ -190,5 +191,6 @@
                     </table>
    
 </div><!-- end for participated in section-->
+</div>
 </div>
 {% endblock %}

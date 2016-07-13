@@ -59,7 +59,7 @@ class MultiPollsView(generic.ListView):
         return Question.objects.all()
     def get_context_data(self, **kwargs):
         ctx = super(MultiPollsView, self).get_context_data(**kwargs)
-    
+        # sort the list by date
         ctx['multipolls_created'] = reverseListOrder(MultiPoll.objects.filter(owner = self.request.user))
         ctx['multipolls_participated'] = reverseListOrder(self.request.user.multipoll_participated.exclude(owner = self.request.user))
         return ctx
@@ -221,51 +221,11 @@ class DetailView(generic.DetailView):
 
     def get_order(self, ctx):
         otherUserResponses = self.object.response_set.reverse()
-        preferences = []
         if len(otherUserResponses) == 0:
+            # use the default order
             return ctx['object'].item_set.all
-        for resp in otherUserResponses:
-            user = self.request.user
-            otherUser = resp.user
-            KT = getKTScore(user, otherUser)
-            
-            prefGraph = {}
-            dictionary = get_object_or_404(Dictionary, response=resp)
-            
-            candMap = {}
-            counter = 0
-            for item in dictionary.items():
-                candMap[counter] = item[0]
-                counter += 1
-
-            for cand1Index in candMap:
-                tempDict = {}
-                for cand2Index in candMap:
-                    if cand1Index == cand2Index:
-                        continue
-                    
-                    cand1 = candMap[cand1Index]
-                    cand2 = candMap[cand2Index]
-                    cand1Rank = dictionary.get(cand1)
-                    cand2Rank = dictionary.get(cand2)
-                    #lower number is better (i.e. rank 1 is better than rank 2)
-                    if cand1Rank < cand2Rank:
-                        tempDict[cand2Index] = 1
-                    elif cand2Rank < cand1Rank:
-                        tempDict[cand2Index] = -1
-                    else:
-                        tempDict[cand2Index] = 0
-                prefGraph[cand1Index] = tempDict
-            preferences.append(Preference(prefGraph, KT))
-        pollProfile = Profile(candMap, preferences)
-
-        pref = MechanismBorda().getCandScoresMap(pollProfile)
-        l = list(sorted(pref.items(), key=lambda kv: (kv[1], kv[0])))
-        final_list = []
-        for p in reversed(l):
-            final_list.append(candMap[p[0]])
-        print(final_list)
-        return final_list
+        
+        return getRecommendedOrder(otherUserResponses, self.request)
 
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
@@ -274,6 +234,7 @@ class DetailView(generic.DetailView):
         if tempOrderStr == "null":
             ctx['items'] = self.get_order(ctx)
             return ctx
+        
         # check if the user submitted a vote earlier and display that for modification
         if len(currentUserResponses) > 0:
             mostRecentResponse = currentUserResponses[0]
@@ -301,51 +262,11 @@ class DependencyDetailView(generic.DetailView):
     
     def get_order(self, ctx):
         otherUserResponses = self.object.target_question.response_set.reverse()
-        preferences = []
         if len(otherUserResponses) == 0:
             return self.object.target_question.item_set.all
-        for resp in otherUserResponses:
-            user = self.request.user
-            otherUser = resp.user
-            KT = getKTScore(user, otherUser)
-            
-            prefGraph = {}          
-            dictionary = get_object_or_404(Dictionary, response=resp)
-            
-            candMap = {}
-            counter = 0
-            for item in dictionary.items():
-                candMap[counter] = item[0]
-                counter += 1
-
-            for cand1Index in candMap:
-                tempDict = {}
-                for cand2Index in candMap:
-                    if cand1Index == cand2Index:
-                        continue
-                    
-                    cand1 = candMap[cand1Index]
-                    cand2 = candMap[cand2Index]
-                    cand1Rank = dictionary.get(cand1)
-                    cand2Rank = dictionary.get(cand2)
-                    #lower number is better (i.e. rank 1 is better than rank 2)
-                    if cand1Rank < cand2Rank:
-                        tempDict[cand2Index] = 1
-                    elif cand2Rank < cand1Rank:
-                        tempDict[cand2Index] = -1
-                    else:
-                        tempDict[cand2Index] = 0
-                prefGraph[cand1Index] = tempDict
-            preferences.append(Preference(prefGraph, KT))
-        pollProfile = Profile(candMap, preferences)
-
-        pref = MechanismBorda().getCandScoresMap(pollProfile)
-        l = list(sorted(pref.items(), key=lambda kv: (kv[1], kv[0])))
-        final_list = []
-        for p in reversed(l):
-            final_list.append(candMap[p[0]])
-        print(final_list)
-        return final_list
+        
+        return getRecommendedOrder(otherUserResponses, self.request)
+    
     def get_context_data(self,**kwargs):
         ctx = super(DependencyDetailView, self).get_context_data(**kwargs)
         ctx['question'] = self.get_object().target_question
@@ -356,7 +277,7 @@ class DependencyDetailView(generic.DetailView):
             return ctx
         if len(currentUserResponses) > 0:
             mostRecentResponse = currentUserResponses[0]
-            selectionArray = []             
+            selectionArray = []
             for d in mostRecentResponse.dictionary_set.all():   
                 selectionArray = d.sorted_values()
             ctx['currentSelection'] = selectionArray
@@ -635,6 +556,51 @@ def getMarginOfVictory(latest_responses):
     marginList.append("-")
     return marginList
 
+def getRecommendedOrder(otherUserResponses, request):
+    preferences = []
+    for resp in otherUserResponses:
+        user = request.user
+        otherUser = resp.user
+        KT = getKTScore(user, otherUser)
+        
+        prefGraph = {}
+        dictionary = get_object_or_404(Dictionary, response=resp)
+        
+        candMap = {}
+        counter = 0
+        for item in dictionary.items():
+            candMap[counter] = item[0]
+            counter += 1
+
+        for cand1Index in candMap:
+            tempDict = {}
+            for cand2Index in candMap:
+                if cand1Index == cand2Index:
+                    continue
+                
+                cand1 = candMap[cand1Index]
+                cand2 = candMap[cand2Index]
+                cand1Rank = dictionary.get(cand1)
+                cand2Rank = dictionary.get(cand2)
+                #lower number is better (i.e. rank 1 is better than rank 2)
+                if cand1Rank < cand2Rank:
+                    tempDict[cand2Index] = 1
+                elif cand2Rank < cand1Rank:
+                    tempDict[cand2Index] = -1
+                else:
+                    tempDict[cand2Index] = 0
+            prefGraph[cand1Index] = tempDict
+        preferences.append(Preference(prefGraph, KT))
+    pollProfile = Profile(candMap, preferences)
+
+    pref = MechanismBorda().getCandScoresMap(pollProfile)
+    l = list(sorted(pref.items(), key=lambda kv: (kv[1], kv[0])))
+    final_list = []
+    for p in reversed(l):
+        final_list.append(candMap[p[0]])
+    print(final_list)
+    return final_list    
+ 
 #function to add voter to voter list (invite only)
 def addVoter(request, question_id):
     question    = get_object_or_404(Question, pk=question_id)

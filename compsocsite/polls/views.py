@@ -169,6 +169,19 @@ def deletePoll(request, question_id):
     question.delete()
     return HttpResponseRedirect(reverse('polls:index'))
 
+def quitPoll(request, question_id):
+
+    question = get_object_or_404(Question, pk=question_id)
+    email = request.user.email
+    question.emailDelete = email
+    question.save()
+    if email:
+        sendEmail(request, question_id, 'remove')   
+    question.question_voters.remove(request.user)
+    question.save()
+
+    return HttpResponseRedirect(reverse('polls:regular_polls' ))
+
 def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     # set the poll to start

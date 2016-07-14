@@ -116,12 +116,16 @@
 		{% if multipolls %}
 				{% for mpoll in multipolls %}
 				{% if request.user != mpoll.owner and request.user in mpoll.voters.all %}
-				
-                    <tr><td>{{ mpoll.title }}</td></tr>
+				<tbody>
+                    <tr data-toggle="collapse" data-target="#{{ mpoll.id }}" class="accordion-toggle"> 
+                        <td><h4 href="#collapse{{ forloop.counter }}" style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;">{{ mpoll.title }} <span class="caret" style="color:#377BB5;"></span></h4></td></tr>
 
-
+                    <tr>
+                    <td colspan="12" class="hiddenRow"><div class="accordian-body collapse" id="{{ mpoll.id }}"> 
+                        <table class="table table-hover" id="{{ mpoll.id }}">
+                            
                 {% for question in mpoll.questions.all %}
-                <tr><td><a href="{% url 'polls:pollinfo' question.id %}"> <span style = "font-size: 100%;">{{ question.question_text }} </span></a></td>
+                <tr class="info"><td><a href="{% url 'polls:pollinfo' question.id %}"> <span style = "font-size: 100%;">{{ question.question_text }} </span></a></td>
 
                     <td style="float:middle;"> {% if question.status == 2 %} <a href="{% url 'polls:dependency' question.id %}" class ="btn btn-dark" style='float:middle'>Vote</a> {% endif %} </td>
                     <td>{% if question.status == 1 %}
@@ -147,15 +151,19 @@
 
                     {% endif %} </td>
                 </tr>
-
+       
             {% endfor %}
-            </table>
+                        </table>
+                        </div>
+                        </td></tr>
+             </tbody>            
+            
 
 				{%endif%}
 				{% endfor %}
 		
 			{% endif %}	
-
+</table>
 </div>
     </div>
 </div><!--end of contanier-->

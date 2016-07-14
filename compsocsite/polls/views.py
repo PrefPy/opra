@@ -20,6 +20,7 @@ from groups.models import *
 from django.conf import settings
 from multipolls.models import *
 from .algorithms import *
+import json
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
@@ -334,6 +335,86 @@ class ConfirmationView(generic.DetailView):
     model = Question
     template_name = 'polls/confirmation.html'
 
+# view that displays vote results using various algorithms
+class VoteResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/vote_rule.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(VoteResultsView, self).get_context_data(**kwargs)
+        
+        all_responses = self.object.response_set.reverse()
+        (latest_responses, previous_responses) = categorizeResponses(all_responses)
+        ctx['latest_responses'] = latest_responses
+        ctx['previous_responses'] = previous_responses
+        ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
+        voteResults = getVoteResults(latest_responses) 
+        ctx['vote_results'] = voteResults
+        ctx['shade_values'] = getShadeValues(voteResults)
+        (nodes, edges) = parseWmg(latest_responses)
+        ctx['wmg_nodes'] = nodes
+        ctx['wmg_edges'] = edges
+        ctx['poll_algorithms'] = getListPollAlgorithms()
+        ctx['margin_victory'] = getMarginOfVictory(latest_responses)
+        
+        previous_winners = OldWinner.objects.all().filter(question=self.object)
+        ctx['previous_winners'] = []
+        for pw in previous_winners:
+            obj = {}
+            responses = self.object.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp])
+            (lr, pr) = categorizeResponses(responses)
+            obj['title'] = str(pw)
+            obj['latest_responses'] = lr
+            obj['previous_responses'] = pr
+            obj['vote_results'] = getVoteResults(lr)
+            obj['margin_victory'] = getMarginOfVictory(lr)
+            ctx['previous_winners'].append(obj)
+        return ctx
+
+# get a list of algorithms supported by the system
+def getListPollAlgorithms():
+    return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+
+# get a list of allocation methods
+def getAllocMethods():
+    return ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
+
+# build a graph of nodes and edges from a 2d dictionary
+def parseWmg(latest_responses):
+    pollProfile = getPollProfile(latest_responses)
+    if pollProfile == None:
+        return []
+   
+    #make sure no ties or incomplete results are in the votes
+    if pollProfile.getElecType() != "soc":
+        return []  
+        
+    # get nodes (the options)
+    candMap = getCandidateMap(latest_responses[0])
+    nodes = []
+    for rowIndex in candMap:
+        data = {}
+        data['id'] = rowIndex
+        data['value'] = 1
+        data['label'] = candMap[rowIndex].item_text
+        nodes.append(data)
+
+    # get edges from the weighted majority graph
+    wmg = pollProfile.getWmg()
+    edges = []
+    for rowIndex in wmg:
+        row = wmg[rowIndex]
+        for colIndex in row:
+            value = row[colIndex]
+            if value > 0:
+                data = {}
+                data['from'] = rowIndex
+                data['to'] = colIndex
+                data['value'] = value
+                data['title'] = str(value)
+                edges.append(data)
+
+    return (nodes, edges)
+
 #separate the user votes into two categories: (1)most recent (2)previous history
 def categorizeResponses(all_responses):
     latest_responses = []
@@ -363,46 +444,6 @@ def categorizeResponses(all_responses):
             latest_responses.append(response1)   
     
     return (latest_responses, previous_responses)
-
-# view that displays vote results using various algorithms
-class VoteResultsView(generic.DetailView):
-    model = Question
-    template_name = 'polls/vote_rule.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(VoteResultsView, self).get_context_data(**kwargs)
-        
-        all_responses = self.object.response_set.reverse()
-        (latest_responses, previous_responses) = categorizeResponses(all_responses)
-        ctx['latest_responses'] = latest_responses
-        ctx['previous_responses'] = previous_responses
-        ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
-        voteResults = getVoteResults(latest_responses) 
-        ctx['vote_results'] = voteResults
-        ctx['shade_values'] = getShadeValues(voteResults)
-        ctx['poll_algorithms'] = getListPollAlgorithms()
-        ctx['margin_victory'] = getMarginOfVictory(latest_responses)
-        
-        previous_winners = OldWinner.objects.all().filter(question=self.object)
-        ctx['previous_winners'] = []
-        for pw in previous_winners:
-            obj = {}
-            responses = self.object.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp])
-            (lr, pr) = categorizeResponses(responses)
-            obj['title'] = str(pw)
-            obj['latest_responses'] = lr
-            obj['previous_responses'] = pr
-            obj['vote_results'] = getVoteResults(lr)
-            obj['margin_victory'] = getMarginOfVictory(lr)
-            ctx['previous_winners'].append(obj)
-        return ctx
-
-# get a list of algorithms supported by the system
-def getListPollAlgorithms():
-    return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
-
-# get a list of allocation methods
-def getAllocMethods():
-    return ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
 
 #get a list of options for this poll
 def getCandidateMap(response):

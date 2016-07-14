@@ -76,8 +76,7 @@ nopadding {
     display: block;
     margin: 5px 5px 5px 5px;
     padding: 5px;
-    background: linear-gradient(to bottom, #ffffff 0%,#aaaaaa 100%);
-    border-radius: 25px;
+    background: #F5F5F5;
     padding-left:50px;
 }
 
@@ -113,14 +112,9 @@ button:hover .greencolor {
     margin-top: 12px;
 }
 	
-.panel-border {
-    border: 3px solid;
-    border-color: darkgrey; 
-    border-radius: 0 0px 25px 25px;
-}
 
 .btn-danger.reset-button {
-    background: linear-gradient(to bottom, orangered 0%, darkred 100%);
+    background: rgb(201, 48, 44, 0.9);
 }
 
 .reset-button-mobile {
@@ -131,7 +125,7 @@ button:hover .greencolor {
 
 .btn-success.submit-button {
     display: none; 
-    background: linear-gradient(to bottom, lightgreen 0%, darkgreen 100%);
+    background: rgb(68, 157, 68,0.9);
 }
 
 .submit-button-mobile {
@@ -146,7 +140,7 @@ button:hover .greencolor {
 }
 
 .btn-primary.move-all-button {
-    background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);
+    background: (55,123,181,0.9);
 }
 
 .move-all-button-mobile {

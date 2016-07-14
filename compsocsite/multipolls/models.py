@@ -13,13 +13,13 @@ class MultiPoll(models.Model):
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=500)
     owner = models.ForeignKey(User,related_name='owner')
-    questions = models.ManyToManyField(Question, through='MultiPollQuestion', through_fields=('multipoll','question'),)
-    voters = models.ManyToManyField(User)
+    questions = models.ManyToManyField(Question, through='MultiPollQuestion', through_fields=('multipoll','question'))
+    voters = models.ManyToManyField(User, related_name='multipoll_participated')
     pos = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
     #pub_date = models.DateTimeField('date published')
     def __str__(self):
-        return ""
+        return self.title
 
 @python_2_unicode_compatible
 class MultiPollQuestion(models.Model):

@@ -141,7 +141,7 @@
 					<ul id="right-sortable" class="list-group">
 						{% if currentSelection == None %}
 						{% for item in items %}
-						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
+						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
 							{% if item.image %}
 								<img class="item" src='/{{ item.image.url }}'/>
 							{% endif %}

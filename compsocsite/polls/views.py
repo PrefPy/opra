@@ -285,27 +285,6 @@ class DependencyDetailView(generic.DetailView):
             ctx['items'] = self.get_order(ctx)
         return ctx
 
-def getKTScore(user, otherUser):
-    KT = 0
-    num = 0
-    questions = Question.objects.all().filter(question_voters=otherUser).filter(question_voters=user)
-    for q in questions:
-        userResponse = q.response_set.filter(user=user).reverse()
-        otherUserResponse = q.response_set.filter(user=otherUser).reverse()
-        if len(userResponse) > 0 and len(otherUserResponse) > 0:
-            num = num + 1
-            userResponse = get_object_or_404(Dictionary, response=userResponse[0])
-            otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
-            KT += getKendallTauScore(userResponse, otherUserResponse)
-    
-    if num != 0:
-        KT /= num
-    if KT == 0:
-        KT = .25
-    else:
-        KT = 1/(1 + KT)
-    return KT    
-    
 # view for settings detail
 class PollInfoView(generic.DetailView):
     model = Question
@@ -556,6 +535,29 @@ def getMarginOfVictory(latest_responses):
     marginList.append("-")
     return marginList
 
+# used to help find the recommended order
+def getKTScore(user, otherUser):
+    KT = 0
+    num = 0
+    questions = Question.objects.all().filter(question_voters=otherUser).filter(question_voters=user)
+    for q in questions:
+        userResponse = q.response_set.filter(user=user).reverse()
+        otherUserResponse = q.response_set.filter(user=otherUser).reverse()
+        if len(userResponse) > 0 and len(otherUserResponse) > 0:
+            num = num + 1
+            userResponse = get_object_or_404(Dictionary, response=userResponse[0])
+            otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
+            KT += getKendallTauScore(userResponse, otherUserResponse)
+    
+    if num != 0:
+        KT /= num
+    if KT == 0:
+        KT = .25
+    else:
+        KT = 1/(1 + KT)
+    return KT    
+
+# use other responses to recommend a response order for you
 def getRecommendedOrder(otherUserResponses, request):
     preferences = []
     for resp in otherUserResponses:
@@ -697,13 +699,14 @@ def vote(request, question_id):
     # find ranking student gave for each item under the question
     item_num = 1
     for item in question.item_set.all():
-        arrayIndex = prefOrder.index("item" + str(item_num))
+        arrayIndex = prefOrder.index("item" + str(item))
+        
         if arrayIndex == -1:
             # set value to lowest possible rank
             d[item] = question.item_set.all().count()
         else:
             # add 1 to array index, since rank starts at 1
-            rank = (prefOrder.index("item" + str(item_num))) + 1
+            rank = (prefOrder.index("item" + str(item))) + 1
             # add pref to response dict
             d[item] = rank
         d.save()

@@ -393,19 +393,19 @@ def getAllocMethods():
 
 #get a list of options for this poll
 def getCandidateMap(response):
-    responseValues = response.dictionary_set.all()
+    d = Dictionary.objects.get(response=response)
     candMap = {}
-    for d in responseValues:
-        counter = 0
-        for item in d.items():
-            candMap[counter] = item[0]
-            counter += 1
+
+    counter = 0
+    for item in d.items():
+        candMap[counter] = item[0]
+        counter += 1
     return candMap
 
 #convert a user's preference into a 2d map
 def getPreferenceGraph(response):
     prefGraph = {}
-    responseValues = response.dictionary_set.all()
+    dictionary = Dictionary.objects.get(response=response)
     candMap = getCandidateMap(response)
 
     for cand1Index in candMap:
@@ -416,8 +416,8 @@ def getPreferenceGraph(response):
             
             cand1 = candMap[cand1Index]
             cand2 = candMap[cand2Index]
-            cand1Rank = response.dictionary_set.all()[0].get(cand1)
-            cand2Rank = response.dictionary_set.all()[0].get(cand2)
+            cand1Rank = dictionary.get(cand1)
+            cand2Rank = dictionary.get(cand2)
             #lower number is better (i.e. rank 1 is better than rank 2)
             if cand1Rank < cand2Rank:
                 tempDict[cand2Index] = 1
@@ -563,36 +563,13 @@ def getRecommendedOrder(otherUserResponses, request):
     for resp in otherUserResponses:
         user = request.user
         otherUser = resp.user
+        
+        # get current user and other user preferences
         KT = getKTScore(user, otherUser)
-        
-        prefGraph = {}
-        dictionary = get_object_or_404(Dictionary, response=resp)
-        
-        candMap = {}
-        counter = 0
-        for item in dictionary.items():
-            candMap[counter] = item[0]
-            counter += 1
-
-        for cand1Index in candMap:
-            tempDict = {}
-            for cand2Index in candMap:
-                if cand1Index == cand2Index:
-                    continue
-                
-                cand1 = candMap[cand1Index]
-                cand2 = candMap[cand2Index]
-                cand1Rank = dictionary.get(cand1)
-                cand2Rank = dictionary.get(cand2)
-                #lower number is better (i.e. rank 1 is better than rank 2)
-                if cand1Rank < cand2Rank:
-                    tempDict[cand2Index] = 1
-                elif cand2Rank < cand1Rank:
-                    tempDict[cand2Index] = -1
-                else:
-                    tempDict[cand2Index] = 0
-            prefGraph[cand1Index] = tempDict
+        prefGraph = getPreferenceGraph(resp)
         preferences.append(Preference(prefGraph, KT))
+    
+    candMap = getCandidateMap(otherUserResponses[0])        
     pollProfile = Profile(candMap, preferences)
 
     pref = MechanismBorda().getCandScoresMap(pollProfile)
@@ -765,13 +742,13 @@ def assignPreference(request, combination_id):
     # find ranking student gave for each item under the question
     item_num = 1
     for item in question.item_set.all():
-        arrayIndex = prefOrder.index("item" + str(item_num))
+        arrayIndex = prefOrder.index("item" + str(item))
         if arrayIndex == -1:
             # set value to lowest possible rank
             d[item] = question.item_set.all().count()
         else:
             # add 1 to array index, since rank starts at 1
-            rank = (prefOrder.index("item" + str(item_num))) + 1
+            rank = (prefOrder.index("item" + str(item))) + 1
             # add pref to response dict
             d[item] = rank
         d.save()

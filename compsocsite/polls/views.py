@@ -29,11 +29,6 @@ class IndexView(generic.ListView):
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
-    def get_context_data(self, **kwargs):
-        ctx = super(IndexView, self).get_context_data(**kwargs)
-        ctx['multipolls'] = MultiPoll.objects.all()
-        #ctx['multipolls'] = MultiPoll.objects.all().order_by('-pub_date')
-        return ctx
 
 class RegularPollsView(generic.ListView):
     template_name = 'polls/regular_polls.html'
@@ -166,13 +161,18 @@ def deleteChoice(request, choice_id):
     item.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# permanently erase a poll and all its information and settings
 def deletePoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+
+    # check to make sure the current user is the owner
+    if request.user != question.question_owner:
+        return HttpResponseRedirect(reverse('polls:index'))    
+    
     question.delete()
     return HttpResponseRedirect(reverse('polls:index'))
 
 def quitPoll(request, question_id):
-
     question = get_object_or_404(Question, pk=question_id)
     email = request.user.email
     question.emailDelete = email
@@ -182,20 +182,36 @@ def quitPoll(request, question_id):
     question.question_voters.remove(request.user)
     question.save()
 
-    return HttpResponseRedirect(reverse('polls:regular_polls' ))
+    return HttpResponseRedirect(reverse('polls:regular_polls'))
 
+# when a poll starts, users can cast votes at any time. 
+# however, the owner won't be able to remove voters or choices
 def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+
+    # check to make sure the owner started the poll
+    if request.user != question.question_owner:
+        return HttpResponseRedirect(reverse('polls:index'))
+    
     # set the poll to start
     question.status = 2
     question.save()
+    
     # send notification email
     if question.emailStart:
         sendEmail(request, question_id, 'start')
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
 
+# when a poll stops, users can no longer cast votes
+# the final results will be calculated and displayed
 def stopPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+
+    # check to make sure the owner stopped the poll
+    if request.user != question.question_owner:
+        return HttpResponseRedirect(reverse('polls:index'))    
+    
     # set the status to stop
     question.status = 3
     # get winner or allocation, and save it
@@ -204,6 +220,7 @@ def stopPoll(request, question_id):
     elif question.question_type == 2: #allocation
         allocation(question)
     question.save()
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def getPollWinner(question):

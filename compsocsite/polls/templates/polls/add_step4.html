@@ -1,12 +1,15 @@
 {% extends 'polls/base.html' %}
 
-{% block content %}
+{% block extra_head %}
 <style>
     p.sameline{
         display:inline-block;
     }
 </style>
+{% endblock %}
 
+{% block content %}
+{% if question.question_owner == request.user %}
 <div class="col-md-10 col-md-offset-1">
     <h2  align="center">Create a New Poll</h2>
     <br/>
@@ -77,4 +80,5 @@
         </form>
     </div>
 </div>
+{% endif %}
 {% endblock %}

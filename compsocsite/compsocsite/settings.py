@@ -145,3 +145,7 @@ STATICFILES_DIRS = (
     '/static/',
     os.path.join(os.path.abspath(BASE_DIR), 'static'),
 )
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

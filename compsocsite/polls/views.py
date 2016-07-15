@@ -11,6 +11,7 @@ from .models import *
 from django.utils import timezone
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.contrib import messages
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
@@ -382,11 +383,15 @@ def getAllocMethods():
 def parseWmg(latest_responses):
     pollProfile = getPollProfile(latest_responses)
     if pollProfile == None:
-        return []
+        return ([], [])
    
     #make sure no ties or incomplete results are in the votes
     if pollProfile.getElecType() != "soc":
-        return []  
+        return ([], [])  
+
+    # make sure there's at least one response
+    if len(latest_responses) == 0:
+        return ([], [])
         
     # get nodes (the options)
     candMap = getCandidateMap(latest_responses[0])
@@ -747,7 +752,10 @@ def vote(request, question_id):
     old_winner = OldWinner(question=question, response=response)
     old_winner.save()
 
-    return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))
+    # notify the user that the vote has been updated
+    messages.success(request, 'Your preferences have been updated.')
+
+    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 
 def dependencyRedirect(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -807,4 +815,8 @@ def assignPreference(request, combination_id):
             d[item] = rank
         d.save()
         item_num += 1
-    return HttpResponseRedirect(reverse('polls:confirmation', args=(question.id,)))
+        
+    # notify the user that the vote has been updated
+    messages.success(request, 'Your preferences have been updated.')        
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

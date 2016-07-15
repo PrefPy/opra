@@ -14,6 +14,24 @@
 
 {% block content %}
 
+{% if error_message %}
+<p>
+	<strong>{{ error_message }}</strong>
+</p>
+{% endif %}
+
+<p>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+        {{ message }}  <a href="{% url 'polls:regular_polls'%}">Return home</a>
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+</p>
+
 {% if question.status == 2 %}
 <div class="grid">
 	<div class="row">
@@ -50,11 +68,6 @@
 		</div>
 	</div>
 </div>
-
-{% if error_message %}
-<p>
-	<strong>{{ error_message }}</strong>
-</p>{% endif %}
 
 <div class="row">
 	<form action="{% url 'polls:vote' question.id %}" method="post">

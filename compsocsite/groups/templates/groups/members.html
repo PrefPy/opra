@@ -19,7 +19,7 @@
 <div class="col-md-6">
     <form action="{% url 'groups:addmember' group.id %}" method="post">
         {% csrf_token %}
-        <select id="newmembers" name="newmembers" class="form-control" multiple>
+        <select id="newmembers" name="newmembers" class="form-control multiple-select" multiple>
         {% for user in users %}
             {% if user not in group.members.all %}
                  <option value="{{ user.username }}">{{ user.username }}</option>

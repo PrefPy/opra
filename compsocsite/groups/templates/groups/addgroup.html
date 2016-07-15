@@ -10,12 +10,14 @@
         <input type="text" name="groupName" class="form-control" value="" size="100" autofocus/>
         <br />
         
-        <label for="groupName">Select members by username: </label> <br />
-        <select name="voters" class="form-control" multiple>
+        <fieldset>
+        <label for="groupName">Search members by username: </label> <br />
+        <select name="voters" class="form-control multiple-select" multiple>
         {% for user in users %}
             <option value="{{ user.username }}">{{ user.username }}</option>
         {% endfor %}
         </select>
+        </fieldset>
         <br />
         
         <input type="submit" value="Submit" class="btn btn-primary">

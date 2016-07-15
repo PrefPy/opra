@@ -44,6 +44,24 @@ def switchEmail(x, name, uname, creator, request, question_id):
                 + ' to view the decision.\n\nSincerely,\nOPRAH Staff',
     }.get(x, x)
 
+def switchHTML(x, name, uname, creator, request, question_id):
+    return {
+        'invite': '<h1>Hello ' + name + ',</h1><p>' + creator
+                + ' has invited you to vote on a poll. Please login <a href=\''
+                + request.build_absolute_uri(reverse('appauth:login')+'?name='+uname)
+                + '\'>here</a> to check it out.</p><p>Sincerely,</p><p>OPRAH Staff</p>',
+        'remove': 'Hello ' + name + ',\n\n' + creator
+                + ' has deleted you from a poll.\n\nSincerely,\nOPRAH Staff',
+        'start': 'Hello ' + name + ',\n\n' + creator
+                + ' has started a poll. It is now available to vote on at '
+                + request.build_absolute_uri(reverse('polls:detail', args=[question_id]))
+                + ' \n\nSincerely,\nOPRAH Staff',
+        'stop': 'Hello ' + name + ',\n\n' + creator
+                + ' has ended a poll. Please visit '
+                + request.build_absolute_uri(reverse('polls:index'))
+                + ' to view the decision.\n\nSincerely,\nOPRAH Staff',
+    }.get(x, x)
+
 #function to send email
 def sendEmail(request, question_id, type):
     question = get_object_or_404(Question, pk=question_id)
@@ -66,7 +84,8 @@ def sendEmail(request, question_id, type):
             name = voter.first_name + " " + voter.last_name
         mail.send_mail(switchSubject(type, title, creator),
             switchEmail(type, name, uname, creator, request, question_id),
-            'oprahprogramtest@gmail.com',[voter.email])
+            'oprahprogramtest@gmail.com',[voter.email],
+            html_message=switchHTML(type, name, uname, creator, request, question_id))
 
 def emailSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

@@ -22,7 +22,7 @@
     <b>Add Voter: </b>
     <form action="{% url 'polls:addvoter' question.id %}" method="post">
         {% csrf_token %}
-        <select name="voters" class="form-control" multiple>
+        <select name="voters" class="form-control multiple-select" multiple>
             {% for user in users %}
                 {% if user not in question.question_voters.all %}
                     <option value="{{ user.username }}">{{ user.username }}</option>
@@ -34,13 +34,13 @@
         <input type="checkbox" name="email" id="email1" value="email" {% if question.emailInvite == True %} checked {% endif %}>
         <br />
         <input type="submit" class="btn btn-success" value="Invite">
-    </form>      
+    </form>     
 </div>
 <div class="col-md-4">
     <b>Add Group: </b>
     <form action="{% url 'groups:addgroupvoters' question.id %}" method="post">
         {% csrf_token %}
-        <select name="groups" class="form-control" multiple>
+        <select name="groups" class="form-control multiple-select" multiple>
             {% for group in groups %}
                 {% if group.owner == request.user %}
                     <option value="{{ group.name }}">{{group.name}}</option>

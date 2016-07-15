@@ -1,4 +1,48 @@
 {% extends 'polls/base.html' %}
+
+{% block extra_head %}
+  <style type="text/css">
+    #mynetwork {
+      width: 600px;
+      height: 600px;
+      border: 1px solid lightgray;
+    }
+  </style>
+
+  <script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
+  <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
+
+  <script type="text/javascript">
+    var nodes = null;
+    var edges = null;
+    var network = null;
+
+    function draw() {
+        // create nodes
+        nodes = []
+        {% for row in wmg_nodes %}
+            nodes.push({id : {{ row.id }}, label: '{{ row.label }}' });
+        {% endfor %}
+
+        // create connections between nodes
+        edges = []
+        {% for row in wmg_edges %}
+            edges.push({from : {{ row.from }}, to: {{ row.to }}, title: '{{ row.title }}', arrows:'to' });
+        {% endfor %}
+
+      // Instantiate our network object.
+      var container = document.getElementById('mynetwork');
+      var data = {
+        nodes: nodes,
+        edges: edges
+      };
+      var options = {};
+      network = new vis.Network(container, data, options);
+    }
+    window.onload = draw;
+</script>
+{% endblock %}
+
 {% load poll_extra %}
 
 {% block content %}
@@ -6,7 +50,7 @@
         <h1>{{ question.question_text }}</h1>
 
         {% if cand_map and question.status == 3 or question.display_pref == 0 %}
-        {% if question.question_owner == request.user or question.display_pref <= 1 %}
+        {% if question.question_owner == request.user or question.display_pref <= 1 %}                                                                    
         <div class="panel panel-default">
             <!-- Default panel contents -->
             <div class="panel-heading">Poll Results</div>
@@ -89,6 +133,12 @@
                     {% endfor %}
                 </table>
                 {% endfor %}
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Weighted Majority Graph</div>
+            <div class="panel-body">
+                <div id="mynetwork"></div>
             </div>
         </div>
         {% endif %}

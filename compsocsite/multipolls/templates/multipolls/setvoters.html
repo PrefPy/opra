@@ -57,7 +57,7 @@
     <b>Add Voter: </b>
     <form action="{% url 'multipolls:addvoter' multipoll.id %}" method="post">
         {% csrf_token %}
-        <select name="voters" class="form-control" multiple>
+        <select name="voters" class="form-control multiple-select" multiple>
         {% for user in users %}
             {% if user not in multipoll.voters.all %}
                  <option value="{{ user.username }}">{{ user.username }}</option>
@@ -75,7 +75,7 @@
         <b>Add Group: </b>
         <form action="{% url 'groups:addgroupvoterstompoll' multipoll.id %}" method="post">
             {% csrf_token %}
-            <select name="groups" class="form-control" multiple>
+            <select name="groups" class="form-control multiple-select" multiple>
                 {% for group in groups %}
                     {% if group.owner == request.user %}
                         <option value="{{group.name}}">{{group.name}}</option>

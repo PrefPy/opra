@@ -2,28 +2,37 @@
 {% block content %}
 
 <br/>
-<!-- The M-poll tab included in index2 --->
+<!-- The M-poll tab included in index2 -->
 <div class="container">
     
- <div name="created" class="panel panel-default">
-     <div class="panel-body">
+<div name="created" class="panel panel-default">
+    <div class="panel-body">
         <table style = "width:100%;border-collapse:collapse;" class="table" name="created">
-            <thead><tr><th>
-		   Multi-polls created by you		
-			<a href="{% url 'multipolls:AddStep1' %}" style='font-size:60%; float:right;' class="btn btn-yellow"> <span class="glyphicon glyphicon-plus"></span></a>
-            </th></tr></thead>
-				{% if multipolls %}
-				{% for mpoll in multipolls %}
-				{% if request.user == mpoll.owner %}
+            <thead>
+                <tr>
+                    <th>
+                        Multi-polls created by you		
+                        <a href="{% url 'multipolls:AddStep1' %}" style='font-size:60%; float:right;' class="btn btn-yellow"> 
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+
+            {% for mpoll in multipolls_created %}
             <!-- M-polls' names-->
             <tbody>
                 <tr style = "margin:0; padding:0" data-toggle="collapse" data-target="#{{ mpoll.id }}" class="accordion-toggle">
-                    <td><h4 href="#collapse{{ forloop.counter }}" style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;">{{ mpoll.title }} <span class="caret" style="color:#377BB5;"></span></h4></td>
+                    <td>
+                        <h4 href="#collapse{{ forloop.counter }}" style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;">
+                            {{ mpoll.title }} <span class="caret" style="color:#377BB5;"></span>
+                        </h4>
+                    </td>
                     {% if mpoll.status == 0 %}
                     <td>
-                    <div class="start-icon">
-                    <i class="fa fa-play" aria-hidden="true" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}"></i>
-                    </div>    
+                        <div class="start-icon">
+                            <i class="fa fa-play" aria-hidden="true" data-toggle="modal" data-target="#confirm-startmpoll{{ mpoll.id }}"></i>
+                        </div>    
                     </td>
                     <td>  
                     <div class="modal fade" id="confirm-startmpoll{{ mpoll.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -37,9 +46,10 @@
                                 </div>
                                 <div class="modal-footer">
                                     <a href="{% url 'multipolls:start' mpoll.id %}">
-                                    <button type="button" class="btn-large btn-success btn-ok">
-                                        Yes
-                                    </button> </a>
+                                        <button type="button" class="btn-large btn-success btn-ok">
+                                            Yes
+                                        </button> 
+                                    </a>
                                     <button type="button" class="btn-large btn-default" data-dismiss="modal">
                                         Cancel
                                     </button>
@@ -49,115 +59,132 @@
                     </div>
                     </td>
                     {% elif mpoll.status != mpoll.number|add:"1" %}
-                    <td><a href="{% url 'multipolls:progress' mpoll.id %}"> <span class="btn btn-primary" style = "float:right">Progress</span> </a></td>
+                        <td>
+                            <a href="{% url 'multipolls:progress' mpoll.id %}"> 
+                                <span class="btn btn-primary" style = "float:right">Progress</span> 
+                            </a>
+                        </td>
                     {% endif %}
                 </tr>
                 <tr>
-                    <td colspan="12" class="hiddenRow"><div class="accordian-body collapse" id="{{ mpoll.id }}"> 
+                    <td colspan="12" class="hiddenRow">
+                        <div class="accordian-body collapse" id="{{ mpoll.id }}"> 
                         <table class="table table-hover" id="{{ mpoll.id }}">
 							{% for question in mpoll.questions.all %}
 								<tr class="info" >
-									<td><a href="{% url 'polls:pollinfo' question.id %}"> <span style = "font-size: 100%;">{{ question.question_text }} </span></a></td>
+									<td>
+                                        <a href="{% url 'polls:pollinfo' question.id %}"> 
+                                            <span style = "font-size: 100%;">{{ question.question_text }} </span>
+                                        </a>
+                                    </td>
 
-									<td style="float:middle;"> {% if question.status == 2 %} <a href="{% url 'polls:dependency' question.id %}" class ="btn btn-dark" style='float:middle;font-size=60%;'>Vote</a> {% endif %} </td>
+									<td style="float:middle;"> 
+                                        {% if question.status == 2 %} 
+                                            <a href="{% url 'polls:dependency' question.id %}" class ="btn btn-dark" style='float:middle;font-size=60%;'>Vote</a> 
+                                        {% endif %} 
+                                    </td>
 									<td>
                                     {% if question.status == 1 %}
-									Poll not started
+									   Poll not started
 									{% elif question.status == 2 %}
-									Polling in session
+									   Polling in session
 									{% elif question.status == 3 and question.display_pref == 1 and question.question_type == 1 %}
-
-									winner is <a href="{% url 'polls:voteresults' question.id %}">{{question.winner}}</a> 
+									   Winner is <a href="{% url 'polls:voteresults' question.id %}">{{question.winner}}</a> 
 									{% elif question.status == 3 and question.display_pref != 1 and question.question_type == 1 %}
-									winner is  {{question.winner}}
-									
-									
-                                        {% elif question.question_type == 2 %}
-                                            <a href="{% url 'polls:allocate_results' question.id %}" > Allocation Complete:
+									   Winner is  {{question.winner}}
+                                    {% elif question.question_type == 2 %}
+                                        <a href="{% url 'polls:allocate_results' question.id %}" > 
+                                            Allocation Complete:
                                             <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
-                                            </a>   <br />
-                                            {% for response in question.response_set.all %}
-                                                {{ response.user.username }}: {{ response.allocation.item_text }} 
-                                                <br />
-                                            {% endfor %}
-                                            
-
-									{% endif %} </td>
+                                        </a>   
+                                        <br />
+                                        {% for response in question.response_set.all %}
+                                            {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                            <br />
+                                        {% endfor %}
+									{% endif %} 
+                                    </td>
 								</tr>
 							
 							{% endfor %}
-                                </table>
+                        </table>
                         </div>
                     </td>
                 </tr>
-            </tbody>
-					
-						<!-- for each question in one m-poll-->
-                            
-							
-	
-				{%endif%}
-				{% endfor %} <!--end for mpoll in multipolls-->
-			{% endif %}
-
-            </table>
-<!-- end for M-polls created by you-->
+            </tbody><!-- for each question in one m-poll-->             
+            {% endfor %} <!--end for mpoll in multipolls-->
+        </table>
+    <!-- end for M-polls created by you-->
      </div>
-    </div>
+</div>
+    
 <!--The M-poll participated tab included in index2-->
-  
 <div name="participated" class="panel panel-default">
     <div class="panel-body">
     
     <table style = "width:100%;" class="table" name="participated">
-            <thead><tr><th>
-		      Multi-polls participated in		
-            </th></tr></thead>
-		{% if multipolls %}
-				{% for mpoll in multipolls %}
-				{% if request.user != mpoll.owner and request.user in mpoll.voters.all %}
-				
-                    <tr><td>{{ mpoll.title }}</td></tr>
-
-
-                {% for question in mpoll.questions.all %}
-                <tr><td><a href="{% url 'polls:pollinfo' question.id %}"> <span style = "font-size: 100%;">{{ question.question_text }} </span></a></td>
-
-                    <td style="float:middle;"> {% if question.status == 2 %} <a href="{% url 'polls:dependency' question.id %}" class ="btn btn-dark" style='float:middle'>Vote</a> {% endif %} </td>
-                    <td>{% if question.status == 1 %}
-                    Poll not started
-                    {% elif question.status == 2 %}
-                    Polling in session
-                    {% elif question.status == 3 and question.display_pref == 1 and question.question_type == 1 %}
-
-                    winner is <a href="{% url 'polls:voteresults' question.id %}">{{question.winner}}</a> 
-                    {% elif question.status == 3 and question.display_pref != 1 and question.question_type == 1 %}
-                    winner is  {{question.winner}}
-
-
-                        {% elif question.question_type == 2 %}
-                            <a href="{% url 'polls:allocate_results' question.id %}" > Allocation Complete:
-                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
-                            </a>   <br />
-                            {% for response in question.response_set.all %}
-                                {{ response.user.username }}: {{ response.allocation.item_text }} 
-                                <br />
-                            {% endfor %}
-
-
-                    {% endif %} </td>
-                </tr>
-
-            {% endfor %}
-            </table>
-
-				{%endif%}
-				{% endfor %}
-		
-			{% endif %}	
-
-</div>
+        <thead>
+            <tr>
+                <th>
+                    Multi-polls participated in		
+                </th>
+            </tr>
+        </thead>
+        {% for mpoll in multipolls_participated %}
+        <tbody>
+            <tr data-toggle="collapse" data-target="#{{ mpoll.id }}" class="accordion-toggle"> 
+                <td>
+                    <h4 href="#collapse{{ forloop.counter }}" style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;">
+                        {{ mpoll.title }} <span class="caret" style="color:#377BB5;"></span>
+                    </h4>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="12" class="hiddenRow">
+                    <div class="accordian-body collapse" id="{{ mpoll.id }}"> 
+                    <table class="table table-hover" id="{{ mpoll.id }}">
+                        {% for question in mpoll.questions.all %}
+                            <tr class="info">
+                                <td>
+                                    <a href="{% url 'polls:pollinfo' question.id %}"> <span style = "font-size: 100%;">{{ question.question_text }} </span></a>
+                                </td>
+                                <td style="float:middle;"> 
+                                    {% if question.status == 2 %} 
+                                        <a href="{% url 'polls:dependency' question.id %}" class ="btn btn-dark" style='float:middle'>Vote</a> 
+                                    {% endif %} 
+                                </td>
+                                <td>
+                                    {% if question.status == 1 %}
+                                        Poll not started
+                                    {% elif question.status == 2 %}
+                                        Polling in session
+                                    {% elif question.status == 3 and question.display_pref == 1 and question.question_type == 1 %}
+                                        Winner is <a href="{% url 'polls:voteresults' question.id %}">{{question.winner}}</a> 
+                                    {% elif question.status == 3 and question.display_pref != 1 and question.question_type == 1 %}
+                                        Winner is  {{question.winner}}
+                                    {% elif question.question_type == 2 %}
+                                        <a href="{% url 'polls:allocate_results' question.id %}" > Allocation Complete:
+                                            <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                        </a>  
+                                        <br />
+                                        {% for response in question.response_set.all %}
+                                            {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                            <br />
+                                        {% endfor %}
+                                    {% endif %} 
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>			
     </div>
+</div>
+
 </div><!--end of contanier-->
 {% endblock %}
 	

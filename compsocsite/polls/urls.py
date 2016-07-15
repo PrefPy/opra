@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^delete/([0-9]+)/$', views.deletePoll, name='delpoll'),
     url(r'^(?P<question_id>[0-9]+)/addvoter/$', views.addVoter, name='addvoter'),
     url(r'^(?P<question_id>[0-9]+)/delvoter/$', views.removeVoter, name='delvoter'),
+    url(r'^quit/([0-9]+)/$', views.quitPoll, name='quitpoll'),
     
     #Setting created poll
     

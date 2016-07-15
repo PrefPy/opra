@@ -131,9 +131,11 @@ img:hover{
             <li><a data-toggle="tab" href="#emailsetting">Email</a></li>
             <li><a data-toggle="tab" href="#historyinfo">History</a></li>
             <li><a data-toggle="tab" href="#delete">Delete</a></li>
+            
         {% else %}  
         <li class="active"><a data-toggle="tab" href="#general">General Info</a></li>
         <li><a data-toggle="tab" href="#historyinfo">History</a></li>
+        <li><a data-toggle="tab" href="#quit">Quit</a></li>
         {% endif %}
         
     </ul>  
@@ -273,8 +275,38 @@ img:hover{
     </div>
 </div>
 </div>
+    
 {% else %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="quit">
+    <h3 class="page-header">Quit {{ question.question_text }} </h3>
+    <div class="panel panel-danger">
+    <div class="panel-heading">Danger Zone</div>
+    <div class="panel-body" align="center">
+        <p>
+            Make sure you are very certain before you make a decision. Once you quit the poll, it cannot be recovered.<br /><br/>
+            <span class="btn btn-danger" data-toggle="modal" data-target="#confirm-quit"><span class="glyphicon glyphicon-trash"></span> Quit this poll</span>
+        </p>
 
+        <div class="modal fade" id="confirm-quit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Confirm Quit Poll
+                    </div>
+                    <div class="modal-body">
+                        Are you absolutely sure you want to quit this poll? All voting information, settings, etc. will be erased permanently. 
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-danger btn-ok" href="{% url 'polls:quitpoll' question.id %}">Yes</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+    
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="general">
               <h3 class="page-header">General info of {{ question.question_text }} </h3>
 
@@ -328,6 +360,8 @@ img:hover{
               {% endif %}     
             </div>
             {% endif %}  
+                  
+                  
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo">
       <h3 class="page-header">History votes of {{ question.question_text }} </h3>
         <!-- Display most recent vote -->

@@ -3,8 +3,8 @@
 {% block extra_head %}
   <style type="text/css">
     #mynetwork {
-      width: 600px;
-      height: 600px;
+      width: 400px;
+      height: 400px;
       border: 1px solid lightgray;
     }
   </style>
@@ -94,9 +94,21 @@
                         </tr>
                     {% endfor %}
                 </table>
-                <h1>Previous Winners</h1>
+            </div>
+        </div>
+    
+        <!-- Panel for previous winners (closed by default) -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#collapse_pw">
+                       Previous Winners <span class="caret" style="color:#377BB5;"></span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse_pw" class="panel-body collapse">
                 {% for pw in previous_winners %}
-            <div class="panel-heading">{{ pw.title }}</div>
+                <div class="panel-heading">{{ pw.title }}</div>
                 <table class="table">
                     <tr>
                         <th>Poll Mechanism</th>
@@ -135,9 +147,17 @@
                 {% endfor %}
             </div>
         </div>
+
+        <!-- Panel for weighted majority graph (closed by default) -->
         <div class="panel panel-default">
-            <div class="panel-heading">Weighted Majority Graph</div>
-            <div class="panel-body">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#collapse_wmg">
+                        Weighted Majority Graph <span class="caret" style="color:#377BB5;"></span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse_wmg" class="panel-body collapse">
                 <div id="mynetwork"></div>
             </div>
         </div>

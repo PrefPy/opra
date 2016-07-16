@@ -305,6 +305,12 @@ class DetailView(generic.DetailView):
 class DependencyView(generic.DetailView):
     model = Question
     template_name = 'polls/dependency.html'
+    def get_context_data(self,**kwargs):
+        ctx = super(DependencyView, self).get_context_data(**kwargs)    
+        # there should only be one combination at most
+        combination = Combination.objects.filter(target_question=self.object, user=self.request.user)
+        ctx['prevCombination'] = combination[0] if (len(combination) > 0) else None
+        return ctx
     
 class DependencyDetailView(generic.DetailView):
     model = Combination
@@ -815,8 +821,13 @@ def chooseDependency(request, question_id):
     for poll in l:
         i = int(poll)
         dependencies.append(poll)
-    combination = Combination(target_question=question, user=request.user)
+        
+    # use a single combination object
+    combination, created = Combination.objects.get_or_create(target_question=question, user=request.user)
+    if created == False:
+        combination.dependent_questions.clear()
     combination.save()
+ 
     if len(dependencies) > 0:
         for poll in dependencies:
             combination.dependent_questions.add(poll)

@@ -1,17 +1,12 @@
 {% extends 'polls/base.html' %}
 
-{% block extra_head %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
-{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
   <ol class="breadcrumb">
-  <li><a href="#">Multi-Poll</a></li>
-  <li><a href="#">{{question.multipoll_set.all.0.title}}</a></li>
-  <li class="active"> {{question.question_text}}</li> 
+  <li>Multi-Poll</li>
+  <li>{{ question.multipoll_set.all.0.title }}</li>
+  <li class="active"> {{ question.question_text }}</li> 
   </ol>
     <form method="post" action="{% url 'polls:choosedependency' question.id %}" style="font-size:100%">
         {% csrf_token %}
@@ -26,8 +21,15 @@
 
             <li class="list-group-item">
                 <div class="checkbox" align="center">
-                <label for="{{poll.id}}" data-toggle="tooltip" data-placement="right" title="More info about {{poll.question_text}}: Help users to choose if has may possibile dependencies"> {{poll.question_text}} </label>
-                    <input type="radio" name="polls" value="{{poll.id}}" id="{{poll.id}}">
+                    {% if prevCombination %}
+                        <input type="checkbox" name="polls" value="{{poll.id}}" id="{{poll.id}}" class="pull-right" {% if poll in prevCombination.dependent_questions.all %} checked="checked" {% endif %}>
+                    {% else %}
+                        <input type="checkbox" name="polls" value="{{poll.id}}" id="{{poll.id}}">
+                    {% endif %}
+                    
+                    <label  for="{{poll.id}}" data-toggle="tooltip" data-placement="right" title="More info about {{poll.question_text}}: Help users choose possibile dependencies">      
+                        {{ poll.question_text }} 
+                    </label>
                 </div>  
             </li>
         
@@ -36,7 +38,7 @@
                 
             {% endif %}
         {% endfor%}
-        </ul></br>
+        </ul><br />
 
 
         <div align="center" style='font-size:100%'>

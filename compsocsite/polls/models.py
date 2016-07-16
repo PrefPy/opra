@@ -74,9 +74,10 @@ class OldWinner(models.Model):
     def __str__(self):
         return (str(self.response.timestamp.time()))
 
+# a poll can have multiple dependent polls (must be part of the same multipoll)
 class Combination(models.Model):
     target_question = models.ForeignKey(Question)
-    dependent_questions = models.ManyToManyField(Question,related_name="dependent_questions")
+    dependent_questions = models.ManyToManyField(Question, related_name="dependent_questions")
     user = models.ForeignKey(User)
     dependencies = models.ManyToManyField(Item)
     response = models.OneToOneField(Response,null=True, blank=True)

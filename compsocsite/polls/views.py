@@ -61,13 +61,14 @@ class MultiPollsView(generic.ListView):
         ctx['multipolls_participated'] = reverseListOrder(self.request.user.multipoll_participated.exclude(owner = self.request.user))
         return ctx
 
+# guest homepage view
 class MainView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
         
-#the first step of creating new vote
+# step 1: the intial question object will be created. 
 def AddStep1View(request):
     context = RequestContext(request)
     if request.method == 'POST':
@@ -90,6 +91,7 @@ def AddStep1View(request):
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
     return render_to_response('polls/add_step1.html', {}, context)
 
+# step 2: the owner adds choices to a poll
 class AddStep2View(generic.DetailView):
     model = Question
     template_name = 'polls/add_step2.html'
@@ -103,6 +105,7 @@ class AddStep2View(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+# step 3: the owner invites voters and groups to a poll
 class AddStep3View(generic.DetailView):
     model = Question
     template_name = 'polls/add_step3.html'
@@ -116,7 +119,8 @@ class AddStep3View(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
-    
+
+# step 4: the owner selects the type of poll and other settings    
 class AddStep4View(generic.DetailView):
     model = Question
     template_name = 'polls/add_step4.html'
@@ -125,7 +129,7 @@ class AddStep4View(generic.DetailView):
         ctx['preference'] = self.request.user.userprofile.displayPref
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()
-        ctx['view_preferences'] = ["Everyone can see all votes at all times", "Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
+        ctx['view_preferences'] = getViewPreferences()
         return ctx
     def get_queryset(self):
         """
@@ -133,29 +137,40 @@ class AddStep4View(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+# Add a single choice to a poll.
+# - A choice must contain text
+# - No duplicate choices (text can't be the same) 
+# - The user can add an image to the choice, but images are optional
 def addChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     item_text = request.POST['choice']
     imageURL = request.POST['imageURL']
+    
     #check for empty strings
     if item_text == "":
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     # check for duplicates
     allChoices = question.item_set.all()
     for choice in allChoices:
         if item_text == choice.item_text:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
     # create the choice
     item = Item(question=question, item_text=item_text)
+    
     # if the user uploaded an image or set a URL, add it to the item
     if request.FILES.get('docfile') != None:
         item.image = request.FILES.get('docfile')
     elif imageURL != '':
         item.imageURL = imageURL 
+    
     # save the choice
     item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# remove a choice from the poll. 
+# deleting choices should only be done before the poll starts
 def deleteChoice(request, choice_id):
     item = get_object_or_404(Item, pk=choice_id)
     item.delete()
@@ -172,13 +187,15 @@ def deletePoll(request, question_id):
     question.delete()
     return HttpResponseRedirect(reverse('polls:index'))
 
+# the voter can opt out of a poll at any time 
 def quitPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    email = request.user.email
-    question.emailDelete = email
-    question.save()
-    if email:
-        sendEmail(request, question_id, 'remove')   
+    
+    # notify the user if this option is checked
+    if request.user.userprofile.emailDelete:
+        sendEmail(request, question_id, 'remove')
+        
+    # remove from the voter list
     question.question_voters.remove(request.user)
     question.save()
 
@@ -223,6 +240,7 @@ def stopPoll(request, question_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# find the winner(s) using the polling algorithm selected earlier 
 def getPollWinner(question):
     all_responses = question.response_set.reverse()
     if len(all_responses) == 0:
@@ -395,6 +413,10 @@ def getListPollAlgorithms():
 # get a list of allocation methods
 def getAllocMethods():
     return ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
+
+# get a list of visibility settings
+def getViewPreferences():
+    return ["Everyone can see all votes at all times", "Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
 
 # build a graph of nodes and edges from a 2d dictionary
 def parseWmg(latest_responses):
@@ -656,7 +678,8 @@ def getRecommendedOrder(otherUserResponses, request):
     print(final_list)
     return final_list    
  
-#function to add voter to voter list (invite only)
+# function to add voter to voter list (invite only)
+# can invite new voters at any time
 def addVoter(request, question_id):
     question    = get_object_or_404(Question, pk=question_id)
     creator_obj = User.objects.get(id=question.question_owner_id)
@@ -674,7 +697,8 @@ def addVoter(request, question_id):
         question.question_voters.add(voterObj.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-#remove voters from the list
+# remove voters from a poll.
+# should only be done before a poll starts
 def removeVoter(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     
@@ -704,6 +728,8 @@ def setAlgorithm(request, question_id):
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# set the visibility settings, how much information should be shown to the user
+# options range from showing everything (most visibility) to showing only the user's vote (least visibility)
 def setVisibility(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     displayChoice = request.POST['viewpreferences']
@@ -781,6 +807,7 @@ def dependencyRedirect(request, question_id):
     else:
         return HttpResponseRedirect(reverse('polls:dependencyview', args=(question.id,)))
 
+# chose a dependent poll
 def chooseDependency(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     dependencies = []
@@ -795,7 +822,8 @@ def chooseDependency(request, question_id):
             combination.dependent_questions.add(poll)
             combination.save()
     return HttpResponseRedirect(reverse('polls:dependencydetail', args=(combination.id,)))
-    
+
+# take previous polls into account as well as the current poll    
 def assignPreference(request, combination_id):
     combination = get_object_or_404(Combination, pk=combination_id)
     question = get_object_or_404(Question, pk=combination.target_question.id)

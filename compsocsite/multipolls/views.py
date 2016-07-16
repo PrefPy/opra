@@ -86,16 +86,17 @@ class SetVotersView(generic.DetailView):
         ctx['groups'] = Group.objects.all()
         return ctx
         
-
-
 def setQuestion(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
     questionString = request.POST['questionTitle']   
     questionDesc = request.POST['desc']
-    imageURL = request.POST['image']
+    imageURL = request.POST['imageURL']
+    
     question = multipoll.questions.all()[multipoll.pos]
     question.question_text = questionString
     question.question_desc = questionDesc
+    if request.FILES.get('docfile') != None:
+        question.image = request.FILES.get('docfile')    
     if imageURL != '':
         question.imageURL = imageURL
     question.save()

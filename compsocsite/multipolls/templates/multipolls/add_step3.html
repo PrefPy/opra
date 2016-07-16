@@ -39,45 +39,9 @@
         </div>
     </div>
     <br/>
-    <ul class="list-group">
-    {% for item in items %}
-        {% if item.question == question %}
-            <li class="list-group-item ">
-                {% if item.image %}
-                    <img src='/static/items/{{ item.image.url }}'/>
-                {% endif %}
-                {{ item }}
-                {% if question.status == 1 %}
-                <a href="{% url 'polls:delchoice' item.id %}">
-                    <div class="pull-right">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </div>
-                </a>
-                {% endif %}
-            </li>
-        {% endif %}
-    {% endfor %}
-        <li  class="list-group-item">
-            <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <div class="col-lg-8">
-                <input type="text" class="form-control" name="choice" value="" size="50" placeholder="Option name" autofocus/>
-            </div>
-
-            <div class="col-sm-4">
-                <input type="text" class="form-control" name="imageURL" value="" size="50" placeholder="Paste Image URL"/>
-            </div>
-
-            <label for="image" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
-            <input style="display:none" id="image" type="file" name="docfile" accept="image/*">
-
-            <button type="submit" class="btn btn-primary">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-        </form>
-        </li>
-    </ul>
+    
+    {% include 'polls/_add_choice.html' %}
+    
     <div class="col-md-6 col-md-offset-3" align="center">
         <form action= "/multipolls/{{multipoll.id}}/add_step4/">
             <input type="submit" value="Next" class="btn btn-primary" size="300">

@@ -44,7 +44,7 @@ function validateForm() {
     </div>
     <br/>
 
-    <form id="add_poll" method="post" action="{% url 'multipolls:setquestion' multipoll.id %}" name="add_step2" onsubmit="return validateForm()">
+    <form id="add_poll" method="post" action="{% url 'multipolls:setquestion' multipoll.id %}" name="add_step2" onsubmit="return validateForm()" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="questionTitle">Title:</label> <br />
         <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="20" size="100" autofocus/>
@@ -53,8 +53,11 @@ function validateForm() {
         <label for="desc">Question description:</label> <br />
         <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
         
-        <label for="image">Image:</label> <br />
-        <input type="text" class="form-control" id="image" name="image" value="" />
+        <label for="imageURL">Image:</label> <br />
+        <input type="text" class="form-control input-sm" id="imageURL" name="imageURL" value="" />
+
+        <label for="image" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
+        <input style="display:none" id="image" type="file" name="docfile" accept="image/*">
         <br /><br />
         <div class="col-md-6 col-md-offset-3" align="center">
             <input type="submit" value="Next" class="btn btn-primary" size="300"/>

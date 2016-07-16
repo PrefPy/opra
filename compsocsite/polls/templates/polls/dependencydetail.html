@@ -25,6 +25,31 @@
 {% endif %}
 </p>
 
+<div class="grid">
+	<div class="row">
+		{% if question.imageURL != Null and question.imageURL != '' %}
+		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+			<a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
+		</div>
+		{% elif question.image %}
+		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+			<a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
+		</div>
+		{% endif %}
+		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
+			<h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
+				{{ question.question_text }}:</h3>
+            <small class="text-muted">Created by {{ question.question_owner }}</small>
+			
+			{% if question.question_desc %}
+			<h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
+				{{ question.question_desc }}
+			</h3>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
 <div>
     <form action="{% url 'polls:assignpreference' combination.id %}" method="post">
         {% csrf_token %}

@@ -2,14 +2,49 @@ from polls.models import *
 import operator
 import random
 
+#separate the user votes into two categories: (1)most recent (2)previous history
+def categorizeResponses(all_responses):
+    latest_responses = []
+    previous_responses = []
+    
+    if len(all_responses) > 0:
+        #the first response must be the most recent 
+        latest_responses.append(all_responses[0])   
+    
+    others = all_responses[1:]
+    
+    #the outer loop goes through all the responses
+    for response1 in others:
+        if response1.user == None:
+            continue
+        
+        add = True
+        #check if the user has voted multiple times
+        for response2 in latest_responses:
+            if response1.user.username == response2.user.username:
+                add = False
+                previous_responses.append(response1)
+                break
+
+        #this is the most recent vote
+        if add:
+            latest_responses.append(response1)   
+    
+    return (latest_responses, previous_responses)
+
 # ALLOCATION ALGORITHM FUNCTIONS HERE:
 def allocation(question):
+    # the responses are latest to earliest
+    (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
+
     if question.poll_algorithm == 1:
         #SD early first
-        allocation_serial_dictatorship(question.response_set.all(), early_first = 1)
+        allocation_serial_dictatorship(list(reversed(latest_responses)), early_first = 1)
     elif question.poll_algorithm == 2:
         #SD late first
-        allocation_serial_dictatorship(question.response_set.all(), early_first = 0)
+        allocation_serial_dictatorship(latest_responses, early_first = 0)
+    elif question.poll_algorithm == 3:
+        allocation_random_assignment(latest_responses)
 
 # Serial dictatorship algorithm to allocate items to students for a given question.
 # It takes as an argument the response set to run the algorithm on.
@@ -24,7 +59,6 @@ def allocation_serial_dictatorship(responses, early_first = 1):
     item_set = responses[0].question.item_set.all()
     student_response_order = responses
     
-
     # it's a follow-up question, so run it in reverse order of timestamp from original question
     if responses[0].question.follow_up != None:
         response_set = []
@@ -78,9 +112,9 @@ def allocation_random_assignment(responses):
         items.append(item)
 
     for student_response in student_response_order:
-        index = random.randrange(items.len())
+        index = random.randrange(len(items))
         myitem = items[index]
         student_response.allocation = myitem
         student_response.save()
         items.remove(myitem)
-        return
+    return

@@ -113,8 +113,10 @@
                                 {% elif question.question_type == 2 %}
                                     Allocation Complete: <br />
                                     {% for response in question.response_set.all %}
-                                        {{ response.user.username }}: {{ response.allocation.item_text }} 
-                                        <br />
+                                        {% if response.allocation.item_text %}
+                                            {{ response.user.username }}: {{ response.allocation.item_text }} 
+                                            <br />
+                                        {% endif %}
                                     {% endfor %}
                                     <a href="{% url 'polls:allocate_results' question.id %}" >
                                         <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
@@ -161,23 +163,19 @@
                     <td>In session</td>
                 {% elif question.status == 3 %}
                     <td>
-                        {% if question.display_pref == 1 %}
-                            {% if question.question_type == 1 %}
-                                <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
-                                {{question.winner}} wins
-                            </a> 
-                            {% elif question.question_type == 2 %}
-                                Allocation Complete: <br />
-                                {% for response in question.response_set.all %}
+                        {% if question.question_type == 1 %}
+                            <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
+                            {{question.winner}} wins
+                        </a> 
+                        {% elif question.question_type == 2 %}
+                            Allocation Complete: <br />
+                            {% for response in question.response_set.all %}
+                                {% if response.allocation.item_text %}
                                     {{ response.user.username }}: {{ response.allocation.item_text }} 
                                     <br />
-                                {% endfor %}
-                                <a href="{% url 'polls:allocate_results' question.id %}" >
-                                <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
-                                </a> 
-                            {% endif %}
-                        {% endif %} 
-
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </td>
                 {% endif %}
                 </tr>

@@ -12,9 +12,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 from polls.views import getPollWinner
-from .algorithms import *
-# Create your views here.
-
+from polls.algorithms import *
 
 def AddStep1(request):
     context = RequestContext(request)
@@ -103,7 +101,6 @@ def setQuestion(request, multipoll_id):
     return HttpResponseRedirect('/multipolls/%s/add_step3' % multipoll_id)
  
 def setInitialSettings(request, multipoll_id):
-    
     multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
     question = multipoll.questions.all()[multipoll.pos]
     question.poll_algorithm = request.POST['pollpreferences']
@@ -151,10 +148,11 @@ def start(request, multipoll_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 def progress(request, multipoll_id):
-    multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
-    #poll hasn't started
+    multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
+    #poll in session
     if multipoll.status < multipoll.number:
         question = multipoll.questions.all()[multipoll.status-1]
+        
         #end the previous poll   
         question.status = 3
         if question.question_type == 1: #poll
@@ -164,9 +162,11 @@ def progress(request, multipoll_id):
             print("allocation responses",question.response_set.all())
             allocation(question)
         question.save()
+        
         #move to the next poll
         multipoll.status += 1
         multipoll.save()
+        
         #This part is for checking conditional preferences
         poll = multipoll.questions.all()[multipoll.status-1]
         if poll.question_type == 1:
@@ -194,15 +194,14 @@ def progress(request, multipoll_id):
     #all the polls have ended
     else:
         #end the last poll
-        question = multipoll.questions.all()[multipoll.status-1]
+        question = multipoll.questions.all()[multipoll.status - 1]
         question.status = 3
         if question.question_type == 1: #poll
             question.winner = getPollWinner(question)
         elif question.question_type == 2: #allocation
-            allocation_serial_dictatorship(question.response_set.all())
+            allocation(question)
         question.save()
+        
         multipoll.status += 1
         multipoll.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        
-        

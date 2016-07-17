@@ -114,8 +114,10 @@
                                     Allocation Complete: <br />
                                     
                                     {% for order_item in question.allocationvoter_set.all %}
-                                        {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
-                                        <br />
+                                        {% if order_item.response.allocation %}
+                                            {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
+                                            <br />
+                                        {% endif %}
                                     {% endfor %}
                                 
                                     <a href="{% url 'polls:allocate_results' question.id %}" >
@@ -170,8 +172,10 @@
                         {% elif question.question_type == 2 %}
                             Allocation Complete: <br />
                             {% for order_item in question.allocationvoter_set.all %}
-                                {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
-                                <br />
+                                {% if order_item.response.allocation %}
+                                    {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
+                                    <br />
+                                {% endif %}
                             {% endfor %}
                         {% endif %}
                     </td>

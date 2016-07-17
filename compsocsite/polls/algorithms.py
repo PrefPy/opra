@@ -86,9 +86,14 @@ def allocation_serial_dictatorship(responses, early_first = 1):
 
     # the ordering of students is already set, so this loop only needs to do the allocation one by one
     for user_response in student_response_order:
+        # no more items left to allocate
+        if len(items) == 0:
+            return
+        
         voter, created = AllocationVoter.objects.get_or_create(question=user_response.question, user=user_response.user)
-        if created == True:
-            voter.save()      
+        # save the most recent response
+        voter.response = user_response
+        voter.save()
 
         highest_rank = len(items)
         myitem = items[0]
@@ -115,9 +120,11 @@ def allocation_manual(allocation_order, responses):
     items = []
     response_set = []
 
+    # get a list of choices
     for item in item_set:
         items.append(item)
-        
+    
+    # get the list of responses in the specified order   
     for order_item in allocation_order:
         question = order_item.question
         user = order_item.user
@@ -126,7 +133,12 @@ def allocation_manual(allocation_order, responses):
         order_item.save()
         response_set.append(response)
     
+    # allocate items to responses
     for user_response in response_set:
+        # no more items left to allocate
+        if len(items) == 0:
+            return
+        
         highest_rank = len(items)
         myitem = items[0]
         prefs = user_response.dictionary_set.all()[0]
@@ -141,6 +153,7 @@ def allocation_manual(allocation_order, responses):
         user_response.save()
         items.remove(myitem)
     return
+
 # This is a toy algorithm present for testing certain system functionality. It will simply allocate a random item
 # to each user in the response set.
 def allocation_random_assignment(responses):

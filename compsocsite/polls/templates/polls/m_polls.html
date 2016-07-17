@@ -98,9 +98,11 @@
                                             <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
                                         </a>   
                                         <br />
-                                        {% for response in question.response_set.all %}
-                                            {{ response.user.username }}: {{ response.allocation.item_text }} 
-                                            <br />
+                                        {% for order_item in question.allocationvoter_set.all %}
+                                            {% if order_item.response.allocation %}
+                                                {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
+                                                <br />
+                                            {% endif %}
                                         {% endfor %}
 									{% endif %} 
                                     </td>
@@ -167,9 +169,11 @@
                                             <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
                                         </a>  
                                         <br />
-                                        {% for response in question.response_set.all %}
-                                            {{ response.user.username }}: {{ response.allocation.item_text }} 
-                                            <br />
+                                        {% for order_item in question.allocationvoter_set.all %}
+                                            {% if order_item.response.allocation %}
+                                                {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
+                                                <br />
+                                            {% endif %}
                                         {% endfor %}
                                     {% endif %} 
                                 </td>

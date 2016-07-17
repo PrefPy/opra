@@ -156,7 +156,7 @@ img:hover{
     </div>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="algorithm">
-    <h3 class="page-header">Algorithm for {{ question.question_text }} </h3>
+    <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
         {% if question.status == 1 %}
             <form class="form-group" method="post" action="{% url 'polls:setAlgorithm' question.id %}" align="center">
                 {% csrf_token %}
@@ -184,17 +184,23 @@ img:hover{
             </form>
         {% else %}
             {% if question.question_type == 1 %}
+                <!-- Display the current option -->
                 {% for item in poll_algorithms %}
                     {% if question.poll_algorithm == forloop.counter %}
                         Poll Algorithm:　{{ item }}
                     {% endif %}
                 {% endfor %}
             {% elif question.question_type == 2 %}
+                <!-- Display the current option -->
                 {% for item in alloc_methods %}
                     {% if question.poll_algorithm == forloop.counter %}
                         {{ item }}
                     {% endif %}
                 {% endfor %}
+                <br />
+                {% if question.poll_algorithm == 3 %}    
+                    <a href="{% url 'polls:viewAllocationOrder' question.id %}" class ="btn btn-dark" role="button">Set Allocation Order</a>
+                {% endif %}
             {% endif %}
         {% endif %}
 </div>

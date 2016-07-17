@@ -764,6 +764,64 @@ def setVisibility(request, question_id):
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+class AllocationOrder(generic.DetailView):
+    model = Question
+    template_name = 'polls/allocation_order.html' 
+    def get_context_data(self, **kwargs):
+        ctx = super(AllocationOrder, self).get_context_data(**kwargs)
+        currentAllocationOrder = self.object.allocationvoter_set.all()
+        print currentAllocationOrder
+        tempOrderStr = self.request.GET.get('order', '')
+        if tempOrderStr == "null":
+            ctx['question_voters'] = self.object.question_voters.all()
+            return ctx
+        
+        # check if the user submitted a vote earlier and display that for modification
+        if len(currentAllocationOrder) > 0:
+            ctx['currentSelection'] = currentAllocationOrder
+
+        ctx['question_voters'] = self.object.question_voters.all()
+        return ctx    
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
+# manually set the allocation order of voters
+def setAllocationOrder(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    # get the voter order
+    orderStr = request.POST["pref_order"]
+    prefOrder = getPrefOrder(orderStr, question)
+    if orderStr == "":
+        # the user must rank all voters
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
+        
+    prefOrder = orderStr.split(",")
+    if len(prefOrder) != len(question.question_voters.all()):
+        # the user must rank all voters
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
+
+    #reset allocation order
+    for voter in question.allocationvoter_set.all():
+        voter.delete()
+
+    # find ranking student gave for each item under the question
+    item_num = 1
+    for item in question.question_voters.all():
+        arrayIndex = prefOrder.index("item" + str(item_num))
+        if arrayIndex != -1:
+            user = question.question_voters.all()[arrayIndex]
+            # add pref to list
+            voter, created = AllocationVoter.objects.get_or_create(question=question, user=user, response=None)
+            voter.save()  
+
+        item_num += 1    
+    
+    return HttpResponseRedirect(reverse('polls:viewAllocationOrder', args=(question.id,)))
+
 #function to get preference order from a string 
 def getPrefOrder(orderStr, question):
     # empty string

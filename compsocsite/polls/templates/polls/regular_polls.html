@@ -112,12 +112,12 @@
                                     </a> 
                                 {% elif question.question_type == 2 %}
                                     Allocation Complete: <br />
-                                    {% for response in question.response_set.all %}
-                                        {% if response.allocation.item_text %}
-                                            {{ response.user.username }}: {{ response.allocation.item_text }} 
-                                            <br />
-                                        {% endif %}
+                                    
+                                    {% for order_item in question.allocationvoter_set.all %}
+                                        {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
+                                        <br />
                                     {% endfor %}
+                                
                                     <a href="{% url 'polls:allocate_results' question.id %}" >
                                         <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
                                     </a> 
@@ -169,11 +169,9 @@
                         </a> 
                         {% elif question.question_type == 2 %}
                             Allocation Complete: <br />
-                            {% for response in question.response_set.all %}
-                                {% if response.allocation.item_text %}
-                                    {{ response.user.username }}: {{ response.allocation.item_text }} 
-                                    <br />
-                                {% endif %}
+                            {% for order_item in question.allocationvoter_set.all %}
+                                {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
+                                <br />
                             {% endfor %}
                         {% endif %}
                     </td>

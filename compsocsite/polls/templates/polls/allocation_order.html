@@ -1,0 +1,133 @@
+{% extends 'polls/base.html' %}
+
+{% block extra_head %}
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src='/static/js/shared.js'></script>
+{% if request.flavour == "mobile" %}
+<script src='/static/js/mobile.js'></script>
+{% else %}
+<script src='/static/js/desktop.js'></script>
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+{% if question.status == 2 %}
+<div class="row">
+	<form action="{% url 'polls:setAllocationOrder' question.id %}" method="post">
+		{% csrf_token %}
+		
+		{% if request.flavour == "mobile" %}
+		<div class="col-md-6 margin-panel-top">
+		{% else %}
+        <div class="col-md-6 margin-panel-top">
+		{% endif %}
+		
+		
+			<div class="panel panel-default panel-border">
+				<div class="panel-heading" >
+					<b>Your preferences:</b>
+				    {% if request.flavour == "mobile" %}
+						<button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+							<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+						</button>
+						
+						<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
+							Submit
+				        </button>	
+				    {% else %}
+							<a href="/polls/{{ question.id }}/allocate/order?order=null" class="btn btn-danger reset-button">Clear</a>
+							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
+				                Submit
+							</button>
+					{% endif %}
+				    <input type="hidden" id="pref_order" name="pref_order" value=""/>
+				</div>
+
+				<div class="panel-body" >
+					<ul id="left-sortable" class="list-group droptrue">
+						{% if currentSelection %}
+                            {% for selection in currentSelection %}
+                                {% for item in question_voters %}
+                                    {% if selection.user == item %}
+                                    <li class="list-group-item"  id="item{{ forloop.counter }}">
+                                        {{ selection.user }}
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+						{% endif %}
+					</ul>
+				</div>
+				
+				{% if request.flavour == "mobile" %}
+					<button onclick="javascript:window.location.href='/polls/{{ question.id }}/allocate/order?order=null'; return false;" class="reset-button-mobile">
+				        <a href="/polls/{{ question.id }}/allocate/order?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+				    </button>		
+				{% endif %}
+			</div>
+		</div>
+
+
+		{% if request.flavour == "mobile" %}
+		<div class="col-md-6 margin-panel-top">
+		{% else %}
+		<div class="col-md-6 margin-panel-top">
+		{% endif %}
+		
+			<div class="panel panel-default panel-border">
+				<div class="panel-heading">
+					<b>Remaining Options:</b>
+					
+					{% if request.flavour == "mobile" %}
+						<button onclick="moveAll(); return false;" class="move-all-button-mobile">
+					<span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>
+				        </button>
+				    {% else %}
+				        <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
+					       Move All
+				        </button>
+					{% endif %}
+				</div>
+				<div class="panel-body">
+					<ul id="right-sortable" class="list-group">
+						{% if currentSelection == None %}
+						{% for item in question_voters %}
+						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ forloop.counter }}">
+							{{ item }}
+						</li>
+						{% endfor %}
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script>
+	var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
+	var wholeHeight2 = $('#right-sortable')[0].scrollHeight;
+	if (wholeHeight1 > wholeHeight2) {
+		$('#right-sortable').css("height", wholeHeight1);
+	} else {
+		$('#left-sortable').css("height", wholeHeight2);
+	}
+	$('#left-sortable').sortable('refresh');
+	$('#right-sortable').sortable('refresh');
+
+</script>
+
+{% elif question.status == 1 %}
+
+<p>This poll has not started yet.</p>
+
+{% else %}
+
+<p>	This poll has ended.</p>
+
+{% endif %}
+
+{% endblock %}

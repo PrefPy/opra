@@ -62,7 +62,7 @@ class Response(models.Model):
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
     def __str__(self):
-        return "Response of student " + self.user.username + "\nfor question " + self.question.question_text
+        return "Response of user " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:
         ordering = ['timestamp'] 
 
@@ -74,6 +74,15 @@ class OldWinner(models.Model):
     def __str__(self):
         return (str(self.response.timestamp.time()))
 
+# a single voter in the allocation
+@python_2_unicode_compatible
+class AllocationVoter(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    response = models.ForeignKey(Response, on_delete=models.CASCADE, null=True)
+    def __str__(self):
+        return "User " + self.user.username + " assigned to " + self.question.question_text 
+    
 # a poll can have multiple dependent polls (must be part of the same multipoll)
 class Combination(models.Model):
     target_question = models.ForeignKey(Question)

@@ -271,11 +271,8 @@ class DetailView(generic.DetailView):
 
     def get_order(self, ctx):
         otherUserResponses = self.object.response_set.reverse()
-        if len(otherUserResponses) == 0:
-            # use the default order
-            return ctx['object'].item_set.all
-        
-        return getRecommendedOrder(otherUserResponses, self.request)
+        defaultOrder = ctx['object'].item_set.all()
+        return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)
 
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
@@ -318,10 +315,8 @@ class DependencyDetailView(generic.DetailView):
     
     def get_order(self, ctx):
         otherUserResponses = self.object.target_question.response_set.reverse()
-        if len(otherUserResponses) == 0:
-            return self.object.target_question.item_set.all
-        
-        return getRecommendedOrder(otherUserResponses, self.request)
+        defaultOrder = self.object.target_question.item_set.all()
+        return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)
     
     def get_context_data(self,**kwargs):
         ctx = super(DependencyDetailView, self).get_context_data(**kwargs)
@@ -662,7 +657,19 @@ def getKTScore(user, otherUser):
     return KT    
 
 # use other responses to recommend a response order for you
-def getRecommendedOrder(otherUserResponses, request):
+# responses are sorted from latest to earliest
+def getRecommendedOrder(otherUserResponses, request, defaultOrder):  
+    # no responses
+    if len(otherUserResponses) == 0:
+        return defaultOrder
+    
+    # if the poll owner added more choices during the poll, then reset using the default order
+    itemsLastResponse = len(getCandidateMap(otherUserResponses[0])) 
+    itemsCurrent = defaultOrder.count()
+    if itemsLastResponse != itemsCurrent:
+        return defaultOrder    
+    
+    # iterate through all the responses
     preferences = []
     for resp in otherUserResponses:
         user = request.user
@@ -675,7 +682,12 @@ def getRecommendedOrder(otherUserResponses, request):
     
     candMap = getCandidateMap(otherUserResponses[0])        
     pollProfile = Profile(candMap, preferences)
+    
+    # incomplete answers or ties 
+    if pollProfile.getElecType() != "soc":
+        return defaultOrder
 
+    # return the order based off of ranking 
     pref = MechanismBorda().getCandScoresMap(pollProfile)
     l = list(sorted(pref.items(), key=lambda kv: (kv[1], kv[0])))
     final_list = []

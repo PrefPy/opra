@@ -770,7 +770,7 @@ class AllocationOrder(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(AllocationOrder, self).get_context_data(**kwargs)
         currentAllocationOrder = self.object.allocationvoter_set.all()
-        print currentAllocationOrder
+        print(currentAllocationOrder)
         tempOrderStr = self.request.GET.get('order', '')
         if tempOrderStr == "null":
             ctx['question_voters'] = self.object.question_voters.all()

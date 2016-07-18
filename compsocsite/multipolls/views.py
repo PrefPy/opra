@@ -146,62 +146,63 @@ def start(request, multipoll_id):
         question.save()
     multipoll.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def endSubpoll(multipoll):
+    #end the previous poll
+    question = multipoll.questions.all()[multipoll.status - 1]
+    question.status = 3
+    if question.question_type == 1: #poll
+        question.winner = getPollWinner(question)
+    elif question.question_type == 2: #allocation
+        allocation(question)
+    question.save()
     
+    #move to the next poll
+    multipoll.status += 1
+    multipoll.save()    
+
+# end the next poll in the sequence    
 def progress(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
     #poll in session
     if multipoll.status < multipoll.number:
-        question = multipoll.questions.all()[multipoll.status-1]
+        endSubpoll(multipoll)
         
-        #end the previous poll   
-        question.status = 3
-        if question.question_type == 1: #poll
-            question.winner = getPollWinner(question)
-            print("voting responses",question.response_set.all())
-        elif question.question_type == 2: #allocation
-            print("allocation responses",question.response_set.all())
-            allocation(question)
-        question.save()
-        
-        #move to the next poll
-        multipoll.status += 1
-        multipoll.save()
-        
-        #This part is for checking conditional preferences
+        # check conditional preferences
         poll = multipoll.questions.all()[multipoll.status-1]
-        if poll.question_type == 1:
-            for combination in poll.combination_set.all():
-                flag = True
-                for item in combination.dependencies.all():
-                    if item.item_text not in item.question.winner:
-                        flag = False
-                if flag == True:
-                    response = combination.response
-                    response.question = poll
-                    response.save()
-        else:
+        if poll.question_type == 1: # poll
+            for combination in poll.combination_set.all(): 
+                for condition in combination.conditionalitem_set.all(): 
+                    flag = True
+                    for item in condition.items.all():
+                        # this combination does not have the winner
+                        if item.item_text not in item.question.winner:
+                            flag = False
+
+                    # save this response
+                    if flag == True:
+                        response = condition.response
+                        response.question = poll
+                        response.save()
+        elif poll.question_type == 2: # allocation
             user = request.user
             for combination in poll.combination_set.all():
-                flag = True
-                for item in combination.dependencies.all():
-                    latest_response = item.question.response_set.all().filter(user=user)[0]
-                    if latest_response.allocation != item:
-                        flag = False
-                if flag == True:
-                    response = combination.response
-                    response.question = poll
-                    response.save()
+                for condition in combination.conditionalitem_set.all():
+                    flag = True
+                    for item in condition.items.all():
+                        latest_response = item.question.response_set.all().filter(user=user)[0]
+                        # this combination does not have the allocation
+                        if latest_response.allocation != item:
+                            flag = False
+
+                    # save this response
+                    if flag == True:
+                        response = condition.response
+                        response.question = poll
+                        response.save()
     #all the polls have ended
     else:
         #end the last poll
-        question = multipoll.questions.all()[multipoll.status - 1]
-        question.status = 3
-        if question.question_type == 1: #poll
-            question.winner = getPollWinner(question)
-        elif question.question_type == 2: #allocation
-            allocation(question)
-        question.save()
-        
-        multipoll.status += 1
-        multipoll.save()
+        endSubpoll(multipoll)
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

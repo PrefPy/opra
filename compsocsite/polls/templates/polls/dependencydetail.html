@@ -58,10 +58,19 @@
             <div class="col-md-4 margin-panel-top">
                 <h4>Poll {{ poll.question_text }}</h4>
                 Select a choice for this dependent poll:
-                <select name="{{poll.id}}" class="form-control">
-                {% for item in poll.item_set.all %}
-                    <option value="{{item.item_text}}">{{item.item_text}}</option>
-                {% endfor %}
+                <select name="{{ poll.id }}" class="form-control">
+                    {{ condition_items }}
+                    {% if condition_items %}
+                    
+                        {% for item in poll.item_set.all %}
+                            <option value="{{ item.item_text }}" {% if item in condition_items %} selected {% endif %}>{{item.item_text}}</option>
+                        {% endfor %}
+                    {% else %}
+                        {% for item in poll.item_set.all %}
+                            <option value="{{ item.item_text }}">{{item.item_text}}</option>
+                        {% endfor %}
+                    {% endif %}
+                
                 </select>
             </div>
         {% endfor %}
@@ -71,7 +80,6 @@
         {% else %}
         <div class="col-md-6 margin-panel-top">
         {% endif %}
-        
         
             <div class="panel panel-default panel-border">
                 <div class="panel-heading" >
@@ -95,22 +103,22 @@
 
                 <div class="panel-body" >
                     <ul id="left-sortable" class="list-group droptrue">
-                        {% if currentSelection %}
-                        {% for selection in currentSelection %}
-                        {% for item in question.item_set.all %}
-                        {% if selection.0 == item %}
-                        <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
-                            {% if selection.0.image %}
-                                <img class="item" src='/{{ selection.0.image.url }}'/>
-                            {% endif %}
-                            {% if item.imageURL != Null %}
-                                <img class="item" src='{{ item.imageURL }}'/>
-                            {% endif %}
-                            {{ selection.0 }}
-                        </li>
-                        {% endif %}
-                        {% endfor %}
-                        {% endfor %}
+                        {% if condition_responses %}
+                            {% for selection in condition_responses %}
+                                {% for item in question.item_set.all %}
+                                    {% if selection.0 == item %}
+                                    <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
+                                        {% if selection.0.image %}
+                                            <img class="item" src='/{{ selection.0.image.url }}'/>
+                                        {% endif %}
+                                        {% if item.imageURL != Null %}
+                                            <img class="item" src='{{ item.imageURL }}'/>
+                                        {% endif %}
+                                        {{ selection.0 }}
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
                         {% endif %}
                     </ul>
                 </div>
@@ -146,7 +154,7 @@
                 </div>
                 <div class="panel-body">
                     <ul id="right-sortable" class="list-group">
-                        {% if currentSelection == None %}
+                        {% if condition_responses == None %}
                         {% for item in items %}
                         <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
                             {% if item.image %}

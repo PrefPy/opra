@@ -321,19 +321,19 @@ class DependencyDetailView(generic.DetailView):
     def get_context_data(self,**kwargs):
         ctx = super(DependencyDetailView, self).get_context_data(**kwargs)
         ctx['question'] = self.get_object().target_question
-        currentUserResponses = self.object.target_question.response_set.filter(user=self.request.user).reverse()
         tempOrderStr = self.request.GET.get('order', '')
         if tempOrderStr == "null":
             ctx['items'] = self.get_order(ctx)
             return ctx
-        if len(currentUserResponses) > 0:
-            mostRecentResponse = currentUserResponses[0]
-            selectionArray = []
-            for d in mostRecentResponse.dictionary_set.all():   
-                selectionArray = d.sorted_values()
-            ctx['currentSelection'] = selectionArray
-        else:
-            ctx['items'] = self.get_order(ctx)
+
+        currentCombination = Combination.objects.filter(target_question=self.object.target_question, user=self.request.user)
+        if len(currentCombination) > 0:
+            conditionalSet = currentCombination[0].conditionalitem_set.all()
+            if len(conditionalSet) > 0:
+                ctx["condition_items"] = list(conditionalSet[0].items.all())
+                ctx["condition_responses"] = conditionalSet[0].response.dictionary_set.all()[0].sorted_values()
+
+        ctx['items'] = self.get_order(ctx)
         return ctx
 
 # view for settings detail
@@ -764,6 +764,7 @@ def setVisibility(request, question_id):
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# view for ordering voters for allocation
 class AllocationOrder(generic.DetailView):
     model = Question
     template_name = 'polls/allocation_order.html' 
@@ -908,23 +909,43 @@ def chooseDependency(request, question_id):
 def assignPreference(request, combination_id):
     combination = get_object_or_404(Combination, pk=combination_id)
     question = get_object_or_404(Question, pk=combination.target_question.id)
-    for poll in combination.dependent_questions.all():
-        s = str(poll.id)
-        itemtxt = request.POST[s]
-        item = poll.item_set.get(item_text=itemtxt)
-        combination.dependencies.add(item.id)
-        combination.save()
+
+    # get the preference order for this particular combination
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:
         # the user must rank all preferences
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))    
+
+    # for each depedent poll, get the choice selected
+    conditionsSelected = []
+    for poll in combination.dependent_questions.all():
+        s = str(poll.id)
+        itemtxt = request.POST[s]
+        item = poll.item_set.get(item_text=itemtxt)
+        conditionsSelected.append(item)
     
+    # check if a response has been submitted for this condition    
+    allConditions = ConditionalItem.objects.filter(combination=combination)
+    condition = None
+    for currentCondition in allConditions:
+        if list(currentCondition.items.all()) == conditionsSelected:
+            condition = currentCondition
+            break
+
+    # create a new condition
+    if condition == None:
+        condition = ConditionalItem(combination=combination)
+        condition.save()
+        for item in conditionsSelected:
+            condition.items.add(item)
+        condition.save()
+
     # make Response object to store data
-    response = Response(user=request.user, timestamp=timezone.now())
+    response = Response(question=question, user=request.user, timestamp=timezone.now())
     response.save()
-    combination.response = response
-    combination.save()
+    condition.response = response
+    condition.save()
     d = response.dictionary_set.create(name = response.user.username + " Predicting Preferences")
 
     # find ranking student gave for each item under the question

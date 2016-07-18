@@ -38,7 +38,7 @@
 							Submit
 				        </button>	
 				    {% else %}
-							<a href="/polls/{{ question.id }}/allocate/order?order=null" class="btn btn-danger reset-button">Clear</a>
+							<a href="{% url 'polls:viewAllocationOrder' question.id %}?order=null" class="btn btn-danger reset-button">Clear</a>
 							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
 				                Submit
 							</button>
@@ -63,8 +63,8 @@
 				</div>
 				
 				{% if request.flavour == "mobile" %}
-					<button onclick="javascript:window.location.href='/polls/{{ question.id }}/allocate/order?order=null'; return false;" class="reset-button-mobile">
-				        <a href="/polls/{{ question.id }}/allocate/order?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+					<button onclick="javascript:window.location.href='{% url 'polls:viewAllocationOrder' question.id %}?order=null'; return false;" class="reset-button-mobile">
+				        <a href="{% url 'polls:viewAllocationOrder' question.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
 				    </button>		
 				{% endif %}
 			</div>

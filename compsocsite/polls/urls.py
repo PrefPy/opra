@@ -48,6 +48,7 @@ urlpatterns = [
     
     url(r'^(?P<pk>[0-9]+)/pollinfo/$', views.PollInfoView.as_view(), name='pollinfo'),
     url(r'^(?P<question_id>[0-9]+)/dependency/$', views.dependencyRedirect, name='dependency'),
+    url(r'^dependency/(?P<combination_id>[0-9]+)/get/$', views.getConditionalResponse, name='dependencyget'),
     url(r'^(?P<pk>[0-9]+)/dependency/view/$', views.DependencyView.as_view(), name='dependencyview'),
     url(r'^dependency/(?P<pk>[0-9]+)/detail/$', views.DependencyDetailView.as_view(), name='dependencydetail'),
     url(r'^(?P<question_id>[0-9]+)/choosedependency/$', views.chooseDependency, name='choosedependency'),

@@ -41,6 +41,14 @@ class Question(models.Model):
     def get_voters(self):
         return ",".join([str(voter) for voter in self.question_voters.all()])
 
+# email to be sent
+@python_2_unicode_compatible
+class Email(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    type     = models.IntegerField()
+    subject  = models.CharField(max_length=100)
+    message  = models.CharField(max_length=500)
+
 #Helper function for image
 def get_image_path(instance, filename):
     return 'static/img/items/'
@@ -75,6 +83,8 @@ class EmailResponse(models.Model):
     identity = models.CharField(max_length=20, null=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, null=True)
+    def __str__(self):
+        return ""     
 
 # a winner at a certain point in time
 @python_2_unicode_compatible

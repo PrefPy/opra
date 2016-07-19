@@ -32,6 +32,7 @@ class Question(models.Model):
     question_type = models.IntegerField(default=1)
     winner = models.CharField(max_length=200)
     m_poll = models.BooleanField(default=False)
+    open = models.BooleanField(default=False)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):
@@ -54,13 +55,18 @@ class Item(models.Model):
     def __str__(self):
         return self.item_text
 
+class AnonymousVoter(models.Model):
+    name = models.CharField(max_length=50)
+    question = models.ForeignKey(Question)
+
 # all information pertaining to a response that a student made to a question
 @python_2_unicode_compatible
 class Response(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
-    user = models.ForeignKey(User, null = True)
+    user = models.ForeignKey(User, null = True, blank = True)
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
+    anonymous_voter = models.ForeignKey(AnonymousVoter, null=True, blank = True)
     def __str__(self):
         return "Response of user " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:
@@ -90,7 +96,9 @@ class Combination(models.Model):
     user = models.ForeignKey(User)
     dependencies = models.ManyToManyField(Item)
     response = models.OneToOneField(Response,null=True, blank=True)
-        
+
+    
+
 # Dictionary Helper Models - from https://djangosnippets.org/snippets/2451/
 # Models include modifications to be used specifically for holding student preferences - these changes are marked with comments
 

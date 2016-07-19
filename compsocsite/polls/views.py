@@ -137,6 +137,13 @@ class AddStep4View(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+class QRCodeView(generic.DetailView):
+    model = Question
+    template_name = 'polls/qrcode.html'
+    
+class AnonymousInviteView(generic.DetailView):
+    model = Question
+    template_name = 'polls/anonymous_invite.html'
 # Add a single choice to a poll.
 # - A choice must contain text
 # - No duplicate choices (text can't be the same) 
@@ -736,6 +743,11 @@ def setInitialSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['pollpreferences']
     question.display_pref = request.POST['viewpreferences']
+    openstring = request.POST['openpoll']
+    if openstring == "yes":
+        question.open = True
+    else:
+        question.open = False
     question.save()
     return HttpResponseRedirect(reverse('polls:index'))
 
@@ -761,6 +773,18 @@ def setVisibility(request, question_id):
         question.display_pref = 3
     else:
         question.display_pref = 4
+    question.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def openPoll(request,question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.open = True
+    question.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+def closePoll(request,question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.open = False
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -946,3 +970,52 @@ def assignPreference(request, combination_id):
     messages.success(request, 'Your preferences have been updated.')        
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+def anonymousJoin(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    name = request.POST['name']
+    anonymousvoter = AnonymousVoter(name=name, question=question)
+    anonymousvoter.save()
+    request.session['anonymousvoter'] = anonymousvoter
+    return HttpResponseRedirect('/polls/%s/' % question_id)
+    
+def anonymousVote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    # get the preference order
+    orderStr = request.POST["pref_order"]
+    prefOrder = getPrefOrder(orderStr, question)
+    if prefOrder == None:
+        # the user must rank all preferences
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+    # make Response object to store data
+    voter = request.session['anonymousvoter']
+    response = Response(question=question, timestamp=timezone.now(), anonymous_voter = voter)
+    response.save()
+    d = response.dictionary_set.create(name = voter.name + " Preferences")
+
+    # find ranking student gave for each item under the question
+    item_num = 1
+    for item in question.item_set.all():
+        arrayIndex = prefOrder.index("item" + str(item))
+        
+        if arrayIndex == -1:
+            # set value to lowest possible rank
+            d[item] = question.item_set.all().count()
+        else:
+            # add 1 to array index, since rank starts at 1
+            rank = (prefOrder.index("item" + str(item))) + 1
+            # add pref to response dict
+            d[item] = rank
+        d.save()
+        item_num += 1
+
+    #get current winner
+    old_winner = OldWinner(question=question, response=response)
+    old_winner.save()
+
+    # notify the user that the vote has been updated
+    messages.success(request, 'Your preferences have been updated.')
+
+    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))

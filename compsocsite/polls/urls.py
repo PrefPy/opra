@@ -42,6 +42,8 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/allocate/results/$', views.AllocateResultsView.as_view(), name='allocate_results'),
     url(r'^(?P<question_id>[0-9]+)/sendEmail/$', views.sendEmail, name='sendEmail'),
     url(r'^(?P<question_id>[0-9]+)/emailSettings/$', email.emailSettings, name='emailSettings'),
+    url(r'^(?P<question_id>[0-9]+)/openpoll/$', views.openPoll, name='openpoll'), 
+    url(r'^(?P<question_id>[0-9]+)/closepoll/$', views.closePoll, name='closepoll'), 
     
     url(r'^(?P<pk>[0-9]+)/pollinfo/$', views.PollInfoView.as_view(), name='pollinfo'),
     url(r'^(?P<question_id>[0-9]+)/dependency/$', views.dependencyRedirect, name='dependency'),
@@ -49,4 +51,6 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/dependency/detail/$', views.DependencyDetailView.as_view(), name='dependencydetail'),
     url(r'^(?P<question_id>[0-9]+)/choosedependency/$', views.chooseDependency, name='choosedependency'),
     url(r'^(?P<combination_id>[0-9]+)/assignpreference/$', views.assignPreference, name='assignpreference'),
+    url(r'^(?P<question_id>[0-9]+)/anonymousinvite/$', views.AnonymousInviteView.as_view(), name='anonymousinvite'),
+    url(r'^(?P<question_id>[0-9]+)/anonymousvote/$', views.anonymousVote, name='anonymousvote'),
 ]

@@ -84,6 +84,8 @@ class SetVotersView(generic.DetailView):
         ctx['groups'] = Group.objects.all()
         return ctx
         
+
+        
 def setQuestion(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
     questionString = request.POST['questionTitle']   

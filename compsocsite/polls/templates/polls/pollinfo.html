@@ -5,6 +5,9 @@
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 -->
+
+<script src='/static/js/qrcodejs/qrcode.js'></script>
+
 <style>
 
 /*
@@ -108,13 +111,16 @@ img:hover{
   #selectable .ui-selected { background: #F39814; color: white; }
   #selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
   #selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+
+  </style>
   <script>
   $(function() {
     $( "#selectable" ).selectable();
   });
   </script>
 
-</style>
+
+
 
 {% endblock %}
 {% load staticfiles %}
@@ -125,9 +131,10 @@ img:hover{
     <ul class="nav nav-sidebar">
         {% if question.question_owner == request.user %}
             <li class="active"><a data-toggle="tab" href="#choices" >Choices</a></li>
-            <li ><a data-toggle="tab" href="#voters">Voters</a></li>
+            <li><a data-toggle="tab" href="#voters">Voters</a></li>
             <li><a data-toggle="tab" href="#algorithm">Algorithms</a></li>
             <li><a data-toggle="tab" href="#visibility">Visibility</a></li>
+            <li><a data-toggle="tab" href="#qr">Open/Close Poll</a></li>
             <li><a data-toggle="tab" href="#emailsetting">Email</a></li>
             <li><a data-toggle="tab" href="#historyinfo">History</a></li>
             <li><a data-toggle="tab" href="#delete">Delete</a></li>
@@ -221,6 +228,28 @@ img:hover{
 
         <input type="submit" value="Submit" class="btn btn-success">
     </form>
+</div>
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="qr">
+    <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
+    {% if question.open == False %}
+    <a href="{% url 'polls:openpoll' question.id %}" class="btn btn-success btn-ok">Open Poll</a>
+    
+    
+    {% else %}
+    <h4>Here is the QR Code for inviting users who have not logged in</h4>
+    <div id="qrcode" style="margin-top:15px;"></div>
+    <br >
+    <a href="{% url 'polls:closepoll' question.id %}" class="btn btn-danger">Close Poll</a>
+    <script type="text/javascript">
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
+        width : 400,
+        height : 400
+    });
+    qrcode.makeCode("{{request.get_host}}{% url 'polls:anonymousinvite' question.id %}");
+    </script>
+
+    {% endif %}
 </div>
 
 
@@ -481,5 +510,7 @@ img:hover{
     </div>
 
 </div>
+
+
   
 {% endblock %}

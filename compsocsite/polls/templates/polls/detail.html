@@ -128,9 +128,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		</div>
 	</div>
 </div>
+<form {% if question.session.anonymousvoter %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
+	<div class="row">
 
-<div class="row">
-	<form action="{% url 'polls:vote' question.id %}" method="post">
 		{% csrf_token %}
 		
 		{% if request.flavour == "mobile" %}
@@ -244,8 +244,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 				</div>
 			</div>
 		</div>
-	</form>
-</div>
+	
+	</div>
+	<div>
+		<textarea class="form-control" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">
+
+		</textarea>
+	</div>
+</form>
+
 
 <script>
 	var wholeHeight1 = $('#left-sortable')[0].scrollHeight;

@@ -872,7 +872,10 @@ def vote(request, question_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
     # make Response object to store data
+    comment = request.POST['comment']
     response = Response(question=question, user=request.user, timestamp=timezone.now())
+    if comment != "":
+        response.comment = comment
     response.save()
     d = response.dictionary_set.create(name = response.user.username + " Preferences")
 
@@ -1012,7 +1015,10 @@ def anonymousVote(request, question_id):
     
     # make Response object to store data
     voter = request.session['anonymousvoter']
+    comment = request.POST['comment']
     response = Response(question=question, timestamp=timezone.now(), anonymous_voter = voter)
+    if comment != "":
+        response.comment = comment
     response.save()
     d = response.dictionary_set.create(name = voter.name + " Preferences")
 

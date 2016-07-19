@@ -67,6 +67,7 @@ class Response(models.Model):
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
     anonymous_voter = models.ForeignKey(AnonymousVoter, null=True, blank = True)
+    comment = models.CharField(max_length=1000, blank=True, null=True)
     def __str__(self):
         return "Response of user " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:

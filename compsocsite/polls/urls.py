@@ -29,8 +29,9 @@ urlpatterns = [
     
     #Setting created poll
     
-    url(r'^(?P<question_id>[0-9]+)/start/$', views.startPoll, name='start'),  
+    url(r'^(?P<question_id>[0-9]+)/start/$', views.startPoll, name='start'),
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
+    url(r'^(?P<resp_id>[0-9]+)/(?P<key>\w+)/voteEmail/$', email.voteEmail, name='voteEmail'),
     url(r'^(?P<question_id>[0-9]+)/stop/$', views.stopPoll, name='stop'),
     url(r'^(?P<question_id>[0-9]+)/settings/initial$', views.setInitialSettings, name='setinitial'),    
     url(r'^(?P<question_id>[0-9]+)/settings/algorithm$', views.setAlgorithm, name='setAlgorithm'),

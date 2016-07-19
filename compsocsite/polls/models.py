@@ -64,7 +64,14 @@ class Response(models.Model):
     def __str__(self):
         return "Response of user " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:
-        ordering = ['timestamp'] 
+        ordering = ['timestamp']
+
+# all information pertaining to a response that a student made to a question
+@python_2_unicode_compatible
+class EmailResponse(models.Model):
+    identity = models.CharField(max_length=20, null=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, null=True)
 
 # a winner at a certain point in time
 @python_2_unicode_compatible

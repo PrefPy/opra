@@ -290,6 +290,10 @@ class DetailView(generic.DetailView):
             ctx['items'] = ctx['object'].item_set.all()
             return ctx
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        ctx['lastcomment'] = ""
+        if len(currentUserResponses) > 0:
+            if currentUserResponses[0].comment:
+                ctx['lastcomment'] = currentUserResponses[0].comment
         tempOrderStr = self.request.GET.get('order', '')
         if tempOrderStr == "null":
             ctx['items'] = self.get_order(ctx)

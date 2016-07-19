@@ -55,9 +55,13 @@ class Item(models.Model):
     def __str__(self):
         return self.item_text
 
+# voter without an user account
+@python_2_unicode_compatible
 class AnonymousVoter(models.Model):
     name = models.CharField(max_length=50)
     question = models.ForeignKey(Question)
+    def __str__(self):
+        return self.name    
 
 # all information pertaining to a response that a student made to a question
 @python_2_unicode_compatible
@@ -79,6 +83,8 @@ class EmailResponse(models.Model):
     identity = models.CharField(max_length=20, null=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(User, null=True)
+    def __str__(self):
+        return ""     
 
 # a winner at a certain point in time
 @python_2_unicode_compatible

@@ -50,6 +50,23 @@
 	</div>
 </div>
 
+<script>
+$(function(){
+    // bind change event to select
+    {% for poll in combination.dependent_questions.all %}
+        $('#dynamic_select' + '{{poll.id}}').on('change', function () {
+            var choicesStr = "?";
+            {% for poll in combination.dependent_questions.all %}
+                choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&"; 
+            {% endfor %}
+
+            window.location.href = "{% url 'polls:dependencyget' combination.id %}" + choicesStr; // redirect
+            return false;
+        });
+    {% endfor %}
+  });
+</script>
+
 <div>
     <form action="{% url 'polls:assignpreference' combination.id %}" method="post">
         {% csrf_token %}
@@ -58,12 +75,14 @@
             <div class="col-md-4 margin-panel-top">
                 <h4>Poll {{ poll.question_text }}</h4>
                 Select a choice for this dependent poll:
-                <select name="{{ poll.id }}" class="form-control">
-                    {{ condition_items }}
+                <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" class="form-control">
                     {% if condition_items %}
-                    
                         {% for item in poll.item_set.all %}
                             <option value="{{ item.item_text }}" {% if item in condition_items %} selected {% endif %}>{{item.item_text}}</option>
+                        {% endfor %}
+                    {% elif poll_choice_dict %}
+                        {% for item in poll.item_set.all %}
+                            <option value="{{ item.item_text }}" {% if item in poll_choice_dict.values %} selected {% endif %}>{{item.item_text}}</option>
                         {% endfor %}
                     {% else %}
                         {% for item in poll.item_set.all %}

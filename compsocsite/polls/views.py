@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 from .prefpy.mechanism import *
-from .email import sendEmail
+from .email import sendEmail, setupEmail
 from groups.models import *
 from django.conf import settings
 from multipolls.models import *
@@ -88,6 +88,7 @@ def AddStep1View(request):
             question.imageURL = imageURL 
         question.question_type = questionType
         question.save()
+        setupEmail(question)
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
     return render_to_response('polls/add_step1.html', {}, context)
 
@@ -368,6 +369,14 @@ class PollInfoView(generic.DetailView):
     template_name = 'polls/pollinfo.html'
     def get_context_data(self, **kwargs):
         ctx = super(PollInfoView, self).get_context_data(**kwargs)
+        emailInvite = Email.objects.filter(question=self.object, type=1)
+        if len(emailInvite) == 1:
+            setupEmail(self.object)
+            emailInvite = Email.objects.filter(question=self.object, type=1)
+        ctx['emailInvite'] = emailInvite[0]
+        ctx['emailDelete'] = Email.objects.filter(question=self.object, type=2)[0]
+        ctx['emailStart'] = Email.objects.filter(question=self.object, type=3)[0]
+        ctx['emailStop'] = Email.objects.filter(question=self.object, type=4)[0]
         ctx['users'] = User.objects.all()
         ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()

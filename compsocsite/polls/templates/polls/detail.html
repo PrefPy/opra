@@ -1,6 +1,20 @@
 {% extends 'polls/base.html' %}
 
 {% block extra_head %}
+
+
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-59SLDM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-59SLDM');</script>
+<!-- End Google Tag Manager -->
+
+
+
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src='/static/js/shared.js'></script>
@@ -10,9 +24,55 @@
 <script src='/static/js/desktop.js'></script>
 {% endif %}
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+    <style>
+  .sortable1 { list-style-type: none; height: auto; float: left; margin-right: 10px; background: #eee; padding: 5px; width: 460px; }
+  .sortable1 li {border:0; background: transparent; margin:1px; padding:1px; font-size: 1em; width: auto;}
+  </style>
+
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  <script>
+  $( function() {
+      
+    $( "ul.droptrue" ).sortable({
+      connectWith: "ul.droptrue",
+        
+    });
+      
+
+          
+     // if($("ul").has("li").length == 0) {
+	   //    $("ul").hide();
+    //  }
+      $("ul.droptrue").each(
+          function() {
+        var elem = $(this);
+        if (elem.children().length == 0) {
+            elem.hide();
+        }
+        }
+      );
+                
+      
+      
+      $( "ul.droptrue" ).sortable( "refreshPositions" );
+      
+      
+ 
+    $( "ul.droptrue" ).disableSelection();
+      
+  
+  } );
+  </script>
+
+
 {% endblock %}
 
 {% block content %}
+<ul class="sortable1 list-group droptrue"></ul>
 
 {% if error_message %}
 <p>
@@ -99,27 +159,40 @@
 					{% endif %}
 				    <input type="hidden" id="pref_order" name="pref_order" value=""/>
 				</div>
-
+  
+                
 				<div class="panel-body" >
-					<ul id="left-sortable" class="list-group droptrue">
+                    
+					<div id="left-sortable">
+
 						{% if currentSelection %}
 						{% for selection in currentSelection %}
 						{% for item in question.item_set.all %}
+                        
 						{% if selection.0 == item %}
-						<li class="list-group-item"  id="item{{ forloop.counter }}">
+
+                        <ul class="sortable1 list-group droptrue" id="item{{ forloop.counter }}">
+						  <li class="list-group-item"  >  
+                            
 							{% if selection.0.image %}
 				                <img class="item" src='/{{ selection.0.image.url }}'/>
 							{% endif %}
 		                    {% if item.imageURL != Null %}
                                 <img class="item" src='{{ item.imageURL }}'/>
 		                    {% endif %}
+                            
 							{{ selection.0 }}
-						</li>
+                            
+						  </li></ul>
+
+
+                        
 						{% endif %}
+                            
 						{% endfor %}
 						{% endfor %}
 						{% endif %}
-					</ul>
+					</div> <!-- left-sortable-->
 				</div>
 				
 				{% if request.flavour == "mobile" %}
@@ -166,6 +239,7 @@
 						</li>
 						{% endfor %}
 						{% endif %}
+                  
 					</ul>
 				</div>
 			</div>
@@ -183,6 +257,8 @@
 	}
 	$('#left-sortable').sortable('refresh');
 	$('#right-sortable').sortable('refresh');
+    
+
 
 </script>
 

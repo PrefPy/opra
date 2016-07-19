@@ -55,10 +55,6 @@ class Item(models.Model):
     def __str__(self):
         return self.item_text
 
-class AnonymousVoter(models.Model):
-    name = models.CharField(max_length=50)
-    question = models.ForeignKey(Question)
-
 # all information pertaining to a response that a student made to a question
 @python_2_unicode_compatible
 class Response(models.Model):
@@ -66,7 +62,7 @@ class Response(models.Model):
     user = models.ForeignKey(User, null = True, blank = True)
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
-    anonymous_voter = models.ForeignKey(AnonymousVoter, null=True, blank = True)
+    anonymous_voter = models.CharField(max_length=50,blank=True,null=True)
     comment = models.CharField(max_length=1000, blank=True, null=True)
     def __str__(self):
         return "Response of user " + self.user.username + "\nfor question " + self.question.question_text

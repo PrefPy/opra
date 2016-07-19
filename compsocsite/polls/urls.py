@@ -52,6 +52,7 @@ urlpatterns = [
     url(r'^dependency/(?P<pk>[0-9]+)/detail/$', views.DependencyDetailView.as_view(), name='dependencydetail'),
     url(r'^(?P<question_id>[0-9]+)/choosedependency/$', views.chooseDependency, name='choosedependency'),
     url(r'^(?P<combination_id>[0-9]+)/assignpreference/$', views.assignPreference, name='assignpreference'),
-    url(r'^(?P<question_id>[0-9]+)/anonymousinvite/$', views.AnonymousInviteView.as_view(), name='anonymousinvite'),
+    url(r'^(?P<pk>[0-9]+)/anonymousinvite/$', views.AnonymousInviteView.as_view(), name='anonymousinvite'),
+    url(r'^(?P<question_id>[0-9]+)/anonymousjoin/$', views.anonymousJoin, name='anonymousjoin'),
     url(r'^(?P<question_id>[0-9]+)/anonymousvote/$', views.anonymousVote, name='anonymousvote'),
 ]

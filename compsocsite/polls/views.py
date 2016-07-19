@@ -283,6 +283,10 @@ class DetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
+        #Case for anonymous user, return the default order
+        if self.request.user.get_username() == "":
+            ctx['items'] = ctx['object'].item_set.all()
+            return ctx
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         tempOrderStr = self.request.GET.get('order', '')
         if tempOrderStr == "null":
@@ -998,9 +1002,7 @@ def assignPreference(request, combination_id):
 def anonymousJoin(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     name = request.POST['name']
-    anonymousvoter = AnonymousVoter(name=name, question=question)
-    anonymousvoter.save()
-    request.session['anonymousvoter'] = anonymousvoter
+    request.session['anonymousvoter'] = name
     return HttpResponseRedirect('/polls/%s/' % question_id)
     
 def anonymousVote(request, question_id):

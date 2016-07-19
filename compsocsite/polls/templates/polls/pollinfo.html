@@ -416,6 +416,9 @@ img:hover{
                         {% endfor %}
                     {% endfor %}
                     </div>
+                    {% if response.comment %}
+                        <p>Comment: {{response.comment}}</p>
+                    {% endif %}
                 {% endfor %}
                 <br />
                 <br />
@@ -431,7 +434,11 @@ img:hover{
                             <button type="button" class="btn btn-default"> ({{ item.1 }}) {{ item.0 }} </button>
                                 {% endfor %}
                             {% endfor %}
+                            {% if response.comment %}
+                        <p>Comment: {{response.comment}}</p>
+                        {% endif %}
                         </div>
+                        
                     {% endfor %}
                     </div>
                 </div>
@@ -450,6 +457,9 @@ img:hover{
                    <button type="button" class="btn btn-default">({{ item.1 }}) {{ item.0 }} </button>
                         {% endfor %}
                     {% endfor %}
+                    {% if response.comment %}
+                        <p>Comment: {{response.comment}}</p>
+                    {% endif %}
                 </div>
                 <br />
                 <br />
@@ -465,6 +475,9 @@ img:hover{
                             <li class="list-group-item">   ({{ item.1 }}) {{ item.0 }} </li>
                                 {% endfor %}
                             {% endfor %}
+                            {% if response.comment %}
+                        <p>Comment: {{response.comment}}</p>
+                        {% endif %}
                         </ul>
                     {% endfor %}
                     </div>
@@ -489,6 +502,9 @@ img:hover{
                             <button type="button" class="btn btn-default"> {{ item.1 }}) {{ item.0 }} </button>
                                 {% endfor %}
                             {% endfor %}
+                            {% if response.comment %}
+                        <p>Comment: {{response.comment}}</p>
+                        {% endif %}
                         </div>
                     {% endif %}
                 {% endfor %}

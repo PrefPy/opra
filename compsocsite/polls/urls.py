@@ -29,8 +29,9 @@ urlpatterns = [
     
     #Setting created poll
     
-    url(r'^(?P<question_id>[0-9]+)/start/$', views.startPoll, name='start'),  
+    url(r'^(?P<question_id>[0-9]+)/start/$', views.startPoll, name='start'),
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
+    url(r'^(?P<resp_id>[0-9]+)/(?P<key>\w+)/voteEmail/$', email.voteEmail, name='voteEmail'),
     url(r'^(?P<question_id>[0-9]+)/stop/$', views.stopPoll, name='stop'),
     url(r'^(?P<question_id>[0-9]+)/settings/initial$', views.setInitialSettings, name='setinitial'),    
     url(r'^(?P<question_id>[0-9]+)/settings/algorithm$', views.setAlgorithm, name='setAlgorithm'),
@@ -48,7 +49,7 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/pollinfo/$', views.PollInfoView.as_view(), name='pollinfo'),
     url(r'^(?P<question_id>[0-9]+)/dependency/$', views.dependencyRedirect, name='dependency'),
     url(r'^(?P<pk>[0-9]+)/dependency/view/$', views.DependencyView.as_view(), name='dependencyview'),
-    url(r'^(?P<pk>[0-9]+)/dependency/detail/$', views.DependencyDetailView.as_view(), name='dependencydetail'),
+    url(r'^dependency/(?P<pk>[0-9]+)/detail/$', views.DependencyDetailView.as_view(), name='dependencydetail'),
     url(r'^(?P<question_id>[0-9]+)/choosedependency/$', views.chooseDependency, name='choosedependency'),
     url(r'^(?P<combination_id>[0-9]+)/assignpreference/$', views.assignPreference, name='assignpreference'),
     url(r'^(?P<question_id>[0-9]+)/anonymousinvite/$', views.AnonymousInviteView.as_view(), name='anonymousinvite'),

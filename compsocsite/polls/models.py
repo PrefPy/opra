@@ -70,7 +70,14 @@ class Response(models.Model):
     def __str__(self):
         return "Response of user " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:
-        ordering = ['timestamp'] 
+        ordering = ['timestamp']
+
+# all information pertaining to a response that a student made to a question
+@python_2_unicode_compatible
+class EmailResponse(models.Model):
+    identity = models.CharField(max_length=20, null=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, null=True)
 
 # a winner at a certain point in time
 @python_2_unicode_compatible
@@ -97,7 +104,11 @@ class Combination(models.Model):
     dependencies = models.ManyToManyField(Item)
     response = models.OneToOneField(Response,null=True, blank=True)
 
-    
+# link the choices for the dependent polls to a response
+class ConditionalItem(models.Model):
+    combination = models.ForeignKey(Combination)
+    items = models.ManyToManyField(Item)
+    response = models.OneToOneField(Response, null=True, blank=True)
 
 # Dictionary Helper Models - from https://djangosnippets.org/snippets/2451/
 # Models include modifications to be used specifically for holding student preferences - these changes are marked with comments

@@ -89,7 +89,7 @@ def sendEmail(request, question_id, type):
      	    voter = get_object_or_404(User, username=voter)
         name = voter.username
         uname = voter.username
-        if question.poll_algorithm == 1 and type == 'invite':
+        if question.poll_algorithm == 1 and type == 'start':
             items = Item.objects.all().filter(question=question)
             item_array = getOptions(items)
             for i in items:
@@ -116,7 +116,7 @@ def emailSettings(request, question_id):
 def voteEmail(request, key, resp_id):
     eResp = get_object_or_404(EmailResponse, pk=resp_id, identity=key)
     question = eResp.item.question
-    if question.start == True and question.stop == False:
+    if question.status == 2:
         arr = question.item_set.all().exclude(pk=eResp.item.pk)
         prefOrder = ["item" + eResp.item.item_text]
         for a in arr:

@@ -130,12 +130,12 @@ img:hover{
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         {% if question.question_owner == request.user %}
-            <li class="active"><a data-toggle="tab" href="#choices" >Choices</a></li>
-            <li><a data-toggle="tab" href="#voters">Voters</a></li>
-            <li><a data-toggle="tab" href="#algorithm">Algorithms</a></li>
-            <li><a data-toggle="tab" href="#visibility">Visibility</a></li>
-            <li><a data-toggle="tab" href="#qr">Open/Close Poll</a></li>
-            <li><a data-toggle="tab" href="#emailsetting">Email</a></li>
+            <li {% if request.session.setting == 0 %} class="active" {% endif %}><a data-toggle="tab" href="#choices" >Choices</a></li>
+            <li {% if request.session.setting == 1 %} class="active" {% endif %}><a data-toggle="tab" href="#voters">Voters</a></li>
+            <li {% if request.session.setting == 2 %} class="active" {% endif %}><a data-toggle="tab" href="#algorithm">Algorithms</a></li>
+            <li {% if request.session.setting == 3 %} class="active" {% endif %}><a data-toggle="tab" href="#visibility">Visibility</a></li>
+            <li {% if request.session.setting == 4 %} class="active" {% endif %}><a data-toggle="tab" href="#qr">Open/Close Poll</a></li>
+            <li {% if request.session.setting == 5 %} class="active" {% endif %}><a data-toggle="tab" href="#emailsetting">Email</a></li>
             <li><a data-toggle="tab" href="#historyinfo">History</a></li>
             <li><a data-toggle="tab" href="#delete">Delete</a></li>
             
@@ -148,21 +148,35 @@ img:hover{
     </ul>  
 </div>
 
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+<p>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+        {{ message }}
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+</p>
+</div>
+
 <div class="tab-content">
 {% if question.question_owner == request.user %}
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="choices">
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 0 %}active{% endif %}" id="choices">
         <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
         
         {% include 'polls/_add_choice.html' %}
     </div>
 
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="voters">
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 1 %}active{% endif %}" id="voters">
         <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
 
         {% include 'polls/_invite_voters.html' %}
     </div>
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="algorithm">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 2 %}active{% endif %}" id="algorithm">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
         {% if question.status == 1 %}
             <form class="form-group" method="post" action="{% url 'polls:setAlgorithm' question.id %}" align="center">
@@ -212,7 +226,7 @@ img:hover{
         {% endif %}
 </div>
             
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="visibility">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 3 %}active{% endif %}" id="visibility">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
    <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}" align="center">
         {% csrf_token %}
@@ -230,7 +244,7 @@ img:hover{
     </form>
 </div>
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="qr">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 4 %}active{% endif %}" id="qr">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
     {% if question.open == False %}
     <a href="{% url 'polls:openpoll' question.id %}" class="btn btn-success btn-ok">Open Poll</a>
@@ -253,7 +267,7 @@ img:hover{
 </div>
 
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="emailsetting">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 5 %}active{% endif %}" id="emailsetting">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
 
 <div class="col-md-10">

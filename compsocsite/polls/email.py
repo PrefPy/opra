@@ -152,6 +152,7 @@ def emailSettings(request, question_id):
     question.emailStart = request.POST.get('emailStart') == 'email'
     question.emailStop = request.POST.get('emailStop') == 'email'
     question.save()
+    request.session['setting'] = 5
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def voteEmail(request, key, resp_id):

@@ -176,6 +176,7 @@ def addChoice(request, question_id):
     
     # save the choice
     item.save()
+    request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def editChoice(request, question_id):
@@ -186,6 +187,7 @@ def editChoice(request, question_id):
         item_num += 1
         item.item_text = new_text
         item.save()
+    request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # remove a choice from the poll. 
@@ -193,6 +195,7 @@ def editChoice(request, question_id):
 def deleteChoice(request, choice_id):
     item = get_object_or_404(Item, pk=choice_id)
     item.delete()
+    request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # permanently erase a poll and all its information and settings
@@ -765,6 +768,7 @@ def addVoter(request, question_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
+    request.session['setting'] = 1
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # remove voters from a poll.
@@ -781,6 +785,7 @@ def removeVoter(request, question_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.remove(voterObj.id)
+    request.session['setting'] = 1
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # called when creating the poll
@@ -801,6 +806,8 @@ def setAlgorithm(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['pollpreferences']
     question.save()
+    request.session['setting'] = 2
+    messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # set the visibility settings, how much information should be shown to the user
@@ -819,18 +826,24 @@ def setVisibility(request, question_id):
     else:
         question.display_pref = 4
     question.save()
+    request.session['setting'] = 3
+    messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def openPoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.open = True
     question.save()
+    request.session['setting'] = 4
+    messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 def closePoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.open = False
     question.save()
+    request.session['setting'] = 4
+    messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # view for ordering voters for allocation
@@ -1097,7 +1110,6 @@ def anonymousVote(request, question_id):
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
-    print("entered function")
     if prefOrder == None:
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1133,5 +1145,4 @@ def anonymousVote(request, question_id):
 
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')
-    print("redirected")
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))

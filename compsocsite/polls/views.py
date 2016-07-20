@@ -98,7 +98,7 @@ class AddStep2View(generic.DetailView):
     template_name = 'polls/add_step2.html'
     def get_context_data(self, **kwargs):
         ctx = super(AddStep2View, self).get_context_data(**kwargs)
-        ctx['items'] = Item.objects.all()
+        ctx['items'] = self.object.item_set.all()
         return ctx
     def get_queryset(self):
         """
@@ -176,6 +176,16 @@ def addChoice(request, question_id):
     
     # save the choice
     item.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def editChoice(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    item_num = 0
+    for item in question.item_set.all():
+        new_text = request.POST["item"+str(item_num)]
+        item_num += 1
+        item.item_text = new_text
+        item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # remove a choice from the poll. 
@@ -285,12 +295,13 @@ class DetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
+        ctx['lastcomment'] = ""
         #Case for anonymous user, return the default order
         if self.request.user.get_username() == "":
             ctx['items'] = ctx['object'].item_set.all()
             return ctx
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
-        ctx['lastcomment'] = ""
+        
         if len(currentUserResponses) > 0:
             if currentUserResponses[0].comment:
                 ctx['lastcomment'] = currentUserResponses[0].comment
@@ -386,7 +397,7 @@ class PollInfoView(generic.DetailView):
         ctx['emailStart'] = Email.objects.filter(question=self.object, type=3)[0]
         ctx['emailStop'] = Email.objects.filter(question=self.object, type=4)[0]
         ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
+        ctx['items'] = self.object.item_set.all()
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()     
@@ -1076,7 +1087,7 @@ def anonymousJoin(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     name = request.POST['name']
     request.session['anonymousvoter'] = name
-    return HttpResponseRedirect('/polls/%s/' % question_id)
+    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
     
 def anonymousVote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -1084,6 +1095,7 @@ def anonymousVote(request, question_id):
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
+    print("entered function")
     if prefOrder == None:
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1095,7 +1107,7 @@ def anonymousVote(request, question_id):
     if comment != "":
         response.comment = comment
     response.save()
-    d = response.dictionary_set.create(name = voter.name + " Preferences")
+    d = response.dictionary_set.create(name = voter + " Preferences")
 
     # find ranking student gave for each item under the question
     item_num = 1
@@ -1119,5 +1131,5 @@ def anonymousVote(request, question_id):
 
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')
-
+    print("redirected")
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))

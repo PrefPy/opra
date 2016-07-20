@@ -21,6 +21,7 @@ urlpatterns = [
     
     url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),
     url(r'^(?P<question_id>[0-9]+)/choice/add/$', views.addChoice, name='addchoice'),
+    url(r'^(?P<question_id>[0-9]+)/editchoice/$', views.editChoice, name='editchoice'),
     url(r'^choice/delete/([0-9]+)/$', views.deleteChoice, name='delchoice'),
     url(r'^delete/([0-9]+)/$', views.deletePoll, name='delpoll'),
     url(r'^(?P<question_id>[0-9]+)/addvoter/$', views.addVoter, name='addvoter'),

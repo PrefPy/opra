@@ -33,7 +33,10 @@
             <thead>
                 <tr>
                     <th>
-		                  Regular polls created by you		
+		                  Regular polls created by you ({{ polls_created|length }})	
+                    </th>
+                    <th></th>
+                    <th>
                             <a href="{% url 'polls:AddStep1' %}" style='font-size:60%; float:right;' class="btn btn-yellow">
                                     <span class="glyphicon glyphicon-plus"></span>
                             </a>
@@ -139,8 +142,10 @@
             <thead>
                 <tr>
                     <th>
-                        Participated in		
+                        Participated in	({{ polls_participated|length }})	
                     </th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
 

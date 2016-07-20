@@ -11,7 +11,7 @@
             <thead>
                 <tr>
                     <th>
-                        Multi-polls created by you		
+                        Multi-polls created by you ({{ multipolls_created|length }})	
                         <a href="{% url 'multipolls:AddStep1' %}" style='font-size:60%; float:right;' class="btn btn-yellow"> 
                             <span class="glyphicon glyphicon-plus"></span>
                         </a>
@@ -128,7 +128,7 @@
         <thead>
             <tr>
                 <th>
-                    Multi-polls participated in		
+                    Multi-polls participated in ({{ multipolls_participated|length }})		
                 </th>
             </tr>
         </thead>

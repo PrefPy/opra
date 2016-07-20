@@ -44,23 +44,6 @@ def setupEmail(question):
     emailStart.save()
     emailStop.save()
 
-def switchHTML(x, name, uname, creator, request, question_id, options):
-    return {
-        'invite': '<h1>Hello ' + name + ',</h1><p>' + creator
-                + ' has invited you to vote on a poll. Please login <a href=\''
-                + request.build_absolute_uri(reverse('appauth:login')+'?name='+uname)
-                + '\'>here</a> to check it out.</p><p>Sincerely,</p><p>OPRAH Staff</p>',
-        'remove': 'Hello ' + name + ',\n\n' + creator
-                + ' has deleted you from a poll.\n\nSincerely,\nOPRAH Staff',
-        'start': '<h1>Hello ' + name + ',</h1><p>' + creator
-                + ' has started a poll. It is now available to vote on <a href=\''
-                + '\'>here</a>.</p>' + options + '<p>Sincerely,</p><p>OPRAH Staff</p>',
-        'stop': 'Hello ' + name + ',\n\n' + creator
-                + ' has ended a poll. Please visit '
-                + request.build_absolute_uri(reverse('polls:index'))
-                + ' to view the decision.\n\nSincerely,\nOPRAH Staff',
-    }.get(x, x)
-
 def getOptions(items):
     arr = []
     for item in items:
@@ -85,7 +68,7 @@ def translateEmail(text, uname, url):
     text = text.replace("[url]", url)
     return text
 
-def translateHTML(text, uname, url):
+def translateHTML(text, uname, url, options):
     text = translateEmail(text, uname, url)
     text = "<p>" + text + "</p>"
     text = text.replace("\n\n", "</p><br /><p>")
@@ -127,7 +110,7 @@ def sendEmail(request, question_id, type):
         mail.send_mail(translateEmail(email.subject, name, url),
             translateEmail(email.message, name, url),
             'oprahprogramtest@gmail.com',[voter.email],
-            html_message=translateHTML(email.message, name, url))
+            html_message=translateHTML(email.message, name, url, options))
 
 def emailSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

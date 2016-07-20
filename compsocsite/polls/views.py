@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 from .prefpy.mechanism import *
-from .email import sendEmail
+from .email import sendEmail, setupEmail
 from groups.models import *
 from django.conf import settings
 from multipolls.models import *
@@ -88,6 +88,7 @@ def AddStep1View(request):
             question.imageURL = imageURL 
         question.question_type = questionType
         question.save()
+        setupEmail(question)
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
     return render_to_response('polls/add_step1.html', {}, context)
 
@@ -97,7 +98,7 @@ class AddStep2View(generic.DetailView):
     template_name = 'polls/add_step2.html'
     def get_context_data(self, **kwargs):
         ctx = super(AddStep2View, self).get_context_data(**kwargs)
-        ctx['items'] = Item.objects.all()
+        ctx['items'] = self.object.item_set.all()
         return ctx
     def get_queryset(self):
         """
@@ -144,6 +145,7 @@ class QRCodeView(generic.DetailView):
 class AnonymousInviteView(generic.DetailView):
     model = Question
     template_name = 'polls/anonymous_invite.html'
+
 # Add a single choice to a poll.
 # - A choice must contain text
 # - No duplicate choices (text can't be the same) 
@@ -174,6 +176,18 @@ def addChoice(request, question_id):
     
     # save the choice
     item.save()
+    request.session['setting'] = 0
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def editChoice(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    item_num = 0
+    for item in question.item_set.all():
+        new_text = request.POST["item"+str(item_num)]
+        item_num += 1
+        item.item_text = new_text
+        item.save()
+    request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # remove a choice from the poll. 
@@ -181,6 +195,7 @@ def addChoice(request, question_id):
 def deleteChoice(request, choice_id):
     item = get_object_or_404(Item, pk=choice_id)
     item.delete()
+    request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # permanently erase a poll and all its information and settings
@@ -283,7 +298,16 @@ class DetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
+        ctx['lastcomment'] = ""
+        #Case for anonymous user, return the default order
+        if self.request.user.get_username() == "":
+            ctx['items'] = ctx['object'].item_set.all()
+            return ctx
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        
+        if len(currentUserResponses) > 0:
+            if currentUserResponses[0].comment:
+                ctx['lastcomment'] = currentUserResponses[0].comment
         tempOrderStr = self.request.GET.get('order', '')
         if tempOrderStr == "null":
             ctx['items'] = self.get_order(ctx)
@@ -291,11 +315,9 @@ class DetailView(generic.DetailView):
         
         # check if the user submitted a vote earlier and display that for modification
         if len(currentUserResponses) > 0:
-            mostRecentResponse = currentUserResponses[0]
-            selectionArray = []             
-            for d in mostRecentResponse.dictionary_set.all():   
-                selectionArray = d.sorted_values()
-            ctx['currentSelection'] = selectionArray
+            mostRecentResponse = currentUserResponses[0]          
+            responseDict = mostRecentResponse.dictionary_set.all()[0]   
+            ctx['currentSelection'] = responseDict.sorted_values()
         else:
             # no history so display the list of choices
             ctx['items'] = self.get_order(ctx)
@@ -333,12 +355,30 @@ class DependencyDetailView(generic.DetailView):
             ctx['items'] = self.get_order(ctx)
             return ctx
 
+        # if the user has responded to this question, then load the response
         currentCombination = Combination.objects.filter(target_question=self.object.target_question, user=self.request.user)
         if len(currentCombination) > 0:
             conditionalSet = currentCombination[0].conditionalitem_set.all()
-            if len(conditionalSet) > 0:
-                ctx["condition_items"] = list(conditionalSet[0].items.all())
-                ctx["condition_responses"] = conditionalSet[0].response.dictionary_set.all()[0].sorted_values()
+            conditionIndexStr = self.request.GET.get('condInd', '')
+            conditionIndex = int(conditionIndexStr) if conditionIndexStr.isdigit() else -1
+            
+            # check if the condition already exists
+            if len(conditionalSet) > 0 and conditionIndexStr == "":
+                selectedCondition = conditionalSet[0]
+                ctx["condition_items"] = list(selectedCondition.items.all())
+                ctx["condition_responses"] = selectedCondition.response.dictionary_set.all()[0].sorted_values()                
+            elif len(conditionalSet) > 0 and conditionIndex > -1 and conditionIndex < len(conditionalSet):
+                selectedCondition = conditionalSet[conditionIndex]
+                ctx["condition_items"] = list(selectedCondition.items.all())
+                ctx["condition_responses"] = selectedCondition.response.dictionary_set.all()[0].sorted_values()
+            else:
+                # this combination of choices does not have a response
+                pollChoiceDict = {}
+                for poll in currentCombination[0].dependent_questions.all():
+                    pollStr = "poll" + str(poll.id)
+                    if pollStr in self.request.session:
+                        pollChoiceDict[pollStr] = poll.item_set.get(item_text=self.request.session[pollStr])
+                ctx["poll_choice_dict"] = pollChoiceDict
 
         ctx['items'] = self.get_order(ctx)
         return ctx
@@ -349,8 +389,16 @@ class PollInfoView(generic.DetailView):
     template_name = 'polls/pollinfo.html'
     def get_context_data(self, **kwargs):
         ctx = super(PollInfoView, self).get_context_data(**kwargs)
+        emailInvite = Email.objects.filter(question=self.object, type=1)
+        if len(emailInvite) == 1:
+            setupEmail(self.object)
+            emailInvite = Email.objects.filter(question=self.object, type=1)
+        ctx['emailInvite'] = emailInvite[0]
+        ctx['emailDelete'] = Email.objects.filter(question=self.object, type=2)[0]
+        ctx['emailStart'] = Email.objects.filter(question=self.object, type=3)[0]
+        ctx['emailStop'] = Email.objects.filter(question=self.object, type=4)[0]
         ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
+        ctx['items'] = self.object.item_set.all()
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()     
@@ -480,20 +528,30 @@ def categorizeResponses(all_responses):
     
     #the outer loop goes through all the responses
     for response1 in others:
+        #for anonymous users, check anonymous name instead of username
         if response1.user == None:
-            continue
-        
-        add = True
-        #check if the user has voted multiple times
-        for response2 in latest_responses:
-            if response1.user.username == response2.user.username:
-                add = False
-                previous_responses.append(response1)
-                break
+            add = True
+            for response2 in latest_responses:
+                if response1.anonymous_voter and response2.anonymous_voter:
+                    if response1.anonymous_voter == response2.anonymous_voter:
+                        add = False
+                        previous_responses.append(response1)
+                        break
+            if add:
+                latest_responses.append(response1)  
+                    
+        else:
+            add = True
+            #check if the user has voted multiple times
+            for response2 in latest_responses:
+                if response1.user.username == response2.user.username:
+                    add = False
+                    previous_responses.append(response1)
+                    break
 
-        #this is the most recent vote
-        if add:
-            latest_responses.append(response1)   
+            #this is the most recent vote
+            if add:
+                latest_responses.append(response1)   
     
     return (latest_responses, previous_responses)
 
@@ -720,6 +778,7 @@ def addVoter(request, question_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
+    request.session['setting'] = 1
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # remove voters from a poll.
@@ -736,6 +795,7 @@ def removeVoter(request, question_id):
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.remove(voterObj.id)
+    request.session['setting'] = 1
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # called when creating the poll
@@ -756,6 +816,8 @@ def setAlgorithm(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['pollpreferences']
     question.save()
+    request.session['setting'] = 2
+    messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # set the visibility settings, how much information should be shown to the user
@@ -774,18 +836,24 @@ def setVisibility(request, question_id):
     else:
         question.display_pref = 4
     question.save()
+    request.session['setting'] = 3
+    messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def openPoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.open = True
     question.save()
+    request.session['setting'] = 4
+    messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 def closePoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.open = False
     question.save()
+    request.session['setting'] = 4
+    messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # view for ordering voters for allocation
@@ -904,6 +972,7 @@ def vote(request, question_id):
 
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 
+# check whether this poll is the first one in a multipoll
 def dependencyRedirect(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     if question.multipollquestion_set.all()[0].order == question.multipoll_set.all()[0].status-1:
@@ -911,9 +980,10 @@ def dependencyRedirect(request, question_id):
     else:
         return HttpResponseRedirect(reverse('polls:dependencyview', args=(question.id,)))
 
-# chose a dependent poll
+# choose a dependent poll
 def chooseDependency(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    
     dependencies = []
     l = request.POST.getlist('polls')
     for poll in l:
@@ -953,20 +1023,7 @@ def assignPreference(request, combination_id):
         conditionsSelected.append(item)
     
     # check if a response has been submitted for this condition    
-    allConditions = ConditionalItem.objects.filter(combination=combination)
-    condition = None
-    for currentCondition in allConditions:
-        if list(currentCondition.items.all()) == conditionsSelected:
-            condition = currentCondition
-            break
-
-    # create a new condition
-    if condition == None:
-        condition = ConditionalItem(combination=combination)
-        condition.save()
-        for item in conditionsSelected:
-            condition.items.add(item)
-        condition.save()
+    condition = getConditionFromResponse(conditionsSelected, combination)
 
     # make Response object to store data
     response = Response(question=question, user=request.user, timestamp=timezone.now())
@@ -989,19 +1046,73 @@ def assignPreference(request, combination_id):
             d[item] = rank
         d.save()
         item_num += 1
-        
+    
+    # get the index
+    conditionIndex = getConditionIndex(conditionsSelected, combination)
+
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')        
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(reverse('polls:dependencydetail', args=(combination.id,)) + "?condInd=" + str(conditionIndex))
+
+# check if there is a response for this set of conditions and return the condition object
+# create a new one if there is no existing objects
+def getConditionFromResponse(conditionsSelected, combination):
+    # check if a response has been submitted for this condition    
+    allConditions = ConditionalItem.objects.filter(combination=combination)
+    for currentCondition in allConditions:
+        # the list of conditions is equal
+        if list(currentCondition.items.all()) == conditionsSelected:
+            return currentCondition
+
+    # create a new condition object
+    condition = ConditionalItem(combination=combination)
+    condition.save()
+    for item in conditionsSelected:
+        condition.items.add(item)
+    condition.save()
+    return condition
+
+# find the index in the array
+def getConditionIndex(conditionsSelected, combination):
+    # check if a response has been submitted for this condition    
+    allConditions = ConditionalItem.objects.filter(combination=combination)
+    conditionIndex = 0
+    for currentCondition in allConditions:
+        if list(currentCondition.items.all()) == conditionsSelected:
+            return conditionIndex
+        conditionIndex += 1
+    
+    # not found
+    return -1
+    
+# preload the response based off of the condition(s) selected
+def getConditionalResponse(request, combination_id):
+    combination = get_object_or_404(Combination, pk=combination_id)
+    
+    # get conditions selected
+    conditionsSelected = []    
+    dependentQuestions = combination.dependent_questions.all()
+    for poll in dependentQuestions:
+        itemStr = request.GET["poll" + str(poll.id)]
+        item = poll.item_set.get(item_text=itemStr)
+        conditionsSelected.append(item)   
+    
+    # get the array index
+    conditionIndex = getConditionIndex(conditionsSelected, combination)        
+    
+    # save the poll responses
+    for poll in combination.dependent_questions.all():
+        request.session["poll" + str(poll.id)] = request.GET["poll" + str(poll.id)]
+
+    # set a parameter to the condition index, so that the response to that conditon will be preloaded
+    return HttpResponseRedirect(reverse('polls:dependencydetail', args=(combination.id,)) + "?condInd=" + str(conditionIndex))  
     
 def anonymousJoin(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     name = request.POST['name']
-    anonymousvoter = AnonymousVoter(name=name, question=question)
-    anonymousvoter.save()
-    request.session['anonymousvoter'] = anonymousvoter
-    return HttpResponseRedirect('/polls/%s/' % question_id)
+    request.session['anonymousvoter'] = name
+    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
     
 def anonymousVote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -1020,7 +1131,7 @@ def anonymousVote(request, question_id):
     if comment != "":
         response.comment = comment
     response.save()
-    d = response.dictionary_set.create(name = voter.name + " Preferences")
+    d = response.dictionary_set.create(name = voter + " Preferences")
 
     # find ranking student gave for each item under the question
     item_num = 1
@@ -1044,5 +1155,4 @@ def anonymousVote(request, question_id):
 
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')
-
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))

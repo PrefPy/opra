@@ -1,6 +1,8 @@
+
 <ul class="list-group">
+    <form action="{% url 'polls:editchoice' question.id %}" method="post">
+        {% csrf_token %}
     {% for item in items %}
-        {% if item.question == question %}
             <li class="list-group-item ">
                 {% if item.image %}  
                     <img src='/{{ item.image }}'/>
@@ -8,7 +10,7 @@
                 {% if item.imageURL != Null %}
                     <img src='{{ item.imageURL }}'/>
                 {% endif %}
-                {{ item }} 
+                <input type="text" class="form-control" style="width:70%;" name="item{{forloop.counter0}}" size="50" value="{{ item }}"/>
                 {% if question.status == 1 %}
                     <a href="{% url 'polls:delchoice' item.id %}">
                         <div class="pull-right">
@@ -17,8 +19,12 @@
                     </a>
                 {% endif %}
             </li>
-        {% endif %}
     {% endfor %}
+    {% if items.count > 0 %}
+    <br />
+    <input type="submit" class="btn btn-primary" value="Save Changes"/>
+    {% endif %}
+    </form>
     
     <li class="list-group-item">
         <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">

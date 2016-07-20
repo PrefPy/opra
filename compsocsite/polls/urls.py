@@ -21,6 +21,7 @@ urlpatterns = [
     
     url(r'^(?P<pk>[0-9]+)/$', views.DetailView.as_view(), name='detail'),
     url(r'^(?P<question_id>[0-9]+)/choice/add/$', views.addChoice, name='addchoice'),
+    url(r'^(?P<question_id>[0-9]+)/editchoice/$', views.editChoice, name='editchoice'),
     url(r'^choice/delete/([0-9]+)/$', views.deleteChoice, name='delchoice'),
     url(r'^delete/([0-9]+)/$', views.deletePoll, name='delpoll'),
     url(r'^(?P<question_id>[0-9]+)/addvoter/$', views.addVoter, name='addvoter'),
@@ -48,10 +49,12 @@ urlpatterns = [
     
     url(r'^(?P<pk>[0-9]+)/pollinfo/$', views.PollInfoView.as_view(), name='pollinfo'),
     url(r'^(?P<question_id>[0-9]+)/dependency/$', views.dependencyRedirect, name='dependency'),
+    url(r'^dependency/(?P<combination_id>[0-9]+)/get/$', views.getConditionalResponse, name='dependencyget'),
     url(r'^(?P<pk>[0-9]+)/dependency/view/$', views.DependencyView.as_view(), name='dependencyview'),
     url(r'^dependency/(?P<pk>[0-9]+)/detail/$', views.DependencyDetailView.as_view(), name='dependencydetail'),
     url(r'^(?P<question_id>[0-9]+)/choosedependency/$', views.chooseDependency, name='choosedependency'),
     url(r'^(?P<combination_id>[0-9]+)/assignpreference/$', views.assignPreference, name='assignpreference'),
-    url(r'^(?P<question_id>[0-9]+)/anonymousinvite/$', views.AnonymousInviteView.as_view(), name='anonymousinvite'),
+    url(r'^(?P<pk>[0-9]+)/anonymousinvite/$', views.AnonymousInviteView.as_view(), name='anonymousinvite'),
+    url(r'^(?P<question_id>[0-9]+)/anonymousjoin/$', views.anonymousJoin, name='anonymousjoin'),
     url(r'^(?P<question_id>[0-9]+)/anonymousvote/$', views.anonymousVote, name='anonymousvote'),
 ]

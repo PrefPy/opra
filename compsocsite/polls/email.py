@@ -20,31 +20,29 @@ from django.conf import settings
 import random
 import string
 
-def switchSubject(x, title, creator):
-    return {
-        'invite': 'You have been invited to vote on ' + title,
-        'remove': 'You have been removed from ' + title,
-        'start': title + ' has started!',
-        'stop': title + ' has stopped',
-    }.get(x, "A message from " + creator)
-
-def switchEmail(x, name, uname, creator, request, question_id):
-    return {
-        'invite': 'Hello ' + name + ',\n\n' + creator
-                + ' has invited you to vote on a poll. Please login at '
-                + request.build_absolute_uri(reverse('appauth:login')+'?name='+uname)
-                + ' to check out.\n\nSincerely,\nOPRAH Staff',
-        'remove': 'Hello ' + name + ',\n\n' + creator
-                + ' has deleted you from a poll.\n\nSincerely,\nOPRAH Staff',
-        'start': 'Hello ' + name + ',\n\n' + creator
-                + ' has started a poll. It is now available to vote on at '
-                + request.build_absolute_uri(reverse('polls:detail', args=[question_id]))
-                + ' \n\nSincerely,\nOPRAH Staff',
-        'stop': 'Hello ' + name + ',\n\n' + creator
-                + ' has ended a poll. Please visit '
-                + request.build_absolute_uri(reverse('polls:index'))
-                + ' to view the decision.\n\nSincerely,\nOPRAH Staff',
-    }.get(x, x)
+def setupEmail(question):
+    title = question.question_text
+    creator = question.question_owner.username
+    emailInvite = Email(question=question, type=1,
+        subject="You have been invited to vote on " + title,
+        message='Hello [user_name],\n\n' + creator
+                + ' has invited you to vote on a poll. Please login at [url] to check it out.\n\nSincerely,\nOPRAH Staff')
+    emailRemove = Email(question=question, type=2,
+        subject="You have been removed from " + title,
+        message='Hello [user_name],\n\n' + creator
+                + ' has deleted you from a poll.\n\nSincerely,\nOPRAH Staff')
+    emailStart = Email(question=question, type=3,
+        subject=title + ' has started!',
+        message='Hello [user_name],\n\n' + creator
+                + ' has started a poll. It is now available to vote on at [url] \n\nSincerely,\nOPRAH Staff')
+    emailStop = Email(question=question, type=4,
+        subject=title + ' has stopped',
+        message='Hello [user_name],\n\n' + creator
+                + ' has ended a poll. Please visit [url] to view the decision.\n\nSincerely,\nOPRAH Staff')
+    emailInvite.save()
+    emailRemove.save()
+    emailStart.save()
+    emailStop.save()
 
 def switchHTML(x, name, uname, creator, request, question_id, options):
     return {
@@ -56,7 +54,6 @@ def switchHTML(x, name, uname, creator, request, question_id, options):
                 + ' has deleted you from a poll.\n\nSincerely,\nOPRAH Staff',
         'start': '<h1>Hello ' + name + ',</h1><p>' + creator
                 + ' has started a poll. It is now available to vote on <a href=\''
-                + request.build_absolute_uri(reverse('appauth:login')+'?name='+uname)
                 + '\'>here</a>.</p>' + options + '<p>Sincerely,</p><p>OPRAH Staff</p>',
         'stop': 'Hello ' + name + ',\n\n' + creator
                 + ' has ended a poll. Please visit '
@@ -70,9 +67,35 @@ def getOptions(items):
         arr.append(item.item_text)
     return arr
 
+def switchModel(type, question):
+    if type == 'invite':
+        email = Email.objects.filter(question=question, type=1)
+    if type == 'remove':
+        email = Email.objects.filter(question=question, type=2)
+    if type == 'start':
+        email = Email.objects.filter(question=question, type=3)
+    if type == 'stop':
+        email = Email.objects.filter(question=question, type=4)
+    if len(email) != 1:
+        setupEmail(question)
+    return email[0]
+
+def translateEmail(text, uname, url):
+    text = text.replace("[user_name]", uname)
+    text = text.replace("[url]", url)
+    return text
+
+def translateHTML(text, uname, url):
+    text = translateEmail(text, uname, url)
+    text = "<p>" + text + "</p>"
+    text = text.replace("\n\n", "</p><br /><p>")
+    text = text.replace("\n", "</p><p>")
+    return text
+
 #function to send email
 def sendEmail(request, question_id, type):
     question = get_object_or_404(Question, pk=question_id)
+    email = switchModel(type, question)
     options = ''
     title = question.question_text
     creator_obj = User.objects.get(id=question.question_owner_id)
@@ -92,6 +115,7 @@ def sendEmail(request, question_id, type):
         if question.poll_algorithm == 1 and type == 'start':
             items = Item.objects.all().filter(question=question)
             item_array = getOptions(items)
+            options = ''
             for i in items:
                 rand = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(20))
                 response = EmailResponse(item=i, user=voter, identity=rand)
@@ -99,18 +123,36 @@ def sendEmail(request, question_id, type):
                 options += '<p><a href=\'' + request.build_absolute_uri(reverse('polls:index') + str(response.pk) + "/" + rand + "/voteEmail/") + '\'>' + i.item_text + '</a></p>'
         if voter.first_name != "":
             name = voter.first_name + " " + voter.last_name
-        mail.send_mail(switchSubject(type, title, creator),
-            switchEmail(type, name, uname, creator, request, question_id),
+        url = request.build_absolute_uri(reverse('appauth:login')+'?name='+uname)
+        mail.send_mail(translateEmail(email.subject, name, url),
+            translateEmail(email.message, name, url),
             'oprahprogramtest@gmail.com',[voter.email],
-            html_message=switchHTML(type, name, uname, creator, request, question_id, options))
+            html_message=translateHTML(email.message, name, url))
 
 def emailSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    emailInvite = Email.objects.filter(question=question, type=1)[0]
+    emailInvite.subject = request.POST.get('inviteSubject')
+    emailInvite.message = request.POST.get('inviteMessage')
+    emailInvite.save()
+    emailDelete = Email.objects.filter(question=question, type=2)[0]
+    emailDelete.subject = request.POST.get('deleteSubject')
+    emailDelete.message = request.POST.get('deleteMessage')
+    emailDelete.save()
+    emailStart = Email.objects.filter(question=question, type=3)[0]
+    emailStart.subject = request.POST.get('startSubject')
+    emailStart.message = request.POST.get('startMessage')
+    emailStart.save()
+    emailStop = Email.objects.filter(question=question, type=4)[0]
+    emailStop.subject = request.POST.get('stopSubject')
+    emailStop.message = request.POST.get('stopMessage')
+    emailStop.save()
     question.emailInvite = request.POST.get('emailInvite') == 'email'
     question.emailDelete = request.POST.get('emailDelete') == 'email'
     question.emailStart = request.POST.get('emailStart') == 'email'
     question.emailStop = request.POST.get('emailStop') == 'email'
     question.save()
+    request.session['setting'] = 5
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def voteEmail(request, key, resp_id):

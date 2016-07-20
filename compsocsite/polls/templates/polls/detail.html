@@ -176,8 +176,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div>
 </div>
 </div>
+<<<<<<< HEAD
 <form {% if question.session.anonymousvoter %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
 <div class="row">
+=======
+<form {% if request.session.anonymousvoter %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
+	<div class="row">
+>>>>>>> origin/master
 
 {% csrf_token %}
 {% if request.flavour == "mobile" %}
@@ -278,6 +283,7 @@ Submit
 {% endfor %}
 {% endif %}
                   
+<<<<<<< HEAD
 </ul>
 </div>
 </div>
@@ -286,6 +292,17 @@ Submit
 <div>
 <textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here..."></textarea>
 </div>
+=======
+					</ul>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+	<div>
+		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">{% if request.user.username != ""%}{{lastcomment}}{% endif %}</textarea>
+	</div>
+>>>>>>> origin/master
 </form>
 
 

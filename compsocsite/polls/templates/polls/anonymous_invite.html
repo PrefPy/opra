@@ -2,8 +2,12 @@
 
 {% block content %}
 <div class="col-md-10 col-md-offset-1">
+<br />
+<br />
+<br />
+<br />
 
-	<form action="{% url 'polls:anonymousjoin' question.id %}">
+	<form action="{% url 'polls:anonymousjoin' question.id %}" method="post">
 		{% csrf_token %}
 		<p>Please Enter Your Name</p>
 		<input name="name" id="name" value=""/>

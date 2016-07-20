@@ -42,9 +42,6 @@ class AddStep2View(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(AddStep2View, self).get_context_data(**kwargs)
         ctx['question'] = self.get_object().questions.all()[self.get_object().pos]
-        ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
         return ctx
         
 class AddStep3View(generic.DetailView):
@@ -52,10 +49,9 @@ class AddStep3View(generic.DetailView):
     template_name = 'multipolls/add_step3.html'
     def get_context_data(self, **kwargs):
         ctx = super(AddStep3View, self).get_context_data(**kwargs)
-        ctx['question'] = self.get_object().questions.all()[self.get_object().pos]
-        ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
+        question = self.get_object().questions.all()[self.get_object().pos]
+        ctx['question'] = question
+        ctx['items'] = question.item_set.all()
         return ctx
         
 class AddStep4View(generic.DetailView):
@@ -64,9 +60,6 @@ class AddStep4View(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(AddStep4View, self).get_context_data(**kwargs)
         ctx['question'] = self.get_object().questions.all()[self.get_object().pos]
-        ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
-        ctx['groups'] = Group.objects.all()
         ctx['preference'] = self.request.user.userprofile.displayPref
         ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
         ctx['alloc_methods'] = ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
@@ -80,12 +73,9 @@ class SetVotersView(generic.DetailView):
         ctx = super(SetVotersView, self).get_context_data(**kwargs)
         ctx['question'] = self.get_object().questions.all()[self.get_object().pos]
         ctx['users'] = User.objects.all()
-        ctx['items'] = Item.objects.all()
         ctx['groups'] = Group.objects.all()
         return ctx
-        
 
-        
 def setQuestion(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
     questionString = request.POST['questionTitle']   

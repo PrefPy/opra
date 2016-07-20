@@ -433,11 +433,15 @@ img:hover{
         {% if question.question_owner == request.user %}
             {% if latest_responses|length > 0 %}
                 {% for response in latest_responses %}
+                    {% if response.user %}
                     {% if response.user.first_name == "" %}
                         <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
                     {% else %}
                         {{ response.user.first_name }} {{ response.user.last_name }} (<a href="mailto:{{ response.user.email }}">{{ response.user.email }}</a>)
                         (last voted on {{ response.timestamp }}) <br />
+                    {% endif %}
+                    {% else %}
+                        <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br />
                     {% endif %}
                     <div >
                     {% for d in response.dictionary_set.all %}
@@ -458,7 +462,11 @@ img:hover{
                     <div class="well">
                     {% for response in previous_responses %}
                         <div class="btn-group">
-                            <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
+                            {% if response.user %}
+                            <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
+                            {% else %}
+                            <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br />
+                            {% endif %} 
                             {% for d in response.dictionary_set.all %}
                                 {% for item in d.sorted_values %}
                             <button type="button" class="btn btn-default"> ({{ item.1 }}) {{ item.0 }} </button>
@@ -524,6 +532,7 @@ img:hover{
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
                 <p>The owner allows everyone to see all votes cast.</p>
                 {% for response in latest_responses %}
+                {% if response.user %}
                     {% if response.user != request.user %}
                         <div class="btn-group">
                             <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
@@ -537,6 +546,19 @@ img:hover{
                         {% endif %}
                         </div>
                     {% endif %}
+                {% else %}
+                <div class="btn-group">
+                            <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br /> 
+                            {% for d in response.dictionary_set.all %}
+                                {% for item in d.sorted_values %}
+                            <button type="button" class="btn btn-default"> {{ item.1 }}) {{ item.0 }} </button>
+                                {% endfor %}
+                            {% endfor %}
+                            {% if response.comment %}
+                        <p>Comment: {{response.comment}}</p>
+                        {% endif %}
+                        </div>
+                {% endif %}
                 {% endfor %}
             {% elif question.display_pref == 2 %}
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>

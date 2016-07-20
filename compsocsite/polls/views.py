@@ -528,20 +528,30 @@ def categorizeResponses(all_responses):
     
     #the outer loop goes through all the responses
     for response1 in others:
+        #for anonymous users, check anonymous name instead of username
         if response1.user == None:
-            continue
-        
-        add = True
-        #check if the user has voted multiple times
-        for response2 in latest_responses:
-            if response1.user.username == response2.user.username:
-                add = False
-                previous_responses.append(response1)
-                break
+            add = True
+            for response2 in latest_responses:
+                if response1.anonymous_voter and response2.anonymous_voter:
+                    if response1.anonymous_voter == response2.anonymous_voter:
+                        add = False
+                        previous_responses.append(response1)
+                        break
+            if add:
+                latest_responses.append(response1)  
+                    
+        else:
+            add = True
+            #check if the user has voted multiple times
+            for response2 in latest_responses:
+                if response1.user.username == response2.user.username:
+                    add = False
+                    previous_responses.append(response1)
+                    break
 
-        #this is the most recent vote
-        if add:
-            latest_responses.append(response1)   
+            #this is the most recent vote
+            if add:
+                latest_responses.append(response1)   
     
     return (latest_responses, previous_responses)
 

@@ -48,6 +48,8 @@ class Email(models.Model):
     type     = models.IntegerField()
     subject  = models.CharField(max_length=100)
     message  = models.CharField(max_length=500)
+    def __str__(self):
+        return self.question
 
 #Helper function for image
 def get_image_path(instance, filename):

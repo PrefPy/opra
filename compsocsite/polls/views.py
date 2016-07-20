@@ -312,11 +312,9 @@ class DetailView(generic.DetailView):
         
         # check if the user submitted a vote earlier and display that for modification
         if len(currentUserResponses) > 0:
-            mostRecentResponse = currentUserResponses[0]
-            selectionArray = []             
-            for d in mostRecentResponse.dictionary_set.all():   
-                selectionArray = d.sorted_values()
-            ctx['currentSelection'] = selectionArray
+            mostRecentResponse = currentUserResponses[0]          
+            responseDict = mostRecentResponse.dictionary_set.all()[0]   
+            ctx['currentSelection'] = responseDict.sorted_values()
         else:
             # no history so display the list of choices
             ctx['items'] = self.get_order(ctx)
@@ -951,6 +949,7 @@ def vote(request, question_id):
 
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 
+# check whether this poll is the first one in a multipoll
 def dependencyRedirect(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     if question.multipollquestion_set.all()[0].order == question.multipoll_set.all()[0].status-1:
@@ -958,9 +957,10 @@ def dependencyRedirect(request, question_id):
     else:
         return HttpResponseRedirect(reverse('polls:dependencyview', args=(question.id,)))
 
-# chose a dependent poll
+# choose a dependent poll
 def chooseDependency(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    
     dependencies = []
     l = request.POST.getlist('polls')
     for poll in l:
@@ -1000,20 +1000,7 @@ def assignPreference(request, combination_id):
         conditionsSelected.append(item)
     
     # check if a response has been submitted for this condition    
-    allConditions = ConditionalItem.objects.filter(combination=combination)
-    condition = None
-    for currentCondition in allConditions:
-        if list(currentCondition.items.all()) == conditionsSelected:
-            condition = currentCondition
-            break
-
-    # create a new condition
-    if condition == None:
-        condition = ConditionalItem(combination=combination)
-        condition.save()
-        for item in conditionsSelected:
-            condition.items.add(item)
-        condition.save()
+    condition = getConditionFromResponse(conditionsSelected, combination)
 
     # make Response object to store data
     response = Response(question=question, user=request.user, timestamp=timezone.now())
@@ -1038,18 +1025,44 @@ def assignPreference(request, combination_id):
         item_num += 1
     
     # get the index
-    conditionIndex = 0
-    for currentCondition in allConditions:
-        if list(currentCondition.items.all()) == conditionsSelected:
-            condition = currentCondition
-            break
-        conditionIndex += 1
+    conditionIndex = getConditionIndex(conditionsSelected, combination)
 
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')        
 
     return HttpResponseRedirect(reverse('polls:dependencydetail', args=(combination.id,)) + "?condInd=" + str(conditionIndex))
 
+# check if there is a response for this set of conditions and return the condition object
+# create a new one if there is no existing objects
+def getConditionFromResponse(conditionsSelected, combination):
+    # check if a response has been submitted for this condition    
+    allConditions = ConditionalItem.objects.filter(combination=combination)
+    for currentCondition in allConditions:
+        # the list of conditions is equal
+        if list(currentCondition.items.all()) == conditionsSelected:
+            return currentCondition
+
+    # create a new condition object
+    condition = ConditionalItem(combination=combination)
+    condition.save()
+    for item in conditionsSelected:
+        condition.items.add(item)
+    condition.save()
+    return condition
+
+# find the index in the array
+def getConditionIndex(conditionsSelected, combination):
+    # check if a response has been submitted for this condition    
+    allConditions = ConditionalItem.objects.filter(combination=combination)
+    conditionIndex = 0
+    for currentCondition in allConditions:
+        if list(currentCondition.items.all()) == conditionsSelected:
+            return conditionIndex
+        conditionIndex += 1
+    
+    # not found
+    return -1
+    
 # preload the response based off of the condition(s) selected
 def getConditionalResponse(request, combination_id):
     combination = get_object_or_404(Combination, pk=combination_id)
@@ -1061,21 +1074,10 @@ def getConditionalResponse(request, combination_id):
         itemStr = request.GET["poll" + str(poll.id)]
         item = poll.item_set.get(item_text=itemStr)
         conditionsSelected.append(item)   
-        
-    # check if a response has been submitted for this condition    
-    allConditions = ConditionalItem.objects.filter(combination=combination)
-    condition = None
-    conditionIndex = 0
-    for currentCondition in allConditions:
-        if list(currentCondition.items.all()) == conditionsSelected:
-            condition = currentCondition
-            break
-        conditionIndex += 1
     
-    # if not found, set to -1
-    if conditionIndex == len(allConditions):
-        conditionIndex = -1
-
+    # get the array index
+    conditionIndex = getConditionIndex(conditionsSelected, combination)        
+    
     # save the poll responses
     for poll in combination.dependent_questions.all():
         request.session["poll" + str(poll.id)] = request.GET["poll" + str(poll.id)]

@@ -1,5 +1,26 @@
 {% extends 'polls/base.html' %}
 
+{% block extra_head %} 
+<!-- Google Analytics -->    
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-81006265-1', 'none');
+ //ga('create', 'UA-81006265-1', 'none','DetailTracker');
+  ga('send', 'pageview');
+ //ga('DetailTracker.send', 'pageview');
+ga(function(tracker) {
+  // Logs the tracker created above to the console.
+  console.log(tracker);
+});
+
+</script>
+{% endblock %}
+        
+
 {% block content %}
     {% if user.is_authenticated %} 
 

@@ -3,6 +3,42 @@
 {% block extra_head %}
 
 
+<!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-81006265-1', 'none');
+ //ga('create', 'UA-81006265-1', 'none','DetailTracker');
+  ga('send', 'pageview');
+ ga('send', 'event', 'Button', 'click', 'left-sortable');
+ //ga('DetailTracker.send', 'pageview');
+ga(function(tracker) {
+  // Logs the tracker created above to the console.
+  console.log(tracker);
+});
+    var left-form=document.getElementById('left-sortable');
+    form.addEventListener('submit', function(event) {
+
+  // Prevents the browser from submiting the form
+  // and thus unloading the current page.
+  event.preventDefault();
+
+  // Sends the event to Google Analytics and
+  // resubmits the form once the hit is done.
+  ga('send', 'event', 'Left Form', 'submit', {
+    hitCallback: function() {
+      form.submit();
+    }
+  });
+});
+
+</script>
+    
+<!-- End Google Analytics -->
+
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-59SLDM"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -27,56 +63,70 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/resources/demos/style.css">
     <style>
-  .sortable1 { list-style-type: none; height: auto; float: left; margin-right: 10px; background: #eee; padding: 5px; width: 460px; }
-  .sortable1 li {border:0; background: transparent; margin:1px; padding:1px; font-size: 1em; width: auto;}
+.sortable1 {background:transparent;}
+.aftersort {background-color:#eee;}
+.hide1 {background-color:transparent; min-height=5px;min-width:15px;}
   </style>
 
 
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
   <script>
-  $( function() {
       
-    $( "ul.droptrue" ).sortable({
-      connectWith: "ul.droptrue",
-        
-    });
       
-
+      
+      $(function() {
           
-     // if($("ul").has("li").length == 0) {
-	   //    $("ul").hide();
-    //  }
-      $("ul.droptrue").each(
-          function() {
-        var elem = $(this);
-        if (elem.children().length == 0) {
-            elem.hide();
-        }
-        }
-      );
+           $('.hide1')
+                .mouseover(function(){
+                 $('.ept',this).show();})
+           ;
+          
+          
+        var oldList, newList, item,sortin;
+          
+        $("ul.choice1").sortable({
+           
+            start: function(event, ui) {
+                sortin=-1,
+                item = ui.item;
+                newList = oldList = ui.item.parent();
                 
-      
-      
-      $( "ul.droptrue" ).sortable( "refreshPositions" );
-      
-      
- 
-    $( "ul.droptrue" ).disableSelection();
-      
-  
-  } );
+            },
+            
+            stop: function(event, ui) {
+                if(oldList.attr('id')!=newList.attr('id')){
+                    newList.addClass('aftersort'); 
+
+                } 
+                
+                //no ul background when ul has only one li
+                 if(oldList.attr('class').indexOf('aftersort')>-1 && oldList.children().size()==1){
+                    oldList.removeClass('aftersort');    
+                }
+                
+                //alert(oldList.attr('id')+" TO "+newList.attr('id'));
+            },
+               
+            change: function(event, ui) {  
+                if(ui.sender) newList = ui.placeholder.parent();
+            },
+            connectWith: "ul.choice1",
+        }).disableSelection();
+          
+            
+              
+    });
+    
   </script>
 
 
 {% endblock %}
 
 {% block content %}
-<ul class="sortable1 list-group droptrue"></ul>
-
 {% if error_message %}
 <p>
-	<strong>{{ error_message }}</strong>
+<strong>{{ error_message }}</strong>
 </p>
 {% endif %}
 
@@ -94,174 +144,161 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 {% if question.status == 2 %}
 <div class="grid">
-	<div class="row">
-		{% if question.imageURL != Null and question.imageURL != '' %}
-		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-			<a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
-		</div>
-		{% elif question.image %}
-		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-			<a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
-		</div>
-		{% endif %}
-		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
-			<h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
-				{{ question.question_text }}:</h3>
+<div class="row">
+{% if question.imageURL != Null and question.imageURL != '' %}
+<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+<a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
+</div>
+{% elif question.image %}
+<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+<a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
+</div>
+{% endif %}
+<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
+<h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
+{{ question.question_text }}:</h3>
             <small class="text-muted">Created by {{ question.question_owner }}</small>
-			
-			{% if question.question_desc %}
-			<h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
-				{{ question.question_desc }}
-			</h3>
-			{% endif %}
-		
-			<!-- <p>
-			<b>Voters: </b>
-			{% for voter in question.question_voters.all %}
-			{% if voter == request.user %}
-			<i>{{ voter }}</i>,
-			{% else %}
-			{{ voter }},
-			{% endif %}
-			{% endfor %}
-			</p> -->
-		</div>
-	</div>
+{% if question.question_desc %}
+<h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
+{{ question.question_desc }}
+</h3>
+{% endif %}
+<!-- <p>
+<b>Voters: </b>
+{% for voter in question.question_voters.all %}
+{% if voter == request.user %}
+<i>{{ voter }}</i>,
+{% else %}
+{{ voter }},
+{% endif %}
+{% endfor %}
+</p> -->
+</div>
+</div>
 </div>
 <form {% if question.session.anonymousvoter %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
-	<div class="row">
+<div class="row">
 
-		{% csrf_token %}
-		
-		{% if request.flavour == "mobile" %}
-		<div class="col-md-6 margin-panel-top">
-		{% else %}
+{% csrf_token %}
+{% if request.flavour == "mobile" %}
+<div class="col-md-6 margin-panel-top">
+{% else %}
         <div class="col-md-6 margin-panel-top">
-		{% endif %}
-		
-		
-			<div class="panel panel-default">
-				<div class="panel-heading" >
-					<b>Your preferences:</b>
-				    {% if request.flavour == "mobile" %}
-						<button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-							<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-						</button>
-						
-						<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
-							Submit
-				        </button>	
-				    {% else %}
-							<a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background">Clear</a>
-							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
-				                Submit
-							</button>
-					{% endif %}
-				    <input type="hidden" id="pref_order" name="pref_order" value=""/>
-				</div>
+{% endif %}
+<div class="panel panel-default">
+<div class="panel-heading" >
+<b>Your preferences:</b>
+   {% if request.flavour == "mobile" %}
+<button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+</button>
+<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
+Submit
+       </button>
+   {% else %}
+<a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background">Clear</a>
+<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
+               Submit
+</button>
+{% endif %}
+   <input type="hidden" id="pref_order" name="pref_order" value=""/>
+</div>
   
                 
-				<div class="panel-body" >
-                    
-					<div id="left-sortable">
+        <div class="panel-body" >
 
-						{% if currentSelection %}
-						{% for selection in currentSelection %}
-						{% for item in question.item_set.all %}
-                        
-						{% if selection.0 == item %}
+            <div id="left-sortable" >
+            {% if currentSelection %}
+            
+            {% for selection in currentSelection %}
+            {% for item in question.item_set.all %}
 
-                        <ul class="sortable1 list-group droptrue" id="item{{ forloop.counter }}">
-						  <li class="list-group-item"  >  
-                            
-							{% if selection.0.image %}
-				                <img class="item" src='/{{ selection.0.image.url }}'/>
-							{% endif %}
-		                    {% if item.imageURL != Null %}
-                                <img class="item" src='{{ item.imageURL }}'/>
-		                    {% endif %}
-                            
-							{{ selection.0 }}
-                            
-						  </li></ul>
+            {% if selection.0 == item %}
+            
+          
+            <ul class="choice1 sortable1" id="item{{ forloop.counter }}">
+             <li style="padding:10px;">  
+            {% if selection.0.image %}
+                    <img class="item" src='/{{ selection.0.image.url }}'/>
+            {% endif %}
+            {% if item.imageURL != Null %}
+                    <img class="item" src='{{ item.imageURL }}'/>
+            {% endif %}
 
+            {{ selection.0 }}</li></ul>
 
-                        
-						{% endif %}
-                            
-						{% endfor %}
-						{% endfor %}
-						{% endif %}
-					</div> <!-- left-sortable-->
-				</div>
-				
-				{% if request.flavour == "mobile" %}
-					<button onclick="javascript:window.location.href='{% url 'polls:detail' question.id %}?order=null'; return false;" class="reset-button-mobile">
-				        <a href="{% url 'polls:detail' question.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
-				    </button>		
-				{% endif %}
-			</div>
-		</div>
+            {% endif %}
+
+            {% endfor %}
+            {% endfor %}
+                 <ul class="choice1 hide1" id="hide1"><li class="ept" style="visibility:hidden;"/> </ul>  
+            {% endif %}
+            </div> <!-- left-sortable-->
+        </div>
+{% if request.flavour == "mobile" %}
+<button onclick="javascript:window.location.href='{% url 'polls:detail' question.id %}?order=null'; return false;" class="reset-button-mobile">
+       <a href="{% url 'polls:detail' question.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+   </button>
+{% endif %}
+</div>
+</div>
 
 
-		{% if request.flavour == "mobile" %}
-		<div class="col-md-6 margin-panel-top">
-		{% else %}
-		<div class="col-md-6 margin-panel-top">
-		{% endif %}
-		
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<b>Remaining Options:</b>
-					
-					{% if request.flavour == "mobile" %}
-						<button onclick="moveAll(); return false;" class="move-all-button-mobile">
-					<span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>
-				        </button>
-				    {% else %}
-				        <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
-					       Move All
-				        </button>
-					{% endif %}
-				</div>
-				<div class="panel-body">
-					<ul id="right-sortable" class="list-group">
-						{% if currentSelection == None %}
-						{% for item in items %}
-						<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
-							{% if item.image %}
-								<img class="item" src='/{{ item.image.url }}'/>
-							{% endif %}
-		                    {% if item.imageURL != Null %}
-		                    	<img class="item" src='{{ item.imageURL }}'/>
-		                    {% endif %}
-							{{ item.item_text }}
-						</li>
-						{% endfor %}
-						{% endif %}
+{% if request.flavour == "mobile" %}
+<div class="col-md-6 margin-panel-top">
+{% else %}
+<div class="col-md-6 margin-panel-top">
+{% endif %}
+<div class="panel panel-default">
+<div class="panel-heading">
+<b>Remaining Options:</b>
+{% if request.flavour == "mobile" %}
+<button onclick="moveAll(); return false;" class="move-all-button-mobile">
+<span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>
+       </button>
+   {% else %}
+       <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
+      Move All
+       </button>
+{% endif %}
+</div>
+<div class="panel-body">
+<ul id="right-sortable" class="list-group">
+{% if currentSelection == None %}
+{% for item in items %}
+<li class="list-group-item" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
+{% if item.image %}
+<img class="item" src='/{{ item.image.url }}'/>
+{% endif %}
+                   {% if item.imageURL != Null %}
+                   	<img class="item" src='{{ item.imageURL }}'/>
+                   {% endif %}
+{{ item.item_text }}
+</li>
+{% endfor %}
+{% endif %}
                   
-					</ul>
-				</div>
-			</div>
-		</div>
-	
-	</div>
-	<div>
-		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here..."></textarea>
-	</div>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div>
+<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here..."></textarea>
+</div>
 </form>
 
 
 <script>
-	var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
-	var wholeHeight2 = $('#right-sortable')[0].scrollHeight;
-	if (wholeHeight1 > wholeHeight2) {
-		$('#right-sortable').css("height", wholeHeight1);
-	} else {
-		$('#left-sortable').css("height", wholeHeight2);
-	}
-	$('#left-sortable').sortable('refresh');
-	$('#right-sortable').sortable('refresh');
+var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
+var wholeHeight2 = $('#right-sortable')[0].scrollHeight;
+if (wholeHeight1 > wholeHeight2) {
+$('#right-sortable').css("height", wholeHeight1);
+} else {
+$('#left-sortable').css("height", wholeHeight2);
+}
+$('#left-sortable').sortable('refresh');
+$('#right-sortable').sortable('refresh');
     
 
 

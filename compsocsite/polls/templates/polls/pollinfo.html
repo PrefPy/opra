@@ -266,7 +266,7 @@ img:hover{
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
 
 <div class="col-md-10">
-    <form action="{%url 'polls:emailSettings' question.id%}" method="post">
+    <form action="{% url 'polls:emailSettings' question.id %}" method="post">
         {% csrf_token %}
         <div class="col-md-6">
             <label for="inviteSubject">Subject:</label> <br />

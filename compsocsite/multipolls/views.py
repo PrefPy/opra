@@ -196,5 +196,30 @@ def progress(request, multipoll_id):
     else:
         #end the last poll
         endSubpoll(multipoll)
-
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class mpollinfoView(generic.DetailView):
+    model = MultiPoll
+    template_name = 'multipolls/mpollinfo.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(mpollinfoView, self).get_context_data(**kwargs)
+        mpoll=self.get_object()
+        question = self.get_object().questions.all()[self.get_object().pos]
+        ctx['mpoll']= mpoll
+        ctx['question'] = question
+        ctx['items'] = question.item_set.all()
+        return ctx
+    
+def deleteMpoll(request, multipoll_id):
+    multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
+    # check to make sure the current user is the owner
+    if request.user != multipoll.owner:
+        return HttpResponseRedirect(reverse('polls:m_polls'))  
+    
+    for question in multipoll.questions.all():
+        question.delete()
+    multipoll.delete()
+    
+    
+    return HttpResponseRedirect(reverse('polls:m_polls'))

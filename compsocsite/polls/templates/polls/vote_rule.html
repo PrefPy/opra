@@ -1,46 +1,14 @@
 {% extends 'polls/base.html' %}
 
 {% block extra_head %}
-  <style type="text/css">
-    #mynetwork {
-      width: 400px;
-      height: 400px;
-      border: 1px solid lightgray;
+<style type="text/css">
+    #cy {
+        width: 500px;
+        height: 500px;
+        border: 1px solid lightgray;
     }
-  </style>
-
-  <script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
-  <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
-
-  <script type="text/javascript">
-    var nodes = null;
-    var edges = null;
-    var network = null;
-
-    function draw() {
-        // create nodes
-        nodes = []
-        {% for row in wmg_nodes %}
-            nodes.push({id : {{ row.id }}, label: '{{ row.label }}' });
-        {% endfor %}
-
-        // create connections between nodes
-        edges = []
-        {% for row in wmg_edges %}
-            edges.push({from : {{ row.from }}, to: {{ row.to }}, value: {{ row.value }}, title: '{{ row.title }}', arrows:'to' });
-        {% endfor %}
-
-      // Instantiate our network object.
-      var container = document.getElementById('mynetwork');
-      var data = {
-        nodes: nodes,
-        edges: edges
-      };
-      var options = {};
-      network = new vis.Network(container, data, options);
-    }
-    window.onload = draw;
-</script>
+</style>
+<script src="http://js.cytoscape.org/js/cytoscape.min.js"></script>
 {% endblock %}
 
 {% load poll_extra %}
@@ -147,7 +115,6 @@
                 {% endfor %}
             </div>
         </div>
-
         <!-- Panel for weighted majority graph (closed by default) -->
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -157,13 +124,75 @@
                     </a>
                 </h4>
             </div>
-            <div id="collapse_wmg" class="panel-body collapse">
-                <div id="mynetwork"></div>
+            <div id="collapse_wmg" class="panel-body">
+               <div id="cy"></div>
             </div>
         </div>
+
         {% endif %}
         {% endif %}
     
         <a href="{% url 'polls:index' %}"> Return Home</a>
     </div>
+<script>
+    var cy = cytoscape({
+        container: document.getElementById('cy'),
+        layout: {
+            name: 'cose',
+            padding: 10
+        },
+        
+      style: cytoscape.stylesheet()
+        .selector('node')
+          .css({
+            'width': 'mapData(weight, 40, 80, 20, 60)',
+            'content': 'data(name)',
+            'text-valign': 'center',
+            'text-outline-width': 2,
+            'text-outline-color': 'data(faveColor)',
+            'background-color': 'data(faveColor)',
+            'color': '#fff'
+          })
+        .selector(':selected')
+          .css({
+            'border-width': 3,
+            'border-color': '#333'
+          })
+        .selector('edge')
+          .css({
+            'curve-style': 'bezier',
+            'opacity': 0.666,
+            'width': 'mapData(strength, 70, 100, 2, 6)',
+            'target-arrow-shape': 'triangle',
+            'source-arrow-shape': 'circle',
+            'line-color': 'data(faveColor)',
+            'source-arrow-color': 'data(faveColor)',
+            'target-arrow-color': 'data(faveColor)'
+          })
+        .selector('edge.questionable')
+          .css({
+            'line-style': 'dotted',
+            'target-arrow-shape': 'diamond'
+          })
+        .selector('.faded')
+          .css({
+            'opacity': 0.25,
+            'text-opacity': 0
+          }),
+
+
+      elements: {
+        nodes: [
+         {% for row in wmg_nodes %}
+                {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 50, faveColor: '#6FB1FC' } },
+            {% endfor %}
+        ],
+        edges: [
+         {% for row in wmg_edges %}
+                {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#6FB1FC', strength: {{ row.value }} * 10 + 50 } },
+            {% endfor %}
+        ]
+      },
+    });
+</script>
 {% endblock %}

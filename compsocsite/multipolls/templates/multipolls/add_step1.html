@@ -43,21 +43,21 @@ function validateForm() {
 
     <form id="add_poll" method="post" action="/multipolls/add_step1/" name="add_step1" onsubmit="return validateForm()">
         {% csrf_token %}
-        <label for="mPollTitle">Title:</label> <br />
-        <input type="text" class="form-control" id="mPollTitle" name="mPollTitle" value="" maxlength="20" size="100" autofocus/>
-        <small class="text-muted">Required (at most 20 characters) </small> <br/><br/>
+        <label for="mPollTitle">Title:</label> <small class="text-muted"> * </small><br />
+        <input type="text" class="form-control" id="mPollTitle" name="mPollTitle" placeholder="At most 20 characters" maxlength="20" size="100" autofocus/>
+         <br/>
         
         <label for="desc">Multi-poll description:</label> <br />
-        <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
+        <textarea type="text" class="form-control" id="desc" name="desc" placeholder="Optional" maxlength="500"></textarea> <br />
         
-        <label for="questiontype">Question Type:</label> <br />
+        <label for="questiontype">Question Type:</label><small class="text-muted"> * </small> <br />
         <select name="questiontype" class="form-control" style='font-size:100%'>
             <option value="1">Poll</option>
             <option value="2">Allocation</option>
         </select> <br />
         
-        <label for="n">Number of Polls:</label> <br />
-        <input type="number" class="form-control" id="n" name="n" value="1" />
+        <label for="n">Number of Polls:</label><small class="text-muted"> * </small> <br />
+        <input type="number" class="form-control" id="n" name="n" value="2" />
         <br /><br />
         
         <div class="col-md-6 col-md-offset-3" align="center">

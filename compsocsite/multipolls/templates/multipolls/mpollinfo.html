@@ -126,18 +126,20 @@ img:hover{
 {% endblock %}
 {% load staticfiles %}
 {% block content %}
-<div class="tab-content">
+
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
+        <li> <a data-toggle="tab" href="#info">General Infomation </a></li>
         {% if mpoll.owner == request.user %}
             <li><a data-toggle="tab" href="#delete">Delete</a></li>
         {% else %}  
             <li><a data-toggle="tab" href="#quit">Quit</a></li>
         {% endif %}  
-        <li> <a data-toggle="tab" href="#info">General Infomation </a></li>
+        
     </ul>  
 </div>
-
+<div class="tab-content">
+    
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="delete">
     <h3 class="page-header">Info and settings of {{ mpoll.title }} </h3>
 
@@ -172,6 +174,37 @@ img:hover{
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="info">
     <h3 class="page-header">Info and settings of {{ mpoll.title }} </h3>
 
+</div>
+    
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="quit">
+    <h3 class="page-header">Info and settings of {{ mpoll.title }} </h3>
+
+    <div class="panel panel-danger">
+        <div class="panel-heading">Danger Zone</div>
+        <div class="panel-body" align="center">
+            <p>
+                Make sure you are very certain before you make a decision. Once quit, it cannot be recovered.<br /><br/>
+                <span class="btn btn-danger" data-toggle="modal" data-target="#confirm-quit"><span class="glyphicon glyphicon-trash"></span> Quit this poll</span>
+            </p>
+
+            <div class="modal fade" id="confirm-quit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Confirm Quit Multi Poll
+                        </div>
+                        <div class="modal-body">
+                            Are you absolutely sure you want to quit this multi poll? All voting information, settings, etc. will be erased permanently. 
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-danger btn-ok" href="{% url 'multipolls:delmpoll' mpoll.id %}">Yes</a>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
     
 </div>

@@ -50,7 +50,7 @@ def getOptions(items):
         arr.append(item.item_text)
     return arr
 
-def switchModel(type, question):
+def switchModel(type, question, request):
     if type == 'invite':
         email = Email.objects.filter(question=question, type=1)
     if type == 'remove':
@@ -59,9 +59,11 @@ def switchModel(type, question):
         email = Email.objects.filter(question=question, type=3)
     if type == 'stop':
         email = Email.objects.filter(question=question, type=4)
+    if type == 'now':
+        return [request.POST.get('subject'), request.POST.get('message')]
     if len(email) != 1:
         setupEmail(question)
-    return email[0]
+    return [email[0].subject, email[0].message]
 
 def translateEmail(text, uname, url):
     text = text.replace("[user_name]", uname)
@@ -78,7 +80,7 @@ def translateHTML(text, uname, url, options):
 #function to send email
 def sendEmail(request, question_id, type):
     question = get_object_or_404(Question, pk=question_id)
-    email = switchModel(type, question)
+    email = switchModel(type, question, request)
     options = ''
     title = question.question_text
     creator_obj = User.objects.get(id=question.question_owner_id)
@@ -92,7 +94,7 @@ def sendEmail(request, question_id, type):
         voters = question.question_voters.all()
     for voter in voters:
         if type == 'invite' or type == 'remove':
-     	    voter = get_object_or_404(User, username=voter)
+            voter = get_object_or_404(User, username=voter)
         name = voter.username
         uname = voter.username
         if question.poll_algorithm == 1 and type == 'start':
@@ -107,10 +109,15 @@ def sendEmail(request, question_id, type):
         if voter.first_name != "":
             name = voter.first_name + " " + voter.last_name
         url = request.build_absolute_uri(reverse('appauth:login')+'?name='+uname)
-        mail.send_mail(translateEmail(email.subject, name, url),
-            translateEmail(email.message, name, url),
+        mail.send_mail(translateEmail(email[0], name, url),
+            translateEmail(email[1], name, url),
             'oprahprogramtest@gmail.com',[voter.email],
-            html_message=translateHTML(email.message, name, url, options))
+            html_message=translateHTML(email[1], name, url, options))
+
+#function to send email
+def emailNow(request, question_id):
+    sendEmail(request, question_id, "now")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def emailSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

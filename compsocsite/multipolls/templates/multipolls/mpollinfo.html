@@ -131,6 +131,7 @@ img:hover{
     <ul class="nav nav-sidebar">
         <li> <a data-toggle="tab" href="#info">General Infomation </a></li>
         {% if mpoll.owner == request.user %}
+            <li><a data-toggle="tab" href="#voters">Voters</a></li>
             <li><a data-toggle="tab" href="#delete">Delete</a></li>
         {% else %}  
             <li><a data-toggle="tab" href="#quit">Quit</a></li>
@@ -139,6 +140,14 @@ img:hover{
     </ul>  
 </div>
 <div class="tab-content">
+  
+    
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="voters">
+    <h3 class="page-header">Voters Setting of {{ mpoll.title }} <br/><small class="text-muted"> All subquestions of {{ mpoll.title }} share the same voters.</small> </h3>
+     
+        {% include 'multipolls/_invite_voters.html' %}
+
+</div>
     
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="delete">
     <h3 class="page-header">Info and settings of {{ mpoll.title }} </h3>
@@ -171,10 +180,7 @@ img:hover{
     </div>
 </div>
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="info">
-    <h3 class="page-header">Info and settings of {{ mpoll.title }} </h3>
 
-</div>
     
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="quit">
     <h3 class="page-header">Info and settings of {{ mpoll.title }} </h3>

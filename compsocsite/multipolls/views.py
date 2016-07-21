@@ -209,6 +209,8 @@ class mpollinfoView(generic.DetailView):
         ctx['mpoll']= mpoll
         ctx['question'] = question
         ctx['items'] = question.item_set.all()
+        ctx['users'] = User.objects.all()
+        ctx['groups'] = Group.objects.all()
         return ctx
     
 def deleteMpoll(request, multipoll_id):

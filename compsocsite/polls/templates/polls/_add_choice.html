@@ -10,7 +10,11 @@
                 {% if item.imageURL != Null %}
                     <img src='{{ item.imageURL }}'/>
                 {% endif %}
+                {% if question.status == 1 %}
                 <input type="text" class="form-control" style="width:70%;" name="item{{forloop.counter0}}" size="50" value="{{ item }}"/>
+                {% else %}
+                {{item}}
+                {% endif %}
                 {% if question.status == 1 %}
                     <a href="{% url 'polls:delchoice' item.id %}">
                         <div class="pull-right">
@@ -20,7 +24,7 @@
                 {% endif %}
             </li>
     {% endfor %}
-    {% if items.count > 0 %}
+    {% if items.count > 0 and question.status == 1 %}
     <br />
     <input type="submit" class="btn btn-primary" value="Save Changes"/>
     {% endif %}

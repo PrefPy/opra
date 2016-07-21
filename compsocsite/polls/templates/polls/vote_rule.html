@@ -27,7 +27,7 @@
         // create connections between nodes
         edges = []
         {% for row in wmg_edges %}
-            edges.push({from : {{ row.from }}, to: {{ row.to }}, title: '{{ row.title }}', arrows:'to' });
+            edges.push({from : {{ row.from }}, to: {{ row.to }}, value: {{ row.value }}, title: '{{ row.title }}', arrows:'to' });
         {% endfor %}
 
       // Instantiate our network object.

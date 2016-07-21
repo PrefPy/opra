@@ -146,7 +146,7 @@ def endSubpoll(multipoll):
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
-        allocation(question)
+        allocation(question, multipoll)
     question.save()
     
     #move to the next poll

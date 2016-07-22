@@ -209,17 +209,22 @@ class mpollinfoView(generic.DetailView):
         ctx['mpoll']= mpoll
         ctx['question'] = question
         ctx['items'] = question.item_set.all()
+        ctx['users'] = User.objects.all()
+        ctx['groups'] = Group.objects.all()
         return ctx
     
 def deleteMpoll(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
     # check to make sure the current user is the owner
     if request.user != multipoll.owner:
+        for question in multipoll.questions.all():
+            question.question_voters.remove(request.user)
+            question.save()
+        multipoll.voters.remove(request.user)
         return HttpResponseRedirect(reverse('polls:m_polls'))  
-    
-    for question in multipoll.questions.all():
-        question.delete()
-    multipoll.delete()
-    
-    
-    return HttpResponseRedirect(reverse('polls:m_polls'))
+    else:
+        for question in multipoll.questions.all():
+            question.delete()
+        multipoll.delete()
+        
+        return HttpResponseRedirect(reverse('polls:m_polls'))

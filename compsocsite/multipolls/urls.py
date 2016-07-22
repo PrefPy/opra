@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^(?P<multipoll_id>[0-9]+)/progress/$', views.progress, name='progress'), 
     url(r'^(?P<multipoll_id>[0-9]+)/setquestion/$', views.setQuestion, name='setquestion'), 
     url(r'^(?P<multipoll_id>[0-9]+)/start/$', views.start, name='start'), 
-     url(r'^(?P<pk>[0-9]+)/mpollinfo/$', views.mpollinfoView.as_view(), name='mpollinfo'), 
+    url(r'^(?P<pk>[0-9]+)/mpollinfo/$', views.mpollinfoView.as_view(), name='mpollinfo'), 
     url(r'^(?P<multipoll_id>[0-9]+)/delete/$', views.deleteMpoll, name='delmpoll'),
 
     

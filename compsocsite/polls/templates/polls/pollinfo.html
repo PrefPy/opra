@@ -302,6 +302,16 @@ img:hover{
         </div>
         <input type="submit" value="Save Settings" class="btn btn-success">
     </form>
+    <form action="{%url 'polls:emailNow' question.id%}" method="post">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <label for="subject">Subject:</label> <br />
+            <input type="text" class="form-control" id="subject" name="subject" value="" maxlength="100" size="100" />
+            <label for="message">Email body:</label> <br />
+            <textarea type="text" class="form-control" id="message" name="message" value="" maxlength="500"></textarea> <br />
+        </div>
+        <input type="submit" value="Send Now" class="btn btn-success">
+    </form>
 </div>
 </div>
 

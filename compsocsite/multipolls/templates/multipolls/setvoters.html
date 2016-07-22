@@ -33,62 +33,7 @@
     <br/>
     
     <h3>Voters</h3>
-    <div class="col-md-4">
-    <b>Current Voters: </b>
-    <form action="{% url 'multipolls:delvoter' multipoll.id %}" method="post">
-        {% csrf_token %}
-        <select name="voters" class="form-control" multiple>
-        {% for user in users %}
-            {% if user in multipoll.voters.all %}
-                 <option value="{{ user.username }}">{{ user.username }}</option>
-            {% endif %}
-        {% endfor %}
-        </select>  
-        <br />
-        <label for="email2">Email announcement</label>
-        <input type="checkbox" name="email" id="email2" value="email" {% if multipoll.emailDelete == True or multipoll.emailDelete == None %} checked {% endif %}>
-        {% if multipoll.status == 1 %}
-        <br />
-        <input type="submit" class="btn btn-danger" value="Remove">
-        {% endif %}
-    </form> 
-    </div>     
-    <div class="col-md-4">
-    <b>Add Voter: </b>
-    <form action="{% url 'multipolls:addvoter' multipoll.id %}" method="post">
-        {% csrf_token %}
-        <select name="voters" class="form-control multiple-select" multiple>
-        {% for user in users %}
-            {% if user not in multipoll.voters.all %}
-                 <option value="{{ user.username }}">{{ user.username }}</option>
-            {% endif %}
-        {% endfor %}
-        </select>
-        <br />
-        <label for="email1">Email announcement</label>
-        <input type="checkbox" name="email" id="email1" value="email" {% if multipoll.emailInvite == True %} checked {% endif %}>
-        <br />
-        <input type="submit" class="btn btn-success" value="Invite">
-    </form>      
-    </div>
-    <div class="col-md-4">
-        <b>Add Group: </b>
-        <form action="{% url 'groups:addgroupvoterstompoll' multipoll.id %}" method="post">
-            {% csrf_token %}
-            <select name="groups" class="form-control multiple-select" multiple>
-                {% for group in groups %}
-                    {% if group.owner == request.user %}
-                        <option value="{{group.name}}">{{group.name}}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-            <br />
-            <label for="email">Email announcement</label>
-            <input type="checkbox" name="email" id="email" value="email" {% if multipoll.emailInvite == True or multipoll.emailInvite == None %} checked {% endif %}>
-            <br />
-            <input type="submit" class="btn btn-success" value="Invite">
-        </form>
-    </div>
+    {% include 'multipolls/_invite_voters.html' %}
     
     
 

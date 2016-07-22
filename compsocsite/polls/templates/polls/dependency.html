@@ -1,5 +1,15 @@
 {% extends 'polls/base.html' %}
 
+{% block extra_head %}
+<style type="text/css">
+ #cy {
+    width: 100%;
+    height: 200px;
+    border: 1px solid lightgray;
+}   
+</style>
+<script src="http://js.cytoscape.org/js/cytoscape.min.js"></script>
+{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
@@ -38,12 +48,78 @@
                 
             {% endif %}
         {% endfor%}
-        </ul><br />
-
-
+        </ul>
+        <br />
+        <div style="left: 50%;">
+            <div id="cy" ></div>
+        </div>
+        
+        <br />
         <div align="center" style='font-size:100%'>
             <input type="submit" value="Next" class="btn btn-primary"/>
         </div>
     </form>
 </div>
+
+<script>
+    var cy = cytoscape({
+        container: document.getElementById('cy'),
+        layout: {
+            name: 'cose',
+            padding: 10
+        },
+
+      style: cytoscape.stylesheet()
+        .selector('node')
+          .css({
+            'width': 'mapData(weight, 40, 80, 20, 60)',
+            'content': 'data(name)',
+            'text-valign': 'center',
+            'text-outline-width': 2,
+            'text-outline-color': 'data(faveColor)',
+            'background-color': 'data(faveColor)',
+            'color': '#fff'
+          })
+        .selector(':selected')
+          .css({
+            'border-width': 3,
+            'border-color': '#333'
+          })
+        .selector('edge')
+          .css({
+            'curve-style': 'bezier',
+            'opacity': 0.666,
+            'width': 'mapData(strength, 70, 100, 2, 6)',
+            'target-arrow-shape': 'triangle',
+            'source-arrow-shape': 'circle',
+            'line-color': 'data(faveColor)',
+            'source-arrow-color': 'data(faveColor)',
+            'target-arrow-color': 'data(faveColor)'
+          })
+        .selector('edge.questionable')
+          .css({
+            'line-style': 'dotted',
+            'target-arrow-shape': 'diamond'
+          })
+        .selector('.faded')
+          .css({
+            'opacity': 0.25,
+            'text-opacity': 0
+          }),
+
+
+      elements: {
+        nodes: [
+         {% for row in pref_nodes %}
+            {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 10, faveColor: '#6FB1FC' } },
+        {% endfor %}
+        ],
+        edges: [
+         {% for row in pref_edges %}
+            {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#6FB1FC', strength: 50 } },
+        {% endfor %}
+        ]
+      },
+    });
+</script>
 {% endblock %}

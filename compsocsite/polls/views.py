@@ -336,6 +336,9 @@ class DependencyView(generic.DetailView):
         # there should only be one combination at most
         combination = Combination.objects.filter(target_question=self.object, user=self.request.user)
         ctx['prevCombination'] = combination[0] if (len(combination) > 0) else None
+        (nodes, edges) = getPrefenceGraph(self.request, self.object)
+        ctx['pref_nodes'] = nodes
+        ctx['pref_edges'] = edges        
         return ctx
     
 class DependencyDetailView(generic.DetailView):
@@ -1001,6 +1004,32 @@ def chooseDependency(request, question_id):
             combination.dependent_questions.add(poll)
             combination.save()
     return HttpResponseRedirect(reverse('polls:dependencydetail', args=(combination.id,)))
+
+def getPrefenceGraph(request, question):
+    multipoll = question.multipoll_set.all()[0]
+    
+    # get the nodes
+    nodes = []
+    for poll in multipoll.questions.all():
+        data = {}
+        data['id'] = poll.id
+        data['label'] = poll.question_text
+        nodes.append(data)    
+
+    # get the edges
+    edges = []
+    for poll in multipoll.questions.all():
+        currentCombination = Combination.objects.filter(target_question=poll, user=request.user)
+        if len(currentCombination) > 0:
+            dependentPolls = currentCombination[0].dependent_questions.all()
+
+            for dep_poll in dependentPolls:
+                data = {}
+                data['from'] = dep_poll.id
+                data['to'] = poll.id
+                data['value'] = 1
+                edges.append(data)   
+    return (nodes, edges)
 
 # take previous polls into account as well as the current poll    
 def assignPreference(request, combination_id):

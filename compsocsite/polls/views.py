@@ -137,10 +137,6 @@ class AddStep4View(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
-
-class QRCodeView(generic.DetailView):
-    model = Question
-    template_name = 'polls/qrcode.html'
     
 class AnonymousInviteView(generic.DetailView):
     model = Question
@@ -299,9 +295,24 @@ class DetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
         ctx['lastcomment'] = ""
-        #Case for anonymous user, return the default order
+        
+        
+        #Case for anonymous user
         if self.request.user.get_username() == "":
-            ctx['items'] = ctx['object'].item_set.all()
+            orderstr = self.request.GET.get('order', '')
+            if orderstr == "null":
+                ctx['items'] = self.object.item_set.all()
+                return ctx
+            if 'anonymousvoter' in self.request.session and 'anonymousid' in self.request.session:
+                currentAnonymousResponses = self.object.response_set.filter(anonymous_id = self.request.session['anonymousid']).reverse()
+                if len(currentAnonymousResponses) > 0:
+                    mostRecentAnonymousResponse = currentAnonymousResponses[0]
+                    responseAnonymousDict = mostRecentAnonymousResponse.dictionary_set.all()[0]
+                    ctx['currentSelection'] = responseAnonymousDict.sorted_values()
+                    if mostRecentAnonymousResponse.comment:
+                        ctx['lastcomment'] = mostRecentAnonymousResponse.comment
+            else:
+                ctx['items'] = self.object.item_set.all()
             return ctx
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         
@@ -533,7 +544,7 @@ def categorizeResponses(all_responses):
             add = True
             for response2 in latest_responses:
                 if response1.anonymous_voter and response2.anonymous_voter:
-                    if response1.anonymous_voter == response2.anonymous_voter:
+                    if response1.anonymous_id == response2.anonymous_id:
                         add = False
                         previous_responses.append(response1)
                         break
@@ -1116,7 +1127,19 @@ def anonymousJoin(request, question_id):
     
 def anonymousVote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-
+    voter = ""
+    id = 0
+    if 'anonymousvoter' not in request.session or 'anonymousid' not in request.session:
+        voter = request.POST['anonymousname']
+        if voter == "":
+            voter = "Anonymous"
+        request.session['anonymousvoter'] = voter
+        id = question.response_set.all().count()
+        request.session['anonymousid'] = id
+    else:
+        voter = request.session['anonymousvoter']
+        id = request.session['anonymousid']
+    
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
@@ -1125,9 +1148,8 @@ def anonymousVote(request, question_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
     # make Response object to store data
-    voter = request.session['anonymousvoter']
     comment = request.POST['comment']
-    response = Response(question=question, timestamp=timezone.now(), anonymous_voter = voter)
+    response = Response(question=question, timestamp=timezone.now(), anonymous_voter = voter, anonymous_id=id)
     if comment != "":
         response.comment = comment
     response.save()

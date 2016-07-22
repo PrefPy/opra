@@ -181,10 +181,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div>
 </div>
 </div>
-<form {% if request.session.anonymousvoter %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
+
+
+
+<form {% if request.user.username == "" %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
 	<div class="row">
 
 {% csrf_token %}
+{% if request.user.username == "" and 'anonymousid' not in request.session %}
+
+<div class="col-md-12" style="padding-left:1%; clear:right; ">
+  <h4>Please enter your name: </h4>
+  <input type="text" size="50" class="form-control" style="width=50%; clear:right;" name="anonymousname"/>
+
+</div>
+
+{% endif %}
 {% if request.flavour == "mobile" %}
 <div class="col-md-6 margin-panel-top">
 {% else %}

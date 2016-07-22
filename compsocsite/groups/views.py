@@ -106,6 +106,7 @@ def addgroupvoters(request, question_id):
                                 + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
                                 + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
                                 'oprahprogramtest@gmail.com',[voterObj.email])
+    request.session['setting'] = 1
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 def removegroupvoters(request, question_id):

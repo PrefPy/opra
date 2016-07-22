@@ -253,7 +253,7 @@ img:hover{
     {% else %}
     <h4>Here is the QR Code for inviting users who have not logged in</h4>
     <div id="qrcode" style="margin-top:15px;">
-        <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:anonymousinvite' question.id %}" style="width:500px" />
+        <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:detail' question.id %}" style="width:500px" />
     </div>
     <br >
     <a href="{% url 'polls:closepoll' question.id %}" class="btn btn-danger">Close Poll</a>

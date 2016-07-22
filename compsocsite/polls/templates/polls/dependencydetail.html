@@ -75,7 +75,7 @@ $(function(){
             <div class="col-md-4 margin-panel-top">
                 <h4>Poll {{ poll.question_text }}</h4>
                 Select a choice for this dependent poll:
-                <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" class="form-control">
+                <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" class="form-control" size="{{poll.item_set.count}}">
                     {% if condition_items %}
                         {% for item in poll.item_set.all %}
                             <option value="{{ item.item_text }}" {% if item in condition_items %} selected {% endif %}>{{item.item_text}}</option>
@@ -86,7 +86,7 @@ $(function(){
                         {% endfor %}
                     {% else %}
                         {% for item in poll.item_set.all %}
-                            <option value="{{ item.item_text }}">{{item.item_text}}</option>
+                            <option value="{{ item.item_text }}" {% if forloop.counter == 1 %} selected {% endif %} >{{item.item_text}}</option>
                         {% endfor %}
                     {% endif %}
                 

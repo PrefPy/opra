@@ -75,6 +75,7 @@ def translateHTML(text, uname, url, options):
     text = "<p>" + text + "</p>"
     text = text.replace("\n\n", "</p><br /><p>")
     text = text.replace("\n", "</p><p>")
+    text += options
     return text
 
 #function to send email
@@ -117,6 +118,11 @@ def sendEmail(request, question_id, type):
 #function to send email
 def emailNow(request, question_id):
     sendEmail(request, question_id, "now")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+#function to send email
+def emailOptions(request, question_id):
+    sendEmail(request, question_id, "start")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def emailSettings(request, question_id):

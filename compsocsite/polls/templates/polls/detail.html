@@ -19,7 +19,7 @@ ga(function(tracker) {
   // Logs the tracker created above to the console.
   console.log(tracker);
 });
-    var left-form=document.getElementById('left-sortable');
+    var form=document.getElementById('left-sortable');
     form.addEventListener('submit', function(event) {
 
   // Prevents the browser from submiting the form
@@ -61,11 +61,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 {% endif %}
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/resources/demos/style.css">
+<!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
     <style>
 .sortable1 {background:transparent;}
 .aftersort {background-color:#eee;}
 .hide1 {background-color:transparent; min-height=5px;min-width:15px;}
+ul.choice1{min-height:25px; border-style: solid;
+    border-width: medium;}
   </style>
 
 
@@ -85,36 +87,48 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           
         var oldList, newList, item,sortin;
           
+        window.setInterval(function(){
         $("ul.choice1").sortable({
            
             start: function(event, ui) {
-                sortin=-1,
+            //     sortin=-1,
                 item = ui.item;
                 newList = oldList = ui.item.parent();
                 
             },
             
             stop: function(event, ui) {
-                if(oldList.attr('id')!=newList.attr('id')){
+                if(oldList.attr('id')!=newList.attr('id') && newList.children().size()>1){
                     newList.addClass('aftersort'); 
-
                 } 
                 
                 //no ul background when ul has only one li
-                 if(oldList.attr('class').indexOf('aftersort')>-1 && oldList.children().size()==1){
+                 if(oldList.attr('class').indexOf('aftersort')>-1 && oldList.children().size()<=2){
                     oldList.removeClass('aftersort');    
                 }
-                
-                //alert(oldList.attr('id')+" TO "+newList.attr('id'));
+                var len = $(".choice1").length;
+                newItem = "<ul class=\"choice1\"></ul>";
+                $( ".choice1" ).each(function( index ) {
+                    if( $( this ).children().size() < 1 ){
+                        $( this ).remove();
+                    }else{
+                        $( this ).before(newItem);
+                    }
+                    if( index == len - 1 ){
+                        $( this ).after(newItem);
+                    }
+                });
+                // alert(oldList.attr('id')+" TO "+newList.attr('id'));
             },
                
             change: function(event, ui) {  
                 if(ui.sender) newList = ui.placeholder.parent();
             },
+            placeholder: "ui-state-highlight",
             connectWith: "ul.choice1",
         }).disableSelection();
-          
-            
+        console.log(1);
+        }, 1000);
               
     });
     
@@ -224,32 +238,33 @@ Submit
                 
         <div class="panel-body" >
 
-            <div id="left-sortable" >
-            {% if currentSelection %}
-            
-            {% for selection in currentSelection %}
-            {% for item in question.item_set.all %}
+            <ul id="left-sortable" >
+                {% if currentSelection %}
+                
+                    {% for selection in currentSelection %}
+                        {% for item in question.item_set.all %}
 
-            {% if selection.0 == item %}
-            
-          
-            <ul class="choice1 sortable1" id="item{{ forloop.counter }}">
-             <li style="padding:10px;">  
-            {% if selection.0.image %}
-                    <img class="item" src='/{{ selection.0.image.url }}'/>
-            {% endif %}
-            {% if item.imageURL != Null %}
-                    <img class="item" src='{{ item.imageURL }}'/>
-            {% endif %}
+                            {% if selection.0 == item %}
+                                <ul class="choice1"></ul>
+                                <ul class="choice1" id="item{{ forloop.counter }}">
+                                    <li style="padding:10px;">  
+                                        {% if selection.0.image %}
+                                            <img class="item" src='/{{ selection.0.image.url }}'/>
+                                        {% endif %}
+                                        {% if item.imageURL != Null %}
+                                            <img class="item" src='{{ item.imageURL }}'/>
+                                        {% endif %}
 
-            {{ selection.0 }}</li></ul>
+                                        {{ selection.0 }}
+                                    </li>
+                                </ul>
 
-            {% endif %}
+                            {% endif %}
 
-            {% endfor %}
-            {% endfor %}
-            {% endif %}
-            </div> <!-- left-sortable-->
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+            </ul> <!-- left-sortable-->
         </div>
 {% if request.flavour == "mobile" %}
 <button onclick="javascript:window.location.href='{% url 'polls:detail' question.id %}?order=null'; return false;" class="reset-button-mobile">
@@ -313,8 +328,8 @@ $('#right-sortable').css("height", wholeHeight1);
 } else {
 $('#left-sortable').css("height", wholeHeight2);
 }
-$('#left-sortable').sortable('refresh');
-$('#right-sortable').sortable('refresh');
+// $('#left-sortable').sortable('refresh');
+// $('#right-sortable').sortable('refresh');
     
 
 

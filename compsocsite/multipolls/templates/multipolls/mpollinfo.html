@@ -136,8 +136,8 @@ img:hover{
                 <!--<li><a href="{% url 'polls:pollinfo' question.id %}" >{{question.question_text}}</a></li>-->
         
         
-        <li><a data-toggle="collapse" data-target="#products{{forloop.counter}}" class="collapsed">{{question.question_text}}</a></li>
-                <ul class="collapse-in" id="products{{forloop.counter}}">
+        <li><a data-toggle="collapse" data-target="#products{{forloop.counter}}" class="collapsed">{{question.question_text}} <span class="glyphicon glyphicon-menu-down" style="font-size:60%"></span></a></li>
+                <ul class="collapse" id="products{{forloop.counter}}">
                     <li style="padding:3px;"><a data-toggle="tab" href="#choices{{question.id}}">Choices</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#algorithm{{question.id}}">Algorithm</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#visibility{{question.id}}">Visibility</a></li>
@@ -169,10 +169,9 @@ img:hover{
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="choices{{question.id}}">
  
         <h3 class="page-header">Info and settings of {{ question.question_text }}</h3>
-            {% include 'polls/_add_choice.html' %} 
-
-     
-  
+                {% with items=question.item_set.all%}
+                    {% include 'polls/_add_choice.html' %}
+                {% endwith %}
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="algorithm{{question.id}}">
         {% include 'polls/_set_algorithm.html' %}    
@@ -183,8 +182,24 @@ img:hover{
     </div>
     
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo{{question.id}}">
-
-        {% include 'polls/_view_history.html' %}
+        <p>{{question.id}} And {{latest_responses|length}} and pre res length {{previous_responses|length}}</p>
+        
+        {% for s in latest_responses %}     
+                {{s.id}}
+                
+        {%endfor%}
+        {% for sub in previous_responses %}     
+                {{sub.i}}
+                
+        {%endfor%}
+        
+         {% for sub in qid %}     
+                {{sub}}
+                
+        {%endfor%}
+        
+        
+        
 
     </div>
     {% endfor %}

@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/allocate/results/$', views.AllocateResultsView.as_view(), name='allocate_results'),
     url(r'^(?P<question_id>[0-9]+)/sendEmail/$', views.sendEmail, name='sendEmail'),
     url(r'^(?P<question_id>[0-9]+)/emailNow/$', email.emailNow, name='emailNow'),
+    url(r'^(?P<question_id>[0-9]+)/emailOptions/$', email.emailOptions, name='emailOptions'),
     url(r'^(?P<question_id>[0-9]+)/emailSettings/$', email.emailSettings, name='emailSettings'),
     url(r'^(?P<question_id>[0-9]+)/openpoll/$', views.openPoll, name='openpoll'), 
     url(r'^(?P<question_id>[0-9]+)/closepoll/$', views.closePoll, name='closepoll'), 

@@ -117,6 +117,9 @@ img:hover{
   $(function() {
     $( "#selectable" ).selectable();
   });
+  $( "#inviteButtonShow" ).click(function(){
+    $("#invite").hide();
+  });
   </script>
 
 
@@ -268,7 +271,8 @@ img:hover{
 <div class="col-md-10">
     <form action="{% url 'polls:emailSettings' question.id %}" method="post">
         {% csrf_token %}
-        <div class="col-md-6">
+        <a href="#" id="inviteButtonShow">Edit Invite Message</a>
+        <div class="col-md-6" id="invite">
             <label for="inviteSubject">Subject:</label> <br />
             <input type="text" class="form-control" id="inviteSubject" name="inviteSubject" value="{{emailInvite.subject}}" maxlength="100" size="100" />
             <label for="inviteMessage">Email body:</label> <br />
@@ -311,6 +315,10 @@ img:hover{
             <textarea type="text" class="form-control" id="message" name="message" value="" maxlength="500"></textarea> <br />
         </div>
         <input type="submit" value="Send Now" class="btn btn-success">
+    </form>
+    <form action="{%url 'polls:emailOptions' question.id%}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Send Options" class="btn btn-success">
     </form>
 </div>
 </div>

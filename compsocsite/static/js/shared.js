@@ -59,9 +59,14 @@ function moveAll() {
 };
 
 $(function() {
+    //if the user updates existing preferences, the submit button should be shown
+    if ($('#right-sortable li').length == 0) {
+        enableSubmission();
+    }
+
+    
     $("list-group-item").sortable();
 	$("#left-sortable").sortable({
-       
         start: function(event, ui) {
         //     sortin=-1,
             item = ui.item;
@@ -99,9 +104,7 @@ $(function() {
 		//placeholder : "ui-sortable-placeholder",
 		containment : "document",
         connectWith : "#right-sortable",
-        
 	});
-
 
 	$("#left-sortable, #right-sortable").disableSelection();
 });

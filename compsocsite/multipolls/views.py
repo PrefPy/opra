@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import mail
 from polls.views import getPollWinner
 from polls.algorithms import *
+from polls.views import *
 
 def AddStep1(request):
     context = RequestContext(request)
@@ -202,15 +203,40 @@ def progress(request, multipoll_id):
 class mpollinfoView(generic.DetailView):
     model = MultiPoll
     template_name = 'multipolls/mpollinfo.html'
+    
+    
     def get_context_data(self, **kwargs):
         ctx = super(mpollinfoView, self).get_context_data(**kwargs)
         mpoll=self.get_object()
-        question = self.get_object().questions.all()[self.get_object().pos]
+        mostRecentResponse=[]
+        history=[]
+        latest_responses=[]
+        previous_responses=[]
+        items=[]
+        
+        
+        for question in mpoll.questions.all():
+            items.append(question.item_set.all())
+            currentUserResponses = question.response_set.filter(user=self.request.user).reverse()
+            mostRecentResponse.append(currentUserResponses[0] if (len(currentUserResponses) > 0) else None)
+            history.append(currentUserResponses[1:])
+            all_responses = question.response_set.reverse()
+            (latest_responses, previous_responses) = categorizeResponses(all_responses)
+            latest_responses.append(latest_responses)
+            previous_responses.append(previous_responses)
+
+
         ctx['mpoll']= mpoll
-        ctx['question'] = question
-        ctx['items'] = question.item_set.all()
         ctx['users'] = User.objects.all()
         ctx['groups'] = Group.objects.all()
+        ctx['poll_algorithms'] = getListPollAlgorithms()
+        ctx['alloc_methods'] = getAllocMethods()  
+        ctx['mostRecentResponse'] = mostRecentResponse
+        ctx['history'] = history
+        ctx['latest_responses'] = latest_responses
+        ctx['previous_responses'] = previous_responses
+        ctx['items'] = items
+    
         return ctx
     
 def deleteMpoll(request, multipoll_id):
@@ -228,3 +254,4 @@ def deleteMpoll(request, multipoll_id):
         multipoll.delete()
         
         return HttpResponseRedirect(reverse('polls:m_polls'))
+    

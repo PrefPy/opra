@@ -1,12 +1,12 @@
 
 {% extends 'polls/base.html' %}
 {% block extra_head %}
+{% load staticfiles %}
 <!--
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 -->
-
 <script src='/static/js/qrcodejs/qrcode.js'></script>
 
 <style>
@@ -127,27 +127,70 @@ img:hover{
 {% load staticfiles %}
 {% block content %}
 
+
+
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-        <li> <a data-toggle="tab" href="#info">General Infomation </a></li>
         {% if mpoll.owner == request.user %}
+
             <li><a data-toggle="tab" href="#voters">Voters</a></li>
-            <li><a data-toggle="tab" href="#delete">Delete</a></li>
+            {% for question in mpoll.questions.all %}
+                <!--<li><a href="{% url 'polls:pollinfo' question.id %}" >{{question.question_text}}</a></li>-->
+        
+        
+        <li><a data-toggle="collapse" data-target="#products{{forloop.counter}}" class="collapsed">{{question.question_text}}</a></li>
+                <ul class="collapse-in" id="products{{forloop.counter}}">
+                    <li style="padding:3px;"><a data-toggle="tab" href="#choices{{question.id}}">Choices</a></li>
+                    <li style="padding:3px;"><a data-toggle="tab" href="#algorithm{{question.id}}">Algorithm</a></li>
+                    <li style="padding:3px;"><a data-toggle="tab" href="#visibility{{question.id}}">Visibility</a></li>
+                    <li style="padding:3px;"><a data-toggle="tab" href="#historyinfo{{question.id}}">History</a></li>
+                </ul>
+    
+            {% endfor %}
+        <li><a data-toggle="tab" href="#delete">Delete</a></li>
+                
         {% else %}  
             <li><a data-toggle="tab" href="#quit">Quit</a></li>
         {% endif %}  
         
     </ul>  
 </div>
+
 <div class="tab-content">
   
     
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="voters">
-    <h3 class="page-header">Voters Setting of {{ mpoll.title }} <br/><small class="text-muted"> All subquestions of {{ mpoll.title }} share the same voters.</small> </h3>
+    <h3 class="page-header">Voters Setting of {{ mpoll.title }} <br/><small class="text-muted"> All subquestions of {{ mpoll.title }} share the same voters.</small></h3>
      
         {% include 'multipolls/_invite_voters.html' %}
+  
 
 </div>
+    
+  {% for question in mpoll.questions.all %}  
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="choices{{question.id}}">
+ 
+        <h3 class="page-header">Info and settings of {{ question.question_text }}</h3>
+            {% include 'polls/_add_choice.html' %} 
+
+     
+  
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="algorithm{{question.id}}">
+        {% include 'polls/_set_algorithm.html' %}    
+    </div>
+    
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="visibility{{question.id}}">
+        {% include 'polls/_set_visibility.html' %}
+    </div>
+    
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo{{question.id}}">
+
+        {% include 'polls/_view_history.html' %}
+
+    </div>
+    {% endfor %}
+      
     
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="delete">
     <h3 class="page-header">Info and settings of {{ mpoll.title }} </h3>
@@ -214,4 +257,5 @@ img:hover{
 </div>
     
 </div>
+
 {% endblock %}

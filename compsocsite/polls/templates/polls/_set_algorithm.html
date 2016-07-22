@@ -1,0 +1,47 @@
+<h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
+        {% if question.status == 1 %}
+            <form class="form-group" method="post" action="{% url 'polls:setAlgorithm' question.id %}" align="center">
+                {% csrf_token %}
+                {% if question.question_type == 1 %}
+                    <label for="pollpreferences">Select a voting algorithm</label>
+                    <select name="pollpreferences" class="form-control">
+                    {% for item in poll_algorithms %}
+                        <option value="{{ forloop.counter }}" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
+                            {{ item }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                {% elif question.question_type == 2 %}
+                    <label for="pollpreferences">Select an allocation method</label>
+                    <select name="pollpreferences" class="form-control">
+                    {% for item in alloc_methods %}
+                        <option value="{{ forloop.counter }}" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
+                            {{ item }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                {% endif %}
+                <br/><br/>
+                <input type="submit" value="Submit" class="btn btn-success">
+            </form>
+        {% else %}
+            {% if question.question_type == 1 %}
+                <!-- Display the current option -->
+                {% for item in poll_algorithms %}
+                    {% if question.poll_algorithm == forloop.counter %}
+                        Poll Algorithm:　{{ item }}
+                    {% endif %}
+                {% endfor %}
+            {% elif question.question_type == 2 %}
+                <!-- Display the current option -->
+                {% for item in alloc_methods %}
+                    {% if question.poll_algorithm == forloop.counter %}
+                        {{ item }}
+                    {% endif %}
+                {% endfor %}
+                <br />
+                {% if question.poll_algorithm == 3 %}    
+                    <a href="{% url 'polls:viewAllocationOrder' question.id %}" class ="btn btn-dark" role="button">Set Allocation Order</a>
+                {% endif %}
+            {% endif %}
+        {% endif %}

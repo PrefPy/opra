@@ -117,9 +117,6 @@ img:hover{
   $(function() {
     $( "#selectable" ).selectable();
   });
-  $( "#inviteButtonShow" ).click(function(){
-    $("#invite").hide();
-  });
   </script>
 
 
@@ -128,32 +125,21 @@ img:hover{
 {% endblock %}
 {% load staticfiles %}
 {% block content %}
-
-
-
+{% if question.m_poll == False %}
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         {% if question.question_owner == request.user %}
-        
-            {%if question.m_poll == True %}
-                <li> {{question.question_text}} <li>
-                <li ><a href="{% url 'multipolls:mpollinfo' question.multipoll_set.all.0.id %}" >Go to the Multi Poll</a></li>
-        
-            {% endif %}
-           
-               <li {% if request.session.setting == 0 %} class="active" {% endif %}><a data-toggle="tab" href="#choices" >Choices</a></li>
-                <li {% if request.session.setting == 2 %} class="active" {% endif %}><a data-toggle="tab" href="#algorithm">Algorithms</a></li>
-                <li {% if request.session.setting == 3 %} class="active" {% endif %}><a data-toggle="tab" href="#visibility">Visibility</a></li>
-                <li><a data-toggle="tab" href="#historyinfo">History</a></li>
-       
-           
-            {%if question.m_poll == False %}
+            <li {% if request.session.setting == 0 %} class="active" {% endif %}><a data-toggle="tab" href="#choices" >Choices</a></li>
                 <li {% if request.session.setting == 1 %} class="active" {% endif %}><a data-toggle="tab" href="#voters">Voters</a></li>
-        
                 <li {% if request.session.setting == 5 %} class="active" {% endif %}><a data-toggle="tab" href="#emailsetting">Email</a></li>
                 <li {% if request.session.setting == 4 %} class="active" {% endif %}><a data-toggle="tab" href="#qr">Open/Close Poll</a></li>
-                <li><a data-toggle="tab" href="{%url 'polls:pollinfo' question.id %}">Delete</a></li>
-            {%endif%}
+            <li {% if request.session.setting == 2 %} class="active" {% endif %}><a data-toggle="tab" href="#algorithm">Algorithms</a></li>
+            <li {% if request.session.setting == 3 %} class="active" {% endif %}><a data-toggle="tab" href="#visibility">Visibility</a></li>
+            
+            <li><a data-toggle="tab" href="#historyinfo">History</a></li>
+     
+            <li><a data-toggle="tab" href="#delete">Delete</a></li>
+        
             
         {% else %}  
         <li class="active"><a data-toggle="tab" href="#general">General Info</a></li>
@@ -163,9 +149,7 @@ img:hover{
         
     </ul>  
 </div>
-
-
-
+{% endif %}
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
 <p>
@@ -203,7 +187,21 @@ img:hover{
 </div>
             
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 3 %}active{% endif %}" id="visibility">
-    {% include 'polls/_set_visibility.html' %}
+    <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
+   <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}" align="center">
+        {% csrf_token %}
+        <label for="viewpreferences">Visibility setting for this specific poll</label>
+        <select name="viewpreferences" class="form-control">
+            <option value="always" {% if question.display_pref == 0 %} selected {% endif %} >Everyone can see all votes at all times</option>
+            <option value="allpermit" {% if question.display_pref == 1 %} selected {% endif %} >Everyone can see all votes</option>
+            <option value="voternames" {% if question.display_pref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
+            <option value="justnumber" {% if question.display_pref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
+            <option value="nothing" {% if question.display_pref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>
+        </select>  
+        <br/><br/>
+
+        <input type="submit" value="Submit" class="btn btn-success">
+    </form>
 </div>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 4 %}active{% endif %}" id="qr">
@@ -215,7 +213,7 @@ img:hover{
     {% else %}
     <h4>Here is the QR Code for inviting users who have not logged in</h4>
     <div id="qrcode" style="margin-top:15px;">
-        <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:detail' question.id %}" style="width:500px" />
+        <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:anonymousinvite' question.id %}" style="width:500px" />
     </div>
     <br >
     <a href="{% url 'polls:closepoll' question.id %}" class="btn btn-danger">Close Poll</a>
@@ -230,8 +228,7 @@ img:hover{
 <div class="col-md-10">
     <form action="{% url 'polls:emailSettings' question.id %}" method="post">
         {% csrf_token %}
-        <a href="#" id="inviteButtonShow">Edit Invite Message</a>
-        <div class="col-md-6" id="invite">
+        <div class="col-md-6">
             <label for="inviteSubject">Subject:</label> <br />
             <input type="text" class="form-control" id="inviteSubject" name="inviteSubject" value="{{emailInvite.subject}}" maxlength="100" size="100" />
             <label for="inviteMessage">Email body:</label> <br />
@@ -274,10 +271,6 @@ img:hover{
             <textarea type="text" class="form-control" id="message" name="message" value="" maxlength="500"></textarea> <br />
         </div>
         <input type="submit" value="Send Now" class="btn btn-success">
-    </form>
-    <form action="{%url 'polls:emailOptions' question.id%}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Send Options" class="btn btn-success">
     </form>
 </div>
 </div>
@@ -425,7 +418,7 @@ img:hover{
                     {% if response.comment %}
                         <p>Comment: {{response.comment}}</p>
                     {% endif %}
-                {% endfor %} <!-- for response-->
+                {% endfor %}
                 <br />
                 <br />
                 {% if previous_responses %}

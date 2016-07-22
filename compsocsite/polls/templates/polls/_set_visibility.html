@@ -1,0 +1,15 @@
+<h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
+   <form class="form-group" method="post" action="{% url 'polls:setview' question.id %}" align="center">
+        {% csrf_token %}
+        <label for="viewpreferences">Visibility setting for this specific poll</label>
+        <select name="viewpreferences" class="form-control">
+            <option value="always" {% if question.display_pref == 0 %} selected {% endif %} >Everyone can see all votes at all times</option>
+            <option value="allpermit" {% if question.display_pref == 1 %} selected {% endif %} >Everyone can see all votes</option>
+            <option value="voternames" {% if question.display_pref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
+            <option value="justnumber" {% if question.display_pref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
+            <option value="nothing" {% if question.display_pref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>
+        </select>  
+        <br/><br/>
+
+        <input type="submit" value="Submit" class="btn btn-success">
+    </form>

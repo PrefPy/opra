@@ -26,9 +26,9 @@
                     
                     <td> 
                         <a href="{%url 'multipolls:mpollinfo' mpoll.id %}">
-                        <h4  style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;">
+                        <span style= "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0; font-size:17px;">
                             {{ mpoll.title }} 
-                        </h4></a>
+                        </span></a>
                         <span href="#collapse{{ forloop.counter }}" class="caret" style="color:#377BB5;"></span>   
                     </td>
                     
@@ -143,9 +143,9 @@
             <tr data-toggle="collapse" data-target="#{{ mpoll.id }}" class="accordion-toggle"> 
                  <td> 
                         <a href="{%url 'multipolls:mpollinfo' mpoll.id %}">
-                        <h4  style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;">
+                        <span style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:17px;">
                             {{ mpoll.title }} 
-                        </h4></a>
+                        </span></a>
                         <span href="#collapse{{ forloop.counter }}" class="caret" style="color:#377BB5;"></span>   
                     </td>
             </tr>

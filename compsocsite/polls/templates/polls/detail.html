@@ -2,54 +2,10 @@
 
 {% block extra_head %}
 
-
-<!-- Google Analytics -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-81006265-1', 'none');
- //ga('create', 'UA-81006265-1', 'none','DetailTracker');
-  ga('send', 'pageview');
- ga('send', 'event', 'Button', 'click', 'left-sortable');
- //ga('DetailTracker.send', 'pageview');
-ga(function(tracker) {
-  // Logs the tracker created above to the console.
-  console.log(tracker);
-});
-    var form=document.getElementById('left-sortable');
-    form.addEventListener('submit', function(event) {
-
-  // Prevents the browser from submiting the form
-  // and thus unloading the current page.
-  event.preventDefault();
-
-  // Sends the event to Google Analytics and
-  // resubmits the form once the hit is done.
-  ga('send', 'event', 'Left Form', 'submit', {
-    hitCallback: function() {
-      form.submit();
-    }
-  });
-});
-
-</script>
-    
-<!-- End Google Analytics -->
-
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-59SLDM"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-59SLDM');</script>
 <!-- End Google Tag Manager -->
-
-
 
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -58,81 +14,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <script src='/static/js/mobile.js'></script>
 {% else %}
 <script src='/static/js/desktop.js'></script>
+<script src='/static/js/voteWithTies.js'></script>
 {% endif %}
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
     <style>
 .sortable1 {background:transparent;}
-.aftersort {background-color:#eee;}
+.aftersort {background-color:#eee;width:100%;}
 .hide1 {background-color:transparent; min-height=5px;min-width:15px;}
-ul.choice1{min-height:25px; border-style: solid;
-    border-width: medium;}
+ul.choice1{min-height:25px;}
   </style>
 
 
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-  <script>
-      
-      
-      
-      $(function() {
-          
-           $('.hide1')
-                .mouseover(function(){
-                 $('.ept',this).show();})
-           ;
-          
-          
-        var oldList, newList, item,sortin;
-          
-        window.setInterval(function(){
-        $("ul.choice1").sortable({
-           
-            start: function(event, ui) {
-            //     sortin=-1,
-                item = ui.item;
-                newList = oldList = ui.item.parent();
-                
-            },
-            
-            stop: function(event, ui) {
-                if(oldList.attr('id')!=newList.attr('id') && newList.children().size()>1){
-                    newList.addClass('aftersort'); 
-                } 
-                
-                //no ul background when ul has only one li
-                 if(oldList.attr('class').indexOf('aftersort')>-1 && oldList.children().size()<=2){
-                    oldList.removeClass('aftersort');    
-                }
-                var len = $(".choice1").length;
-                newItem = "<ul class=\"choice1\"></ul>";
-                $( ".choice1" ).each(function( index ) {
-                    if( $( this ).children().size() < 1 ){
-                        $( this ).remove();
-                    }else{
-                        $( this ).before(newItem);
-                    }
-                    if( index == len - 1 ){
-                        $( this ).after(newItem);
-                    }
-                });
-                // alert(oldList.attr('id')+" TO "+newList.attr('id'));
-            },
-               
-            change: function(event, ui) {  
-                if(ui.sender) newList = ui.placeholder.parent();
-            },
-            placeholder: "ui-state-highlight",
-            connectWith: "ul.choice1",
-        }).disableSelection();
-        console.log(1);
-        }, 1000);
-              
-    });
-    
-  </script>
 
 
 {% endblock %}
@@ -140,60 +36,61 @@ ul.choice1{min-height:25px; border-style: solid;
 {% block content %}
 {% if error_message %}
 <p>
-<strong>{{ error_message }}</strong>
+    <strong>{{ error_message }}</strong>
 </p>
 {% endif %}
 
 <p>
-<br />
-<br />
-<br />
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-        {{ message }}  <a href="{% url 'polls:regular_polls'%}">Return home</a>
-    </div>
-    {% endfor %}
-</ul>
-{% endif %}
+    <br />
+    <br />
+    <br />
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                {{ message }}  <a href="{% url 'polls:regular_polls'%}">Return home</a>
+            </div>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </p>
 
 
 
 {% if question.status == 2 %}
 <div class="grid">
-<div class="row">
-{% if question.imageURL != Null and question.imageURL != '' %}
-<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-<a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
-</div>
-{% elif question.image %}
-<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-<a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
-</div>
-{% endif %}
-<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
-<h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
-{{ question.question_text }}:</h3>
+    <div class="row">
+        {% if question.imageURL != Null and question.imageURL != '' %}
+            <div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+                <a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
+            </div>
+            {% elif question.image %}
+                <div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+                    <a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
+                </div>
+        {% endif %}
+        <div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
+            <h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
+                {{ question.question_text }}:
+            </h3>
             <small class="text-muted">Created by {{ question.question_owner }}</small>
-{% if question.question_desc %}
-<h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
-{{ question.question_desc }}
-</h3>
-{% endif %}
-<!-- <p>
-<b>Voters: </b>
-{% for voter in question.question_voters.all %}
-{% if voter == request.user %}
-<i>{{ voter }}</i>,
-{% else %}
-{{ voter }},
-{% endif %}
-{% endfor %}
-</p> -->
-</div>
-</div>
+            {% if question.question_desc %}
+                <h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
+                    {{ question.question_desc }}
+                </h3>
+            {% endif %}
+            <!-- <p>
+            <b>Voters: </b>
+            {% for voter in question.question_voters.all %}
+            {% if voter == request.user %}
+            <i>{{ voter }}</i>,
+            {% else %}
+            {{ voter }},
+            {% endif %}
+            {% endfor %}
+            </p> -->
+        </div>
+    </div>
 </div>
 
 
@@ -263,6 +160,7 @@ Submit
 
                         {% endfor %}
                     {% endfor %}
+                    <ul class="choice1"></ul>
                 {% endif %}
             </ul> <!-- left-sortable-->
         </div>
@@ -318,22 +216,6 @@ Submit
 		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">{% if request.user.username != ""%}{{lastcomment}}{% endif %}</textarea>
 	</div>
 </form>
-
-
-<script>
-var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
-var wholeHeight2 = $('#right-sortable')[0].scrollHeight;
-if (wholeHeight1 > wholeHeight2) {
-$('#right-sortable').css("height", wholeHeight1);
-} else {
-$('#left-sortable').css("height", wholeHeight2);
-}
-// $('#left-sortable').sortable('refresh');
-// $('#right-sortable').sortable('refresh');
-    
-
-
-</script>
 
 {% elif question.status == 1%}
 

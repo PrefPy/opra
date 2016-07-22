@@ -61,6 +61,41 @@ function moveAll() {
 $(function() {
     $("list-group-item").sortable();
 	$("#left-sortable").sortable({
+       
+        start: function(event, ui) {
+        //     sortin=-1,
+            item = ui.item;
+            newList = oldList = ui.item.parent();
+            
+        },
+        
+        stop: function(event, ui) {
+            if(oldList.attr('id')!=newList.attr('id') && newList.children().size()>1){
+                newList.addClass('aftersort');
+                newList.children().css( "width", "40%" );
+                newList.children().css( "display", "inline-block" );
+            } 
+            
+            //no ul background when ul has only one li
+            if(oldList.attr('class').indexOf('aftersort')>-1 && oldList.children().size()<=2){
+                oldList.removeClass('aftersort');    
+            }
+            var len = $(".choice1").length;
+            newItem = "<ul class=\"choice1\"></ul>";
+            $( ".choice1" ).each(function( index ) {
+                if( $( this ).children().size() < 1 ){
+                    $( this ).remove();
+                }else{
+                    $( this ).before(newItem);
+                }
+            });
+            $( ".choice1" ).last().after(newItem);
+            // alert(oldList.attr('id')+" TO "+newList.attr('id'));
+        },
+           
+        change: function(event, ui) {  
+            if(ui.sender) newList = ui.placeholder.parent();
+        },
 		//placeholder : "ui-sortable-placeholder",
 		containment : "document",
         connectWith : "#right-sortable",

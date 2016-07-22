@@ -134,7 +134,12 @@ img:hover{
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         {% if question.question_owner == request.user %}
-
+        
+            {%if question.m_poll == True %}
+                <li> {{question.question_text}} <li>
+                <li ><a href="{% url 'multipolls:mpollinfo' question.multipoll_set.all.0.id %}" >Go to the Multi Poll</a></li>
+        
+            {% endif %}
            
                <li {% if request.session.setting == 0 %} class="active" {% endif %}><a data-toggle="tab" href="#choices" >Choices</a></li>
                 <li {% if request.session.setting == 2 %} class="active" {% endif %}><a data-toggle="tab" href="#algorithm">Algorithms</a></li>
@@ -142,13 +147,13 @@ img:hover{
                 <li><a data-toggle="tab" href="#historyinfo">History</a></li>
        
            
-
+            {%if question.m_poll == False %}
                 <li {% if request.session.setting == 1 %} class="active" {% endif %}><a data-toggle="tab" href="#voters">Voters</a></li>
         
                 <li {% if request.session.setting == 5 %} class="active" {% endif %}><a data-toggle="tab" href="#emailsetting">Email</a></li>
                 <li {% if request.session.setting == 4 %} class="active" {% endif %}><a data-toggle="tab" href="#qr">Open/Close Poll</a></li>
-                <li><a data-toggle="tab" href="#delete">Delete</a></li>
-
+                <li><a data-toggle="tab" href="{%url 'polls:pollinfo' question.id %}">Delete</a></li>
+            {%endif%}
             
         {% else %}  
         <li class="active"><a data-toggle="tab" href="#general">General Info</a></li>

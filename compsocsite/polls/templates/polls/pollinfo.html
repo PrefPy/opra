@@ -151,8 +151,8 @@ img:hover{
                 <li {% if request.session.setting == 1 %} class="active" {% endif %}><a data-toggle="tab" href="#voters">Voters</a></li>
         
                 <li {% if request.session.setting == 5 %} class="active" {% endif %}><a data-toggle="tab" href="#emailsetting">Email</a></li>
-                <li {% if request.session.setting == 4 %} class="active" {% endif %}><a data-toggle="tab" href="#qr">Open/Close Poll</a></li>
-                <li><a data-toggle="tab" href="{%url 'polls:pollinfo' question.id %}">Delete</a></li>
+                <li {% if request.session.setting == 4 %} class="active" {% endif %}><a data-toggle="tab" href="#qr">Anonymous Voting</a></li>
+                <li><a data-toggle="tab" href="#delete">Delete</a></li>
             {%endif%}
             
         {% else %}  
@@ -209,17 +209,14 @@ img:hover{
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 4 %}active{% endif %}" id="qr">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
     {% if question.open == False %}
-    <a href="{% url 'polls:openpoll' question.id %}" class="btn btn-success btn-ok">Open Poll</a>
-    
-    
+        <a href="{% url 'polls:openpoll' question.id %}" class="btn btn-success btn-ok">Open Poll</a>
     {% else %}
-    <h4>Here is the QR Code for inviting users who have not logged in</h4>
-    <div id="qrcode" style="margin-top:15px;">
-        <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:detail' question.id %}" style="width:500px" />
-    </div>
-    <br >
-    <a href="{% url 'polls:closepoll' question.id %}" class="btn btn-danger">Close Poll</a>
-
+        <h4>Here is the QR Code for inviting users who have not logged in</h4>
+        <div id="qrcode" style="margin-top:15px;">
+            <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:detail' question.id %}" style="width:500px" />
+        </div>
+        <br >
+        <a href="{% url 'polls:closepoll' question.id %}" class="btn btn-danger">Close Poll</a>
     {% endif %}
 </div>
 
@@ -231,50 +228,58 @@ img:hover{
     <form action="{% url 'polls:emailSettings' question.id %}" method="post">
         {% csrf_token %}
         <a href="#" id="inviteButtonShow">Edit Invite Message</a>
-        <div class="col-md-6" id="invite">
-            <label for="inviteSubject">Subject:</label> <br />
-            <input type="text" class="form-control" id="inviteSubject" name="inviteSubject" value="{{emailInvite.subject}}" maxlength="100" size="100" />
-            <label for="inviteMessage">Email body:</label> <br />
-            <textarea type="text" class="form-control" id="inviteMessage" name="inviteMessage" value="" maxlength="500">{{emailInvite.message}}</textarea> <br />
-            <label for="emailInvite">Send email when inviting voters</label>
-            <input type="checkbox" name="emailInvite" id="emailInvite" value="email" {% if question.emailInvite == True %} checked {% endif %}>
+        <div class="row">
+            <div class="col-md-6" id="invite">
+                <label for="inviteSubject">Subject:</label> <br />
+                <input type="text" class="form-control" id="inviteSubject" name="inviteSubject" value="{{emailInvite.subject}}" maxlength="100" size="100" />
+                <label for="inviteMessage">Email body:</label> <br />
+                <textarea type="text" class="form-control" id="inviteMessage" name="inviteMessage" value="" maxlength="500">{{emailInvite.message}}</textarea> <br />
+                <label for="emailInvite">Send email when inviting voters</label>
+                <input type="checkbox" name="emailInvite" id="emailInvite" value="email" {% if question.emailInvite == True %} checked {% endif %}>
+            </div>
+            <div class="col-md-6">
+                <label for="deleteSubject">Subject:</label> <br />
+                <input type="text" class="form-control" id="deleteSubject" name="deleteSubject" value="{{emailDelete.subject}}" maxlength="100" size="100" />
+                <label for="deleteMessage">Email body:</label> <br />
+                <textarea type="text" class="form-control" id="deleteMessage" name="deleteMessage" value="" maxlength="500">{{emailDelete.message}}</textarea> <br />
+                <label for="emailDelete">Send email when deleting voters</label>
+                <input type="checkbox" name="emailDelete" id="emailDelete" value="email" {% if question.emailDelete %} checked {% endif %}>
+            </div>
         </div>
-        <div class="col-md-6">
-            <label for="deleteSubject">Subject:</label> <br />
-            <input type="text" class="form-control" id="deleteSubject" name="deleteSubject" value="{{emailDelete.subject}}" maxlength="100" size="100" />
-            <label for="deleteMessage">Email body:</label> <br />
-            <textarea type="text" class="form-control" id="deleteMessage" name="deleteMessage" value="" maxlength="500">{{emailDelete.message}}</textarea> <br />
-            <label for="emailDelete">Send email when deleting voters</label>
-            <input type="checkbox" name="emailDelete" id="emailDelete" value="email" {% if question.emailDelete %} checked {% endif %}>
-        </div>
-        <div class="col-md-6">
-            <label for="startSubject">Subject:</label> <br />
-            <input type="text" class="form-control" id="startSubject" name="startSubject" value="{{emailStart.subject}}" maxlength="100" size="100" />
-            <label for="startMessage">Email body:</label> <br />
-            <textarea type="text" class="form-control" id="startMessage" name="startMessage" value="" maxlength="500">{{emailStart.message}}</textarea> <br />
-            <label for="emailStart">Send email when the poll starts</label>
-            <input type="checkbox" name="emailStart" id="emailStart" value="email" {% if question.emailStart %} checked {% endif %}>
-        </div>
-        <div class="col-md-6">
-            <label for="stopSubject">Subject:</label> <br />
-            <input type="text" class="form-control" id="stopSubject" name="stopSubject" value="{{emailStop.subject}}" maxlength="100" size="100" />
-            <label for="stopMessage">Email body:</label> <br />
-            <textarea type="text" class="form-control" id="stopMessage" name="stopMessage" value="" maxlength="500">{{emailStop.message}}</textarea> <br />
-            <label for="emailStop">Send email when the poll stops</label>
-            <input type="checkbox" name="emailStop" id="emailStop" value="email" {% if question.emailStop %} checked {% endif %}>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="startSubject">Subject:</label> <br />
+                <input type="text" class="form-control" id="startSubject" name="startSubject" value="{{emailStart.subject}}" maxlength="100" size="100" />
+                <label for="startMessage">Email body:</label> <br />
+                <textarea type="text" class="form-control" id="startMessage" name="startMessage" value="" maxlength="500">{{emailStart.message}}</textarea> <br />
+                <label for="emailStart">Send email when the poll starts</label>
+                <input type="checkbox" name="emailStart" id="emailStart" value="email" {% if question.emailStart %} checked {% endif %}>
+            </div>
+            <div class="col-md-6">
+                <label for="stopSubject">Subject:</label> <br />
+                <input type="text" class="form-control" id="stopSubject" name="stopSubject" value="{{emailStop.subject}}" maxlength="100" size="100" />
+                <label for="stopMessage">Email body:</label> <br />
+                <textarea type="text" class="form-control" id="stopMessage" name="stopMessage" value="" maxlength="500">{{emailStop.message}}</textarea> <br />
+                <label for="emailStop">Send email when the poll stops</label>
+                <input type="checkbox" name="emailStop" id="emailStop" value="email" {% if question.emailStop %} checked {% endif %}>
+            </div>
         </div>
         <input type="submit" value="Save Settings" class="btn btn-success">
     </form>
+    
     <form action="{%url 'polls:emailNow' question.id%}" method="post">
         {% csrf_token %}
-        <div class="col-md-6">
-            <label for="subject">Subject:</label> <br />
-            <input type="text" class="form-control" id="subject" name="subject" value="" maxlength="100" size="100" />
-            <label for="message">Email body:</label> <br />
-            <textarea type="text" class="form-control" id="message" name="message" value="" maxlength="500"></textarea> <br />
+        <div class="row">
+            <div class="col-md-6">
+                <label for="subject">Subject:</label> <br />
+                <input type="text" class="form-control" id="subject" name="subject" value="" maxlength="100" size="100" />
+                <label for="message">Email body:</label> <br />
+                <textarea type="text" class="form-control" id="message" name="message" value="" maxlength="500"></textarea> <br />
+            </div>
         </div>
         <input type="submit" value="Send Now" class="btn btn-success">
     </form>
+        
     <form action="{%url 'polls:emailOptions' question.id%}" method="post">
         {% csrf_token %}
         <input type="submit" value="Send Options" class="btn btn-success">

@@ -277,7 +277,21 @@ def getPollWinner(question):
             #add the winner
             winnerStr += item_set[index].item_text
     return winnerStr
-    
+
+# check whether the user clicked 'reset' when ordering preferences
+def isPrefReset(request):
+    # reset link would have '?order=null' at the end
+    orderStr = request.GET.get('order', '')
+    if orderStr == "null":
+        return True
+    return False 
+
+# given a list of responses, return the response's selection data
+def getCurrentSelection(responses):
+    mostRecentResponse = responses[0]
+    responseDict = mostRecentResponse.dictionary_set.all()[0]
+    return responseDict.sorted_values()    
+
 # view for question detail
 class DetailView(generic.DetailView):
     model = Question
@@ -292,39 +306,40 @@ class DetailView(generic.DetailView):
         ctx = super(DetailView, self).get_context_data(**kwargs)
         ctx['lastcomment'] = ""
         
-        
         #Case for anonymous user
         if self.request.user.get_username() == "":
-            orderstr = self.request.GET.get('order', '')
-            if orderstr == "null":
+            if isPrefReset(self.request):
                 ctx['items'] = self.object.item_set.all()
                 return ctx
+            # check the anonymous voter
             if 'anonymousvoter' in self.request.session and 'anonymousid' in self.request.session:
+                # sort the responses from latest to earliest
                 currentAnonymousResponses = self.object.response_set.filter(anonymous_id = self.request.session['anonymousid']).reverse()
                 if len(currentAnonymousResponses) > 0:
-                    mostRecentAnonymousResponse = currentAnonymousResponses[0]
-                    responseAnonymousDict = mostRecentAnonymousResponse.dictionary_set.all()[0]
-                    ctx['currentSelection'] = responseAnonymousDict.sorted_values()
+                    # get the voter's most recent selection
+                    ctx['currentSelection'] = getCurrentSelection(currentAnonymousResponses)
                     if mostRecentAnonymousResponse.comment:
                         ctx['lastcomment'] = mostRecentAnonymousResponse.comment
             else:
+                # load choices in the default order
                 ctx['items'] = self.object.item_set.all()
             return ctx
+
+        # Get the responses for the current logged-in user from latest to earliest
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         
         if len(currentUserResponses) > 0:
             if currentUserResponses[0].comment:
                 ctx['lastcomment'] = currentUserResponses[0].comment
-        tempOrderStr = self.request.GET.get('order', '')
-        if tempOrderStr == "null":
+
+        # reset button
+        if isPrefReset(self.request):
             ctx['items'] = self.get_order(ctx)
             return ctx
         
         # check if the user submitted a vote earlier and display that for modification
-        if len(currentUserResponses) > 0:
-            mostRecentResponse = currentUserResponses[0]          
-            responseDict = mostRecentResponse.dictionary_set.all()[0]   
-            ctx['currentSelection'] = responseDict.sorted_values()
+        if len(currentUserResponses) > 0: 
+            ctx['currentSelection'] = getCurrentSelection(currentUserResponses)
         else:
             # no history so display the list of choices
             ctx['items'] = self.get_order(ctx)
@@ -360,8 +375,8 @@ class DependencyDetailView(generic.DetailView):
     def get_context_data(self,**kwargs):
         ctx = super(DependencyDetailView, self).get_context_data(**kwargs)
         ctx['question'] = self.get_object().target_question
-        tempOrderStr = self.request.GET.get('order', '')
-        if tempOrderStr == "null":
+
+        if isPrefReset(self.request):
             ctx['items'] = self.get_order(ctx)
             return ctx
 
@@ -402,9 +417,8 @@ class PollInfoView(generic.DetailView):
         emailInvite = Email.objects.filter(question=self.object, type=1)
         if len(emailInvite) == 1:
             setupEmail(self.object)
-            emailInvite = Email.objects.filter(question=self.object, type=1)
-        if self.object.m_poll == False:
-            ctx['emailInvite'] = emailInvite[0]
+        if Email.objects.filter(question=self.object).count() > 0:
+            ctx['emailInvite'] = Email.objects.filter(question=self.object, type=1)[0]
             ctx['emailDelete'] = Email.objects.filter(question=self.object, type=2)[0]
             ctx['emailStart'] = Email.objects.filter(question=self.object, type=3)[0]
             ctx['emailStop'] = Email.objects.filter(question=self.object, type=4)[0]
@@ -851,6 +865,7 @@ def setVisibility(request, question_id):
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# poll is open to anonymous voters
 def openPoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.open = True
@@ -859,6 +874,7 @@ def openPoll(request,question_id):
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
+# poll is closed to anonymous voters
 def closePoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.open = False
@@ -995,6 +1011,7 @@ def dependencyRedirect(request, question_id):
 def chooseDependency(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     
+    # get the polls selected
     dependencies = []
     l = request.POST.getlist('polls')
     for poll in l:
@@ -1007,6 +1024,7 @@ def chooseDependency(request, question_id):
         combination.dependent_questions.clear()
     combination.save()
  
+    # save a list of dependent questions 
     if len(dependencies) > 0:
         for poll in dependencies:
             combination.dependent_questions.add(poll)
@@ -1143,16 +1161,19 @@ def getConditionalResponse(request, combination_id):
     # set a parameter to the condition index, so that the response to that conditon will be preloaded
     return HttpResponseRedirect(reverse('polls:dependencydetail', args=(combination.id,)) + "?condInd=" + str(conditionIndex))  
     
+# join a poll without logging in
 def anonymousJoin(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     name = request.POST['name']
     request.session['anonymousvoter'] = name
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
     
+# submit a vote without logging in
 def anonymousVote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     voter = ""
     id = 0
+    # check if the anonymous voter has voted before
     if 'anonymousvoter' not in request.session or 'anonymousid' not in request.session:
         voter = request.POST['anonymousname']
         if voter == "":

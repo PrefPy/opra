@@ -138,6 +138,14 @@ class AddStep4View(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+class QRCodeView(generic.DetailView):
+    model = Question
+    template_name = 'polls/qrcode.html'
+    
+class AnonymousInviteView(generic.DetailView):
+    model = Question
+    template_name = 'polls/anonymous_invite.html'
+
 # Add a single choice to a poll.
 # - A choice must contain text
 # - No duplicate choices (text can't be the same) 
@@ -291,24 +299,9 @@ class DetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
         ctx['lastcomment'] = ""
-        
-        
-        #Case for anonymous user
+        #Case for anonymous user, return the default order
         if self.request.user.get_username() == "":
-            orderstr = self.request.GET.get('order', '')
-            if orderstr == "null":
-                ctx['items'] = self.object.item_set.all()
-                return ctx
-            if 'anonymousvoter' in self.request.session and 'anonymousid' in self.request.session:
-                currentAnonymousResponses = self.object.response_set.filter(anonymous_id = self.request.session['anonymousid']).reverse()
-                if len(currentAnonymousResponses) > 0:
-                    mostRecentAnonymousResponse = currentAnonymousResponses[0]
-                    responseAnonymousDict = mostRecentAnonymousResponse.dictionary_set.all()[0]
-                    ctx['currentSelection'] = responseAnonymousDict.sorted_values()
-                    if mostRecentAnonymousResponse.comment:
-                        ctx['lastcomment'] = mostRecentAnonymousResponse.comment
-            else:
-                ctx['items'] = self.object.item_set.all()
+            ctx['items'] = ctx['object'].item_set.all()
             return ctx
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
         
@@ -343,9 +336,6 @@ class DependencyView(generic.DetailView):
         # there should only be one combination at most
         combination = Combination.objects.filter(target_question=self.object, user=self.request.user)
         ctx['prevCombination'] = combination[0] if (len(combination) > 0) else None
-        (nodes, edges) = getPrefenceGraph(self.request, self.object)
-        ctx['pref_nodes'] = nodes
-        ctx['pref_edges'] = edges
         return ctx
     
 class DependencyDetailView(generic.DetailView):
@@ -403,10 +393,11 @@ class PollInfoView(generic.DetailView):
         if len(emailInvite) == 1:
             setupEmail(self.object)
             emailInvite = Email.objects.filter(question=self.object, type=1)
-        ctx['emailInvite'] = emailInvite[0]
-        ctx['emailDelete'] = Email.objects.filter(question=self.object, type=2)[0]
-        ctx['emailStart'] = Email.objects.filter(question=self.object, type=3)[0]
-        ctx['emailStop'] = Email.objects.filter(question=self.object, type=4)[0]
+        if self.object.m_poll == False:
+            ctx['emailInvite'] = emailInvite[0]
+            ctx['emailDelete'] = Email.objects.filter(question=self.object, type=2)[0]
+            ctx['emailStart'] = Email.objects.filter(question=self.object, type=3)[0]
+            ctx['emailStop'] = Email.objects.filter(question=self.object, type=4)[0]
         ctx['users'] = User.objects.all()
         ctx['items'] = self.object.item_set.all()
         ctx['groups'] = Group.objects.all()
@@ -543,7 +534,7 @@ def categorizeResponses(all_responses):
             add = True
             for response2 in latest_responses:
                 if response1.anonymous_voter and response2.anonymous_voter:
-                    if response1.anonymous_id == response2.anonymous_id:
+                    if response1.anonymous_voter == response2.anonymous_voter:
                         add = False
                         previous_responses.append(response1)
                         break
@@ -1064,30 +1055,6 @@ def assignPreference(request, combination_id):
     messages.success(request, 'Your preferences have been updated.')        
 
     return HttpResponseRedirect(reverse('polls:dependencydetail', args=(combination.id,)) + "?condInd=" + str(conditionIndex))
-    
-def getPrefenceGraph(request, question):
-    multipoll = question.multipoll_set.all()[0] 
-    # get the nodes
-    nodes = []
-    for poll in multipoll.questions.all():
-        data = {}
-        data['id'] = poll.id
-        data['label'] = poll.question_text
-        nodes.append(data)    
-    # get the edges
-    edges = []
-    for poll in multipoll.questions.all():
-        currentCombination = Combination.objects.filter(target_question=poll, user=request.user)
-        if len(currentCombination) > 0:
-            dependentPolls = currentCombination[0].dependent_questions.all()
-
-            for dep_poll in dependentPolls:
-                data = {}
-                data['from'] = dep_poll.id
-                data['to'] = poll.id
-                data['value'] = 1
-                edges.append(data)   
-    return (nodes, edges)
 
 # check if there is a response for this set of conditions and return the condition object
 # create a new one if there is no existing objects
@@ -1150,19 +1117,7 @@ def anonymousJoin(request, question_id):
     
 def anonymousVote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    voter = ""
-    id = 0
-    if 'anonymousvoter' not in request.session or 'anonymousid' not in request.session:
-        voter = request.POST['anonymousname']
-        if voter == "":
-            voter = "Anonymous"
-        request.session['anonymousvoter'] = voter
-        id = question.response_set.all().count()
-        request.session['anonymousid'] = id
-    else:
-        voter = request.session['anonymousvoter']
-        id = request.session['anonymousid']
-    
+
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
@@ -1171,8 +1126,9 @@ def anonymousVote(request, question_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
     # make Response object to store data
+    voter = request.session['anonymousvoter']
     comment = request.POST['comment']
-    response = Response(question=question, timestamp=timezone.now(), anonymous_voter = voter, anonymous_id=id)
+    response = Response(question=question, timestamp=timezone.now(), anonymous_voter = voter)
     if comment != "":
         response.comment = comment
     response.save()
@@ -1201,3 +1157,4 @@ def anonymousVote(request, question_id):
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+

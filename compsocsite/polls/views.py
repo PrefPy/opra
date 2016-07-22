@@ -403,10 +403,11 @@ class PollInfoView(generic.DetailView):
         if len(emailInvite) == 1:
             setupEmail(self.object)
             emailInvite = Email.objects.filter(question=self.object, type=1)
-        ctx['emailInvite'] = emailInvite[0]
-        ctx['emailDelete'] = Email.objects.filter(question=self.object, type=2)[0]
-        ctx['emailStart'] = Email.objects.filter(question=self.object, type=3)[0]
-        ctx['emailStop'] = Email.objects.filter(question=self.object, type=4)[0]
+        if self.object.m_poll == False:
+            ctx['emailInvite'] = emailInvite[0]
+            ctx['emailDelete'] = Email.objects.filter(question=self.object, type=2)[0]
+            ctx['emailStart'] = Email.objects.filter(question=self.object, type=3)[0]
+            ctx['emailStop'] = Email.objects.filter(question=self.object, type=4)[0]
         ctx['users'] = User.objects.all()
         ctx['items'] = self.object.item_set.all()
         ctx['groups'] = Group.objects.all()

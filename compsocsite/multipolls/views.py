@@ -235,7 +235,7 @@ class mpollinfoView(generic.DetailView):
         ctx['history'] = history
         ctx['latest_responses'] = latest_responses
         ctx['previous_responses'] = previous_responses
-        ctx['items'] = items
+        ctx['items'] = items[0]
     
         return ctx
     

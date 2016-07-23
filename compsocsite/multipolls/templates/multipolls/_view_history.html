@@ -27,8 +27,8 @@
                 <br />
                 <br />
                 {% if previous_responses %}
-                <button data-toggle="collapse" data-target="#history" class="btn btn-info" >Show/Hide More History</button>
-                <div id="history" class="collapse">
+                <button data-toggle="collapse" data-target="#history{{question.id}}" class="btn btn-info" >Show/Hide More History</button>
+                <div id="history{{question.id}}" class="collapse">
                     <div class="well">
                     {% for response in previous_responses %}
                         <div class="btn-group">

@@ -221,10 +221,9 @@ class mpollinfoView(generic.DetailView):
             tmp_pr['id']=question.id
             
             all_responses = question.response_set.reverse()
-            (lr, pr) = categorizeResponses(all_responses)
- 
-            tmp_lr['main']= lr
-            tmp_pr['main']= pr
+            (lr1, pr1) = categorizeResponses(all_responses)
+            tmp_lr['main']= lr1
+            tmp_pr['main']= pr1
             latest_responses.append(tmp_lr)
             previous_responses.append(tmp_pr)
   
@@ -236,8 +235,8 @@ class mpollinfoView(generic.DetailView):
         ctx['alloc_methods'] = getAllocMethods()  
       
    
-        ctx['latest_responses'] = latest_responses
-        ctx['previous_responses'] = previous_responses
+        ctx['lr'] = latest_responses
+        ctx['pr'] = previous_responses
 
     
         return ctx

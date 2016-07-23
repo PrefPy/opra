@@ -182,21 +182,22 @@ img:hover{
     </div>
     
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo{{question.id}}">
-        <p>{{question.id}} And {{latest_responses|length}} and pre res length {{previous_responses|length}}</p>
         
         {% for s in latest_responses %}     
-                {{s.id}}
+            {% if s.id == question.id %}
+                {% for pr in previous_responses%}
+                    {%if pr.id == question.id %}
+                    {%with latest_responses=s.main%} 
+                    {%with previous_responses=pr.main%}
+                        {% include 'polls/_view_history.html' %} 
+                    {% endwith %}
+                    {% endwith %}
+                    {% endif%}
+                {% endfor %} <!-- for pr in previous_responses-->
+            {%endif%}
                 
         {%endfor%}
-        {% for sub in previous_responses %}     
-                {{sub.i}}
-                
-        {%endfor%}
-        
-         {% for sub in qid %}     
-                {{sub}}
-                
-        {%endfor%}
+
         
         
         

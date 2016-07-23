@@ -211,30 +211,30 @@ class mpollinfoView(generic.DetailView):
     
         latest_responses=[]
         previous_responses=[]
-        q_id=[]
+   
         
         
         for question in self.get_object().questions.all():
             tmp_lr={}
             tmp_pr={}
             tmp_lr['id']= question.id
-            tmp_pr['i']=question.id
+            tmp_pr['id']=question.id
             
             all_responses = question.response_set.reverse()
-            (latest_responses, previous_responses) = categorizeResponses(all_responses)
+            (lr, pr) = categorizeResponses(all_responses)
  
-            tmp_lr['main']= latest_responses
-            tmp_pr['main']= previous_responses
+            tmp_lr['main']= lr
+            tmp_pr['main']= pr
             latest_responses.append(tmp_lr)
             previous_responses.append(tmp_pr)
-            q_id.append(question.id)
+  
 
         ctx['mpoll']= mpoll
         ctx['users'] = User.objects.all()
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()  
-        ctx['qid']=q_id
+      
    
         ctx['latest_responses'] = latest_responses
         ctx['previous_responses'] = previous_responses

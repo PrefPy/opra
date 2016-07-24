@@ -148,7 +148,7 @@ img:hover{
                 <!--<li><a href="{% url 'polls:pollinfo' question.id %}" >{{question.question_text}}</a></li>-->
         <li><a data-toggle="collapse" data-target="#products{{forloop.counter}}" class="collapsed">{{question.question_text}} <span class="glyphicon glyphicon-menu-down" style="font-size:60%"></span></a></li>
                 <ul class="collapse" id="products{{forloop.counter}}">
-                    <li style="padding:3px;"><a data-toggle="tab" href="#geninfo{{question.id}}">General Info</a></li>
+                    <li style="padding:3px;"><a data-toggle="tab" href="#general{{question.id}}">General Info</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#historyinfo{{question.id}}">History</a></li>
                 </ul>
     
@@ -213,8 +213,10 @@ img:hover{
                 {% endfor %} <!-- for p in previous_responses--> 
             {%endif%}    
         {%endfor%} <!--s in lr-->
-        
-
+    </div>
+    
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="general{{question.id}}">
+        {% include 'polls/_voters_generalinfo.html' %}
     </div>
     {% endfor %}
       
@@ -282,6 +284,7 @@ img:hover{
         </div>
     </div>
 </div>
+    
     
 </div>
 

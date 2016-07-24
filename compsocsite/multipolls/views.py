@@ -204,13 +204,14 @@ class mpollinfoView(generic.DetailView):
     model = MultiPoll
     template_name = 'multipolls/mpollinfo.html'
     
-    
     def get_context_data(self, **kwargs):
         ctx = super(mpollinfoView, self).get_context_data(**kwargs)
         mpoll=self.get_object()
     
         latest_responses=[]
         previous_responses=[]
+        mostRecentResponse=[]
+        history=[]
    
         
         
@@ -219,13 +220,24 @@ class mpollinfoView(generic.DetailView):
             tmp_pr={}
             tmp_lr['id']= question.id
             tmp_pr['id']=question.id
-            
             all_responses = question.response_set.reverse()
             (lr1, pr1) = categorizeResponses(all_responses)
             tmp_lr['main']= lr1
             tmp_pr['main']= pr1
             latest_responses.append(tmp_lr)
             previous_responses.append(tmp_pr)
+            
+            tmp_mrr={}
+            tmp_history={}
+            tmp_mrr['id']=question.id
+            tmp_history['id']=question.id
+            currentUserResponses = question.response_set.filter(user=self.request.user).reverse()
+            tmp_mrr['main']=currentUserResponses[0] if (len(currentUserResponses) > 0) else None
+            tmp_history['main']=currentUserResponses[1:]
+            mostRecentResponse.append(tmp_mrr)
+            history.append(tmp_history)
+            
+            
   
 
         ctx['mpoll']= mpoll
@@ -237,7 +249,9 @@ class mpollinfoView(generic.DetailView):
    
         ctx['lr'] = latest_responses
         ctx['pr'] = previous_responses
-
+        
+        ctx['mrr'] = mostRecentResponse
+        ctx['hist'] = history
     
         return ctx
     

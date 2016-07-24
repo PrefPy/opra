@@ -1,4 +1,5 @@
-   <h3 class="page-header">History votes of {{ question.question_text }} </h3>
+{% if mpoll.owner == request.user %}
+<h3 class="page-header">History votes of {{ question.question_text }} </h3>
         <!-- Display most recent vote -->
 
             {% if latest_responses|length > 0 %}
@@ -55,4 +56,89 @@
             {% else %} 
                 <p>No one has voted on this poll yet.</p>
             {% endif %} <!-- no response-->
+{% else %} <!-- Not mpoll owner-->
+    {% if mostRecentResponse %}
+        <div>
+            <b>{{ mostRecentResponse.user.username }}</b> (last voted on {{ mostRecentResponse.timestamp }}) <br /> 
+            {% for d in mostRecentResponse.dictionary_set.all %}
+                {% for item in d.sorted_values %}
+           <button type="button" class="btn btn-default">({{ item.1 }}) {{ item.0 }} </button>
+                {% endfor %}
+            {% endfor %}
+            {% if response.comment %}
+                <p>Comment: {{response.comment}}</p>
+            {% endif %}
+        </div>
+        <br />
+        <br />
+        {% if history %}
+        <button data-toggle="collapse" data-target="#history{{question.id}}" class="btn btn-info">Show/Hide History</button>
+        <div id="history{{question.id}}" class="collapse">
+            <div class="well">
+            {% for response in history %}
+                <ul class="list-group">
+                    <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
+                    {% for d in response.dictionary_set.all %}
+                        {% for item in d.sorted_values %}
+                    <li class="list-group-item">   ({{ item.1 }}) {{ item.0 }} </li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% if response.comment %}
+                <p>Comment: {{response.comment}}</p>
+                {% endif %}
+                </ul>
+            {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    {% else %}
+        <p>You haven't voted on this poll yet.</p>
+    {% endif %}
 
+
+    <!-- Display other user votes -->
+    {% if question.display_pref == 1 %}
+        <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
+        <p>The owner allows everyone to see all votes cast.</p>
+        {% for response in latest_responses %}
+        {% if response.user %}
+            {% if response.user != request.user %}
+                <div class="btn-group">
+                    <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
+                    {% for d in response.dictionary_set.all %}
+                        {% for item in d.sorted_values %}
+                    <button type="button" class="btn btn-default"> {{ item.1 }}) {{ item.0 }} </button>
+                        {% endfor %}
+                    {% endfor %}
+                    {% if response.comment %}
+                <p>Comment: {{response.comment}}</p>
+                {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+        <div class="btn-group">
+                    <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br /> 
+                    {% for d in response.dictionary_set.all %}
+                        {% for item in d.sorted_values %}
+                    <button type="button" class="btn btn-default"> {{ item.1 }}) {{ item.0 }} </button>
+                        {% endfor %}
+                    {% endfor %}
+                    {% if response.comment %}
+                <p>Comment: {{response.comment}}</p>
+                {% endif %}
+                </div>
+        {% endif %}
+        {% endfor %}
+    {% elif question.display_pref == 2 %}
+        <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
+        <p>The following voters have voted on this poll:</p>
+        <ul>
+            {% for response in latest_responses %}
+                <li>{{response.user.username}} (last voted on {{ response.timestamp }})</li>
+            {% endfor %}
+        </ul>
+    {% elif question.display_pref == 3 %}
+        <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
+    {% endif %}
+ 
+{%endif%}

@@ -44,23 +44,7 @@ ul.choice1{min-height:25px;}
     <strong>{{ error_message }}</strong>
 </p>
 {% endif %}
-
-<p>
-    <br />
-    <br />
-    <br />
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-                {{ message }}  <a href="{% url 'polls:regular_polls'%}">Return home</a>
-            </div>
-            {% endfor %}
-        </ul>
-    {% endif %}
-</p>
-
-
+<br />
 
 {% if question.status == 2 %}
 <div class="grid">
@@ -227,6 +211,21 @@ Submit
 		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">{% if request.user.username != ""%}{{lastcomment}}{% endif %}</textarea>
 	</div>
 </form>
+        
+<p>
+    <br />
+    <br />
+    
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                {{ message }}  <a href="{% url 'polls:regular_polls'%}">Return home</a>
+            </div>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</p>
 
 {% elif question.status == 1%}
 

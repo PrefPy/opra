@@ -1,43 +1,3 @@
-{% extends 'polls/base.html' %}
-{% block extra_head %}
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src='/static/js/shared.js'></script>
-{% if request.flavour == "mobile" %}
-<script src='/static/js/mobile.js'></script>
-{% else %}
-<script src='/static/js/desktop.js'></script>
-{% endif %}
-
-{% endblock %}
-{% load staticfiles %}
-{% block content %}
-
-<div class="grid">
-	<div class="row">
-		{% if question.imageURL != Null and question.imageURL != '' %}
-		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-			<a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
-		</div>
-		{% elif question.image %}
-		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-			<a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
-		</div>
-		{% endif %}
-		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
-			<h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
-				{{ question.question_text }}:</h3>
-            <small class="text-muted">Created by {{ question.question_owner }}</small>
-			
-			{% if question.question_desc %}
-			<h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
-				{{ question.question_desc }}
-			</h3>
-			{% endif %}
-		</div>
-	</div>
-</div>
-
 <script>
 $(function(){
     // bind change event to select
@@ -100,7 +60,7 @@ $(function(){
                             Submit
                         </button>   
                     {% else %}
-                            <a href="{% url 'polls:dependencydetail' combination.id %}?order=null" class="btn btn-danger reset-button">Clear</a>
+                            <a href="{% url 'polls:dependencyview' question.id %}?order=null" class="btn btn-danger reset-button">Clear</a>
                             <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
                                 Submit
                             </button>
@@ -181,19 +141,20 @@ $(function(){
         </div>
     </form>
 </div>
+    
+<!-- Display confirmation message -->
 <div class="row">
-<p>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-        {{ message }}  <a href="{% url 'polls:m_polls'%}">Return home</a>
-    </div>
-    {% endfor %}
-</ul>
-{% endif %}
-</p>
-        
+    <p>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+            {{ message }}  <a href="{% url 'polls:m_polls'%}">Return home</a>
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    </p>       
 </div>
 <script>
     var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
@@ -207,6 +168,3 @@ $(function(){
     $('#right-sortable').sortable('refresh');
 
 </script>
-
-  
-{% endblock %}

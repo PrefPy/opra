@@ -25,7 +25,7 @@
                 <tr style = "margin:0; padding:0" data-toggle="collapse" data-target="#{{ mpoll.id }}" class="accordion-toggle">
                     
                     <td> 
-                        <a href="{%url 'multipolls:mpollinfo' mpoll.id %}">
+                        <a href="{%url 'multipolls:mpollinfo' mpoll.id %}"  data-toggle="tooltip" data-placement="right" title="Description: {%if mpoll.description %} {{mpoll.description}} {%else%} None. {%endif%}">
                         <span style= "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0; font-size:17px;">
                             {{ mpoll.title }} 
                         </span></a>
@@ -142,7 +142,7 @@
         <tbody>
             <tr data-toggle="collapse" data-target="#{{ mpoll.id }}" class="accordion-toggle"> 
                  <td> 
-                        <a href="{%url 'multipolls:mpollinfo' mpoll.id %}">
+                        <a href="{%url 'multipolls:mpollinfo' mpoll.id %}"  data-toggle="tooltip" data-placement="right" title="Description: {%if mpoll.description %} {{mpoll.description}} {%else%} None. {%endif%}">
                         <span style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:17px;">
                             {{ mpoll.title }} 
                         </span></a>
@@ -156,7 +156,7 @@
                         {% for question in mpoll.questions.all %}
                             <tr class="info">
                                 <td>
-                                    <a href="{% url 'polls:pollinfo' question.id %}"> <span style = "font-size: 100%;">{{ question.question_text }} </span></a>
+                                    <a href="{% url 'polls:pollinfo' question.id %}" > <span style = "font-size: 100%;">{{ question.question_text }} </span></a>
                                 </td>
                                 <td style="float:middle;"> 
                                     {% if question.status == 2 %} 

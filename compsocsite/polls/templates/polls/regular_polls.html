@@ -2,27 +2,6 @@
 
 
 {% block content %}
-<!--
-<div data-spy="scroll" data-target=".nav" data-offset="50">
-<div class="collapse navbar-collapse" id="myNavbar">
-<ul class="nav nav-pills">
-  <li role="presentation" class="active"><a href="#">Home</a></li>
-  <li role="presentation"><a href="#created">Created</a></li>
-  <li role="presentation"><a href="#participated">Participated</a></li>
-</ul>
-</div>
-
-
-<div id="created" class="container-fluid">
-
-</div>
-    
-<div id="participated" class="container-fluid">
-
-</div>
-
-</div>
--->
 
 <!-- polls created by you is included in index2 -->
 <!-- for created by you section -->
@@ -47,7 +26,7 @@
             {% for question in polls_created %}
                 <tr>
                     <td>    
-                        <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="More info about {{question.question_text}}: Help users to choose if it has many possible dependencies">{{ question.question_text }}</a>
+                        <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if question.question_desc %} {{question.question_desc}} {%else%} None. {%endif%}">{{ question.question_text }}</a>
                     </td>
                     <td style="vertical-align:middle">
                         {% if question.status == 2 %}
@@ -152,7 +131,7 @@
             {% for question in polls_participated %}
             <tr>
                 <td>
-                    <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="More info about {{question.question_text}}: Help users to choose if it has many possible dependencies"> 
+                    <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if question.question_desc %} {{question.question_desc}} {%else%} None. {%endif%}"> 
                     {{ question.question_text }}
                     </a>
                 </td>

@@ -13,18 +13,6 @@
 {% load staticfiles %}
 {% block content %}
 
-<p>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-        {{ message }}  <a href="{% url 'polls:m_polls'%}">Return home</a>
-    </div>
-    {% endfor %}
-</ul>
-{% endif %}
-</p>
-
 <div class="grid">
 	<div class="row">
 		{% if question.imageURL != Null and question.imageURL != '' %}
@@ -190,9 +178,22 @@ $(function(){
                 </div>
             </div>
         </div>
+        </div>
     </form>
-
-
+</div>
+<div class="row">
+<p>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+        {{ message }}  <a href="{% url 'polls:m_polls'%}">Return home</a>
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+</p>
+        
 </div>
 <script>
     var wholeHeight1 = $('#left-sortable')[0].scrollHeight;

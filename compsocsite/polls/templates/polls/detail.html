@@ -46,22 +46,6 @@
     </p>
     {% endif %}
 
-    <p>
-        <br />
-        <br />
-        <br />
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-                    {{ message }}  <a href="{% url 'polls:regular_polls'%}">Return home</a>
-                </div>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </p>
-
-
 
     {% if question.status == 2 %}
         <div class="grid">
@@ -232,6 +216,21 @@
                 </textarea>
         	</div>
         </form>
+        
+        <p>
+            <br />
+            <br />
+            
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                        {{ message }}  <a href="{% url 'polls:regular_polls'%}">Return home</a>
+                    </div>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </p>
 
     {% elif question.status == 1%}
         <p>This poll has not started yet.</p>

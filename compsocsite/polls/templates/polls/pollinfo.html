@@ -203,41 +203,11 @@ img:hover{
 </div>
     
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="title">
-    <h3>Info and setting of {{question.question_text}}</h3>
-     {% if question.status == 1 %}
-       <h5> Setting of Title</h5>
-         <form action="{% url 'polls:edittitle' question.id %}" method="post">
-            {% csrf_token %}
-
-            <input type="text" class="form-control" style="width:70%;" name="title" size="50" value="{{ question.question_text }}"/>
-
-            <br />
-            <input type="submit" class="btn btn-primary" value="Save Changes"/>
-        </form>
-    {% elif question.status == 2 %}
-        <h5>Sorry, the poll is started. You can't change the title now.</h5>
-    {%else%}
-        <h5>Sorry, the poll is ended. You can't change the title now.</h5>
-    {% endif %}    
+    {% include 'polls/_change_title.html' %}
 </div>
     
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="desc">
-    <h3>Info and setting of {{question.question_text}}</h3>
-     {% if question.status == 1 %}
-       <h5> Setting of Title</h5>
-         <form action="{% url 'polls:editdesc' question.id %}" method="post">
-            {% csrf_token %}
-
-            <input type="text" class="form-control" style="width:70%;" name="desc" size="50" value="{%if question.question_desc %} {{ question.question_desc}} {%else%} No descriptions yet.{%endif%}"/>
-
-            <br />
-            <input type="submit" class="btn btn-primary" value="Save Changes"/>
-        </form>
-    {% elif question.status == 2 %}
-        <h5>Sorry, the poll is started. You can't change the title and description now.</h5>
-    {%else%}
-        <h5>Sorry, the poll is ended. You can't change the title and description now.</h5>
-    {% endif %}    
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="desc">
+    {% include 'polls/_change_desc.html' %}
 </div>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 4 %}active{% endif %}" id="qr">

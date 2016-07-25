@@ -271,3 +271,18 @@ def deleteMpoll(request, multipoll_id):
         
         return HttpResponseRedirect(reverse('polls:m_polls'))
     
+def editTitle(request, multipoll_id):
+    question = get_object_or_404(MultiPoll, pk=multipoll_id)
+    new_title= request.POST["Mtitle"]
+    question.title=new_title
+    question.save()
+    request.session['setting'] = 0
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
+
+def editDesc(request, multipoll_id):
+    question = get_object_or_404(MultiPoll, pk=multipoll_id)
+    new_desc=request.POST["Mdesc"]
+    question.description=new_desc
+    question.save()
+    request.session['setting'] = 0
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  

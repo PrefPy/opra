@@ -1,84 +1,117 @@
 {% extends 'polls/base.html' %}
 
 {% block extra_head %}
+<script src="http://js.cytoscape.org/js/cytoscape.min.js"></script>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src='/static/js/shared.js'></script>
+{% if request.flavour == "mobile" %}
+    <script src='/static/js/mobile.js'></script>
+{% else %}
+    <script src='/static/js/desktop.js'></script>
+{% endif %}
+
 <style type="text/css">
  #cy {
-    width: 100%;
-    height: 200px;
+    width: 50%;
+    height: 150px;
     border: 1px solid lightgray;
 }   
 </style>
-<script src="http://js.cytoscape.org/js/cytoscape.min.js"></script>
 <script>
 function check()
 {
     var choicesStr = "?";
     {% for poll in question.multipoll_set.all.0.questions.all %}
         {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}    
-            choicesStr += "poll{{poll.id}}=" + document.getElementById("dynamic_select{{poll.id}}").checked + "&"; 
+            choicesStr += "poll{{poll.id}}=" + document.getElementById("checkbox{{poll.id}}").checked + "&"; 
         {% endif %}
     {% endfor %}
     
     window.location.href = "{% url 'polls:updatePrefGraph' question.id %}" + choicesStr; // redirect
     return false;
 }
+         
+$(function(){
+    // bind change event to select
+    {% for poll in combination.dependent_questions.all %}
+        $('#dynamic_select' + '{{poll.id}}').on('change', function () {
+            var choicesStr = "?";
+            {% for poll in combination.dependent_questions.all %}
+                choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&"; 
+            {% endfor %}
+
+            window.location.href = "{% url 'polls:dependencyget' combination.id %}" + choicesStr; // redirect
+            return false;
+        });
+    {% endfor %}
+});
 </script>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-    <ol class="breadcrumb">
-        <li>Multi-Poll</li>
-        <li>{{ question.multipoll_set.all.0.title }}</li>
-        <li class="active"> {{ question.question_text }}</li> 
-    </ol>
-    <form method="post" action="{% url 'polls:choosedependency' question.id %}" style="font-size:100%">
-        {% csrf_token %}
-        <h3>You are currently voting on {{question.question_text}} </h3>
-        <hr />
-        
-        <div class="row">
-            <div class="col-md-6">
-                <h4 align="center">Your preferences for {{question.question_text}} depends on:</h4>
 
-                <ul class="list-group">
-                {% for poll in question.multipoll_set.all.0.questions.all %}
-                    {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
-
-                    <li class="list-group-item">
-                        <div class="checkbox" align="center">
-                            {% if prevCombination %}
-                                <input type="checkbox" name="polls" value="{{poll.id}}" id="dynamic_select{{poll.id}}" class="pull-right" {% if poll in prevCombination.dependent_questions.all %} checked="checked" {% endif %} onclick="check()">
-                            {% else %}
-                                <input type="checkbox" name="polls" value="{{poll.id}}" id="dynamic_select{{poll.id}}" onclick="check();">
-                            {% endif %}
-
-                            <label  for="{{poll.id}}">      
-                                {{ poll.question_text }} 
-                            </label>
-                        </div>  
-                    </li>
-
-                    <!--<div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>
-                    <p><input type="checkbox" name="polls" value="{{poll.id}}" align="center" class="form-control"> </p>-->
-
-                    {% endif %}
-                {% endfor%}
-                </ul>
-            </div>
-            <div class="col-md-6">
-                <div style="left: 50%;">
-                    <div id="cy" ></div>
-                </div>
-            </div>
-        
-        </div>
-        <br />
-        <div align="center" style='font-size:100%'>
-            <input type="submit" value="Next" class="btn btn-primary"/>
-        </div>
-    </form>
+<!-- Title and description -->
+<div class="grid">
+	<div class="row">
+		{% if question.imageURL != Null and question.imageURL != '' %}
+		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+			<a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
+		</div>
+		{% elif question.image %}
+		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+			<a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
+		</div>
+		{% endif %}
+		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
+			<h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
+				{{ question.question_text }}:</h3>
+            <small class="text-muted">Created by {{ question.question_owner }}</small>
+			
+			{% if question.question_desc %}
+			<h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
+				{{ question.question_desc }}
+			</h3>
+			{% endif %}
+		</div>
+	</div>
 </div>
+        
+<hr />
+        
+<div class="row">
+    <div class="col-md-6">
+        <h4 align="center">Your preferences for {{question.question_text}} depends on:</h4>
+        <div align="center">
+        {% for poll in question.multipoll_set.all.0.questions.all %}
+            {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
+            <label class="checkbox-inline">
+                {% if combination %}
+                    <input type="checkbox" name="polls" value="{{poll.id}}" id="checkbox{{poll.id}}" class="pull-right" {% if poll in combination.dependent_questions.all %} checked="checked" {% endif %} onclick="check()">
+                {% else %}
+                    <input type="checkbox" name="polls" value="{{poll.id}}" id="checkbox{{poll.id}}" onclick="check();">
+                {% endif %}
+                <label for="{{poll.id}}">{{ poll.question_text }}</label>
+            </label>
+
+            <!--<div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>
+            <p><input type="checkbox" name="polls" value="{{poll.id}}" align="center" class="form-control"> </p>-->
+
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div style="left: 50%;">
+            <div id="cy" ></div>
+        </div>
+    </div>
+</div>
+<br />    
+</div>
+
+{% include 'polls/dependencydetail.html' %}
 
 <script>
     var cy = cytoscape({

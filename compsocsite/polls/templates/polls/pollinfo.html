@@ -115,10 +115,7 @@ img:hover{
   </style>
   <script>
   $(function() {
-    $( "#selectable" ).selectable();
-  });
-  $( "#inviteButtonShow" ).click(function(){
-    $("#invite").hide();
+      $( "#selectable" ).selectable();
   });
   </script>
 
@@ -231,39 +228,58 @@ img:hover{
 <div class="col-md-10">
     <form action="{% url 'polls:emailSettings' question.id %}" method="post">
         {% csrf_token %}
-        <a href="#" id="inviteButtonShow">Edit Invite Message</a>
         <div class="row">
             <div class="col-md-6" id="invite">
-                <label for="inviteSubject">Subject:</label> <br />
-                <input type="text" class="form-control" id="inviteSubject" name="inviteSubject" value="{{emailInvite.subject}}" maxlength="100" size="100" />
-                <label for="inviteMessage">Email body:</label> <br />
-                <textarea type="text" class="form-control" id="inviteMessage" name="inviteMessage" value="" maxlength="500">{{emailInvite.message}}</textarea> <br />
+                <a href="#" id="inviteButtonShow">Show Invite Message</a>
+                <a href="#" id="inviteButtonHide">Hide Invite Message</a>
+                <br />
+                <div id="editInvite" style="display:none;">
+                    <label for="inviteSubject">Subject:</label> <br />
+                    <input type="text" class="form-control" id="inviteSubject" name="inviteSubject" value="{{emailInvite.subject}}" maxlength="100" size="100" />
+                    <label for="inviteMessage">Email body:</label> <br />
+                    <textarea type="text" class="form-control" id="inviteMessage" name="inviteMessage" value="" maxlength="500">{{emailInvite.message}}</textarea> <br />
+                </div>
                 <label for="emailInvite">Send email when inviting voters</label>
                 <input type="checkbox" name="emailInvite" id="emailInvite" value="email" {% if question.emailInvite == True %} checked {% endif %}>
             </div>
             <div class="col-md-6">
-                <label for="deleteSubject">Subject:</label> <br />
-                <input type="text" class="form-control" id="deleteSubject" name="deleteSubject" value="{{emailDelete.subject}}" maxlength="100" size="100" />
-                <label for="deleteMessage">Email body:</label> <br />
-                <textarea type="text" class="form-control" id="deleteMessage" name="deleteMessage" value="" maxlength="500">{{emailDelete.message}}</textarea> <br />
+                <a href="#" id="deleteButtonShow">Show Delete Message</a>
+                <a href="#" id="deleteButtonHide">Hide Delete Message</a>
+                <br />
+                <div id="editDelete" style="display:none;">
+                    <label for="deleteSubject">Subject:</label> <br />
+                    <input type="text" class="form-control" id="deleteSubject" name="deleteSubject" value="{{emailDelete.subject}}" maxlength="100" size="100" />
+                    <label for="deleteMessage">Email body:</label> <br />
+                    <textarea type="text" class="form-control" id="deleteMessage" name="deleteMessage" value="" maxlength="500">{{emailDelete.message}}</textarea> <br />
+                </div>
                 <label for="emailDelete">Send email when deleting voters</label>
                 <input type="checkbox" name="emailDelete" id="emailDelete" value="email" {% if question.emailDelete %} checked {% endif %}>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <label for="startSubject">Subject:</label> <br />
-                <input type="text" class="form-control" id="startSubject" name="startSubject" value="{{emailStart.subject}}" maxlength="100" size="100" />
-                <label for="startMessage">Email body:</label> <br />
-                <textarea type="text" class="form-control" id="startMessage" name="startMessage" value="" maxlength="500">{{emailStart.message}}</textarea> <br />
+                <a href="#" id="startButtonShow">Show Start Message</a>
+                <a href="#" id="startButtonHide">Hide Start Message</a>
+                <br />
+                <div id="editStart" style="display:none;">
+                    <label for="startSubject">Subject:</label> <br />
+                    <input type="text" class="form-control" id="startSubject" name="startSubject" value="{{emailStart.subject}}" maxlength="100" size="100" />
+                    <label for="startMessage">Email body:</label> <br />
+                    <textarea type="text" class="form-control" id="startMessage" name="startMessage" value="" maxlength="500">{{emailStart.message}}</textarea> <br />
+                </div>
                 <label for="emailStart">Send email when the poll starts</label>
                 <input type="checkbox" name="emailStart" id="emailStart" value="email" {% if question.emailStart %} checked {% endif %}>
             </div>
             <div class="col-md-6">
-                <label for="stopSubject">Subject:</label> <br />
-                <input type="text" class="form-control" id="stopSubject" name="stopSubject" value="{{emailStop.subject}}" maxlength="100" size="100" />
-                <label for="stopMessage">Email body:</label> <br />
-                <textarea type="text" class="form-control" id="stopMessage" name="stopMessage" value="" maxlength="500">{{emailStop.message}}</textarea> <br />
+                <a href="#" id="stopButtonShow">Show Stop Message</a>
+                <a href="#" id="stopButtonHide">Hide Stop Message</a>
+                <br />
+                <div id="editStop" style="display:none;">
+                    <label for="stopSubject">Subject:</label> <br />
+                    <input type="text" class="form-control" id="stopSubject" name="stopSubject" value="{{emailStop.subject}}" maxlength="100" size="100" />
+                    <label for="stopMessage">Email body:</label> <br />
+                    <textarea type="text" class="form-control" id="stopMessage" name="stopMessage" value="" maxlength="500">{{emailStop.message}}</textarea> <br />
+                </div>
                 <label for="emailStop">Send email when the poll stops</label>
                 <input type="checkbox" name="emailStop" id="emailStop" value="email" {% if question.emailStop %} checked {% endif %}>
             </div>
@@ -510,6 +526,57 @@ img:hover{
     </div>
 
 </div>
+
+<script>
+    $("#editInvite").hide();
+    $( "#inviteButtonHide" ).hide();
+    $( "#inviteButtonShow" ).click(function(){
+        $("#editInvite").show();
+        $( "#inviteButtonShow" ).hide();
+        $( "#inviteButtonHide" ).show();
+    });
+    $( "#inviteButtonHide" ).click(function(){
+        $("#editInvite").hide();
+        $( "#inviteButtonShow" ).show();
+        $( "#inviteButtonHide" ).hide();
+    });
+    $("#editDelete").hide();
+    $( "#deleteButtonHide" ).hide();
+    $( "#deleteButtonShow" ).click(function(){
+        $("#editDelete").show();
+        $( "#deleteButtonShow" ).hide();
+        $( "#deleteButtonHide" ).show();
+    });
+    $( "#deleteButtonHide" ).click(function(){
+        $("#editDelete").hide();
+        $( "#deleteButtonShow" ).show();
+        $( "#deleteButtonHide" ).hide();
+    });
+    $("#editStart").hide();
+    $( "#startButtonHide" ).hide();
+    $( "#startButtonShow" ).click(function(){
+        $("#editStart").show();
+        $( "#startButtonShow" ).hide();
+        $( "#startButtonHide" ).show();
+    });
+    $( "#startButtonHide" ).click(function(){
+        $("#editStart").hide();
+        $( "#startButtonShow" ).show();
+        $( "#startButtonHide" ).hide();
+    });
+    $("#editStop").hide();
+    $( "#stopButtonHide" ).hide();
+    $( "#stopButtonShow" ).click(function(){
+        $("#editStop").show();
+        $( "#stopButtonShow" ).hide();
+        $( "#stopButtonHide" ).show();
+    });
+    $( "#stopButtonHide" ).click(function(){
+        $("#editStop").hide();
+        $( "#stopButtonShow" ).show();
+        $( "#stopButtonHide" ).hide();
+    });
+</script>
 
 
   

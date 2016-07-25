@@ -67,10 +67,8 @@ function enableSubmission() {
     $("ul.choice1").sortable({
        
         start: function(event, ui) {
-        //     sortin=-1,
             item = ui.item;
             newList = oldList = ui.item.parent();
-            
         },
         
         stop: function(event, ui) {

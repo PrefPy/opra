@@ -16,6 +16,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src='/static/js/desktop.js'></script>
 <script src='/static/js/voteWithTies.js'></script>
 {% endif %}
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
+</script>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
@@ -153,6 +158,9 @@ Submit
                                         {% endif %}
 
                                         {{ selection.0 }}
+                                        {% if item.item_description %}
+                                        <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}"></span>
+                                        {% endif %}
                                     </li>
                                 </ul>
 
@@ -203,6 +211,9 @@ Submit
                    	<img class="item" src='{{ item.imageURL }}'/>
                    {% endif %}
 {{ item.item_text }}
+{% if item.item_description %}
+<span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}"></span>
+{% endif %}
 </li>
 {% endfor %}
 {% endif %}

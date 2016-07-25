@@ -15,6 +15,9 @@
                 {% else %}
                 {{item}}
                 {% endif %}
+                <div class="pull-right">
+                    <span class="glyphicon glyphicon-info-sign" data-toggle="modal" data-target="#iteminfo{{forloop.counter0}}"></span>
+                </div>
                 {% if question.status == 1 %}
                     <a href="{% url 'polls:delchoice' item.id %}">
                         <div class="pull-right">
@@ -29,6 +32,42 @@
     <input type="submit" class="btn btn-primary" value="Save Changes"/>
     {% endif %}
     </form>
+
+    {% for item in items %}
+    <form action="{% url 'polls:editchoiceinfo' item.id %}" method="post">
+        {% csrf_token %}
+        <div class="modal fade" role="dialog" id="iteminfo{{forloop.counter0}}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Edit {{item}}
+                    </div>
+                    <div class="modal-body">
+                        <p>Additional Description:</p>
+                        <textarea class="form-control" name="itemdescription{{item.id}}">{% if item.item_description %}{{item.item_description}}{% endif %}</textarea>
+                        <br />
+                        {% if item.image %}
+                        <img class="item" src='/{{ item.image.url }}'/>
+                        {% endif %}
+                        {% if item.imageURL != Null %}
+                        <img class="item" src='{{ item.imageURL }}'/>
+                        {% endif %}
+                        {% if question.status == 1 %}
+                        <input type="text" class="form-control" name="imageURL{{item.id}}" value="{% if item.imageURL %}{{item.imageURL}}{% endif %}" size="50" placeholder="Paste Image URL"/>
+                        <label for="image{{item.id}}" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
+                        <input style="display:none" id="image{{item.id}}" type="file" name="docfile{{item.id}}" accept="image/*">
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn-large btn-success btn-ok"/>
+                        <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+    {% endfor %}
     
     <li class="list-group-item">
         <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">

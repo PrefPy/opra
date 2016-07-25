@@ -60,6 +60,7 @@ def get_image_path(instance, filename):
 class Item(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     item_text = models.CharField(max_length=200)
+    item_description = models.CharField(max_length=1000, blank=True, null=True)
     image = models.ImageField(upload_to='static/img/items/', blank=True, null=True)
     imageURL = models.CharField(max_length=500, blank=True, null=True)
     def __str__(self):

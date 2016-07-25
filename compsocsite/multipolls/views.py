@@ -204,38 +204,54 @@ class mpollinfoView(generic.DetailView):
     model = MultiPoll
     template_name = 'multipolls/mpollinfo.html'
     
-    
     def get_context_data(self, **kwargs):
         ctx = super(mpollinfoView, self).get_context_data(**kwargs)
         mpoll=self.get_object()
-        mostRecentResponse=[]
-        history=[]
+    
         latest_responses=[]
         previous_responses=[]
-        items=[]
+        mostRecentResponse=[]
+        history=[]
+   
         
         
-        for question in mpoll.questions.all():
-            items.append(question.item_set.all())
-            currentUserResponses = question.response_set.filter(user=self.request.user).reverse()
-            mostRecentResponse.append(currentUserResponses[0] if (len(currentUserResponses) > 0) else None)
-            history.append(currentUserResponses[1:])
+        for question in self.get_object().questions.all():
+            tmp_lr={}
+            tmp_pr={}
+            tmp_lr['id']= question.id
+            tmp_pr['id']=question.id
             all_responses = question.response_set.reverse()
-            (latest_responses, previous_responses) = categorizeResponses(all_responses)
-            latest_responses.append(latest_responses)
-            previous_responses.append(previous_responses)
-
+            (lr1, pr1) = categorizeResponses(all_responses)
+            tmp_lr['main']= lr1
+            tmp_pr['main']= pr1
+            latest_responses.append(tmp_lr)
+            previous_responses.append(tmp_pr)
+            
+            tmp_mrr={}
+            tmp_history={}
+            tmp_mrr['id']=question.id
+            tmp_history['id']=question.id
+            currentUserResponses = question.response_set.filter(user=self.request.user).reverse()
+            tmp_mrr['main']=currentUserResponses[0] if (len(currentUserResponses) > 0) else None
+            tmp_history['main']=currentUserResponses[1:]
+            mostRecentResponse.append(tmp_mrr)
+            history.append(tmp_history)
+            
+            
+  
 
         ctx['mpoll']= mpoll
         ctx['users'] = User.objects.all()
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()  
-        ctx['mostRecentResponse'] = mostRecentResponse
-        ctx['history'] = history
-        ctx['latest_responses'] = latest_responses
-        ctx['previous_responses'] = previous_responses
-        ctx['items'] = items[0]
+      
+   
+        ctx['lr'] = latest_responses
+        ctx['pr'] = previous_responses
+        
+        ctx['mrr'] = mostRecentResponse
+        ctx['hist'] = history
     
         return ctx
     

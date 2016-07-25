@@ -181,6 +181,22 @@ def editChoice(request, question_id):
         item.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+def editChoiceInfo(request, item_id):
+    item = get_object_or_404(Item, pk=item_id)
+    item_desc = request.POST["itemdescription"+str(item.id)]
+    imageURL = request.POST["imageURL"+str(item.id)]
+    
+    if item_desc != "":
+        item.item_description = item_desc
+        item.save()
+    if request.FILES.get("docfile"+str(item.id)) != None:
+        item.image = request.FILES.get("docfile"+str(item.id))
+    elif imageURL != "":
+        item.imageURL = imageURL
+    item.save()
+    request.session['setting'] = 0
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # remove a choice from the poll. 
 # deleting choices should only be done before the poll starts
@@ -317,9 +333,10 @@ class DetailView(generic.DetailView):
                 currentAnonymousResponses = self.object.response_set.filter(anonymous_id = self.request.session['anonymousid']).reverse()
                 if len(currentAnonymousResponses) > 0:
                     # get the voter's most recent selection
-                    ctx['currentSelection'] = getCurrentSelection(currentAnonymousResponses)
+                    mostRecentAnonymousResponse = currentAnonymousResponses[0]
                     if mostRecentAnonymousResponse.comment:
                         ctx['lastcomment'] = mostRecentAnonymousResponse.comment
+                    ctx['currentSelection'] = getCurrentSelection(currentAnonymousResponses)
             else:
                 # load choices in the default order
                 ctx['items'] = self.object.item_set.all()

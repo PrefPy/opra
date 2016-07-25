@@ -371,15 +371,40 @@ class DependencyView(generic.DetailView):
     model = Question
     template_name = 'polls/dependency.html'
     def get_context_data(self,**kwargs):
-        ctx = super(DependencyView, self).get_context_data(**kwargs)    
+        ctx = super(DependencyView, self).get_context_data(**kwargs)   
+
         # there should only be one combination at most
         combination = Combination.objects.filter(target_question=self.object, user=self.request.user)
-        ctx['prevCombination'] = combination[0] if (len(combination) > 0) else None
+        ctx['prevCombination'] = combination[0] if (len(combination) > 0) else None        
+        
+        # get the pref graph for display
         (nodes, edges) = getPrefenceGraph(self.request, self.object)
         ctx['pref_nodes'] = nodes
         ctx['pref_edges'] = edges
         return ctx
+
+def updatePrefGraph(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
     
+    # get the combination object
+    combinations = Combination.objects.filter(target_question=question, user=request.user)
+    if len(combinations) > 0:
+        combination = combinations[0]
+        combination.dependent_questions.clear()
+    else:
+        combination = Combination(target_question=question, user=request.user)
+        combination.save()
+        
+    # get polls selected
+    pollsSelected = []  
+    for poll in question.multipoll_set.all()[0].questions.all():
+        pollStr = "poll" + str(poll.id)
+        if pollStr in request.GET:
+            if request.GET[pollStr] == "true":
+                combination.dependent_questions.add(poll.id)
+
+    return HttpResponseRedirect(reverse('polls:dependencyview', args=(question.id,)))
+
 class DependencyDetailView(generic.DetailView):
     model = Combination
     template_name = 'polls/dependencydetail.html'

@@ -130,12 +130,9 @@ img:hover{
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         {% if mpoll.owner == request.user %}
-
             <li><a data-toggle="tab" href="#voters">Voters</a></li>
             {% for question in mpoll.questions.all %}
                 <!--<li><a href="{% url 'polls:pollinfo' question.id %}" >{{question.question_text}}</a></li>-->
-        
-        
         <li><a data-toggle="collapse" data-target="#products{{forloop.counter}}" class="collapsed">{{question.question_text}} <span class="glyphicon glyphicon-menu-down" style="font-size:60%"></span></a></li>
                 <ul class="collapse" id="products{{forloop.counter}}">
                     <li style="padding:3px;"><a data-toggle="tab" href="#choices{{question.id}}">Choices</a></li>
@@ -145,9 +142,17 @@ img:hover{
                 </ul>
     
             {% endfor %}
-        <li><a data-toggle="tab" href="#delete">Delete</a></li>
-                
+        <li><a data-toggle="tab" href="#delete">Delete</a></li>        
         {% else %}  
+            {% for question in mpoll.questions.all %}
+                <!--<li><a href="{% url 'polls:pollinfo' question.id %}" >{{question.question_text}}</a></li>-->
+        <li><a data-toggle="collapse" data-target="#products{{forloop.counter}}" class="collapsed">{{question.question_text}} <span class="glyphicon glyphicon-menu-down" style="font-size:60%"></span></a></li>
+                <ul class="collapse" id="products{{forloop.counter}}">
+                    <li style="padding:3px;"><a data-toggle="tab" href="#general{{question.id}}">General Info</a></li>
+                    <li style="padding:3px;"><a data-toggle="tab" href="#historyinfo{{question.id}}">History</a></li>
+                </ul>
+    
+            {% endfor %}
             <li><a data-toggle="tab" href="#quit">Quit</a></li>
         {% endif %}  
         
@@ -182,22 +187,36 @@ img:hover{
     </div>
     
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo{{question.id}}">
+        
         {% for s in lr %}     
             {% if s.id == question.id %}
                 {% for p in pr %}
                     {%if p.id == question.id %}
-                        {%with latest_responses=s.main%} 
-                        {%with previous_responses=p.main%}
-                            {% include 'multipolls/_view_history.html' %} 
-                        {% endwith %}
-                        {% endwith %}
+                        {% for m in mrr %}     
+                            {% if m.id == question.id %}
+                                {% for h in hist %}
+                                    {%if h.id == question.id %}
+                                        {%with latest_responses=s.main%} 
+                                        {%with previous_responses=p.main%}
+                                        {%with mostRecentResponse=m.main%} 
+                                        {%with history=h.main%}
+                                             {% include 'multipolls/_view_history.html' %} 
+                                        {% endwith %}
+                                        {% endwith %}
+                                        {% endwith %}
+                                        {% endwith %}
+                                    {% endif%}
+                                {% endfor %}<!-- for each history-->
+                            {% endif%}
+                        {% endfor %}<!-- for m in mrr-->
                     {% endif%}
-                {% endfor %} <!-- for pr in previous_responses-->
-                
-            {%endif%}
-                
-        {%endfor%}
-
+                {% endfor %} <!-- for p in previous_responses--> 
+            {%endif%}    
+        {%endfor%} <!--s in lr-->
+    </div>
+    
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="general{{question.id}}">
+        {% include 'polls/_voters_generalinfo.html' %}
     </div>
     {% endfor %}
       
@@ -265,6 +284,7 @@ img:hover{
         </div>
     </div>
 </div>
+    
     
 </div>
 

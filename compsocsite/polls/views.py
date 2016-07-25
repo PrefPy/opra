@@ -181,6 +181,22 @@ def editChoice(request, question_id):
         item.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def editTitle(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    new_title= request.POST["title"]
+    question.question_text=new_title
+    question.save()
+    request.session['setting'] = 0
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def editDesc(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    new_desc=request.POST["desc"]
+    question.question_desc=new_desc
+    question.save()
+    request.session['setting'] = 0
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 def editChoiceInfo(request, item_id):
     item = get_object_or_404(Item, pk=item_id)

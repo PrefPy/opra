@@ -1,0 +1,41 @@
+<form class="form-group" method="post" action="{% url 'polls:setPollingSettings' question.id %}" align="center">
+    {% csrf_token %}
+    {% if question.question_type == 1 %}
+        <label for="pollpreferences">Select a voting algorithm</label>
+        <select name="pollpreferences" class="form-control" {% if question.status != 1 %} disabled {% endif %}>
+        {% for item in poll_algorithms %}
+            <option value="{{ forloop.counter }}" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
+                {{ item }}
+            </option>
+        {% endfor %}
+        </select>
+    {% elif question.question_type == 2 %}
+        <label for="pollpreferences">Select an allocation method</label>
+        <select name="pollpreferences" class="form-control" {% if question.status != 1 %} disabled {% endif %}>
+        {% for item in alloc_methods %}
+            <option value="{{ forloop.counter }}" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
+                {{ item }}
+            </option>
+        {% endfor %}
+        </select>
+        <br />
+        {% if question.status == 2 %}
+            {% if question.poll_algorithm == 3 %}    
+                <a href="{% url 'polls:viewAllocationOrder' question.id %}" class ="btn btn-dark" role="button">Set Allocation Order</a> <br />
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    
+    <br />
+    <label for="viewpreferences">Visibility setting for this specific poll</label>
+    <select name="viewpreferences" class="form-control">
+        <option value="always" {% if question.display_pref == 0 %} selected {% endif %} >Everyone can see all votes at all times</option>
+        <option value="allpermit" {% if question.display_pref == 1 %} selected {% endif %} >Everyone can see all votes</option>
+        <option value="voternames" {% if question.display_pref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
+        <option value="justnumber" {% if question.display_pref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
+        <option value="nothing" {% if question.display_pref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>
+    </select>  
+    <br /><br />
+    
+    <input type="submit" value="Submit" class="btn btn-success">
+</form>

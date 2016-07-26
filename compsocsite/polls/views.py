@@ -182,18 +182,12 @@ def editChoice(request, question_id):
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-def editTitle(request, question_id):
+def editBasicInfo(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    new_title= request.POST["title"]
-    question.question_text=new_title
-    question.save()
-    request.session['setting'] = 0
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-def editDesc(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    new_desc=request.POST["desc"]
-    question.question_desc=new_desc
+    new_title = request.POST["title"]
+    new_desc = request.POST["desc"]
+    question.question_text = new_title
+    question.question_desc = new_desc    
     question.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -898,21 +892,17 @@ def setInitialSettings(request, question_id):
     else:
         question.open = False
     question.save()
-    return HttpResponseRedirect(reverse('polls:index'))
+    return HttpResponseRedirect(reverse('polls:regular_polls'))
 
-# set the poll algorithm or allocation method using an integer
-def setAlgorithm(request, question_id):
+# set algorithms and visibility
+def setPollingSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    question.poll_algorithm = request.POST['pollpreferences']
-    question.save()
-    request.session['setting'] = 2
-    messages.success(request, 'Your changes have been saved.')
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-# set the visibility settings, how much information should be shown to the user
-# options range from showing everything (most visibility) to showing only the user's vote (least visibility)
-def setVisibility(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
+    # set the poll algorithm or allocation method using an integer
+    if 'pollpreferences' in request.POST:
+        question.poll_algorithm = request.POST['pollpreferences']
+    
+    # set the visibility settings, how much information should be shown to the user
+    # options range from showing everything (most visibility) to showing only the user's vote (least visibility)        
     displayChoice = request.POST['viewpreferences']
     if displayChoice == "always":
         question.display_pref = 0
@@ -925,7 +915,7 @@ def setVisibility(request, question_id):
     else:
         question.display_pref = 4
     question.save()
-    request.session['setting'] = 3
+    request.session['setting'] = 2
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

@@ -9,7 +9,6 @@
 <script src='/static/js/qrcodejs/qrcode.js'></script>
 
 <style>
-
 /*
  * Global add-ons
  */
@@ -17,8 +16,6 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 }
-
-
 
 /*
  * Sidebar
@@ -131,22 +128,18 @@ img:hover{
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         {% if question.question_owner == request.user %}
-        
-               <li {% if request.session.setting == 0 %} class="active" {% endif %}><a data-toggle="tab" href="#choices" >Choices</a></li>
-                <li {% if request.session.setting == 2 %} class="active" {% endif %}><a data-toggle="tab" href="#algorithm">Algorithms</a></li>
-                <li {% if request.session.setting == 3 %} class="active" {% endif %}><a data-toggle="tab"  href="#visibility">Visibility</a></li>
-                <li><a data-toggle="tab" href="#historyinfo">History</a></li>
-       
+            <li {% if request.session.setting == 0 %} class="active" {% endif %}><a data-toggle="tab" href="#choices" >Choices</a></li>
+            <li {% if request.session.setting == 2 %} class="active" {% endif %}><a data-toggle="tab" href="#algorithm">Algorithms and Visibility</a></li>
+            <li><a data-toggle="tab" href="#historyinfo">History</a></li>
            
-            {%if question.m_poll == False %}
-                <li><a data-toggle="tab" href="#title">Title</a></li>
-                <li><a data-toggle="tab" href="#desc">Description</a></li>
+            {% if question.m_poll == False %}
+                <li><a data-toggle="tab" href="#title">Basic Info</a></li>
                 <li {% if request.session.setting == 1 %} class="active" {% endif %}><a data-toggle="tab" href="#voters">Voters</a></li>
         
                 <li {% if request.session.setting == 5 %} class="active" {% endif %}><a data-toggle="tab" href="#emailsetting">Email</a></li>
                 <li {% if request.session.setting == 4 %} class="active" {% endif %}><a data-toggle="tab" href="#qr">Anonymous Voting</a></li>
                 <li><a data-toggle="tab" href="#delete">Delete</a></li>
-            {%endif%}
+            {% endif %}
             
         {% else %}  
         <li class="active"><a data-toggle="tab" href="#general">General Info</a></li>
@@ -156,9 +149,6 @@ img:hover{
         
     </ul>  
 </div>
-
-
-
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
 <p>
@@ -192,21 +182,17 @@ img:hover{
     {% endif %}
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 2 %}active{% endif %}" id="algorithm">
-    {% include 'polls/_set_algorithm.html' %}
+    <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
+    
+    {% include 'polls/_set_polling_settings.html' %}
 </div>
             
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 3 %}active{% endif %}" id="visibility">
-    {% include 'polls/_set_visibility.html' %}
-</div>
-    
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="title">
-    {% include 'polls/_change_title.html' %}
+    <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
+    
+    {% include 'polls/_change_title_and_desc.html' %}
 </div>
     
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="desc">
-    {% include 'polls/_change_desc.html' %}
-</div>
-
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 4 %}active{% endif %}" id="qr">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
     {% if question.open == False %}

@@ -22,8 +22,7 @@ urlpatterns = [
     # choices
     url(r'^(?P<question_id>[0-9]+)/choice/add/$', views.addChoice, name='addchoice'),
     url(r'^(?P<question_id>[0-9]+)/editchoice/$', views.editChoice, name='editchoice'),
-    url(r'^(?P<question_id>[0-9]+)/editctitle/$', views.editTitle, name='edittitle'),
-    url(r'^(?P<question_id>[0-9]+)/editdesc/$', views.editDesc, name='editdesc'),
+    url(r'^(?P<question_id>[0-9]+)/edit/basic/$', views.editBasicInfo, name='editBasicInfo'),
     url(r'^choice/editinfo/([0-9]+)/$', views.editChoiceInfo, name='editchoiceinfo'),
     url(r'^choice/delete/([0-9]+)/$', views.deleteChoice, name='delchoice'),
     
@@ -46,8 +45,7 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/pollinfo/$', views.PollInfoView.as_view(), name='pollinfo'),
     url(r'^(?P<resp_id>[0-9]+)/(?P<key>\w+)/voteEmail/$', email.voteEmail, name='voteEmail'),
     url(r'^(?P<question_id>[0-9]+)/settings/initial$', views.setInitialSettings, name='setinitial'),    
-    url(r'^(?P<question_id>[0-9]+)/settings/algorithm$', views.setAlgorithm, name='setAlgorithm'),
-    url(r'^(?P<question_id>[0-9]+)/settings/visibility$', views.setVisibility, name='setview'),
+    url(r'^(?P<question_id>[0-9]+)/settings/algorithm$', views.setPollingSettings, name='setPollingSettings'),
     url(r'^(?P<pk>[0-9]+)/allocate/order$', views.AllocationOrder.as_view(), name='viewAllocationOrder'),
     url(r'^(?P<question_id>[0-9]+)/allocate/order/set/$', views.setAllocationOrder, name='setAllocationOrder'),
     url(r'^(?P<question_id>[0-9]+)/sendEmail/$', views.sendEmail, name='sendEmail'),

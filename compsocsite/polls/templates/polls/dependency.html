@@ -14,7 +14,7 @@
 <style type="text/css">
  #cy {
     width: 50%;
-    height: 150px;
+    height: 125px;
     border: 1px solid lightgray;
 }   
 </style>
@@ -117,7 +117,7 @@ $(function(){
     var cy = cytoscape({
         container: document.getElementById('cy'),
         layout: {
-            name: 'cose',
+            name: 'circle',
             padding: 10
         },
 
@@ -143,15 +143,8 @@ $(function(){
             'opacity': 0.666,
             'width': 'mapData(strength, 70, 100, 2, 6)',
             'target-arrow-shape': 'triangle',
-            'source-arrow-shape': 'circle',
             'line-color': 'data(faveColor)',
-            'source-arrow-color': 'data(faveColor)',
             'target-arrow-color': 'data(faveColor)'
-          })
-        .selector('edge.questionable')
-          .css({
-            'line-style': 'dotted',
-            'target-arrow-shape': 'diamond'
           })
         .selector('.faded')
           .css({

@@ -194,12 +194,12 @@ def editBasicInfo(request, question_id):
     
 def editChoiceInfo(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
+    item_title = request.POST["title"+str(item.id)]
     item_desc = request.POST["itemdescription"+str(item.id)]
     imageURL = request.POST["imageURL"+str(item.id)]
-    
+    item.item_text = item_title
     if item_desc != "":
         item.item_description = item_desc
-        item.save()
     if request.FILES.get("docfile"+str(item.id)) != None:
         item.image = request.FILES.get("docfile"+str(item.id))
     elif imageURL != "":

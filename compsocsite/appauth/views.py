@@ -64,7 +64,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect(reverse('polls:index'))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             return HttpResponse("Your account is disabled.")
         else:
             print ("Invalid login details")

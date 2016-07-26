@@ -10,21 +10,27 @@
                 {% if item.imageURL != Null %}
                     <img src='{{ item.imageURL }}'/>
                 {% endif %}
-                {% if question.status == 1 %}
-                <input type="text" class="form-control" style="width:70%;" name="item{{forloop.counter0}}" size="50" value="{{ item }}"/>
-                {% else %}
-                {{item}}
-                {% endif %}
-                <div class="pull-right">
-                    <span class="glyphicon glyphicon-info-sign" data-toggle="modal" data-target="#iteminfo{{forloop.counter0}}"></span>
-                </div>
-                {% if question.status == 1 %}
+                <div class="row">
+                    <div class="form-group col-xs-8">
+                        {% if question.status == 1 %}
+                        <input type="text" class="form-control" name="item{{forloop.counter0}}" size="50" value="{{ item }}"/>
+                        {% else %}
+                        {{item}}
+                        {% endif %}
+                    </div>
+                    {% if question.status == 1 %}
+                    <div class="form-group col-xs-4">
                     <a href="{% url 'polls:delchoice' item.id %}">
                         <div class="pull-right">
                             <span class="glyphicon glyphicon-remove"></span>
                         </div>
                     </a>
+                    <div class="pull-left">
+                    <span class="glyphicon glyphicon-info-sign" data-toggle="modal" data-target="#iteminfo{{forloop.counter0}}"></span>
+                </div>
+                </div>
                 {% endif %}
+                </div>
             </li>
     {% endfor %}
     {% if items.count > 0 and question.status == 1 %}
@@ -40,7 +46,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        Edit {{item}}
+                        <input type="text" class="form-control" name="title{{item.id}}" value="{{item}}"/>
                     </div>
                     <div class="modal-body">
                         <p>Additional Description:</p>

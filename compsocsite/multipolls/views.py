@@ -53,18 +53,10 @@ class AddStep3View(generic.DetailView):
         question = self.get_object().questions.all()[self.get_object().pos]
         ctx['question'] = question
         ctx['items'] = question.item_set.all()
-        return ctx
-        
-class AddStep4View(generic.DetailView):
-    model = MultiPoll
-    template_name = 'multipolls/add_step4.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(AddStep4View, self).get_context_data(**kwargs)
-        ctx['question'] = self.get_object().questions.all()[self.get_object().pos]
         ctx['preference'] = self.request.user.userprofile.displayPref
-        ctx['poll_algorithms'] = ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
-        ctx['alloc_methods'] = ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
-        ctx['view_preferences'] = ["Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
+        ctx['poll_algorithms'] = getListPollAlgorithms()
+        ctx['alloc_methods'] = getAllocMethods()
+        ctx['view_preferences'] = getViewPreferences()    
         return ctx
         
 class SetVotersView(generic.DetailView):

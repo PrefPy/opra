@@ -377,6 +377,8 @@ class DetailView(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
        
+# display the dependent polls selected 
+# allow the user to vote on this poll given the preferences for the previous dependent polls
 class DependencyView(generic.DetailView):
     model = Question
     template_name = 'polls/dependency.html'
@@ -400,50 +402,65 @@ class DependencyView(generic.DetailView):
         
         # get the current poll
         ctx['question'] = combination.target_question
-        if isPrefReset(self.request):
-            ctx['items'] = self.get_order(ctx)
-            return ctx
+
+        # calculate condition index based off of the current session
+        conditionsSelected = [] 
+        for poll in combination.dependent_questions.all():
+            pollStr = "poll" + str(poll.id)
+            if pollStr in self.request.session:
+                # use the variable from the current session
+                option = poll.item_set.get(item_text=self.request.session[pollStr])
+            else:
+                # default: use the first option in the list
+                option = poll.item_set.all()[0]
+            conditionsSelected.append(option)
+        conditionIndex = getConditionIndex(conditionsSelected, combination)
 
         # if the user has responded to this question, then load the response
         conditionalSet = combination.conditionalitem_set.all()
-        conditionIndexStr = self.request.GET.get('condInd', '')
-        
-        if conditionIndexStr.isdigit():
-            # get integer value
-            conditionIndex = int(conditionIndexStr)  
-        elif conditionIndexStr == "":
-            # default case: get the first item of each depedent poll
-            conditionsSelected = []    
-            dependentQuestions = combination.dependent_questions.all()
-            for poll in dependentQuestions:
-                if len(poll.item_set.all()) > 0:
-                    conditionsSelected.append(poll.item_set.all()[0])           
-            conditionIndex = getConditionIndex(conditionsSelected, combination)
-        else:
-            # invalid parameter
-            conditionIndex = -1
-        
+        colorsArray = []
+        # iterate through all the polls
+        for poll in combination.dependent_questions.all():
+            colorRow = []
+            # iterate through all the choices in a poll
+            for item in poll.item_set.all():
+                found = False
+                # check if that choice has been used in a conditional preference
+                for condition in conditionalSet:
+                    if item in condition.items.all():
+                        found = True
+                        
+                greenColor = "#3CB371"
+                redColor = "#FA8072"
+                if found == True:
+                    colorRow.append(greenColor)
+                else:
+                    colorRow.append(redColor)
+            colorsArray.append(colorRow)
+        ctx["colorArray"] = colorsArray
+
         # check if the condition already exists
-        if len(conditionalSet) > 0 and conditionIndexStr == "" and conditionIndex > -1:
+        if len(conditionalSet) > 0 and conditionIndex > -1 and conditionIndex < len(conditionalSet):
             selectedCondition = conditionalSet[conditionIndex]
             ctx["condition_items"] = list(selectedCondition.items.all())
             ctx["condition_responses"] = selectedCondition.response.dictionary_set.all()[0].sorted_values()   
-        elif len(conditionalSet) > 0 and conditionIndex > -1 and conditionIndex < len(conditionalSet):
-            selectedCondition = conditionalSet[conditionIndex]
-            ctx["condition_items"] = list(selectedCondition.items.all())
-            ctx["condition_responses"] = selectedCondition.response.dictionary_set.all()[0].sorted_values()       
         else:
             # this combination of choices does not have a response
+            # mark these choices as selected instead of the default ones
             pollChoiceDict = {}
             for poll in combination.dependent_questions.all():
                 pollStr = "poll" + str(poll.id)
                 if pollStr in self.request.session:
+                    # use the variable from the current session
                     pollChoiceDict[pollStr] = poll.item_set.get(item_text=self.request.session[pollStr])
+                else:
+                    # default: use the first option in the list
+                    pollChoiceDict[pollStr] = poll.item_set.all()[0]                    
             ctx["poll_choice_dict"] = pollChoiceDict
-
         ctx['items'] = self.get_order(ctx)        
         return ctx
 
+# redraw the dependency graph
 def updatePrefGraph(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     
@@ -1129,14 +1146,11 @@ def assignPreference(request, combination_id):
             d[item] = rank
         d.save()
         item_num += 1
-    
-    # get the index
-    conditionIndex = getConditionIndex(conditionsSelected, combination)
 
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')        
 
-    return HttpResponseRedirect(reverse('polls:dependencyview', args=(combination.target_question.id,)) + "?condInd=" + str(conditionIndex))
+    return HttpResponseRedirect(reverse('polls:dependencyview', args=(combination.target_question.id,)))
     
 def getPrefenceGraph(request, question):
     multipoll = question.multipoll_set.all()[0] 
@@ -1197,23 +1211,12 @@ def getConditionIndex(conditionsSelected, combination):
 def getConditionalResponse(request, combination_id):
     combination = get_object_or_404(Combination, pk=combination_id)
     
-    # get conditions selected
-    conditionsSelected = []    
-    dependentQuestions = combination.dependent_questions.all()
-    for poll in dependentQuestions:
-        itemStr = request.GET["poll" + str(poll.id)]
-        item = poll.item_set.get(item_text=itemStr)
-        conditionsSelected.append(item)   
-    
-    # get the array index
-    conditionIndex = getConditionIndex(conditionsSelected, combination)        
-    
     # save the poll responses
     for poll in combination.dependent_questions.all():
         request.session["poll" + str(poll.id)] = request.GET["poll" + str(poll.id)]
 
     # set a parameter to the condition index, so that the response to that conditon will be preloaded
-    return HttpResponseRedirect(reverse('polls:dependencyview', args=(combination.target_question.id,)) + "?condInd=" + str(conditionIndex))  
+    return HttpResponseRedirect(reverse('polls:dependencyview', args=(combination.target_question.id,)))  
     
 # join a poll without logging in
 def anonymousJoin(request, question_id):

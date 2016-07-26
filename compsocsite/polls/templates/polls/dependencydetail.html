@@ -24,19 +24,22 @@ $(function(){
                 <h4>Poll {{ poll.question_text }}</h4>
                 Select a choice for this dependent poll: <br />
                 <select id="dynamic_select{{ poll.id }}" class="btn-group" name="{{ poll.id }}" size="{{poll.item_set.count}}">
-                    {% if condition_items %}
+                    
                         {% for item in poll.item_set.all %}
-                            <option value="{{ item.item_text }}" class="btn btn-default" {% if item in condition_items %} selected {% endif %}>{{item.item_text}}</option>
+                            {% for row in colorArray %}
+                            {% for color in row %}
+                            {% if forloop.counter == forloop.parentloop.parentloop.counter and forloop.parentloop.counter == forloop.parentloop.parentloop.parentloop.counter %}
+
+                            <option value="{{ item.item_text }}" class="btn btn-default" 
+                                    {% if condition_items %}{% if item in condition_items %} selected {% endif %} 
+                                    {% elif poll_choice_dict %}{% if item in poll_choice_dict.values %} selected {% endif %}
+                                    {% else %}{% if forloop.counter == 1 %} selected {% endif %}{% endif %} 
+                                    style='background-color: {{color}};'>{{item.item_text}}</option>
+                            {% endif %}
+                            {% endfor %}
+                            {% endfor %}
                         {% endfor %}
-                    {% elif poll_choice_dict %}
-                        {% for item in poll.item_set.all %}
-                            <option value="{{ item.item_text }}" class="btn btn-default" {% if item in poll_choice_dict.values %} selected {% endif %}>{{item.item_text}}</option>
-                        {% endfor %}
-                    {% else %}
-                        {% for item in poll.item_set.all %}
-                            <option value="{{ item.item_text }}" class="btn btn-default" {% if forloop.counter == 1 %} selected {% endif %} >{{item.item_text}}</option>
-                        {% endfor %}
-                    {% endif %}
+             
                 </select>
             </div>
         {% endfor %}

@@ -137,11 +137,9 @@ img:hover{
                 <!--<li><a href="{% url 'polls:pollinfo' question.id %}" >{{question.question_text}}</a></li>-->
         <li><a data-toggle="collapse" data-target="#products{{forloop.counter}}" class="collapsed">{{question.question_text}} <span class="glyphicon glyphicon-menu-down" style="font-size:60%"></span></a></li>
                 <ul class="collapse" id="products{{forloop.counter}}">
-                    <li><a data-toggle="tab" href="#title{{question.id}}">Title</a></li>
-                    <li><a data-toggle="tab" href="#desc{{question.id}}">Description</a></li>
+                    <li><a data-toggle="tab" href="#title{{question.id}}">Basic Info</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#choices{{question.id}}">Choices</a></li>
-                    <li style="padding:3px;"><a data-toggle="tab" href="#algorithm{{question.id}}">Algorithm</a></li>
-                    <li style="padding:3px;"><a data-toggle="tab" href="#visibility{{question.id}}">Visibility</a></li>
+                    <li style="padding:3px;"><a data-toggle="tab" href="#algorithm{{question.id}}">Algorithms and Visibility</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#historyinfo{{question.id}}">History</a></li>
                 </ul>
     
@@ -209,13 +207,8 @@ img:hover{
     
   {% for question in mpoll.questions.all %}  
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="title{{question.id}}">
-    {% include 'polls/_change_title.html' %}
+    {% include 'polls/_change_title_and_desc.html' %}
     </div>
-    
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="desc{{question.id}}">
-    {% include 'polls/_change_desc.html' %}
-</div>
- 
     
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="choices{{question.id}}">
  
@@ -225,11 +218,7 @@ img:hover{
                 {% endwith %}
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="algorithm{{question.id}}">
-        {% include 'polls/_set_algorithm.html' %}    
-    </div>
-    
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="visibility{{question.id}}">
-        {% include 'polls/_set_visibility.html' %}
+        {% include 'polls/_set_polling_settings.html' %}    
     </div>
     
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo{{question.id}}">

@@ -95,23 +95,6 @@ $(function(){
                 <label for="{{poll.id}}">{{ poll.question_text }}</label>
             </label>
 
-<<<<<<< HEAD
-            <li class="list-group-item">
-                <div class="checkbox" align="center">
-                    {% if prevCombination %}
-                        <input type="checkbox" name="polls" value="{{poll.id}}" id="{{poll.id}}" class="pull-right" {% if poll in prevCombination.dependent_questions.all %} checked="checked" {% endif %}>
-                    {% else %}
-                        <input type="checkbox" name="polls" value="{{poll.id}}" id="{{poll.id}}">
-                    {% endif %}
-                    
-                    <label  for="{{poll.id}}" data-toggle="tooltip" data-placement="right" title="Description: {%if poll.question_desc %} {{poll.question_desc}} {%else%} None. {%endif%}">      
-                        {{ poll.question_text }} 
-                    </label>
-                </div>  
-            </li>
-        
-=======
->>>>>>> origin/master
             <!--<div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>
             <p><input type="checkbox" name="polls" value="{{poll.id}}" align="center" class="form-control"> </p>-->
 

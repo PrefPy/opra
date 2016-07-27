@@ -12,7 +12,11 @@
                 {% endif %}
                 <div class="row">
                     <div class="form-group col-xs-8">
+                        {% if question.status == 1 %}
+                        <input type="text" class="form-control" name="item{{forloop.counter0}}" size="50" value="{{ item }}" onchange="this.form.submit()"/>
+                        {% else %}
                         {{item}}
+                        {% endif %}
                     </div>
                     {% if question.status == 1 %}
                     <div class="form-group col-xs-4">

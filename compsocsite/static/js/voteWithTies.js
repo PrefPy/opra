@@ -101,27 +101,31 @@ function enableSubmission() {
         change: function(event, ui) {  
             if(ui.sender){
                 newList = ui.placeholder.parent();
-                newItem = "<ul class=\"choice1 empty\"></ul>";
+                newItem = "<ul class=\"choice1 empty line\"></ul>";
                 var tier = 1;
                 prevEmpty = false;
                 $( ".tier" ).each(function( index ) {
                     $( this ).remove();
                 });
+                $( ".line" ).each(function( index ) {
+                    $( this ).remove();
+                });
                 $( ".choice1" ).each(function( index ) {
-                    if( $( this ).children().size() < 1 && prevEmpty){
-                        $( this ).remove();
-                    }else if( $( this ).children().size() < 1){
-                        prevEmpty = true;
+                    if( $( this ).children().size() < 1){
+                        $( this ).addClass('empty');
                     }else{
-                        $( this ).before("<div class=\"tier\">" + tier + "</div>");
-                        if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty'); }
+                        if( $( this ).attr('class').indexOf('empty')>-1 ){
+                            $( this ).before(newItem);
+                            $( this ).after(newItem);
+                            $( this ).removeClass('empty');
+                        }
                         if( $( this ).children().size() < 2 ){
                             $( this ).children().css( "width", "85%" );
                         }else{
                             $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
                         }
+                        $( this ).before("<div class=\"tier\">" + tier + "</div>");
                         tier += 1;
-                        prevEmpty = false;
                     }
                 });
                 if( $(newList).children().size() > 1 ){ $( ui.item ).css("width", "40%"); }

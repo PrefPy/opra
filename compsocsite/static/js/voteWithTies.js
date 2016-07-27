@@ -101,17 +101,18 @@ function enableSubmission() {
         change: function(event, ui) {  
             if(ui.sender){
                 newList = ui.placeholder.parent();
-                var len = $(".choice1").length;
                 newItem = "<ul class=\"choice1 empty\"></ul>";
                 var tier = 1;
+                prevEmpty = false;
                 $( ".tier" ).each(function( index ) {
                     $( this ).remove();
                 });
                 $( ".choice1" ).each(function( index ) {
-                    if( $( this ).children().size() < 1 ){
+                    if( $( this ).children().size() < 1 && prevEmpty){
                         $( this ).remove();
+                    }else if( $( this ).children().size() < 1){
+                        prevEmpty = true;
                     }else{
-                        $( this ).before(newItem);
                         $( this ).before("<div class=\"tier\">" + tier + "</div>");
                         if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty'); }
                         if( $( this ).children().size() < 2 ){
@@ -120,6 +121,7 @@ function enableSubmission() {
                             $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
                         }
                         tier += 1;
+                        prevEmpty = false;
                     }
                 });
                 if( $(newList).children().size() > 1 ){ $( ui.item ).css("width", "40%"); }

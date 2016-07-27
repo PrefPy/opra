@@ -18,21 +18,23 @@ function enableSubmission() {
 
 function checkStyle(){
     var len = $(".choice1").length;
-    newItem = "<ul class=\"choice1\"></ul>";
+    newItem = "<ul class=\"choice1 empty\"></ul>";
     $( ".choice1" ).each(function( index ) {
         if( $( this ).children().size() < 1 ){
             $( this ).remove();
         }else{
             $( this ).before(newItem);
+            $( this ).before("<div class=\"tier\">" + tier + "</div>");
+            if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
             if( $( this ).children().size() < 2 ){
-                if( $( this ).attr('class').indexOf('aftersort')>-1 ){ $( this ).removeClass('aftersort'); }
-                $( this ).children().css( "width", "100%" );
+                $( this ).children().css( "width", "85%" );
             }else{
-                $( this ).addClass('aftersort');
                 $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
             }
+            tier += 1;
         }
     });
+    $( ".choice1" ).last().after(newItem);
 }
 
 function moveToPref(obj) {
@@ -115,16 +117,7 @@ $(function() {
             if(oldList.attr('class').indexOf('aftersort')>-1 && oldList.children().size()<=2){
                 oldList.removeClass('aftersort');    
             }
-            var len = $(".choice1").length;
-            newItem = "<ul class=\"choice1\"></ul>";
-            $( ".choice1" ).each(function( index ) {
-                if( $( this ).children().size() < 1 ){
-                    $( this ).remove();
-                }else{
-                    $( this ).before(newItem);
-                }
-            });
-            $( ".choice1" ).last().after(newItem);
+            checkStyle();
             // alert(oldList.attr('id')+" TO "+newList.attr('id'));
         },
            

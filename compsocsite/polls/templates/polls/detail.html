@@ -29,7 +29,7 @@
         .sortable1 { background:transparent; }
         .aftersort { background-color:#eee;width:100%; }
         .hide1 { background-color:transparent; min-height=5px;min-width:15px; }
-        ul.choice1 { min-height:25px; }
+        ul.empty { background-color:black; height: 10px; }
     </style>
 
 
@@ -134,7 +134,8 @@
                                 {% for item in question.item_set.all %}
 
                                     {% if selection.0 == item %}
-                                        <ul class="choice1"></ul>
+                                        <ul class="choice1 empty"></ul>
+                                        <div class="tier">{{ selection.1 }}</div>
                                         <ul class="choice1" id="item{{ forloop.counter }}">
                                             <li style="padding:10px;">  
                                                 {% if selection.0.image %}
@@ -155,7 +156,7 @@
 
                                 {% endfor %}
                             {% endfor %}
-                            <ul class="choice1"></ul>
+                            <ul class="choice1 empty"></ul>
                         {% endif %}
                     </ul> <!-- left-sortable-->
                 </div>
@@ -190,7 +191,7 @@
                             <ul id="right-sortable" class="list-group">
                                 {% if currentSelection == None %}
                                     {% for item in items %}
-                                        <ul class="choice1"></ul>
+                                        <ul class="choice1 empty"></ul>
                                         <ul class="choice1" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
                                             <li class="">
                                                 {% if item.image %}
@@ -203,6 +204,7 @@
                                             </li>
                                         </ul>
                                     {% endfor %}
+                                    <ul class="choice1 empty"></ul>
                                 {% endif %}
         					</ul>
         				</div>

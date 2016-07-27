@@ -130,14 +130,13 @@ img:hover{
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         {% if mpoll.owner == request.user %}
-            <li><a data-toggle="tab" href="#Mtitle">Title</a></li>
-            <li><a data-toggle="tab" href="#Mdesc">Description</a></li>
+            <li><a data-toggle="tab" href="#Mtitle">Basic Info</a></li>
             <li><a data-toggle="tab" href="#voters">Voters</a></li>
             {% for question in mpoll.questions.all %}
                 <!--<li><a href="{% url 'polls:pollinfo' question.id %}" >{{question.question_text}}</a></li>-->
         <li><a data-toggle="collapse" data-target="#products{{forloop.counter}}" class="collapsed">{{question.question_text}} <span class="glyphicon glyphicon-menu-down" style="font-size:60%"></span></a></li>
                 <ul class="collapse" id="products{{forloop.counter}}">
-                    <li><a data-toggle="tab" href="#title{{question.id}}">Basic Info</a></li>
+                    <li style="padding:3px;"><a data-toggle="tab" href="#title{{question.id}}">Basic Info</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#choices{{question.id}}">Choices</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#algorithm{{question.id}}">Algorithms and Visibility</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#historyinfo{{question.id}}">History</a></li>
@@ -165,37 +164,22 @@ img:hover{
     
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="Mtitle">
     <h3 class="page-header">Title Setting of {{ mpoll.title }} <br/></h3>
-    {% if mpoll.status == 0 %}
-         <form action="{% url 'multipolls:edittitle' mpoll.id %}" method="post">
-            {% csrf_token %}
-
+    <form action="{% url 'multipolls:editBasicInfo' mpoll.id %}" method="post">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <label for="Mtitle">Title</label>
             <input type="text" class="form-control" style="width:70%;" name="Mtitle" size="50" value="{{ mpoll.title }}"/>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="Mdesc">Description</label>
+            <textarea type="text" class="form-control" style="width:70%;" name="Mdesc" maxlength="500" size="50" {% if mpoll.status != 0 %} disabled {% endif %}>{{ mpoll.description}}</textarea>
+        </fieldset>
 
-            <br />
-            <input type="submit" class="btn btn-primary" value="Save Changes"/>
-        </form>
-    {%else%}
-        <h5>Sorry, you can't change the title now.</h5>
-    {% endif %} 
+        <br />
+        <input type="submit" class="btn btn-primary" value="Save Changes"/>
+    </form>
 </div>
     
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="Mdesc">
-    <h3 class="page-header">Descrption Setting of {{ mpoll.title }} <br/></h3>
-    {% if mpoll.status == 0 %}
-         <form action="{% url 'multipolls:editdesc' mpoll.id %}" method="post">
-            {% csrf_token %}
-
-            <input type="text" class="form-control" style="width:70%;" name="Mdesc" size="50" value="{{ mpoll.description}}"/>
-
-            <br />
-            <input type="submit" class="btn btn-primary" value="Save Changes"/>
-        </form>
-    {%else%}
-        <h5>Sorry, you can't change the descrption now.</h5>
-    {% endif %} 
-  
-
-</div>
     
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="voters">
     <h3 class="page-header">Voters Setting of {{ mpoll.title }} <br/><small class="text-muted"> All subquestions of {{ mpoll.title }} share the same voters.</small></h3>

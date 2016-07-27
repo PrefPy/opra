@@ -191,7 +191,6 @@ def progress(request, multipoll_id):
         endSubpoll(multipoll)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
 class mpollinfoView(generic.DetailView):
     model = MultiPoll
     template_name = 'multipolls/mpollinfo.html'
@@ -204,9 +203,7 @@ class mpollinfoView(generic.DetailView):
         previous_responses=[]
         mostRecentResponse=[]
         history=[]
-   
-        
-        
+
         for question in self.get_object().questions.all():
             tmp_lr={}
             tmp_pr={}
@@ -228,17 +225,13 @@ class mpollinfoView(generic.DetailView):
             tmp_history['main']=currentUserResponses[1:]
             mostRecentResponse.append(tmp_mrr)
             history.append(tmp_history)
-            
-            
-  
 
         ctx['mpoll']= mpoll
         ctx['users'] = User.objects.all()
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()  
-      
-   
+
         ctx['lr'] = latest_responses
         ctx['pr'] = previous_responses
         
@@ -263,18 +256,12 @@ def deleteMpoll(request, multipoll_id):
         
         return HttpResponseRedirect(reverse('polls:m_polls'))
     
-def editTitle(request, multipoll_id):
+def editBasicInfo(request, multipoll_id):
     question = get_object_or_404(MultiPoll, pk=multipoll_id)
-    new_title= request.POST["Mtitle"]
-    question.title=new_title
+    new_title = request.POST["Mtitle"]
+    new_desc = request.POST["Mdesc"]    
+    question.title = new_title
+    question.description = new_desc    
     question.save()
-    request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
 
-def editDesc(request, multipoll_id):
-    question = get_object_or_404(MultiPoll, pk=multipoll_id)
-    new_desc=request.POST["Mdesc"]
-    question.description=new_desc
-    question.save()
-    request.session['setting'] = 0
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  

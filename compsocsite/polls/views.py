@@ -67,6 +67,11 @@ class MainView(generic.ListView):
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
+    def get_context_data(self, **kwargs):
+        ctx = super(MainView, self).get_context_data(**kwargs)
+        # sort the list by date
+        ctx['demo_question'] = Question.objects.first()
+        return ctx
         
 # step 1: the intial question object will be created. 
 def AddStep1View(request):

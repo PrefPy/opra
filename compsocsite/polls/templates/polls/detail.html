@@ -48,6 +48,11 @@
 
 
     {% if question.status == 2 %}
+        {% if question.open == False and request.user.username == ""%}
+        You have no permission to vote on this poll.
+        {% elif question.open == False and request.user not in question.question_voters.all %}
+        You are not invited to this poll.
+        {% else %}
         <div class="grid">
             <div class="row">
                 {% if question.imageURL != Null and question.imageURL != '' %}
@@ -211,9 +216,7 @@
         	
         	</div>
         	<div>
-        		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">
-                    {% if request.user.username != ""%}{{lastcomment}}{% endif %}
-                </textarea>
+        		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">{{lastcomment}}</textarea>
         	</div>
         </form>
         
@@ -225,13 +228,13 @@
                 <ul class="messages">
                     {% for message in messages %}
                     <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-                        {{ message }}  <a href="{% url 'polls:regular_polls'%}">Return home</a>
+                        {{ message }} {% if request.user.username != "" %}  <a href="{% url 'polls:regular_polls'%}">Return home</a>{% endif %}
                     </div>
                     {% endfor %}
                 </ul>
             {% endif %}
         </p>
-
+        {% endif %}
     {% elif question.status == 1%}
         <p>This poll has not started yet.</p>
     {% else %}

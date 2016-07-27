@@ -200,9 +200,13 @@ img:hover{
     {% else %}
         <h4>Here is the QR Code for inviting users who have not logged in</h4>
         <div id="qrcode" style="margin-top:15px;">
-            <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:detail' question.id %}" style="width:500px" />
+            <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:detail' question.id %}" style="width:400px" />
         </div>
-        <br >
+        <a href="#" id="showQRLink">Show Link</a>
+        <a href="#" id="hideQRLink">Hide Link</a>
+        <br />
+        <a href="{% url 'polls:detail' question.id %}" id="QRLink">{{request.get_host}}{% url 'polls:detail' question.id %}</a>
+        <br />
         <a href="{% url 'polls:closepoll' question.id %}" class="btn btn-danger">Close Poll</a>
     {% endif %}
 </div>
@@ -561,6 +565,18 @@ img:hover{
         $("#editStop").hide();
         $( "#stopButtonShow" ).show();
         $( "#stopButtonHide" ).hide();
+    });
+    $("#QRLink").hide();
+    $("#hideQRLink").hide();
+    $("#showQRLink").click(function(){
+        $("#QRLink").show();
+        $("#showQRLink").hide();
+        $("#hideQRLink").show();
+    });
+    $("#hideQRLink").click(function(){
+        $("#QRLink").hide();
+        $("#showQRLink").show();
+        $("#hideQRLink").hide();
     });
 </script>
 

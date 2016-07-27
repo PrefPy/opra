@@ -1,23 +1,16 @@
-{% if question.status == 1 %}
-    <h5>Basic Settings</h5>
-    <form action="{% url 'polls:editBasicInfo' question.id %}" method="post">
-        {% csrf_token %}
+<form action="{% url 'polls:editBasicInfo' question.id %}" method="post">
+    {% csrf_token %}
 
-        <fieldset class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" style="width:70%;" name="title" maxlength="20" size="50" value="{{ question.question_text }}"/>
-        </fieldset>
-        
-        <fieldset class="form-group">
-            <label for="description">Description</label>
-            <textarea type="text" class="form-control" style="width:70%;" name="desc" maxlength="500" size="50" value="">{% if question.question_desc %}{{ question.question_desc }}{% else %}No description{% endif %}</textarea>
-        </fieldset>
+    <fieldset class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" style="width:70%;" name="title" maxlength="20" size="50" value="{{ question.question_text }}" {% if question.status != 1 %} disabled {% endif %} />
+    </fieldset>
 
-        <br />
-        <input type="submit" class="btn btn-primary" value="Save Changes"/>
-    </form>
-{% elif question.status == 2 %}
-    <h5>Sorry, the poll has started. You can't change the title now.</h5>
-{% else %}
-    <h5>Sorry, the poll has ended. You can't change the title now.</h5>
-{% endif %} 
+    <fieldset class="form-group">
+        <label for="description">Description</label>
+        <textarea type="text" class="form-control" style="width:70%;" name="desc" maxlength="500" size="50" value="" {% if question.status != 1 %} disabled {% endif %}>{% if question.question_desc %}{{ question.question_desc }}{% else %}No description{% endif %}</textarea>
+    </fieldset>
+
+    <br />
+    <input type="submit" class="btn btn-primary" value="Save Changes"/>
+</form>

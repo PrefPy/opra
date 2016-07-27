@@ -14,7 +14,7 @@
 
 {% block content %}
 
-{% if question.status == 2 %}
+{% if question.status == 1 or question.status == 2 %}
 <div class="row">
 	<form action="{% url 'polls:setAllocationOrder' question.id %}" method="post">
 		{% csrf_token %}

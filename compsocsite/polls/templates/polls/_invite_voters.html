@@ -12,7 +12,7 @@
         <br />
         {% if question.status == 1 %}
             <label for="email2">Email announcement</label>
-            <input type="checkbox" name="email" id="email2" value="email" {% if question.emailDelete == True or question.emailDelete == None %} checked {% endif %}>
+            <input type="checkbox" name="email" id="email2" value="email" {% if question.emailDelete == True or question.emailDelete == None %} checked {% endif %} onchange="this.form.submit()">
             <br />
             <input type="submit" class="btn btn-danger" value="Remove">
         {% endif %}
@@ -22,36 +22,40 @@
     <b>Add Voter: </b>
     <form action="{% url 'polls:addvoter' question.id %}" method="post">
         {% csrf_token %}
-        <select name="voters" class="form-control multiple-select" multiple>
-            {% for user in users %}
-                {% if user not in question.question_voters.all %}
-                    <option value="{{ user.username }}">{{ user.username }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
+        <div class="input-group">
+            <select name="voters" class="form-control multiple-select" multiple onchange="this.form.submit()">
+                {% for user in users %}
+                    {% if user not in question.question_voters.all %}
+                        <option value="{{ user.username }}">{{ user.username }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <input type="submit" class="btn btn-success" value="Invite">
+        </div>
         <br />
         <label for="email1">Email announcement</label>
-        <input type="checkbox" name="email" id="email1" value="email" {% if question.emailInvite == True %} checked {% endif %}>
+        <input type="checkbox" name="email" id="email1" value="email" {% if question.emailInvite == True %} checked {% endif %} onchange="this.form.submit()">
         <br />
-        <input type="submit" class="btn btn-success" value="Invite">
     </form>     
 </div>
 <div class="col-md-4">
     <b>Add Group: </b>
     <form action="{% url 'groups:addgroupvoters' question.id %}" method="post">
         {% csrf_token %}
-        <select name="groups" class="form-control multiple-select" multiple>
-            {% for group in groups %}
-                {% if group.owner == request.user %}
-                    <option value="{{ group.name }}">{{group.name}}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
+        <div class="input-group">
+            <select name="groups" class="form-control multiple-select" multiple>
+                {% for group in groups %}
+                    {% if group.owner == request.user %}
+                        <option value="{{ group.name }}">{{group.name}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <input type="submit" class="btn btn-success" value="Invite">
+            <input type="submit" class="btn btn-danger" value="Remove" formaction="{% url 'groups:removegroupvoters' question.id %}">
+        </div>
         <br />
         <label for="email">Email announcement</label>
-        <input type="checkbox" name="email" id="email" value="email" {% if question.emailInvite == True or question.emailInvite == None %} checked {% endif %}>
+        <input type="checkbox" name="email" id="email" value="email" {% if question.emailInvite == True or question.emailInvite == None %} checked {% endif %} onchange="this.form.submit()">
         <br />
-        <input type="submit" class="btn btn-success" value="Invite">
-        <input type="submit" class="btn btn-danger" value="Remove" formaction="{% url 'groups:removegroupvoters' question.id %}">
     </form>
 </div>

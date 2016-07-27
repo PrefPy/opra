@@ -230,7 +230,7 @@ img:hover{
                     <textarea type="text" class="form-control" id="inviteMessage" name="inviteMessage" value="" maxlength="500">{{emailInvite.message}}</textarea> <br />
                 </div>
                 <label for="emailInvite">Send email when inviting voters</label>
-                <input type="checkbox" name="emailInvite" id="emailInvite" value="email" {% if question.emailInvite == True %} checked {% endif %}>
+                <input type="checkbox" name="emailInvite" id="emailInvite" value="email" {% if question.emailInvite == True %} checked {% endif %} onchange="this.form.submit()">
             </div>
             <div class="col-md-6">
                 <a href="#" id="deleteButtonShow">Show Delete Message</a>
@@ -243,7 +243,7 @@ img:hover{
                     <textarea type="text" class="form-control" id="deleteMessage" name="deleteMessage" value="" maxlength="500">{{emailDelete.message}}</textarea> <br />
                 </div>
                 <label for="emailDelete">Send email when deleting voters</label>
-                <input type="checkbox" name="emailDelete" id="emailDelete" value="email" {% if question.emailDelete %} checked {% endif %}>
+                <input type="checkbox" name="emailDelete" id="emailDelete" value="email" {% if question.emailDelete %} checked {% endif %} onchange="this.form.submit()">
             </div>
         </div>
         <div class="row">
@@ -258,7 +258,7 @@ img:hover{
                     <textarea type="text" class="form-control" id="startMessage" name="startMessage" value="" maxlength="500">{{emailStart.message}}</textarea> <br />
                 </div>
                 <label for="emailStart">Send email when the poll starts</label>
-                <input type="checkbox" name="emailStart" id="emailStart" value="email" {% if question.emailStart %} checked {% endif %}>
+                <input type="checkbox" name="emailStart" id="emailStart" value="email" {% if question.emailStart %} checked {% endif %} onchange="this.form.submit()">
             </div>
             <div class="col-md-6">
                 <a href="#" id="stopButtonShow">Show Stop Message</a>
@@ -271,7 +271,7 @@ img:hover{
                     <textarea type="text" class="form-control" id="stopMessage" name="stopMessage" value="" maxlength="500">{{emailStop.message}}</textarea> <br />
                 </div>
                 <label for="emailStop">Send email when the poll stops</label>
-                <input type="checkbox" name="emailStop" id="emailStop" value="email" {% if question.emailStop %} checked {% endif %}>
+                <input type="checkbox" name="emailStop" id="emailStop" value="email" {% if question.emailStop %} checked {% endif %} onchange="this.form.submit()">
             </div>
         </div>
         <input type="submit" value="Save Settings" class="btn btn-success">

@@ -67,6 +67,7 @@ function enableSubmission() {
     $("ul.choice1").sortable({
        
         start: function(event, ui) {
+            ui.placeholder.height(ui.item.height());
             item = ui.item;
             newList = oldList = oL = ui.item.parent();
         },
@@ -132,7 +133,7 @@ function enableSubmission() {
                 else{ $( ui.item ).css("width", "85%"); }
             }
         },
-        //placeholder: "ui-state-highlight",
+        placeholder: "ui-state-highlight",
         connectWith: "ul.choice1, ul.empty",
     }).disableSelection();
     }, 1000);

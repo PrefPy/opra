@@ -30,6 +30,8 @@
         .aftersort { background-color:#eee;width:100%; }
         .hide1 { background-color:transparent; min-height=5px;min-width:15px; }
         ul.empty { background-color:black; height: 10px; }
+        ul.choice1 { width:90%; }
+        .tier { width:20px; display:inline; }
     </style>
 
 
@@ -141,8 +143,8 @@
                                     {% if selection.0 == item %}
                                         <ul class="choice1 empty"></ul>
                                         <div class="tier">{{ selection.1 }}</div>
-                                        <ul class="choice1" id="item{{ forloop.counter }}">
-                                            <li style="padding:10px;">  
+                                        <ul class="choice1">
+                                            <li style="padding:10px;" id="item{{ item.item_text }}">  
                                                 {% if selection.0.image %}
                                                     <img class="item" src='/{{ selection.0.image.url }}'/>
                                                 {% endif %}
@@ -197,8 +199,9 @@
                                 {% if currentSelection == None %}
                                     {% for item in items %}
                                         <ul class="choice1 empty"></ul>
-                                        <ul class="choice1" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
-                                            <li class="">
+                                        <div class="tier">{{ forloop.counter }}</div>
+                                        <ul class="choice1" onclick = "moveToPref(this)">
+                                            <li class="" id="item{{ item.item_text }}">
                                                 {% if item.image %}
                                                     <img class="item" src='/{{ item.image.url }}'/>
                                                 {% endif %}

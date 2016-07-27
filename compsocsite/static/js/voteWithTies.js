@@ -68,24 +68,29 @@ function enableSubmission() {
        
         start: function(event, ui) {
             item = ui.item;
-            newList = oldList = ui.item.parent();
+            newList = oldList = oL = ui.item.parent();
         },
         
         stop: function(event, ui) {
             var len = $(".choice1").length;
-            newItem = "<ul class=\"choice1\"></ul>";
+            newItem = "<ul class=\"choice1 empty\"></ul>";
+            var tier = 1;
+            $( ".tier" ).each(function( index ) {
+                $( this ).remove();
+            });
             $( ".choice1" ).each(function( index ) {
                 if( $( this ).children().size() < 1 ){
                     $( this ).remove();
                 }else{
                     $( this ).before(newItem);
+                    $( this ).before("<div class=\"tier\">" + tier + "</div>");
+                    if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
                     if( $( this ).children().size() < 2 ){
-                        if( $( this ).attr('class').indexOf('aftersort')>-1 ){ $( this ).removeClass('aftersort'); }
-                        $( this ).children().css( "width", "100%" );
+                        $( this ).children().css( "width", "85%" );
                     }else{
-                        $( this ).addClass('aftersort');
                         $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
                     }
+                    tier += 1;
                 }
             });
             $( ".choice1" ).last().after(newItem);
@@ -94,12 +99,36 @@ function enableSubmission() {
         },
            
         change: function(event, ui) {  
-            if(ui.sender) newList = ui.placeholder.parent();
+            if(ui.sender){
+                newList = ui.placeholder.parent();
+                var len = $(".choice1").length;
+                newItem = "<ul class=\"choice1 empty\"></ul>";
+                var tier = 1;
+                $( ".tier" ).each(function( index ) {
+                    $( this ).remove();
+                });
+                $( ".choice1" ).each(function( index ) {
+                    if( $( this ).children().size() < 1 ){
+                        $( this ).remove();
+                    }else{
+                        $( this ).before(newItem);
+                        $( this ).before("<div class=\"tier\">" + tier + "</div>");
+                        if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty'); }
+                        if( $( this ).children().size() < 2 ){
+                            $( this ).children().css( "width", "85%" );
+                        }else{
+                            $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
+                        }
+                        tier += 1;
+                    }
+                });
+                if( $(newList).children().size() > 1 ){ $( ui.item ).css("width", "40%"); }
+                else{ $( ui.item ).css("width", "85%"); }
+            }
         },
-        placeholder: "ui-state-highlight",
-        connectWith: "ul.choice1",
+        //placeholder: "ui-state-highlight",
+        connectWith: "ul.choice1, ul.empty",
     }).disableSelection();
-    console.log(1);
     }, 1000);
           
 });

@@ -14,6 +14,7 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/stylish-portfolio.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/landing-page.css' %}" />
 
 
     <!-- Custom Fonts -->
@@ -168,43 +169,43 @@
     
 	<body>
         <div class="modal fade" role="dialog" id="loginmodal">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <form id="login_form" method="post" action="/auth/login/">
-                                        {% csrf_token %}
-                                        <div class="modal-header">
-                                            Login
-                                        </div>
-                                        <div class="modal-body">
-                                            
-                                                
-                                                <fieldset class="form-group">
-                                                    <label for="username">Username </label>
-                                                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" />
-                                                </fieldset>
-                                                <fieldset class="form-group">
-                                                    <label for="username">Password</label> 
-                                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
-                                                </fieldset>
-                                                <script>
-                                                if (typeof(QueryString["name"]) != "undefined"){
-                                                        $('#username').val(QueryString["name"]);
-                                                        $('#password').focus();
-                                                }
-                                                else{
-                                                        $('#username').focus();
-                                                }
-                                                </script>
-                                            
-                                        </div>
-                                        <div class="modal-footer">
-                                            <input type="submit" class="btn btn-primary" value="Login"/>
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="login_form" method="post" action="/auth/login/">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        Login
+                    </div>
+                    <div class="modal-body">
+
+
+                            <fieldset class="form-group">
+                                <label for="username">Username </label>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" />
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <label for="username">Password</label> 
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
+                            </fieldset>
+                            <script>
+                            if (typeof(QueryString["name"]) != "undefined"){
+                                    $('#username').val(QueryString["name"]);
+                                    $('#password').focus();
+                            }
+                            else{
+                                    $('#username').focus();
+                            }
+                            </script>
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Login"/>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 		
 		
                 {% if user.is_authenticated %}

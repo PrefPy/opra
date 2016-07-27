@@ -27,27 +27,46 @@
 
 <!--Customize own poll-->
 <div class="content-section-a">
-
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-sm-6">
-                    <hr class="small">
-                    <div class="clearfix"></div>
-                    <h2 class="section-heading">Customized Singular Polls</h2>
-                    <p class="lead"> OPRA allows you to customize your poll by choosing question types (Poll or Allocation), voting algorithms and visibility. Also, OPRA allows anonymous voters to join singular polls.</p>
-                    <a href="#about" class="btn btn-dark">Learn More About Singular Polls</a>
-                </div>
-                <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                    <img class="img-responsive" src="" alt="">
-                </div>
-                
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 col-sm-6">
+                <hr class="small">
+                <div class="clearfix"></div>
+                <h2 class="section-heading">Customized Singular Polls</h2>
+                <p class="lead"> OPRA allows you to customize your poll by choosing question types (Poll or Allocation), voting algorithms and visibility. Also, OPRA allows anonymous voters to join singular polls.</p>
+                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#singular">Learn More About Singular Polls </button>
+                <br/><br/>
+            </div>
+            <div class="col-lg-8 col-lg-offset-2 col-sm-6">
+                <img class="img-responsive" src="" alt="">
             </div>
 
         </div>
-        <!-- /.container -->
 
     </div>
-    <!-- /.content-section-a -->
+    <!-- /.container -->
+</div>
+<!-- /.content-section-a -->
+
+<!-- Singular -->
+<div class="modal fade" id="singular" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">More about Singular Poll</h4>
+      </div>
+      <div class="modal-body">
+        ...
+          <h3>The Features of a poll </h3>
+          <h2></h2>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <!--Customize own mpoll-->
 <div class="content-section-b">
@@ -171,11 +190,11 @@
                     <h2>Other Services</h2>
                     <hr class="small">
                     <div class="row">
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-4 col-sm-10">
                             <div class="service-item">
                                 <span class="fa-stack fa-4x">
                                 <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-cloud fa-stack-1x text-primary"></i>
+                                <i class="fa fa-users fa-stack-1x text-primary"></i>
                             </span>
                                 <h4>
                                     <strong>Group</strong>
@@ -183,11 +202,11 @@
                                 <p>You can create your own group and do one-click invitation.</p>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-4 col-sm-10">
                             <div class="service-item">
                                 <span class="fa-stack fa-4x">
                                 <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-compass fa-stack-1x text-primary"></i>
+                                <i class="fa fa-envelope fa-stack-1x text-primary"></i>
                             </span>
                                 <h4>
                                     <strong>Email</strong>
@@ -195,8 +214,20 @@
                                 <p>OPRA makes sending email to all voters easily.</p>
                             </div>
                         </div>
+                        <div class="col-md-4 col-sm-10">
+                            <div class="service-item">
+                                <span class="fa-stack fa-4x">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-qrcode fa-stack-1x text-primary"></i>
+                            </span>
+                                <h4>
+                                    <strong>QR Code</strong>
+                                </h4>
+                                <p>OPRA produces QR Code for open singualr poll.</p>
+                            </div>
+                        </div>
                     </div>
-                    <!-- /.row (nested) -->.
+                    <!-- /.row (nested) -->
                 </div>
                 <!-- /.col-lg-10 -->
             </div>

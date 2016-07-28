@@ -1,5 +1,4 @@
 {% extends 'polls/base.html' %}
-
 {% block extra_head %}
 <script src="http://js.cytoscape.org/js/cytoscape.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -9,6 +8,7 @@
     <script src='/static/js/mobile.js'></script>
 {% else %}
     <script src='/static/js/desktop.js'></script>
+    <script src='/static/js/voteWithTies.js'></script>
 {% endif %}
 
 <style type="text/css">
@@ -17,6 +17,8 @@
     height: 125px;
     border: 1px solid lightgray;
 }   
+     
+ul.empty { background-color:black; height: 10px; }
 </style>
 <script>
 function check()

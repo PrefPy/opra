@@ -188,3 +188,19 @@ div{
 	font-size:100% !important;
 }
 
+.sortable1 { 
+    background: transparent; 
+}
+.aftersort { 
+    background-color: #eee;
+    width: 100%; 
+}
+.hide1 { 
+    background-color: transparent; 
+    min-height: 5px;
+    min-width: 15px; 
+}
+.tier { 
+    width: 20px; 
+    display: inline; 
+}

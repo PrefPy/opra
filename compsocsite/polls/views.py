@@ -398,6 +398,12 @@ class DependencyView(generic.DetailView):
         # get the current poll
         ctx['question'] = combination.target_question
 
+        # get the prev and next polls
+        currentIndex = self.object.multipollquestion_set.all()[0].order
+        multipoll = self.object.multipoll_set.all()[0]
+        ctx['prev_poll'] = multipoll.questions.all()[currentIndex - 1] if currentIndex > 0 else None
+        ctx['next_poll'] = multipoll.questions.all()[currentIndex + 1] if currentIndex < multipoll.questions.count() - 1 else None
+
         # calculate condition index based off of the current session
         conditionsSelected = [] 
         for poll in combination.dependent_questions.all():

@@ -66,7 +66,21 @@ $(function(){
 		{% endif %}
 		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
 			<h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
-				{{ question.question_text }}:</h3>
+				{{ question.question_text }}:    
+            </h3>
+            <p>
+            {% if prev_poll != None %}
+                <a href="{% url 'polls:dependency' prev_poll.id %}">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                </a>
+            {% endif %}
+            {% if next_poll != None %}
+                <a href="{% url 'polls:dependency' next_poll.id %}">
+                    <span class="glyphicon glyphicon-arrow-right"></span>
+                </a>
+            {% endif %} 
+            </p>
+
             <small class="text-muted">Created by {{ question.question_owner }}</small>
 			
 			{% if question.question_desc %}
@@ -111,7 +125,7 @@ $(function(){
 <br />    
 </div>
 
-{% include 'polls/dependencydetail.html' %}
+{% include 'multipolls/dependencydetail.html' %}
 
 <script>
     var cy = cytoscape({

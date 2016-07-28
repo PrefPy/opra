@@ -178,10 +178,16 @@ def addChoice(request, question_id):
 
 def editChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    item_num = 0
     for item in question.item_set.all():
-        new_text = request.POST["item"+str(item_num)]
-        item_num += 1
+        new_text = request.POST["item"+str(item.id)]
+        item_desc = request.POST["itemdescription"+str(item.id)]
+        imageURL = request.POST["imageURL"+str(item.id)]
+        if item_desc != "":
+            item.item_description = item_desc
+        if request.FILES.get("docfile"+str(item.id)) != None:
+            item.image = request.FILES.get("docfile"+str(item.id))
+        elif imageURL != "":
+            item.imageURL = imageURL
         item.item_text = new_text
         item.save()
     request.session['setting'] = 0
@@ -194,22 +200,6 @@ def editBasicInfo(request, question_id):
     question.question_text = new_title
     question.question_desc = new_desc    
     question.save()
-    request.session['setting'] = 0
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
-def editChoiceInfo(request, item_id):
-    item = get_object_or_404(Item, pk=item_id)
-    item_title = request.POST["title"+str(item.id)]
-    item_desc = request.POST["itemdescription"+str(item.id)]
-    imageURL = request.POST["imageURL"+str(item.id)]
-    item.item_text = item_title
-    if item_desc != "":
-        item.item_description = item_desc
-    if request.FILES.get("docfile"+str(item.id)) != None:
-        item.image = request.FILES.get("docfile"+str(item.id))
-    elif imageURL != "":
-        item.imageURL = imageURL
-    item.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -649,10 +639,11 @@ def categorizeResponses(all_responses):
             add = True
             #check if the user has voted multiple times
             for response2 in latest_responses:
-                if response1.user.username == response2.user.username:
-                    add = False
-                    previous_responses.append(response1)
-                    break
+                if not response2.user == None:
+                    if response1.user.username == response2.user.username:
+                        add = False
+                        previous_responses.append(response1)
+                        break
 
             #this is the most recent vote
             if add:

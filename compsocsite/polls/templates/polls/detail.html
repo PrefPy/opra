@@ -48,6 +48,12 @@
     </p>
     {% endif %}
 
+    {% if request.flavour == "mobile"%}
+    <br />
+    <br />
+    <br />
+    <br />
+    {% endif %}
 
     {% if question.status == 2 %}
         {% if question.open == False and request.user.username == ""%}

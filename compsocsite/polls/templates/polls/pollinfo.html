@@ -115,7 +115,25 @@ img:hover{
       $( "#selectable" ).selectable();
   });
   </script>
-
+<script>
+    $(function() {
+        $(".auto_submit").change(function() {
+            $("#choiceform").submit();
+        });
+    });
+    $('#choiceform').submit(function(event){
+        event.preventDefault();
+        var url = $(location).attr('href');
+        $.ajax({
+            type:'post',
+            url:url,
+            data: $('#choiceform').serialize(),
+            success: function(event){
+                $('ul').load();
+            }
+        });
+    });
+</script>
 
 
 

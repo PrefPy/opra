@@ -1,6 +1,8 @@
 
+
+
 <ul class="list-group">
-    <form action="{% url 'polls:editchoice' question.id %}" method="post">
+    <form id="choiceform"  action="{% url 'polls:editchoice' question.id %}" method="post">
         {% csrf_token %}
     {% for item in items %}
             <li class="list-group-item ">
@@ -11,9 +13,12 @@
                     <img src='{{ item.imageURL }}'/>
                 {% endif %}
                 <div class="row">
-                    <div class="form-group col-xs-8">
+                    <div class="form-group col-xs-1" data-toggle="collapse" data-target="#iteminfo{{item.id}}">
+                        <span  class="caret" style="color:#377BB5;"></span>   
+                    </div>   
+                    <div class="form-group col-xs-7">
                         {% if question.status == 1 %}
-                        <input type="text" class="form-control" name="item{{forloop.counter0}}" size="50" value="{{ item }}" onchange="this.form.submit()"/>
+                        <input type="text" class="form-control auto_submit" name="item{{item.id}}" size="50" value="{{ item }}" />
                         {% else %}
                         {{item}}
                         {% endif %}
@@ -25,51 +30,40 @@
                             <span class="glyphicon glyphicon-remove"></span>
                         </div>
                     </a>
-                    <div class="pull-left">
-                    <span class="glyphicon glyphicon-info-sign" data-toggle="modal" data-target="#iteminfo{{forloop.counter0}}"></span>
                 </div>
                 </div>
-                {% endif %}
-                </div>
-            </li>
-    {% endfor %}
-    </form>
-
-    {% for item in items %}
-    <form action="{% url 'polls:editchoiceinfo' item.id %}" method="post">
-        {% csrf_token %}
-        <div class="modal fade" role="dialog" id="iteminfo{{forloop.counter0}}">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <input type="text" class="form-control" name="title{{item.id}}" value="{{item}}"/>
-                    </div>
-                    <div class="modal-body">
-                        <p>Additional Description:</p>
-                        <textarea class="form-control" name="itemdescription{{item.id}}">{% if item.item_description %}{{item.item_description}}{% endif %}</textarea>
+                <div id="iteminfo{{item.id}}" class="accordian-body collapse">
+                    <div class="row">
+                        <div class="form-group col-xs-1">
+                        </div>
+                        <div class="form-group col-xs-9">
+                    <p>Additional Description:</p>
+                        <textarea class="form-control auto_submit" name="itemdescription{{item.id}}">{% if item.item_description %}{{item.item_description}}{% endif %}</textarea>
                         <br />
+                        </div>
+                    </div>
                         {% if item.image %}
                         <img class="item" src='/{{ item.image.url }}'/>
                         {% endif %}
                         {% if item.imageURL != Null %}
                         <img class="item" src='{{ item.imageURL }}'/>
                         {% endif %}
-                        {% if question.status == 1 %}
+                        <div class="row">
+                            <div class="form-group col-xs-1">
+                            </div>
+                        <div class="form-group col-xs-9">
                         <input type="text" class="form-control" name="imageURL{{item.id}}" value="{% if item.imageURL %}{{item.imageURL}}{% endif %}" size="50" placeholder="Paste Image URL"/>
+                        </div>
+                        <div class="form-group col-xs-2">
                         <label for="image{{item.id}}" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
                         <input style="display:none" id="image{{item.id}}" type="file" name="docfile{{item.id}}" accept="image/*">
-                        {% endif %}
-                    </div>
-                    <div class="modal-footer">
-                        <input type="submit" class="btn-large btn-success btn-ok"/>
-                        <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
-                    </div>
+                        </div>
+                        </div>
                 </div>
-            </div>
-        </div>
-
-    </form>
+                {% endif %}
+            </li>
     {% endfor %}
+    </form>
     
     <li class="list-group-item">
         <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
@@ -94,3 +88,22 @@
         </form>
     </li>
 </ul>
+<script>
+        $(".auto_submit").each(function(){
+            $(this).change(function(){
+                this.form.submit();
+            });
+        });
+    $('#choiceform1').submit(function(event){
+        event.preventDefault();
+        var url = $(location).attr('href');
+        $.ajax({
+            type:'post',
+            url:url,
+            data: $('#choiceform1').serialize(),
+            success: function(event){
+                $('ul').load(location.href + " ul");
+            }
+        });
+    });
+</script>

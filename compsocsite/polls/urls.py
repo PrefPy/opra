@@ -23,7 +23,6 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/choice/add/$', views.addChoice, name='addchoice'),
     url(r'^(?P<question_id>[0-9]+)/editchoice/$', views.editChoice, name='editchoice'),
     url(r'^(?P<question_id>[0-9]+)/edit/basic/$', views.editBasicInfo, name='editBasicInfo'),
-    url(r'^choice/editinfo/([0-9]+)/$', views.editChoiceInfo, name='editchoiceinfo'),
     url(r'^choice/delete/([0-9]+)/$', views.deleteChoice, name='delchoice'),
     
     # voters

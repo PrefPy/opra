@@ -744,33 +744,29 @@ def getShadeValues(scoreVectorList):
 
         newRow = []
         greenColor = "6cbf6c"
-        redColor = "dc6460"
+        whiteColor = "ffffff"
         for index in row:
             rank = sortedRow.index(row[index])
 
             if highestRank == 0:
                 # must be the winner
                 newRow.append("#" + greenColor)
+                continue
+
+            # color is a hex value
+            colorStr = ""
+            # make the colors closer to the left lighter (higher value) and toward the right darker (lower value) 
+            
+            #the 5th row is Simplified Bucklin (lower score is better so reverse the colorings for this row)
+            counter = len(shadeValues)
+            if counter != 4:
+                luminance = 1 - rank / float(highestRank)
             else:
-                # at the midpoint, change colors
-                midRank = highestRank / 2
-                # color is a hex value
-                colorStr = ""
-                # make the colors closer to the end darker (lower value) and toward the middle lighter (higher value) 
-                luminance = 0
-                if midRank != 0:
-                    luminance = 1 - (abs(midRank - rank) / float(midRank))
-                    luminance /= 2.0
-
-                #the 5th row is Simplified Bucklin (lower score is better so reverse the colorings for this row)
-                counter = len(shadeValues)
-                # check if the ranking is above or below the midpoint and assign colors accordingly
-                if (rank <= midRank and counter != 4) or (rank > midRank and counter == 4):
-                    colorStr = colorLuminance(redColor, luminance)
-                else:
-                    colorStr = colorLuminance(greenColor, luminance)
-
-                newRow.append(colorStr)
+                luminance = rank / float(highestRank)
+            luminance /= 1.5
+    
+            colorStr = colorLuminance(greenColor, luminance)
+            newRow.append(colorStr)
 
         shadeValues.append(newRow)
     return shadeValues

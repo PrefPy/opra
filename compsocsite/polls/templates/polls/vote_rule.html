@@ -22,7 +22,20 @@
         {% if question.question_owner == request.user or question.display_pref <= 1 %}                                                                    
         <div class="panel panel-default">
             <!-- Default panel contents -->
-            <div class="panel-heading">Poll Results</div>
+            <div class="panel-heading">
+                Poll Results
+                <div class="pull-right">
+                    <span>Less Preferred</span>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default" style="background-color: #d8ffd8"></button>
+                        <button type="button" class="btn btn-default" style="background-color: #93ff93"></button>
+                        <button type="button" class="btn btn-default" style="background-color: #83e883"></button>
+                        <button type="button" class="btn btn-default" style="background-color: #74cd74"></button>
+                        <button type="button" class="btn btn-default" style="background-color: #6cbf6c"></button>
+                    </div>
+                    <span>More Preferred</span>
+                </div>
+            </div>
             <div class="panel-body">
                 <table class="table">
                     <tr>

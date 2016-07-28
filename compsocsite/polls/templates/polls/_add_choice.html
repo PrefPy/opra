@@ -31,6 +31,7 @@
                         </div>
                     </a>
                 </div>
+				{% endif %}
                 </div>
                 <div id="iteminfo{{item.id}}" class="accordian-body collapse">
                     <div class="row">
@@ -38,7 +39,11 @@
                         </div>
                         <div class="form-group col-xs-9">
                     <p>Additional Description:</p>
+						{% if question.status == 1 %}
                         <textarea class="form-control auto_submit" name="itemdescription{{item.id}}">{% if item.item_description %}{{item.item_description}}{% endif %}</textarea>
+						{% else%}
+						<p>{% if item.item_description %}{{item.item_description}}{% else %}None{% endif %}</p>
+						{% endif %}
                         <br />
                         </div>
                     </div>
@@ -48,6 +53,7 @@
                         {% if item.imageURL != Null %}
                         <img class="item" src='{{ item.imageURL }}'/>
                         {% endif %}
+						{% if question.status == 1 %}
                         <div class="row">
                             <div class="form-group col-xs-1">
                             </div>
@@ -59,8 +65,8 @@
                         <input style="display:none" id="image{{item.id}}" type="file" name="docfile{{item.id}}" accept="image/*">
                         </div>
                         </div>
+						{% endif %}
                 </div>
-                {% endif %}
             </li>
     {% endfor %}
     </form>
@@ -91,19 +97,18 @@
 <script>
         $(".auto_submit").each(function(){
             $(this).change(function(){
-                this.form.submit();
-            });
-        });
-    $('#choiceform1').submit(function(event){
-        event.preventDefault();
-        var url = $(location).attr('href');
-        $.ajax({
-            type:'post',
-            url:url,
-            data: $('#choiceform1').serialize(),
-            success: function(event){
-                $('ul').load(location.href + " ul");
-            }
-        });
-    });
+                this.form.submit(function(event){
+				event.preventDefault();
+				var url = $(location).attr('href');
+				$.ajax({
+					type:'post',
+					url:url,
+					data: $('#choiceform').serialize(),
+					success: function(event){
+						$('ul').load(location.href + " ul");
+					}
+				});
+			});
+					});
+				});
 </script>

@@ -76,6 +76,7 @@ function enableSubmission() {
             var len = $(".choice1").length;
             newItem = "<ul class=\"choice1 empty\"></ul>";
             var tier = 1;
+            var id = 0;
             $( ".tier" ).each(function( index ) {
                 $( this ).remove();
             });
@@ -83,7 +84,9 @@ function enableSubmission() {
                 if( $( this ).children().size() < 1 ){
                     $( this ).remove();
                 }else{
-                    $( this ).before(newItem);
+                    $( this ).attr("id", id.toString());
+                    id += 1;
+                    $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
                     $( this ).before("<div class=\"tier\">" + tier + "</div>");
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
                     if( $( this ).children().size() < 2 ){
@@ -92,9 +95,10 @@ function enableSubmission() {
                         $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
                     }
                     tier += 1;
+                    id += 1;
                 }
             });
-            $( ".choice1" ).last().after(newItem);
+            $( ".choice1" ).last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
             if( $( "#right-sortable" ).children().size == 0 ){ enableSubmission(); }
             // alert(oldList.attr('id')+" TO "+newList.attr('id'));
         },
@@ -102,6 +106,11 @@ function enableSubmission() {
         change: function(event, ui) {  
             if(ui.sender){
                 newList = ui.placeholder.parent();
+                var newListId = parseInt($( newList ).attr("id"));
+                var oldListId = parseInt($( oldList ).attr("id"));
+                var listId;
+                $( "#" + (oldListId + 1).toString() ).addClass("line");
+                $( "#" + (oldListId - 1).toString() ).addClass("line");
                 newItem = "<ul class=\"choice1 empty line\"></ul>";
                 var tier = 1;
                 prevEmpty = false;
@@ -112,7 +121,8 @@ function enableSubmission() {
                     $( this ).remove();
                 });
                 $( ".choice1" ).each(function( index ) {
-                    if( $( this ).children().size() < 1){
+                    listId = parseInt($( this ).attr("id"));
+                    if( $( this ).children().size() < 1 || (listId == oldListId && listId != newListId && $( oldList ).children().size() == 1)){
                         $( this ).addClass('empty');
                     }else{
                         if( $( this ).attr('class').indexOf('empty')>-1 ){

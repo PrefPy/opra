@@ -6,7 +6,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 
 
 ##Dependencies
-* **mathfilter**:
+* **Django-mathfilters**:
 * **Django-mobile**:
 * **pillow**:
 

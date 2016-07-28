@@ -140,6 +140,7 @@ $(function(){
       style: cytoscape.stylesheet()
         .selector('node')
           .css({
+            'shape': 'data(faveShape)',
             'width': 'mapData(weight, 40, 80, 20, 60)',
             'content': 'data(name)',
             'text-valign': 'center',
@@ -162,6 +163,10 @@ $(function(){
             'line-color': 'data(faveColor)',
             'target-arrow-color': 'data(faveColor)'
           })
+        .selector('edge.dotted')
+          .css({
+            'line-style': 'dotted'
+          })
         .selector('.faded')
           .css({
             'opacity': 0.25,
@@ -172,12 +177,12 @@ $(function(){
       elements: {
         nodes: [
          {% for row in pref_nodes %}
-            {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 10, faveColor: '#6FB1FC' } },
+            {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 10, faveColor: '#6FB1FC', faveShape: {% if row.id == question.id %}'rectangle'{% else %}'ellipse'{% endif %} } },
         {% endfor %}
         ],
         edges: [
          {% for row in pref_edges %}
-            {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#6FB1FC', strength: 50 } },
+            {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#6FB1FC', strength: 50 }, {% if row.to != question.id %}classes: 'dotted'{% endif %} },
         {% endfor %}
         ]
       },

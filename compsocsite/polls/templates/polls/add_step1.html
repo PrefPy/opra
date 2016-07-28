@@ -21,51 +21,8 @@ function validateForm() {
 <div class="col-md-10 col-md-offset-1">
     <h2  align="center">Create a New Poll</h2>
     <br/>
-    <div class="steps"  align="center">
-
-        <p class="sameline" style="color:grey;"> 
-            1. General  
-            <span class="glyphicon glyphicon-chevron-right"> </span>
-        </p>
-        <p class="sameline">
-            2. Choices 
-            <span class="glyphicon glyphicon-chevron-right"> </span>
-            3. Invite 
-            <span class="glyphicon glyphicon-chevron-right"> </span>
-            4. Settings
-        </p>
-    </div>
-    
-    
-    <div class="progress">
-        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 25%">
-            <span class="sr-only">25% Complete</span>
-        </div>
-    </div>
-    <br/>
-
-    <form id="add_poll" method="post" action="/polls/add_step1/" name="add_step1" onsubmit="return validateForm() " style="font-size:100%" enctype="multipart/form-data">
-        {% csrf_token %}
-        <label for="questionTitle">Title:</label> <br />
-        <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="20" size="100" autofocus/>
-        <small class="text-muted">Required (at most 20 characters) </small> <br/><br/>
-        
-        <label for="desc">Question description:</label> <br />
-        <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
-        
-        <label for="questiontype">Question Type:</label> <br />
-        <select name="questiontype" class="form-control" style='font-size:100%'>
-            <option value="1">Poll</option>
-            <option value="2">Allocation</option>
-        </select>
-        
-        <label for="imageURL">Image:</label> <br />
-        <input type="text" class="form-control input-sm" id="imageURL" name="imageURL" value="" />
-
-        <label for="image" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
-        <input style="display:none" id="image" type="file" name="docfile" accept="image/*">
-        <br /><br />
-        <div class="col-md-6 col-md-offset-3" align="center" style='font-size:100%'>
+     {% include 'polls/_add_step1.html' %}
+      <div class="col-md-6 col-md-offset-3" align="center" style='font-size:100%'>
             <input type="submit" value="Next" class="btn btn-primary"/>
         </div>
     </form>

@@ -70,7 +70,7 @@ class MainView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(MainView, self).get_context_data(**kwargs)
         # sort the list by date
-        ctx['demo_question'] = Question.objects.first()
+        ctx['question'] = Question.objects.first()
         return ctx
         
 # step 1: the intial question object will be created. 

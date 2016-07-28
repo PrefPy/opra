@@ -13,78 +13,7 @@
 <div class="col-md-10 col-md-offset-1">
     <h2  align="center">Create a New Poll</h2>
     <br/>
-    <div class="steps"  align="center">
-        <p class="sameline" > 
-            1. General   
-            <span class="glyphicon glyphicon-chevron-right"> </span>  
-            2. Choices
-            <span class="glyphicon glyphicon-chevron-right"> </span>
-            3. Invite
-        </p>
-        <p class="sameline" style="color:grey;">
-            <span class="glyphicon glyphicon-chevron-right"> </span>
-            4. Settings 
-        </p>
-    </div>
-    
-    <div class="progress">
-        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-            <span class="sr-only">100% Complete</span>
-        </div>
-    </div>
-    <br/>
-    
-    <div class="row">
-        <form class="form-group" method="post" action="{% url 'polls:setinitial' question.id %}">
-            {% csrf_token %}
-            
-            {% if question.question_type == 1 %}
-                <label for="pollpreferences">Select a voting algorithm</label>
-                <select name="pollpreferences" class="form-control">
-                {% for item in poll_algorithms %}
-                    <option value="{{ forloop.counter }}">
-                        {{ item }}
-                    </option>
-                {% endfor %}
-                </select>
-                <br />
-            {% elif question.question_type == 2 %}
-                <label for="pollpreferences">Select an allocation method</label>
-                <select name="pollpreferences" class="form-control">
-                {% for item in alloc_methods %}
-                    <option value="{{ forloop.counter }}">
-                        {{ item }}
-                    </option>
-                {% endfor %}
-                </select>
-                <br />
-            {% endif %}
-
-            <label for="viewpreferences">Information visible to voters.</label>
-   
-
-            <select name="viewpreferences" class="form-control">
-                {% for item in view_preferences %}
-                <option value="{{ forloop.counter0 }}" {% if forloop.counter == preference %} selected {% endif %}>
-                    {{ item }}
-                </option>
-                {% endfor %}
-            </select>
-            <br />
-
-            <label for="openpoll">Choose if anonymous voters can join and vote. QR Code can be accessed in poll settings page.</label>
-
-            <select name="openpoll" class="form-control">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
-            
-            <br />
-            <div class="col-md-6 col-md-offset-3" align="center">
-                <input type="submit" value="Finish" class="btn btn-primary">
-            </div>
-        </form>
-    </div>
+    {% include 'polls/_add_step4.html' %}
 </div>
 {% endif %}
 {% endblock %}

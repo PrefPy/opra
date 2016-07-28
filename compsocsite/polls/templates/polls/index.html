@@ -1,6 +1,23 @@
 {% extends 'polls/base.html' %}
 {% load staticfiles %}
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/landing-page.css' %}" />
+{% endblock %}
+
 {% block content %}
+<style>
+    p.sameline{
+        display:inline-block;
+    }
+    .panel-default > .panel-heading {
+      color: #fff;
+      background-color: #4c94cc;
+      border-color: transparent;
+        border:0px;
+}
+</style>
+
+
     <!-- Header -->
     <header id="top" class="header">
         <div class="text-vertical-center">
@@ -25,8 +42,146 @@
         <!-- /.container -->
     </section>
 
+
+
+
+
+ <!-- Tutorial Section -->
+    <section id="tutorial" class="content-section-a">
+        <div class="container" >
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Poll Tutorial</h2>
+                    <h4>Show you how to create a new poll.</h4>
+                </div>
+            </div>
+            
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading text-center" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Step 1
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+          <h3 class="text-center"> Step 1 </h3>
+          <hr class="small"/>
+       {% include 'polls/_add_step1.html' %}
+          </form>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading text-center" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Step 2
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+          <h3 class="text-center"> Step 2 </h3>
+          <hr class="small"/>
+          <div class="steps"  align="center">
+                    <p class="sameline" > 
+                        1. General  
+                    </p> 
+                    <p class="sameline" style="color:grey;">
+                        <span class="glyphicon glyphicon-chevron-right"> </span>  
+                        2. Choices
+                    </p>
+                    <p class="sameline">
+                        <span class="glyphicon glyphicon-chevron-right"> </span>
+                        3. Invite <span class="glyphicon glyphicon-chevron-right"> </span>
+                        4. Settings 
+                    </p>
+         </div>
+
+        <div class="progress">
+            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+                <span class="sr-only">50% Complete</span>
+            </div>
+        </div>
+        <br/>
+        {% include 'polls/_add_choice.html' %}
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading text-center" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Step 3
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+          <h3 class="text-center"> Step 3 </h3>
+          <hr class="small"/>
+        <div class="steps"  align="center">
+            <p class="sameline" > 
+                1. General   
+                <span class="glyphicon glyphicon-chevron-right"> </span>  
+                2. Choices 
+            </p>
+
+            <p class="sameline" style="color:grey;">
+                <span class="glyphicon glyphicon-chevron-right"> </span>
+                3. Invite 
+            </p>
+
+            <p class="sameline">
+                <span class="glyphicon glyphicon-chevron-right"> </span>
+                4. Settings 
+            </p>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
+                <span class="sr-only">75% Complete</span>
+            </div>
+        </div>
+        <br/>
+
+        <h3>Voters</h3>
+        {% include 'polls/_invite_voters.html' %}
+      </div>
+    </div>
+  </div>
+    
+    <div class="panel panel-default">
+    <div class="panel-heading text-center" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+          Step 4
+        </a>
+      </h4>
+    </div>
+    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+      <div class="panel-body">
+          <h3 class="text-center"> Step 4 </h3>
+          <hr class="small"/>
+        {% include 'polls/_add_step4.html' %}
+      </div>
+    </div>
+  </div>
+</div>   
+</div>
+</section>
+
+
+
+
+
+
+
 <!--Customize own poll-->
-<div class="content-section-a">
+<div class="content-section-b">
     <div class="container">
         <div class="row">
             <div class="col-lg-7 col-sm-6">
@@ -54,13 +209,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">More about Singular Poll</h4>
+        <h3 class="modal-title" id="myModalLabel">More about Singular Poll</h3>
       </div>
       <div class="modal-body">
-        ...
-          <h3>The Features of a poll </h3>
-          <h2></h2>
-        
+          <h4>The Features of a poll </h4>
+          <h4>Names and description</h4>
+          <p>Question: The question of the poll to be cast. You can set it on the first step.<br/>
+          Description: The description of your customized poll. It will be shown when hovered in the index page.</p> 
       </div>
     </div>
   </div>
@@ -153,7 +308,7 @@
                 <div class="clearfix"></div>
                 <h2 class="section-heading">Organized & Analyzed Results</h2>
                 <p class="lead"> OPRA produces an organized and analyzed results after you stop a poll.It helps you to make decision.</p>
-                <a  class="btn btn-dark" href="{% url 'polls:voteresults' demo_question.id %}">See Result Demo</a>
+                <a  class="btn btn-dark" href="{% url 'polls:voteresults' question.id %}">See Result Demo</a>
             </div>
             <div class="col-lg-5 col-lg-offset-2 col-sm-6">
                 <img class="img-responsive" src="" alt="">

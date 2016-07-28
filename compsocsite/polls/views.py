@@ -376,7 +376,7 @@ class DetailView(generic.DetailView):
 # allow the user to vote on this poll given the preferences for the previous dependent polls
 class DependencyView(generic.DetailView):
     model = Question
-    template_name = 'polls/dependency.html'
+    template_name = 'multipolls/dependency.html'
     def get_order(self, ctx):
         otherUserResponses = self.object.response_set.reverse()
         defaultOrder = self.object.item_set.all()

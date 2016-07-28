@@ -31,4 +31,16 @@ class MultiPollQuestion(models.Model):
     def __str__(self):
         return ""
     
+# a poll can have multiple dependent polls (must be part of the same multipoll)
+class Combination(models.Model):
+    target_question = models.ForeignKey(Question)
+    dependent_questions = models.ManyToManyField(Question, related_name="dependent_questions")
+    user = models.ForeignKey(User)
+    dependencies = models.ManyToManyField(Item)
+    response = models.OneToOneField(Response,null=True, blank=True)
 
+# link the choices for the dependent polls to a response
+class ConditionalItem(models.Model):
+    combination = models.ForeignKey(Combination)
+    items = models.ManyToManyField(Item)
+    response = models.OneToOneField(Response, null=True, blank=True)

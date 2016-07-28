@@ -28,7 +28,7 @@ function check()
         {% endif %}
     {% endfor %}
     
-    window.location.href = "{% url 'polls:updatePrefGraph' question.id %}" + choicesStr; // redirect
+    window.location.href = "{% url 'multipolls:updatePrefGraph' question.id %}" + choicesStr; // redirect
     return false;
 }
          
@@ -41,7 +41,7 @@ $(function(){
                 choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&"; 
             {% endfor %}
 
-            window.location.href = "{% url 'polls:dependencyget' combination.id %}" + choicesStr; // redirect
+            window.location.href = "{% url 'multipolls:dependencyget' combination.id %}" + choicesStr; // redirect
             return false;
         });
     {% endfor %}
@@ -70,12 +70,12 @@ $(function(){
             </h3>
             <p>
             {% if prev_poll != None %}
-                <a href="{% url 'polls:dependency' prev_poll.id %}">
+                <a href="{% url 'multipolls:dependency' prev_poll.id %}">
                     <span class="glyphicon glyphicon-arrow-left"></span>
                 </a>
             {% endif %}
             {% if next_poll != None %}
-                <a href="{% url 'polls:dependency' next_poll.id %}">
+                <a href="{% url 'multipolls:dependency' next_poll.id %}">
                     <span class="glyphicon glyphicon-arrow-right"></span>
                 </a>
             {% endif %} 

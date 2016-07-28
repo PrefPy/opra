@@ -8,7 +8,7 @@ $(function(){
                 choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&"; 
             {% endfor %}
 
-            window.location.href = "{% url 'polls:dependencyget' combination.id %}" + choicesStr; // redirect
+            window.location.href = "{% url 'multipolls:dependencyget' combination.id %}" + choicesStr; // redirect
             return false;
         });
     {% endfor %}
@@ -16,7 +16,7 @@ $(function(){
 </script>
 
 <div>
-    <form action="{% url 'polls:assignpreference' combination.id %}" method="post">
+    <form action="{% url 'multipolls:assignpreference' combination.id %}" method="post">
         {% csrf_token %}
         <div style="clear:both" class="col-md-12">
         {% for poll in combination.dependent_questions.all %}
@@ -62,7 +62,7 @@ $(function(){
                             Submit
                         </button>   
                     {% else %}
-                            <a href="{% url 'polls:dependencyview' question.id %}?order=null" class="btn btn-danger reset-button">Clear</a>
+                            <a href="{% url 'multipolls:dependencyview' question.id %}?order=null" class="btn btn-danger reset-button">Clear</a>
                             <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
                                 Submit
                             </button>
@@ -93,8 +93,8 @@ $(function(){
                 </div>
                 
                 {% if request.flavour == "mobile" %}
-                    <button onclick="javascript:window.location.href='{% url 'polls:dependencydetail' combination.id %}?order=null'; return false;" class="reset-button-mobile">
-                        <a href="{% url 'polls:dependencydetail' combination.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+                    <button onclick="javascript:window.location.href='{% url 'multipolls:dependencydetail' combination.id %}?order=null'; return false;" class="reset-button-mobile">
+                        <a href="{% url 'multipolls:dependencydetail' combination.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
                     </button>       
                 {% endif %}
             </div>

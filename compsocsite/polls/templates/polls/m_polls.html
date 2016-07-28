@@ -86,7 +86,7 @@
 
 									<td style="float:middle;"> 
                                         {% if question.status == 2 %} 
-                                            <a href="{% url 'polls:dependency' question.id %}" class ="btn btn-dark" style='float:middle;font-size=60%;'>Vote</a> 
+                                            <a href="{% url 'multipolls:dependency' question.id %}" class ="btn btn-dark" style='float:middle;font-size=60%;'>Vote</a> 
                                         {% endif %} 
                                     </td>
 									<td>
@@ -160,7 +160,7 @@
                                 </td>
                                 <td style="float:middle;"> 
                                     {% if question.status == 2 %} 
-                                        <a href="{% url 'polls:dependency' question.id %}" class ="btn btn-dark" style='float:middle'>Vote</a> 
+                                        <a href="{% url 'multipolls:dependency' question.id %}" class ="btn btn-dark" style='float:middle'>Vote</a> 
                                     {% endif %} 
                                 </td>
                                 <td>

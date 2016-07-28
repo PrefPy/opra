@@ -157,7 +157,8 @@
         .selector(':selected')
           .css({
             'border-width': 3,
-            'border-color': '#333'
+            'border-color': '#333',
+            'label': 'data(label)'
           })
         .selector('edge')
           .css({
@@ -183,7 +184,7 @@
         ],
         edges: [
          {% for row in wmg_edges %}
-                {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#6FB1FC', strength: {{ row.value }} * 10 + 50 } },
+                {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#6FB1FC', strength: {{ row.value }} * 10 + 50, label: '{{ row.value }}' } },
             {% endfor %}
         ]
       },

@@ -1,3 +1,5 @@
+{% load mathfilters %}
+
 <script>
 $(function(){
     // bind change event to select
@@ -8,7 +10,7 @@ $(function(){
                 choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&"; 
             {% endfor %}
 
-            window.location.href = "{% url 'polls:dependencyget' combination.id %}" + choicesStr; // redirect
+            window.location.href = "{% url 'multipolls:dependencyget' combination.id %}" + choicesStr; // redirect
             return false;
         });
     {% endfor %}
@@ -16,7 +18,7 @@ $(function(){
 </script>
 
 <div>
-    <form action="{% url 'polls:assignpreference' combination.id %}" method="post">
+    <form action="{% url 'multipolls:assignpreference' combination.id %}" method="post">
         {% csrf_token %}
         <div style="clear:both" class="col-md-12">
         {% for poll in combination.dependent_questions.all %}
@@ -62,11 +64,13 @@ $(function(){
                             Submit
                         </button>   
                     {% else %}
-                            <a href="{% url 'polls:dependencyview' question.id %}?order=null" class="btn btn-danger reset-button">Clear</a>
+                            <a href="{% url 'multipolls:dependencyview' question.id %}?order=null" class="btn btn-danger reset-button">Clear</a>
                             <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
                                 Submit
                             </button>
                     {% endif %}
+                    
+                    <input type="checkbox" name="default_pref"> Set as default preferences</input>
                     <input type="hidden" id="pref_order" name="pref_order" value=""/>
                 </div>
 
@@ -76,25 +80,36 @@ $(function(){
                             {% for selection in condition_responses %}
                                 {% for item in question.item_set.all %}
                                     {% if selection.0 == item %}
-                                    <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
-                                        {% if selection.0.image %}
-                                            <img class="item" src='/{{ selection.0.image.url }}'/>
-                                        {% endif %}
-                                        {% if item.imageURL != Null %}
-                                            <img class="item" src='{{ item.imageURL }}'/>
-                                        {% endif %}
-                                        {{ selection.0 }}
-                                    </li>
+                                    <ul class="choice1 empty" id="{{ selection.1|mul:2 }}"></ul>
+                                    <div class="tier">{{ selection.1 }}</div>
+                                    {% with prev=selection.1|mul:2 %}
+                                        <ul class="choice1" id="{{ prev|add:1 }}">
+                                    {% endwith %}
+                                        <li style="padding:10px;" id="item{{ item.item_text }}">
+                                            {% if selection.0.image %}
+                                                <img class="item" src='/{{ selection.0.image.url }}'/>
+                                            {% endif %}
+                                            {% if item.imageURL != Null %}
+                                                <img class="item" src='{{ item.imageURL }}'/>
+                                            {% endif %}
+                                            {{ selection.0 }}
+                                            {% if item.item_description %}
+                                                <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}"></span>
+                                            {% endif %}
+                                        </li>
+                                    </ul>
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
+                            {% with prev=selection.1|mul:2 %}
+                                <ul class="choice1 empty" id="{{ prev|add:2 }}"></ul>
+                            {% endwith %}
                         {% endif %}
-                    </ul>
+                    </ul> <!-- left-sortable-->
                 </div>
-                
                 {% if request.flavour == "mobile" %}
-                    <button onclick="javascript:window.location.href='{% url 'polls:dependencydetail' combination.id %}?order=null'; return false;" class="reset-button-mobile">
-                        <a href="{% url 'polls:dependencydetail' combination.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+                    <button onclick="javascript:window.location.href='{% url 'multipolls:dependencydetail' combination.id %}?order=null'; return false;" class="reset-button-mobile">
+                        <a href="{% url 'multipolls:dependencydetail' combination.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
                     </button>       
                 {% endif %}
             </div>
@@ -113,7 +128,7 @@ $(function(){
                     
                     {% if request.flavour == "mobile" %}
                         <button onclick="moveAll(); return false;" class="move-all-button-mobile">
-                    <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>
+                            <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>
                         </button>
                     {% else %}
                         <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
@@ -125,16 +140,21 @@ $(function(){
                     <ul id="right-sortable" class="list-group">
                         {% if condition_responses == None %}
                         {% for item in items %}
-                        <li class="list-group-item" onclick = "moveToPref(this)" id="item{{ item.item_text }}">
-                            {% if item.image %}
-                                <img class="item" src='/{{ item.image.url }}'/>
-                            {% endif %}
-                            {% if item.imageURL != Null %}
-                                <img class="item" src='{{ item.imageURL }}'/>
-                            {% endif %}
-                            {{ item.item_text }}
-                        </li>
+                            <ul class="choice1 empty"></ul>
+                            <div class="tier">{{ forloop.counter }}</div>
+                            <ul class="choice1" onclick = "moveToPref(this)">
+                                <li class="" id="item{{ item.item_text }}">
+                                    {% if item.image %}
+                                        <img class="item" src='/{{ item.image.url }}'/>
+                                    {% endif %}
+                                    {% if item.imageURL != Null %}
+                                        <img class="item" src='{{ item.imageURL }}'/>
+                                    {% endif %}
+                                    {{ item.item_text }}
+                                </li>
+                            </ul>
                         {% endfor %}
+                        <ul class="choice1 empty"></ul>
                         {% endif %}
                     </ul>
                 </div>

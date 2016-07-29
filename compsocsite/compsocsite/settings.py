@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'groups',
     'multipolls',
     'django_mobile',
+    'mathfilters',
 ]
 
 MIDDLEWARE_CLASSES = [

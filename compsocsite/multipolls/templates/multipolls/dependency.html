@@ -1,5 +1,4 @@
 {% extends 'polls/base.html' %}
-
 {% block extra_head %}
 <script src="http://js.cytoscape.org/js/cytoscape.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -9,6 +8,7 @@
     <script src='/static/js/mobile.js'></script>
 {% else %}
     <script src='/static/js/desktop.js'></script>
+    <script src='/static/js/voteWithTies.js'></script>
 {% endif %}
 
 <style type="text/css">
@@ -17,6 +17,8 @@
     height: 125px;
     border: 1px solid lightgray;
 }   
+     
+ul.empty { background-color:black; height: 10px; }
 </style>
 <script>
 function check()
@@ -28,7 +30,7 @@ function check()
         {% endif %}
     {% endfor %}
     
-    window.location.href = "{% url 'polls:updatePrefGraph' question.id %}" + choicesStr; // redirect
+    window.location.href = "{% url 'multipolls:updatePrefGraph' question.id %}" + choicesStr; // redirect
     return false;
 }
          
@@ -41,7 +43,7 @@ $(function(){
                 choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&"; 
             {% endfor %}
 
-            window.location.href = "{% url 'polls:dependencyget' combination.id %}" + choicesStr; // redirect
+            window.location.href = "{% url 'multipolls:dependencyget' combination.id %}" + choicesStr; // redirect
             return false;
         });
     {% endfor %}
@@ -66,7 +68,21 @@ $(function(){
 		{% endif %}
 		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
 			<h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
-				{{ question.question_text }}:</h3>
+				{{ question.question_text }}:    
+            </h3>
+            <p>
+            {% if prev_poll != None %}
+                <a href="{% url 'multipolls:dependency' prev_poll.id %}">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                </a>
+            {% endif %}
+            {% if next_poll != None %}
+                <a href="{% url 'multipolls:dependency' next_poll.id %}">
+                    <span class="glyphicon glyphicon-arrow-right"></span>
+                </a>
+            {% endif %} 
+            </p>
+
             <small class="text-muted">Created by {{ question.question_owner }}</small>
 			
 			{% if question.question_desc %}
@@ -82,8 +98,8 @@ $(function(){
         
 <div class="row">
     <div class="col-md-6">
-        <h4 align="center">Your preferences for {{question.question_text}} depends on:</h4>
         <div align="center">
+            <p>Your preferences for {{question.question_text}} depends on:</p>
         {% for poll in question.multipoll_set.all.0.questions.all %}
             {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
             <label class="checkbox-inline">
@@ -101,6 +117,7 @@ $(function(){
             {% endif %}
         {% endfor %}
         </div>
+        
     </div>
     <div class="col-md-6">
         <div style="left: 50%;">
@@ -108,10 +125,10 @@ $(function(){
         </div>
     </div>
 </div>
-<br />    
+<br /> 
 </div>
 
-{% include 'polls/dependencydetail.html' %}
+{% include 'multipolls/dependencydetail.html' %}
 
 <script>
     var cy = cytoscape({
@@ -124,6 +141,7 @@ $(function(){
       style: cytoscape.stylesheet()
         .selector('node')
           .css({
+            'shape': 'data(faveShape)',
             'width': 'mapData(weight, 40, 80, 20, 60)',
             'content': 'data(name)',
             'text-valign': 'center',
@@ -146,6 +164,10 @@ $(function(){
             'line-color': 'data(faveColor)',
             'target-arrow-color': 'data(faveColor)'
           })
+        .selector('edge.dotted')
+          .css({
+            'line-style': 'dotted'
+          })
         .selector('.faded')
           .css({
             'opacity': 0.25,
@@ -156,12 +178,12 @@ $(function(){
       elements: {
         nodes: [
          {% for row in pref_nodes %}
-            {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 10, faveColor: '#6FB1FC' } },
+            {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 10, faveColor: '#6FB1FC', faveShape: {% if row.id == question.id %}'rectangle'{% else %}'ellipse'{% endif %} } },
         {% endfor %}
         ],
         edges: [
          {% for row in pref_edges %}
-            {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#6FB1FC', strength: 50 } },
+            {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#6FB1FC', strength: 50 }, {% if row.to != question.id %}classes: 'dotted'{% endif %} },
         {% endfor %}
         ]
       },

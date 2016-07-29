@@ -106,20 +106,6 @@ class AllocationVoter(models.Model):
     response = models.ForeignKey(Response, on_delete=models.CASCADE, null=True)
     def __str__(self):
         return "User " + self.user.username + " assigned to " + self.question.question_text 
-    
-# a poll can have multiple dependent polls (must be part of the same multipoll)
-class Combination(models.Model):
-    target_question = models.ForeignKey(Question)
-    dependent_questions = models.ManyToManyField(Question, related_name="dependent_questions")
-    user = models.ForeignKey(User)
-    dependencies = models.ManyToManyField(Item)
-    response = models.OneToOneField(Response,null=True, blank=True)
-
-# link the choices for the dependent polls to a response
-class ConditionalItem(models.Model):
-    combination = models.ForeignKey(Combination)
-    items = models.ManyToManyField(Item)
-    response = models.OneToOneField(Response, null=True, blank=True)
 
 # Dictionary Helper Models - from https://djangosnippets.org/snippets/2451/
 # Models include modifications to be used specifically for holding student preferences - these changes are marked with comments

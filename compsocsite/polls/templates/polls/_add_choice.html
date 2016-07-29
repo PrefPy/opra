@@ -1,7 +1,7 @@
 
 
 
-<ul class="list-group">
+<ul class="list-group" id="choicesetting">
     <form id="choiceform"  action="{% url 'polls:editchoice' question.id %}" method="post">
         {% csrf_token %}
     {% for item in items %}
@@ -47,18 +47,12 @@
                         <br />
                         </div>
                     </div>
-                        {% if item.image %}
-                        <img class="item" src='/{{ item.image.url }}'/>
-                        {% endif %}
-                        {% if item.imageURL != Null %}
-                        <img class="item" src='{{ item.imageURL }}'/>
-                        {% endif %}
 						{% if question.status == 1 %}
                         <div class="row">
                             <div class="form-group col-xs-1">
                             </div>
                         <div class="form-group col-xs-9">
-                        <input type="text" class="form-control" name="imageURL{{item.id}}" value="{% if item.imageURL %}{{item.imageURL}}{% endif %}" size="50" placeholder="Paste Image URL"/>
+                        <input type="text" class="form-control auto_submit" name="imageURL{{item.id}}" value="{% if item.imageURL %}{{item.imageURL}}{% endif %}" size="50" placeholder="Paste Image URL"/>
                         </div>
                         <div class="form-group col-xs-2">
                         <label for="image{{item.id}}" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
@@ -97,18 +91,18 @@
 <script>
         $(".auto_submit").each(function(){
             $(this).change(function(){
-                this.form.submit(function(event){
-				event.preventDefault();
-				var url = $(location).attr('href');
-				$.ajax({
-					type:'post',
-					url:url,
-					data: $('#choiceform').serialize(),
-					success: function(event){
-						$('ul').load(location.href + " ul");
-					}
-				});
-			});
+                $("#choiceform").submit();
 					});
 				});
+        $("#choiceform").submit(function(event){
+                event.preventDefault();
+                $.ajax({
+                    type:'post',
+                    url:'{% url 'polls:editchoice' question.id %}',
+                    data: $('#choiceform').serialize(),
+                    success: function(event){
+                        $("#choicesetting").load();
+                    }
+                });
+            });
 </script>

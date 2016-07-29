@@ -242,10 +242,12 @@ class MechanismVeto(MechanismPosScoring):
         :ivar Profile profile: A Profile object that represents an election profile.
         """
 
+        numTiers = len(set(profile.getRankMaps()[0].values()))
         scoringVector = []
-        for i in range(0, profile.numCands-1):
+        for i in range(0, numTiers - 1):
             scoringVector.append(1)
-        scoringVector.append(0)
+        for i in range(numTiers - 1, profile.numCands):
+            scoringVector.append(0)
         return scoringVector
 
 class MechanismBorda(MechanismPosScoring):

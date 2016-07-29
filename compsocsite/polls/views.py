@@ -378,7 +378,13 @@ def isPrefReset(request):
 def getCurrentSelection(responses):
     mostRecentResponse = responses[0]
     responseDict = mostRecentResponse.dictionary_set.all()[0]
-    return responseDict.sorted_values()    
+    rd = responseDict.sorted_values() 
+    array = []
+    for itr in range(len(rd)):
+        array.append([]);
+        array[rd[itr][1] - 1].append(rd[itr])
+    print(array)
+    return array
 
 # view for question detail
 class DetailView(generic.DetailView):

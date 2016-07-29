@@ -1,6 +1,6 @@
 //  Helper JavaScript created for the voting page (detail.html)
 
-$(function() {
+$( document ).ready(function() {
     // Google Analytics
     // -----------------------------------------------------------------------
 //     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -55,6 +55,7 @@ $(function() {
     $('.hide1').mouseover(function(){
         $('.ept',this).show();
     });
+    checkStyle();
 
 function enableSubmission() {
     $('#submitbutton').css("display", "inline");

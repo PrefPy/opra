@@ -201,6 +201,6 @@ div{
     min-width: 15px; 
 }
 .tier { 
-    width: 20px; 
-    display: inline; 
+    float:left;
+    font-weight: bold;
 }

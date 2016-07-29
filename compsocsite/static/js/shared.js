@@ -9,7 +9,6 @@ function submitPref() {
             order += "|,";
         }
     });
-    alert(order);
 	$('#pref_order').val(order);
 	$('#pref_order').submit();
 };

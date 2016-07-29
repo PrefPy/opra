@@ -13,7 +13,6 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
-from multipolls.models import *
 
 class IndexView(generic.ListView):
     template_name = 'groups/index.html'
@@ -120,19 +119,4 @@ def removegroupvoters(request, question_id):
                     if voter in question.question_voters.all():
                         voterObj = User.objects.get(username=voter)
                         question.question_voters.remove(voterObj.id)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
-def addgroupvoterstompoll(request, multipoll_id):
-    multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
-    newGroups = request.POST.getlist('groups')
-    for group in newGroups:
-        for cur in Group.objects.all():
-            if cur.owner == request.user and cur.name == group:
-                groupObj = cur
-                for voter in groupObj.members.all():
-                    if voter not in multipoll.voters.all():
-                        voterObj = User.objects.get(username=voter)
-                        multipoll.voters.add(voterObj.id)
-                        for question in multipoll.questions.all():
-                            question.question_voters.add(voterObj.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

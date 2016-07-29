@@ -11,8 +11,10 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/add_step3/$', views.AddStep3View.as_view(), name='AddStep3'),
     url(r'^(?P<multipoll_id>[0-9]+)/initial/$', views.setInitialSettings, name='setinitial'), 
     url(r'^(?P<pk>[0-9]+)/setvoters/$', views.SetVotersView.as_view(), name='SetVoters'),
-    url(r'^(?P<multipoll_id>[0-9]+)/addvoter/$', views.addVoter, name='addvoter'),
-    url(r'^(?P<multipoll_id>[0-9]+)/delvoter/$', views.removeVoter, name='delvoter'),
+    url(r'^(?P<multipoll_id>[0-9]+)/voter/add$', views.addVoter, name='addvoter'),
+    url(r'^(?P<multipoll_id>[0-9]+)/voter/delete$', views.removeVoter, name='delvoter'),
+    url(r'^(?P<multipoll_id>[0-9]+)/voter/add/group/$', views.addGroupVoters, name='addGroupVoters'),      
+    url(r'^(?P<multipoll_id>[0-9]+)/voter/delete/group/$', views.removeGroupVoters, name='removeGroupVoters'),      
     
     # settings
     url(r'^(?P<pk>[0-9]+)/mpollinfo/$', views.mpollinfoView.as_view(), name='mpollinfo'), 

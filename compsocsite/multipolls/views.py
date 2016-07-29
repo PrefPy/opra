@@ -103,6 +103,7 @@ def setInitialSettings(request, multipoll_id):
         print("asd")
         return HttpResponseRedirect('/multipolls/%s/add_step2' % multipoll.id)
 
+# remove a single voter from all subpolls
 def removeVoter(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
     newVoters = request.POST.getlist('voters')
@@ -113,6 +114,7 @@ def removeVoter(request, multipoll_id):
             question.question_voters.remove(voterObj.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
+# add a single voter to all subpolls
 def addVoter(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
     newVoters = request.POST.getlist('voters')
@@ -122,7 +124,39 @@ def addVoter(request, multipoll_id):
         for question in multipoll.questions.all():
             question.question_voters.add(voterObj.id)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
+# add everyone in the group to all subpolls
+def addGroupVoters(request, multipoll_id):
+    multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
+    newGroups = request.POST.getlist('groups')
+    for group in newGroups:
+        for cur in Group.objects.all():
+            if cur.owner == request.user and cur.name == group:
+                groupObj = cur
+                for voter in groupObj.members.all():
+                    if voter not in multipoll.voters.all():
+                        voterObj = User.objects.get(username=voter)
+                        multipoll.voters.add(voterObj.id)
+                        for question in multipoll.questions.all():
+                            question.question_voters.add(voterObj.id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# remove everyone in the group from all multipoll
+def removeGroupVoters(request, multipoll_id):
+    multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
+    newGroups = request.POST.getlist('groups')
+    for group in newGroups:
+        for cur in Group.objects.all():
+            if cur.owner == request.user and cur.name == group:
+                groupObj = cur
+                for voter in groupObj.members.all():
+                    if voter in multipoll.voters.all():
+                        voterObj = User.objects.get(username=voter)
+                        multipoll.voters.remove(voterObj.id)
+                        for question in multipoll.questions.all():
+                            question.question_voters.remove(voterObj.id)                    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 def start(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
     multipoll.status = 1

@@ -12,6 +12,5 @@ urlpatterns = [
     url(r'^(?P<group_id>[0-9]+)/members/add/$', views.addmember, name='addmember'),    
     url(r'^(?P<group_id>[0-9]+)/members/remove/$', views.removemember, name='removemember'),
     url(r'^(?P<question_id>[0-9]+)/addgroupvoters/$', views.addgroupvoters, name='addgroupvoters'),    
-    url(r'^(?P<question_id>[0-9]+)/removegroupvoters/$', views.removegroupvoters, name='removegroupvoters'),
-    url(r'^(?P<multipoll_id>[0-9]+)/addgroupvoterstompoll/$', views.addgroupvoterstompoll, name='addgroupvoterstompoll'),    
+    url(r'^(?P<question_id>[0-9]+)/removegroupvoters/$', views.removegroupvoters, name='removegroupvoters'),  
 ]

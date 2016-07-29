@@ -105,30 +105,40 @@ function enableSubmission() {
            
         change: function(event, ui) {  
             if(ui.sender){
-                newList = ui.placeholder.parent();
-                var newListId = parseInt($( newList ).attr("id"));
-                var oldListId = parseInt($( oldList ).attr("id"));
+                //variables
+                newList = ui.placeholder.parent(); //the list the item is hovering over
+                var newListId = parseInt($( newList ).attr("id")); //the id of the list
+                var oldListId = parseInt($( oldList ).attr("id")); //the id of the old list
                 var listId;
-                $( "#" + (oldListId + 1).toString() ).addClass("line");
-                $( "#" + (oldListId - 1).toString() ).addClass("line");
+                var prevEmpty = false;
+
+
+                // if( !(oldListId == 1 && $(oldList).children().size() > 1) ){
+                //     $( "#" + (oldListId - 1).toString() ).addClass("line");
+                // }
+                // $( "#" + (oldListId + 1).toString() ).addClass("line");
                 newItem = "<ul class=\"choice1 empty line\"></ul>";
                 var tier = 1;
-                prevEmpty = false;
-                $( ".tier" ).each(function( index ) {
-                    $( this ).remove();
-                });
-                $( ".line" ).each(function( index ) {
-                    $( this ).remove();
-                });
+
+                $( ".tier" ).each(function( index ) { $( this ).remove(); }); //get rid of the tier divs
+                $( ".line" ).each(function( index ) { $( this ).remove(); }); //get rid of placeholder uls
+
+                //go through each list
                 $( ".choice1" ).each(function( index ) {
                     listId = parseInt($( this ).attr("id"));
-                    if( $( this ).children().size() < 1 || (listId == oldListId && listId != newListId && $( oldList ).children().size() == 1)){
+                    if( $( this ).children().size() < 1 ){
                         $( this ).addClass('empty');
+                        if(prevEmpty){
+                            //$( this ).remove();
+                        }else{ prevEmpty = true; }
+                    }else if((listId == oldListId && listId != newListId
+                        && $( oldList ).children().size() == 1)){
+                        $( this ).css("height", "0");
                     }else{
                         if( $( this ).attr('class').indexOf('empty')>-1 ){
-                            $( this ).before(newItem);
-                            $( this ).after(newItem);
                             $( this ).removeClass('empty');
+                            $( this ).after(newItem);
+                            $( this ).before(newItem);
                         }
                         if( $( this ).children().size() < 2 ){
                             $( this ).children().css( "width", "85%" );
@@ -137,6 +147,7 @@ function enableSubmission() {
                         }
                         $( this ).before("<div class=\"tier\">" + tier + "</div>");
                         tier += 1;
+                        prevEmpty = true;
                     }
                 });
                 if( $(newList).children().size() > 1 ){ $( ui.item ).css("width", "40%"); }

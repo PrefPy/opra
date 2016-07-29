@@ -31,10 +31,10 @@
         <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
         
         <label for="questiontype">Question Type:</label> <br />
-        <select name="questiontype" class="form-control" style='font-size:100%'>
-            <option value="1">Poll</option>
-            <option value="2">Allocation</option>
-        </select>
+        <div class="form-control">
+            <input type="radio" name="questiontype" value="1" checked>Poll</option>
+            <input type="radio" name="questiontype" value="2">Allocation</option>
+        </div>
         
         <label for="imageURL">Image:</label> <br />
         <input type="text" class="form-control input-sm" id="imageURL" name="imageURL" value="" />

@@ -975,9 +975,16 @@ def getPrefOrder(orderStr, question):
     if orderStr == "":
         return None
     
-    prefOrder = orderStr.split(",")
+    current_array = orderStr.split(",|,")
+    prefOrder = []
+    length = 0
+    for item in current_array:
+        if item != "":
+            curr = item.split(",")
+            prefOrder.append(curr)
+            length += len(curr)
     # the user hasn't ranked all the preferences yet
-    if len(prefOrder) != len(question.item_set.all()):
+    if length != len(question.item_set.all()):
         return None
     
     return prefOrder
@@ -1001,19 +1008,25 @@ def vote(request, question_id):
     response.save()
     d = response.dictionary_set.create(name = response.user.username + " Preferences")
 
-    # find ranking student gave for each item under the question
+    # find ranking user gave for each item under the question
     item_num = 1
     for item in question.item_set.all():
-        arrayIndex = prefOrder.index("item" + str(item))
+        rank = 1
+        for l in prefOrder:
+            string = "item" + str(item)
+            if string in l:
+                d[item] = rank
+                break
+            rank += 1
         
-        if arrayIndex == -1:
-            # set value to lowest possible rank
-            d[item] = question.item_set.all().count()
-        else:
-            # add 1 to array index, since rank starts at 1
-            rank = (prefOrder.index("item" + str(item))) + 1
-            # add pref to response dict
-            d[item] = rank
+        # if arrayIndex == -1:
+        #     # set value to lowest possible rank
+        #     d[item] = question.item_set.all().count()
+        # else:
+        #     # add 1 to array index, since rank starts at 1
+        #     rank = (prefOrder.index("item" + str(item))) + 1
+        #     # add pref to response dict
+        #     d[item] = rank
         d.save()
         item_num += 1
 

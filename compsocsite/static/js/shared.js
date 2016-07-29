@@ -1,14 +1,16 @@
 function submitPref() {
 	var prefcolumn = $('#left-sortable');
-	var order = [];
+	var order = "";
     prefcolumn.children().each(function( index ){
         if( $( this ).children().size() > 0 ){
             $( this ).children().each(function( index ){
-                order.push($( this ).attr('id'));
+                order += $( this ).attr('id') + ",";
             });
+            order += "|,";
         }
     });
-	$('#pref_order').val(order.join(","));
+    alert(order);
+	$('#pref_order').val(order);
 	$('#pref_order').submit();
 };
 

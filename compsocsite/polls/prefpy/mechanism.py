@@ -109,9 +109,9 @@ class MechanismPosScoring(Mechanism):
         :ivar Profile profile: A Profile object that represents an election profile.
         """
 
-        # Currently, we expect the profile to contain strict complete ordering over candidates.
+        # Currently, we expect the profile to contain complete ordering over candidates.
         elecType = profile.getElecType()
-        if elecType != "soc":
+        if elecType != "soc" and elecType != "toc":
             print("ERROR: unsupported election type")
             exit()
 
@@ -143,7 +143,7 @@ class MechanismPosScoring(Mechanism):
 
         # Currently, we expect the profile to contain strict complete ordering over candidates.
         elecType = profile.getElecType()
-        if elecType != "soc":
+        if elecType != "soc" and elecType != "toc":
             print("ERROR: unsupported election type")
             exit()
 
@@ -317,7 +317,7 @@ class MechanismSimplifiedBucklin(Mechanism):
 
         # Currently, we expect the profile to contain strict complete ordering over candidates.
         elecType = profile.getElecType()
-        if elecType != "soc":
+        if elecType != "soc" and elecType != "toc":
             print("ERROR: unsupported profile type")
             exit()
         
@@ -351,7 +351,7 @@ class MechanismSimplifiedBucklin(Mechanism):
 
         # Currently, we expect the profile to contain strict complete ordering over candidates.
         elecType = profile.getElecType()
-        if elecType != "soc":
+        if elecType != "soc" and elecType != "toc":
             print("ERROR: unsupported profile type")
             exit()
         

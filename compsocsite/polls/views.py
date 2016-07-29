@@ -749,7 +749,6 @@ def getMarginOfVictory(latest_responses):
     #make sure no incomplete results are in the votes
     if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
         return []
-    print(MechanismPlurality().getMov(pollProfile))
     marginList = []
     marginList.append(MechanismPlurality().getMov(pollProfile))  
     marginList.append(MechanismBorda().getMov(pollProfile))

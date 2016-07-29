@@ -95,12 +95,10 @@ def setInitialSettings(request, multipoll_id):
     if multipoll.pos == temp:
         multipoll.pos = 0
         multipoll.save()
-        print("qwe")
         return HttpResponseRedirect('/multipolls/%s/setvoters' % multipoll.id)
     else:
         multipoll.pos += 1
         multipoll.save()
-        print("asd")
         return HttpResponseRedirect('/multipolls/%s/add_step2' % multipoll.id)
 
 # remove a single voter from all subpolls
@@ -305,10 +303,8 @@ def editBasicInfo(request, multipoll_id):
 # check whether this poll is the first one in a multipoll
 def dependencyRedirect(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    if question.multipollquestion_set.all()[0].order == question.multipoll_set.all()[0].status-1:
-        return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
-    else:
-        return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(question.id,)))
+
+    return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(question.id,)))
 
 # display the dependent polls selected 
 # allow the user to vote on this poll given the preferences for the previous dependent polls
@@ -357,31 +353,11 @@ class DependencyView(generic.DetailView):
 
         # if the user has responded to this question, then load the response
         conditionalSet = combination.conditionalitem_set.all()
-        colorsArray = []
-        # iterate through all the polls
-        for poll in combination.dependent_questions.all():
-            colorRow = []
-            # iterate through all the choices in a poll
-            for item in poll.item_set.all():
-                found = False
-                # check if that choice has been used in a conditional preference
-                for condition in conditionalSet:
-                    if item in condition.items.all():
-                        found = True
-                        
-                greenColor = "#3CB371"
-                redColor = "#FA8072"
-                if found == True:
-                    colorRow.append(greenColor)
-                else:
-                    colorRow.append(redColor)
-            colorsArray.append(colorRow)
-        ctx["colorArray"] = colorsArray
+        ctx["colorArray"] = getConditionColor(combination)
 
         # check if the condition already exists
         if len(conditionalSet) > 0 and conditionIndex > -1 and conditionIndex < len(conditionalSet) and conditionalSet[conditionIndex].response != None:
             selectedCondition = conditionalSet[conditionIndex]
-            print ("condition index: ", conditionIndex)
             ctx["condition_items"] = list(selectedCondition.items.all())
             ctx["condition_responses"] = getCurrentSelection(selectedCondition.response)  
         else:
@@ -402,9 +378,34 @@ class DependencyView(generic.DetailView):
             defaultResponse = getConditionFromResponse([], combination).response
             if defaultResponse != None:
                 ctx["condition_responses"] = getCurrentSelection(defaultResponse)
-            print ("default respones: ", defaultResponse)
         ctx['items'] = self.get_order(ctx)        
         return ctx
+
+# color the conditions so that you know which conditions have preferences submitted
+def getConditionColor(combination):
+    colorsArray = []
+    greenColor = "#3CB371"
+    redColor = "#FA8072"    
+
+    conditionalSet = combination.conditionalitem_set.all()
+    
+    # iterate through all the polls
+    for poll in combination.dependent_questions.all():
+        colorRow = []
+        # iterate through all the choices in a poll
+        for item in poll.item_set.all():
+            found = False
+            # check if that choice has been used in a conditional preference
+            for condition in conditionalSet:
+                if item in condition.items.all():
+                    found = True
+
+            if found == True:
+                colorRow.append(greenColor)
+            else:
+                colorRow.append(redColor)
+        colorsArray.append(colorRow)
+    return colorsArray
 
 # choose a dependent poll
 def chooseDependency(request, question_id):
@@ -458,6 +459,9 @@ def assignPreference(request, combination_id):
     response.save()
     condition.response = response
     condition.save()
+    
+    # update response dictionary
+    buildResponseDict(response, question, prefOrder)    
 
     # set default pref
     if "default_pref" in request.POST:
@@ -473,8 +477,6 @@ def assignPreference(request, combination_id):
         
         defaultCondition.response = response
         defaultCondition.save()
-    
-    buildResponseDict(response, question, prefOrder)
     
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')        
@@ -569,5 +571,4 @@ def getConditionalResponse(request, combination_id):
         request.session["poll" + str(poll.id)] = request.GET["poll" + str(poll.id)]
 
     # set a parameter to the condition index, so that the response to that conditon will be preloaded
-    return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(combination.target_question.id,)))  
-    
+    return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(combination.target_question.id,)))

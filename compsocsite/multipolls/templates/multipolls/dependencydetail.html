@@ -52,34 +52,37 @@ $(function(){
         <div class="col-md-6 margin-panel-top">
         {% endif %}
         
-            <div class="panel panel-default panel-border">
-                <div class="panel-heading" >
-                    <b>Your preferences:</b>
-                    {% if request.flavour == "mobile" %}
-                        <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-                            <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-                        </button>
-                        
-                        <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
-                            Submit
-                        </button>   
-                    {% else %}
-                            <a href="{% url 'multipolls:dependencyview' question.id %}?order=null" class="btn btn-danger reset-button">Clear</a>
-                            <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
-                                Submit
-                            </button>
-                    {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-heading" >
+                <b>Your preferences:</b>
+                {% if request.flavour == "mobile" %}
+                    <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+                        <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+                    </button>
+                    <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right;">
+                        Submit
+                    </button>
+                {% else %}
+                    <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background">
+                        Clear
+                    </a>
+                    <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
+                        Submit
+                    </button>
+                {% endif %}
+                <input type="hidden" id="pref_order" name="pref_order" value=""/>
+            </div>
+      
                     
-                    <input type="checkbox" name="default_pref"> Set as default preferences</input>
-                    <input type="hidden" id="pref_order" name="pref_order" value=""/>
-                </div>
+            <div class="panel-body" >
 
-                <div class="panel-body" >
-                    <ul id="left-sortable" class="list-group droptrue">
-                        {% if condition_responses %}
-                            {% for selection in condition_responses %}
-                                {% for item in question.item_set.all %}
-                                    {% if selection.0 == item %}
+                <ul id="left-sortable" >
+                    {% if currentSelection %}
+                    
+                        {% for selection in currentSelection %}
+                            {% for item in question.item_set.all %}
+
+                                {% if selection.0 == item %}
                                     <ul class="choice1 empty" id="{{ selection.1|mul:2 }}"></ul>
                                     <div class="tier">{{ selection.1 }}</div>
                                     {% with prev=selection.1|mul:2 %}
@@ -92,27 +95,30 @@ $(function(){
                                             {% if item.imageURL != Null %}
                                                 <img class="item" src='{{ item.imageURL }}'/>
                                             {% endif %}
+
                                             {{ selection.0 }}
                                             {% if item.item_description %}
                                                 <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}"></span>
                                             {% endif %}
                                         </li>
                                     </ul>
-                                    {% endif %}
-                                {% endfor %}
+
+                                {% endif %}
+
                             {% endfor %}
-                            {% with prev=selection.1|mul:2 %}
-                                <ul class="choice1 empty" id="{{ prev|add:2 }}"></ul>
-                            {% endwith %}
-                        {% endif %}
-                    </ul> <!-- left-sortable-->
-                </div>
-                {% if request.flavour == "mobile" %}
-                    <button onclick="javascript:window.location.href='{% url 'multipolls:dependencydetail' combination.id %}?order=null'; return false;" class="reset-button-mobile">
-                        <a href="{% url 'multipolls:dependencydetail' combination.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
-                    </button>       
-                {% endif %}
+                        {% endfor %}
+                        {% with prev=selection.1|mul:2 %}
+                            <ul class="choice1 empty" id="{{ prev|add:2 }}"></ul>
+                        {% endwith %}
+                    {% endif %}
+                </ul> <!-- left-sortable-->
             </div>
+            {% if request.flavour == "mobile" %}
+                <button onclick="javascript:window.location.href='{% url 'polls:detail' question.id %}?order=null'; return false;" class="reset-button-mobile">
+                    <a href="{% url 'polls:detail' question.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+                </button>
+            {% endif %}
+        </div>
         </div>
 
 

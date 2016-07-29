@@ -3,42 +3,42 @@
 $(function() {
     // Google Analytics
     // -----------------------------------------------------------------------
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+//     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+//     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+//     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+//     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-81006265-1', 'none');
- //ga('create', 'UA-81006265-1', 'none','DetailTracker');
-    ga('send', 'pageview');
- ga('send', 'event', 'Button', 'click', 'left-sortable');
- //ga('DetailTracker.send', 'pageview');
-ga(function(tracker) {
-    // Logs the tracker created above to the console.
-    console.log(tracker);
-});
-        var form=document.getElementById('left-sortable');
-        form.addEventListener('submit', function(event) {
+//     ga('create', 'UA-81006265-1', 'none');
+//  //ga('create', 'UA-81006265-1', 'none','DetailTracker');
+//     ga('send', 'pageview');
+//  ga('send', 'event', 'Button', 'click', 'left-sortable');
+//  //ga('DetailTracker.send', 'pageview');
+// ga(function(tracker) {
+//     // Logs the tracker created above to the console.
+//     console.log(tracker);
+// });
+//         var form=document.getElementById('left-sortable');
+//         form.addEventListener('submit', function(event) {
 
-    // Prevents the browser from submiting the form
-    // and thus unloading the current page.
-    event.preventDefault();
+//     // Prevents the browser from submiting the form
+//     // and thus unloading the current page.
+//     event.preventDefault();
 
-    // Sends the event to Google Analytics and
-    // resubmits the form once the hit is done.
-    ga('send', 'event', 'Left Form', 'submit', {
-        hitCallback: function() {
-            form.submit();
-        }
-    });
-});
-    // -----------------------------------------------------------------------
-    // Google Tag Manager
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-59SLDM');
+//     // Sends the event to Google Analytics and
+//     // resubmits the form once the hit is done.
+//     ga('send', 'event', 'Left Form', 'submit', {
+//         hitCallback: function() {
+//             form.submit();
+//         }
+//     });
+// });
+//     // -----------------------------------------------------------------------
+//     // Google Tag Manager
+// (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+// new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+// j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+// '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+// })(window,document,'script','dataLayer','GTM-59SLDM');
     // -----------------------------------------------------------------------
 
 

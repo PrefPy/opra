@@ -15,7 +15,7 @@ function submitPref() {
 };
 
 function enableSubmission() {
-	$('#submitbutton').css("display", "inline");
+	document.getElementById('submitbutton').disabled = false;
 }
 
 function checkStyle(){

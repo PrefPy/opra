@@ -121,14 +121,14 @@
                         <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
                             <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
                         </button>
-                        <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
+                        <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right;">
                             Submit
                         </button>
                     {% else %}
                         <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background">
                             Clear
                         </a>
-                        <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
+                        <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
                             Submit
                         </button>
                     {% endif %}

@@ -1,0 +1,171 @@
+{% extends 'polls/base.html' %}
+{% load mathfilters %}
+{% load staticfiles %}
+{% block extra_head %}
+    <!-- Google Tag Manager -->
+    <noscript>
+        <iframe src="//www.googletagmanager.com/ns.html?id=GTM-59SLDM" height="0" width="0" style="display:none;visibility:hidden">
+        </iframe>
+    </noscript>
+    <!-- End Google Tag Manager -->
+
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src='/static/js/shared.js'></script>
+    <script src='/static/js/intro.js'></script>
+    {% if request.flavour == "mobile" %}
+        <script src='/static/js/mobile.js'></script>
+    {% else %}
+        <script src='/static/js/desktop.js'></script>
+        <script src='/static/js/voteWithTies.js'></script>
+    {% endif %}
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/introjs.css' %}"/>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip(); 
+        });
+    </script>
+    <style>        
+        ul.empty { background-color:black; height: 10px; }
+    </style>
+
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    
+
+
+{% endblock %}
+
+{% block content %}
+<br/><br/><br/>
+<div class="container">
+
+    {% if request.flavour == "mobile"%}
+    <br />
+    <br />
+    <br />
+    <br />
+    {% endif %}
+
+   
+        <div class="text-center">
+        <a class="btn btn-lg btn-success" href="javascript:void(0);" onclick="javascript:introJs().setOption('showProgress', true).start();">Start the Tutorial</a>
+        </div>
+    <hr class="small"/>
+        <div class="grid">
+            <div class="row">
+                <div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
+                    <h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
+                        Demo:
+                    </h3>
+                    <small class="text-muted">Created by OPRA</small>
+           
+                        <h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
+                            This is the voting page demo from OPRA.
+                        </h3>
+ 
+                </div>
+            </div>
+        </div>
+
+
+
+        <form {% if request.user.username == "" %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
+        	<div class="row">
+
+            {% csrf_token %}
+     
+            {% if request.flavour == "mobile" %}
+                <div class="col-md-6 margin-panel-top">
+            {% else %}
+                <div class="col-md-6 margin-panel-top">
+            {% endif %}
+                     
+            <div class="panel panel-default" data-step="3" data-intro="After you click, options will jump to this box. And then you can drag them to change the original ranking or have ties.">
+                <div class="panel-heading" >
+                    <b>Your preferences:</b>
+                    {% if request.flavour == "mobile" %}
+                        <button id="submitbutton" type="submit"  class="submit-button-mobile" >
+                            <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+                        </button>
+                        <button id="submitbutton" type="submit"  class="btn btn-success" style ="float: right; display: none;">
+                            Submit
+                        </button>
+                    {% else %}
+                        <a href="#" class="btn btn-danger reset-button" style="background">
+                            Clear
+                        </a>
+                        <button id="submitbutton" type="submit" class="btn btn-success submit-button">
+                            Submit
+                        </button>
+                    {% endif %}
+                    <input type="hidden" id="pref_order" name="pref_order" value=""/>
+                </div>
+          
+                        
+                <div class="panel-body" >
+                    <ul id="left-sortable" >
+                        
+                        <li style="padding:10px;" id="item1">
+                            Option1
+                        </li>
+                        <li style="padding:10px;" id="item2">
+                            Option2
+                        </li>
+                  
+                    </ul> <!-- left-sortable-->
+                    
+                </div>
+                {% if request.flavour == "mobile" %}
+                    <button  class="reset-button-mobile">
+                        <a href="#" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        {% if request.flavour == "mobile" %}
+            <div class="col-md-6 margin-panel-top">
+                    {% else %}
+                        <div class="col-md-6 margin-panel-top">
+                    {% endif %}
+                    <div class="panel panel-default" data-step="1" data-intro="Here are all options creator set for this poll. They will jump to the left when you click.">
+                        <div class="panel-heading">
+                            <b>Remaining Options:</b>
+                            {% if request.flavour == "mobile" %}
+                                <button class="move-all-button-mobile">
+                                    <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">
+                                        All
+                                    </span>
+                                </button>
+                            {% else %}
+                                <button class="btn btn-primary move-all-button" data-step="2" data-intro="Clikc Move All, and then the remaining options will move to left in default rank.">
+                                    Move All
+                                </button>
+                            {% endif %}
+                        </div>
+                        <div class="panel-body">
+                            <ul id="right-sortable" class="list-group">
+                                <li> Option3</li>
+                                <li> Option4</li>
+        					</ul>
+        				</div>
+        			</div>
+        		</div>
+        	
+        	</div>
+        	<div data-step="4" data-intro="You can enter your coments about this poll here.">
+        		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">Your last comment will be shown here.</textarea>
+        	</div>
+        </form>
+        
+        <p>
+            <br />
+            <br />
+        </p>
+ 
+    
+    </div>
+{% endblock %}

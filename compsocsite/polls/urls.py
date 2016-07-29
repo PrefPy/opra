@@ -12,6 +12,7 @@ urlpatterns = [
     #Two main types of polls
     url(r'^regular_polls$',views.RegularPollsView.as_view(), name='regular_polls'),
     url(r'^m_polls$',views.MultiPollsView.as_view(), name='m_polls'),
+    url(r'^(?P<pk>[0-9]+)/demo$', views.DemoView.as_view(), name='voting_demo'),
    
     # Create a new poll
     url(r'^add_step1/$', views.AddStep1View, name='AddStep1'), 

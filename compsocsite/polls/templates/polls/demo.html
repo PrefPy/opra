@@ -1,6 +1,6 @@
 {% extends 'polls/base.html' %}
 {% load mathfilters %}
-
+{% load staticfiles %}
 {% block extra_head %}
     <!-- Google Tag Manager -->
     <noscript>
@@ -12,6 +12,7 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src='/static/js/shared.js'></script>
+    <script src='/static/js/intro.js'></script>
     {% if request.flavour == "mobile" %}
         <script src='/static/js/mobile.js'></script>
     {% else %}
@@ -20,7 +21,7 @@
     {% endif %}
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-    <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/introjs.css' %}"/>
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip(); 
@@ -33,12 +34,13 @@
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    
 
 
 {% endblock %}
 
 {% block content %}
-<br/>
+<br/><br/><br/>
 <div class="container">
     {% if error_message %}
     <p>
@@ -59,6 +61,10 @@
         {% elif question.open == False and request.user not in question.question_voters.all %}
         You are not invited to this poll.
         {% else %}
+        <div class="text-center">
+        <a class="btn btn-lg btn-success" href="javascript:void(0);" onclick="javascript:introJs().setOption('showProgress', true).start();">Start the Tutorial</a>
+        </div>
+    <hr class="small"/>
         <div class="grid">
             <div class="row">
                 {% if question.imageURL != Null and question.imageURL != '' %}
@@ -100,21 +106,14 @@
         	<div class="row">
 
             {% csrf_token %}
-            {% if request.user.username == "" and 'anonymousid' not in request.session %}
-
-                <div class="col-md-12" style="padding-left:1%; clear:right; ">
-                    <h4>Please enter your name: </h4>
-                    <input type="text" size="50" class="form-control" style="width=50%; clear:right;" name="anonymousname"/>
-
-                </div>
-
-            {% endif %}
+     
             {% if request.flavour == "mobile" %}
                 <div class="col-md-6 margin-panel-top">
             {% else %}
                 <div class="col-md-6 margin-panel-top">
             {% endif %}
-            <div class="panel panel-default">
+                     
+            <div class="panel panel-default" data-step="3" data-intro="After you click, options will jump to this box. And then you can drag them to change the original ranking or have ties.">
                 <div class="panel-heading" >
                     <b>Your preferences:</b>
                     {% if request.flavour == "mobile" %}
@@ -137,7 +136,6 @@
           
                         
                 <div class="panel-body" >
-
                     <ul id="left-sortable" >
                         {% if currentSelection %}
                         
@@ -187,7 +185,7 @@
                     {% else %}
                         <div class="col-md-6 margin-panel-top">
                     {% endif %}
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" data-step="1" data-intro="Here are all options creator set for this poll. They will jump to the left when you click.">
                         <div class="panel-heading">
                             <b>Remaining Options:</b>
                             {% if request.flavour == "mobile" %}
@@ -197,7 +195,7 @@
                                     </span>
                                 </button>
                             {% else %}
-                                <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
+                                <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" data-step="2" data-intro="Clikc Move All, and then the remaining options will move to left in default rank.">
                                     Move All
                                 </button>
                             {% endif %}
@@ -208,9 +206,7 @@
                                     {% for item in items %}
                                         <ul class="choice1 empty"></ul>
                                         <div class="tier">{{ forloop.counter }}</div>
-                                        {% with prev=forloop.counter|mul:2 %}
-                                            <ul class="choice1" id="{{ prev|add:1 }}" onclick = "moveToPref(this)">
-                                        {% endwith %}
+                                        <ul class="choice1" onclick = "moveToPref(this)">
                                             <li class="" id="item{{ item.item_text }}">
                                                 {% if item.image %}
                                                     <img class="item" src='/{{ item.image.url }}'/>
@@ -230,7 +226,7 @@
         		</div>
         	
         	</div>
-        	<div>
+        	<div data-step="4" data-intro="You can enter your coments about this poll here.">
         		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">{{lastcomment}}</textarea>
         	</div>
         </form>

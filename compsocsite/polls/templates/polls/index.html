@@ -184,17 +184,17 @@
 <div class="content-section-b">
     <div class="container">
         <div class="row">
-            <div class="col-lg-7 col-sm-6">
+            <div class="col-lg-5 col-sm-6">
                 <hr class="small">
-                <div class="clearfix"></div>
                 <h2 class="section-heading">Customized Singular Polls</h2>
                 <p class="lead"> OPRA allows you to customize your poll by choosing question types (Poll or Allocation), voting algorithms and visibility. Also, OPRA allows anonymous voters to join singular polls.</p>
                 <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#singular">Learn More About Singular Polls </button>
                 <br/><br/>
             </div>
-            <div class="col-lg-8 col-lg-offset-2 col-sm-6">
-                <img class="img-responsive" src="" alt="">
-            </div>
+            <div class="col-lg-5 col-lg-offset-2 col-sm-6">
+                <br/><br/>
+                <img class="img-responsive" src="{% static 'img/sranking.png' %}" alt="My image">
+            </div> 
 
         </div>
 
@@ -257,8 +257,11 @@
                     <div class="clearfix"></div>
                     <h2 class="section-heading">User-friendly voting interface</h2>
                     <p class="lead"> OPRA provides user-friendly voting interface. xxxxxxxxx</p>
-                    
-                </div>
+                
+                    {%with question=voting_question%}
+                    <a  class="btn btn-dark" href="{% url 'polls:voting_demo' question.id %}">See Voting Page Demo</a>
+                    {%endwith%}
+            
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">
                     <img class="img-responsive" src="" alt="">
                 </div>
@@ -270,9 +273,9 @@
 
     </div>
     <!-- /.content-section-a -->
+</div>
 
-
-<!--User-friendly voting interface-->
+<!--Powerful Algorithm>
 <div class="content-section-b">
 
         <div class="container">
@@ -291,27 +294,25 @@
             </div>
 
         </div>
-        <!-- /.container -->
 
     </div>
-    <!-- /.content-section-a -->
+    -->
 
 
 <!--Result-->
- <div class="content-section-a">
+ <div class="content-section-b">
 
     <div class="container">
 
         <div class="row">
             <div class="col-lg-5 col-sm-6">
                 <hr class="small">
-                <div class="clearfix"></div>
                 <h2 class="section-heading">Organized & Analyzed Results</h2>
                 <p class="lead"> OPRA produces an organized and analyzed results after you stop a poll.It helps you to make decision.</p>
                 <a  class="btn btn-dark" href="{% url 'polls:voteresults' question.id %}">See Result Demo</a>
             </div>
             <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                <img class="img-responsive" src="" alt="">
+                <img class="img-responsive" src="{% static 'img/analysis.png' %}" >
             </div>
         </div>
 

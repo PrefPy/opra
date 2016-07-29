@@ -70,8 +70,76 @@ class MainView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(MainView, self).get_context_data(**kwargs)
         # sort the list by date
-        ctx['question'] = Question.objects.first()
+        ctx['question']=Question.objects.first()
+        ctx['voting_question'] = Question.objects.filter(question_text="Demo").first()
+        ctx['preference'] = 1
+        ctx['poll_algorithms'] = getListPollAlgorithms()
+        ctx['alloc_methods'] = getAllocMethods()
+        ctx['view_preferences'] = getViewPreferences()
+        
         return ctx
+
+
+#demo for voting page in main page
+# view for question detail
+class DemoView(generic.DetailView):
+    model = Question
+    template_name = 'polls/demo.html'
+
+    def get_order(self, ctx):
+        otherUserResponses = self.object.response_set.reverse()
+        defaultOrder = ctx['object'].item_set.all()
+        return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(DemoView, self).get_context_data(**kwargs)
+        ctx['lastcomment'] = ""
+        
+        #Case for anonymous user
+        if self.request.user.get_username() == "":
+            if isPrefReset(self.request):
+                ctx['items'] = self.object.item_set.all()
+                return ctx
+            # check the anonymous voter
+            if 'anonymousvoter' in self.request.session and 'anonymousid' in self.request.session:
+                # sort the responses from latest to earliest
+                currentAnonymousResponses = self.object.response_set.filter(anonymous_id = self.request.session['anonymousid']).reverse()
+                if len(currentAnonymousResponses) > 0:
+                    # get the voter's most recent selection
+                    mostRecentAnonymousResponse = currentAnonymousResponses[0]
+                    if mostRecentAnonymousResponse.comment:
+                        ctx['lastcomment'] = mostRecentAnonymousResponse.comment
+                    ctx['currentSelection'] = getCurrentSelection(currentAnonymousResponses)
+            else:
+                # load choices in the default order
+                ctx['items'] = self.object.item_set.all()
+            return ctx
+
+        # Get the responses for the current logged-in user from latest to earliest
+        currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        
+        if len(currentUserResponses) > 0:
+            if currentUserResponses[0].comment:
+                ctx['lastcomment'] = currentUserResponses[0].comment
+
+        # reset button
+        if isPrefReset(self.request):
+            ctx['items'] = self.get_order(ctx)
+            return ctx
+        
+        # check if the user submitted a vote earlier and display that for modification
+        if len(currentUserResponses) > 0: 
+            ctx['currentSelection'] = getCurrentSelection(currentUserResponses)
+        else:
+            # no history so display the list of choices
+            ctx['items'] = self.get_order(ctx)
+        return ctx
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
         
 # step 1: the intial question object will be created. 
 def AddStep1View(request):

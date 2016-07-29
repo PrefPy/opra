@@ -536,8 +536,8 @@ def parseWmg(latest_responses):
     if pollProfile == None:
         return ([], [])
    
-    #make sure no ties or incomplete results are in the votes
-    if pollProfile.getElecType() != "soc":
+    #make sure no incomplete results are in the votes
+    if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
         return ([], [])  
 
     # make sure there's at least one response
@@ -668,8 +668,8 @@ def getVoteResults(latest_responses):
     if pollProfile == None:
         return []
 
-    #make sure no ties or incomplete results are in the votes
-    if pollProfile.getElecType() != "soc":
+    #make sure no incomplete results are in the votes
+    if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
         return []
 
     scoreVectorList = []
@@ -741,8 +741,8 @@ def getMarginOfVictory(latest_responses):
     if pollProfile == None:
         return []
     
-    #make sure no ties or incomplete results are in the votes
-    if pollProfile.getElecType() != "soc":
+    #make sure no incomplete results are in the votes
+    if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
         return []
     print(MechanismPlurality().getMov(pollProfile))
     marginList = []
@@ -804,8 +804,8 @@ def getRecommendedOrder(otherUserResponses, request, defaultOrder):
     candMap = getCandidateMap(otherUserResponses[0])        
     pollProfile = Profile(candMap, preferences)
     
-    # incomplete answers or ties 
-    if pollProfile.getElecType() != "soc":
+    # incomplete answers 
+    if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
         return defaultOrder
 
     # return the order based off of ranking 

@@ -323,10 +323,6 @@ class DependencyView(generic.DetailView):
     def get_context_data(self,**kwargs):
         ctx = super(DependencyView, self).get_context_data(**kwargs) 
         
-        if self.request.GET.get('order', '') == "null":
-            ctx['items'] = self.get_order(ctx)
-            return ctx  
-        
         # use a single combination object
         combination, created = Combination.objects.get_or_create(target_question=self.object, user=self.request.user)
         combination.save()        
@@ -385,8 +381,9 @@ class DependencyView(generic.DetailView):
         # check if the condition already exists
         if len(conditionalSet) > 0 and conditionIndex > -1 and conditionIndex < len(conditionalSet) and conditionalSet[conditionIndex].response != None:
             selectedCondition = conditionalSet[conditionIndex]
+            print ("condition index: ", conditionIndex)
             ctx["condition_items"] = list(selectedCondition.items.all())
-            ctx["condition_responses"] = selectedCondition.response.dictionary_set.all()[0].sorted_values()   
+            ctx["condition_responses"] = getCurrentSelection(selectedCondition.response)  
         else:
             # this combination of choices does not have a response
             # mark these choices as selected instead of the default ones
@@ -404,7 +401,8 @@ class DependencyView(generic.DetailView):
             # get the default preferences if there are any
             defaultResponse = getConditionFromResponse([], combination).response
             if defaultResponse != None:
-                ctx["condition_responses"] = defaultResponse.dictionary_set.all()[0].sorted_values()
+                ctx["condition_responses"] = getCurrentSelection(defaultResponse)
+            print ("default respones: ", defaultResponse)
         ctx['items'] = self.get_order(ctx)        
         return ctx
 
@@ -476,23 +474,8 @@ def assignPreference(request, combination_id):
         defaultCondition.response = response
         defaultCondition.save()
     
-    d = response.dictionary_set.create(name = response.user.username + " Predicting Preferences")
-
-    # find ranking student gave for each item under the question
-    item_num = 1
-    for item in question.item_set.all():
-        arrayIndex = prefOrder.index("item" + str(item))
-        if arrayIndex == -1:
-            # set value to lowest possible rank
-            d[item] = question.item_set.all().count()
-        else:
-            # add 1 to array index, since rank starts at 1
-            rank = (prefOrder.index("item" + str(item))) + 1
-            # add pref to response dict
-            d[item] = rank
-        d.save()
-        item_num += 1
-
+    buildResponseDict(response, question, prefOrder)
+    
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')        
 

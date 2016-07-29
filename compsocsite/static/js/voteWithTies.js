@@ -100,7 +100,7 @@ function enableSubmission() {
                 }
             });
             $( ".choice1" ).last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-            if( $( "#right-sortable" ).children().size == 0 ){ enableSubmission(); }
+            if( $( "#right-sortable" ).children().size() == 0 ){ enableSubmission(); }
             // alert(oldList.attr('id')+" TO "+newList.attr('id'));
         },
 

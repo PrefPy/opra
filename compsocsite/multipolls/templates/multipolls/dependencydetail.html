@@ -78,39 +78,30 @@ $(function(){
             <div class="panel-body" >
 
                 <ul id="left-sortable" >
-                    {% if currentSelection %}
-                    
-                        {% for selection in currentSelection %}
-                            {% for item in question.item_set.all %}
-
-                                {% if selection.0 == item %}
-                                    <ul class="choice1 empty" id="{{ selection.1|mul:2 }}"></ul>
-                                    <div class="tier">{{ selection.1 }}</div>
-                                    {% with prev=selection.1|mul:2 %}
-                                        <ul class="choice1" id="{{ prev|add:1 }}">
-                                    {% endwith %}
-                                        <li style="padding:10px;" id="item{{ item.item_text }}">
+                    {% if condition_responses %}
+                        {% for s in condition_responses %}
+                            {% if s.0 %} 
+                                <ul class="choice1 empty"></ul>
+                                <ul class="choice1">
+                                    <div class="tier">{{ s.1 }}</div>
+                                    {% for selection in s %}
+                                        <li style="padding:10px;" id="item{{ selection.0.item_text }}">
                                             {% if selection.0.image %}
                                                 <img class="item" src='/{{ selection.0.image.url }}'/>
                                             {% endif %}
-                                            {% if item.imageURL != Null %}
+                                            {% if selection.0.imageURL != Null %}
                                                 <img class="item" src='{{ item.imageURL }}'/>
                                             {% endif %}
 
                                             {{ selection.0 }}
-                                            {% if item.item_description %}
-                                                <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}"></span>
+                                            {% if selection.0.item_description %}
+                                                <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{selection.0.item_description}}"></span>
                                             {% endif %}
                                         </li>
-                                    </ul>
-
-                                {% endif %}
-
-                            {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
                         {% endfor %}
-                        {% with prev=selection.1|mul:2 %}
-                            <ul class="choice1 empty" id="{{ prev|add:2 }}"></ul>
-                        {% endwith %}
                     {% endif %}
                 </ul> <!-- left-sortable-->
             </div>

@@ -375,8 +375,7 @@ def isPrefReset(request):
     return False 
 
 # given a list of responses, return the response's selection data
-def getCurrentSelection(responses):
-    mostRecentResponse = responses[0]
+def getCurrentSelection(mostRecentResponse):
     responseDict = mostRecentResponse.dictionary_set.all()[0]
     rd = responseDict.sorted_values() 
     array = []
@@ -414,7 +413,7 @@ class DetailView(generic.DetailView):
                     mostRecentAnonymousResponse = currentAnonymousResponses[0]
                     if mostRecentAnonymousResponse.comment:
                         ctx['lastcomment'] = mostRecentAnonymousResponse.comment
-                    ctx['currentSelection'] = getCurrentSelection(currentAnonymousResponses)
+                    ctx['currentSelection'] = getCurrentSelection(currentAnonymousResponses[0])
             else:
                 # load choices in the default order
                 ctx['items'] = self.object.item_set.all()
@@ -434,7 +433,7 @@ class DetailView(generic.DetailView):
         
         # check if the user submitted a vote earlier and display that for modification
         if len(currentUserResponses) > 0: 
-            ctx['currentSelection'] = getCurrentSelection(currentUserResponses)
+            ctx['currentSelection'] = getCurrentSelection(currentUserResponses[0])
         else:
             # no history so display the list of choices
             ctx['items'] = self.get_order(ctx)
@@ -1012,6 +1011,19 @@ def vote(request, question_id):
     if comment != "":
         response.comment = comment
     response.save()
+    buildResponseDict(response, question, prefOrder)
+    
+    #get current winner
+    old_winner = OldWinner(question=question, response=response)
+    old_winner.save()
+
+    # notify the user that the vote has been updated
+    messages.success(request, 'Your preferences have been updated.')
+
+    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+
+# create a new dictionary that stores the preferences and rankings
+def buildResponseDict(response, question, prefOrder):
     d = response.dictionary_set.create(name = response.user.username + " Preferences")
 
     # find ranking user gave for each item under the question
@@ -1035,15 +1047,6 @@ def vote(request, question_id):
         #     d[item] = rank
         d.save()
         item_num += 1
-
-    #get current winner
-    old_winner = OldWinner(question=question, response=response)
-    old_winner.save()
-
-    # notify the user that the vote has been updated
-    messages.success(request, 'Your preferences have been updated.')
-
-    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 
 # join a poll without logging in
 def anonymousJoin(request, question_id):

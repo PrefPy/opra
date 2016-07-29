@@ -103,7 +103,7 @@ function enableSubmission() {
             if( $( "#right-sortable" ).children().size == 0 ){ enableSubmission(); }
             // alert(oldList.attr('id')+" TO "+newList.attr('id'));
         },
-           
+
         change: function(event, ui) {  
             if(ui.sender){
                 //variables

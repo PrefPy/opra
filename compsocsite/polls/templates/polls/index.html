@@ -209,13 +209,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel">More about Singular Poll</h3>
+        <h3 class="modal-title" id="myModalLabel">More about Singular Polls</h3>
       </div>
       <div class="modal-body">
-          <h4>The Features of a poll </h4>
-          <h4>Names and description</h4>
-          <p>Question: The question of the poll to be cast. You can set it on the first step.<br/>
-          Description: The description of your customized poll. It will be shown when hovered in the index page.</p> 
+          <h4>Singular Polls (Default)</h4>
+          <h4>Name and Description</h4>
+          <p>Question Title: You must set a question title (keep it short and concise)<br/>
+          Description: Add a description if you need to add more information. It will be shown when you hover over the title in the index page.</p> 
       </div>
     </div>
   </div>
@@ -232,7 +232,7 @@
                     <hr class="small">
                     <div class="clearfix"></div>
                     <h2 class="section-heading">Customized Multi Polls</h2>
-                    <p class="lead"> The other amazing voting type OPRA produces is Multi poll. It allows you to do the poll by several rounds.</p>
+                    <p class="lead"> It allows you to do polling in several rounds. Sometimes your preferences in one poll depend on the results from another poll.</p>
                     <a href="#about" class="btn btn-dark">Learn More About Multi Polls</a>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
@@ -256,7 +256,7 @@
                     <hr class="small">
                     <div class="clearfix"></div>
                     <h2 class="section-heading">User-friendly voting interface</h2>
-                    <p class="lead"> OPRA provides user-friendly voting interface. xxxxxxxxx</p>
+                    <p class="lead"> It is very easy to learn. </p>
                 
                     {%with question=voting_question%}
                     <a  class="btn btn-dark" href="{% url 'polls:voting_demo' question.id %}">See Voting Page Demo</a>
@@ -284,7 +284,7 @@
                     <hr class="small">
                     <div class="clearfix"></div>
                     <h2 class="section-heading">Powerful Voting Algorithms</h2>
-                    <p class="lead"> OPRA also provides powerful voting algorithms xxxxxxxxx</p>
+                    <p class="lead"> OPRA also provides powerful voting algorithms</p>
                     <a href="#about" class="btn btn-dark">Learn More About Voting Algorithms</a>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
@@ -308,8 +308,8 @@
             <div class="col-lg-5 col-sm-6">
                 <hr class="small">
                 <h2 class="section-heading">Organized & Analyzed Results</h2>
-                <p class="lead"> OPRA produces an organized and analyzed results after you stop a poll.It helps you to make decision.</p>
-                <a  class="btn btn-dark" href="{% url 'polls:voteresults' question.id %}">See Result Demo</a>
+                <p class="lead"> After a poll ends, OPRA will compute and analyze the results for you. It helps you make better decisions.</p>
+                <a  class="btn btn-dark" href="{% url 'polls:voteresults' question.id %}">See Results Demo</a>
             </div>
             <div class="col-lg-5 col-lg-offset-2 col-sm-6">
                 <img class="img-responsive" src="{% static 'img/analysis.png' %}" >
@@ -355,7 +355,7 @@
                                 <h4>
                                     <strong>Group</strong>
                                 </h4>
-                                <p>You can create your own group and do one-click invitation.</p>
+                                <p>You can create your own groups and invite everyone using just a single click.</p>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-10">
@@ -379,7 +379,7 @@
                                 <h4>
                                     <strong>QR Code</strong>
                                 </h4>
-                                <p>OPRA produces QR Code for open singualr poll.</p>
+                                <p>If the creator makes a poll open, you can vote anonymously (only for single polls)</p>
                             </div>
                         </div>
                     </div>

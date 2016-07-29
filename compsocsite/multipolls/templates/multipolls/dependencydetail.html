@@ -63,7 +63,7 @@ $(function(){
                         Submit
                     </button>
                 {% else %}
-                    <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background">
+                    <a href="{% url 'multipolls:dependencyview' question.id %}?order=null" class="btn btn-danger reset-button" style="background">
                         Clear
                     </a>
                     <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>

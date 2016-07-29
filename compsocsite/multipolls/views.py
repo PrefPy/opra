@@ -287,7 +287,11 @@ class DependencyView(generic.DetailView):
         return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)    
 
     def get_context_data(self,**kwargs):
-        ctx = super(DependencyView, self).get_context_data(**kwargs)   
+        ctx = super(DependencyView, self).get_context_data(**kwargs) 
+        
+        if self.request.GET.get('order', '') == "null":
+            ctx['items'] = self.get_order(ctx)
+            return ctx  
         
         # use a single combination object
         combination, created = Combination.objects.get_or_create(target_question=self.object, user=self.request.user)

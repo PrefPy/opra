@@ -362,31 +362,13 @@ class DependencyView(generic.DetailView):
                     # default: use the first option in the list
                     pollChoiceDict[pollStr] = poll.item_set.all()[0]                    
             ctx["poll_choice_dict"] = pollChoiceDict
+            
+            # get the default preferences if there are any
+            defaultResponse = getConditionFromResponse([], combination).response
+            if defaultResponse != None:
+                ctx["condition_responses"] = defaultResponse.dictionary_set.all()[0].sorted_values()
         ctx['items'] = self.get_order(ctx)        
         return ctx
-
-# redraw the dependency graph
-def updatePrefGraph(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    
-    # get the combination object
-    combinations = Combination.objects.filter(target_question=question, user=request.user)
-    if len(combinations) > 0:
-        combination = combinations[0]
-        combination.dependent_questions.clear()
-    else:
-        combination = Combination(target_question=question, user=request.user)
-        combination.save()
-        
-    # get polls selected
-    pollsSelected = []  
-    for poll in question.multipoll_set.all()[0].questions.all():
-        pollStr = "poll" + str(poll.id)
-        if pollStr in request.GET:
-            if request.GET[pollStr] == "true":
-                combination.dependent_questions.add(poll.id)
-
-    return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(question.id,)))
 
 # choose a dependent poll
 def chooseDependency(request, question_id):
@@ -440,6 +422,22 @@ def assignPreference(request, combination_id):
     response.save()
     condition.response = response
     condition.save()
+
+    # set default pref
+    if "default_pref" in request.POST:
+        allConditions = ConditionalItem.objects.filter(combination=combination)
+        defaultCondition = None
+        for currentCondition in allConditions:
+            if len(list(currentCondition.items.all())) == 0:
+                defaultCondition = currentCondition
+                break
+        if defaultCondition == None:
+            defaultCondition = ConditionalItem(combination=combination)
+            defaultCondition.save()
+        
+        defaultCondition.response = response
+        defaultCondition.save()
+    
     d = response.dictionary_set.create(name = response.user.username + " Predicting Preferences")
 
     # find ranking student gave for each item under the question
@@ -461,7 +459,8 @@ def assignPreference(request, combination_id):
     messages.success(request, 'Your preferences have been updated.')        
 
     return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(combination.target_question.id,)))
-    
+
+# build a preference graph given the question dependencies
 def getPrefenceGraph(request, question):
     multipoll = question.multipoll_set.all()[0] 
     # get the nodes
@@ -485,6 +484,29 @@ def getPrefenceGraph(request, question):
                 data['value'] = 1
                 edges.append(data)   
     return (nodes, edges)
+
+# redraw the dependency graph
+def updatePrefGraph(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    
+    # get the combination object
+    combinations = Combination.objects.filter(target_question=question, user=request.user)
+    if len(combinations) > 0:
+        combination = combinations[0]
+        combination.dependent_questions.clear()
+    else:
+        combination = Combination(target_question=question, user=request.user)
+        combination.save()
+        
+    # get polls selected
+    pollsSelected = []  
+    for poll in question.multipoll_set.all()[0].questions.all():
+        pollStr = "poll" + str(poll.id)
+        if pollStr in request.GET:
+            if request.GET[pollStr] == "true":
+                combination.dependent_questions.add(poll.id)
+
+    return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(question.id,)))
 
 # check if there is a response for this set of conditions and return the condition object
 # create a new one if there is no existing objects

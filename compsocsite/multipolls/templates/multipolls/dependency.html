@@ -98,8 +98,8 @@ $(function(){
         
 <div class="row">
     <div class="col-md-6">
-        <h4 align="center">Your preferences for {{question.question_text}} depends on:</h4>
         <div align="center">
+            <p>Your preferences for {{question.question_text}} depends on:</p>
         {% for poll in question.multipoll_set.all.0.questions.all %}
             {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
             <label class="checkbox-inline">
@@ -117,6 +117,7 @@ $(function(){
             {% endif %}
         {% endfor %}
         </div>
+        
     </div>
     <div class="col-md-6">
         <div style="left: 50%;">
@@ -124,7 +125,7 @@ $(function(){
         </div>
     </div>
 </div>
-<br />    
+<br /> 
 </div>
 
 {% include 'multipolls/dependencydetail.html' %}

@@ -29,6 +29,6 @@ urlpatterns = [
     url(r'^subpoll/(?P<pk>[0-9]+)/dependency/view/$', views.DependencyView.as_view(), name='dependencyview'),
     url(r'^subpoll/(?P<question_id>[0-9]+)/dependency/view/prefgraph$', views.updatePrefGraph, name='updatePrefGraph'),
     url(r'^subpoll/(?P<question_id>[0-9]+)/dependency/choose$', views.chooseDependency, name='choosedependency'),
-    url(r'^(?P<combination_id>[0-9]+)/pref/assign$', views.assignPreference, name='assignpreference'),    
+    url(r'^pref/(?P<combination_id>[0-9]+)/assign$', views.assignPreference, name='assignpreference'),   
 ]
 

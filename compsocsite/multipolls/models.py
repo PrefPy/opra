@@ -43,4 +43,4 @@ class Combination(models.Model):
 class ConditionalItem(models.Model):
     combination = models.ForeignKey(Combination)
     items = models.ManyToManyField(Item)
-    response = models.OneToOneField(Response, null=True, blank=True)
+    response = models.ForeignKey(Response, null=True, blank=True)

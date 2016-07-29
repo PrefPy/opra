@@ -1,8 +1,7 @@
 function submitPref() {
 	var prefcolumn = $('#left-sortable');
-	var order_empty = prefcolumn.sortable("toArray");
 	var order = [];
-    $(prefcolumn).children().each(function( index ){
+    prefcolumn.children().each(function( index ){
         if( $( this ).children().size() > 0 ){
             $( this ).children().each(function( index ){
                 order.push($( this ).attr('id'));
@@ -10,7 +9,6 @@ function submitPref() {
         }
     });
 	$('#pref_order').val(order.join(","));
-    alert(order.join(","));
 	$('#pref_order').submit();
 };
 

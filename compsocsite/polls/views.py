@@ -79,7 +79,6 @@ class MainView(generic.ListView):
         
         return ctx
 
-
 #demo for voting page in main page
 # view for question detail
 class DemoView(generic.DetailView):
@@ -715,8 +714,6 @@ def getShadeValues(scoreVectorList):
                 newRow.append("#" + greenColor)
                 continue
 
-            # color is a hex value
-            colorStr = ""
             # make the colors closer to the left lighter (higher value) and toward the right darker (lower value) 
             
             #the 5th row is Simplified Bucklin (lower score is better so reverse the colorings for this row)
@@ -725,10 +722,15 @@ def getShadeValues(scoreVectorList):
                 luminance = 1 - rank / float(highestRank)
             else:
                 luminance = rank / float(highestRank)
-            luminance /= 1.5
-    
-            colorStr = colorLuminance(greenColor, luminance)
-            newRow.append(colorStr)
+                
+            # set lowest rank to white
+            if luminance == 1:
+                newRow.append("#" + whiteColor)
+                continue
+            if luminance <= 0.5:
+                luminance /= 2.0
+            
+            newRow.append(colorLuminance(greenColor, luminance))
 
         shadeValues.append(newRow)
     return shadeValues

@@ -216,3 +216,6 @@ ul.choice1{
     user-select:none;
     -o-user-select:none;
 }
+ul.choice1 li{
+    display: inline-block;
+}

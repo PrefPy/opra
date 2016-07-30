@@ -210,6 +210,9 @@
                                                     <img class="item" src='{{ item.imageURL }}'/>
                                                 {% endif %}
                                                 {{ item.item_text }}
+                                                {% if item.item_description %}
+                                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}"></span>
+                                                {% endif %}
                                             </li>
                                         </ul>
                                     {% endfor %}

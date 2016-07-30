@@ -46,7 +46,7 @@
                         Submit
                     </button>
                 {% else %}
-                    <a href="{% url 'multipolls:dependencyview' question.id %}?order=null" class="btn btn-danger reset-button" style="background">
+                    <a onclick="clearAll()" class="btn btn-danger reset-button" style="background">
                         Clear
                     </a>
                     <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>

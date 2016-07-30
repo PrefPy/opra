@@ -354,7 +354,6 @@ class DependencyView(generic.DetailView):
         # if the user has responded to this question, then load the response
         conditionalSet = combination.conditionalitem_set.all()
         ctx["colorArray"] = getConditionColor(combination)
-
         # check if the condition already exists
         if len(conditionalSet) > 0 and conditionIndex > -1 and conditionIndex < len(conditionalSet) and conditionalSet[conditionIndex].response != None:
             selectedCondition = conditionalSet[conditionIndex]

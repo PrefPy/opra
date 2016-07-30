@@ -29,13 +29,13 @@ function check()
             choicesStr += "poll{{poll.id}}=" + document.getElementById("checkbox{{poll.id}}").checked + "&"; 
         {% endif %}
     {% endfor %}
-    
-    $.ajax({
-                    url:"{% url 'multipolls:updatePrefGraph' question.id %}" + choicesStr,
-                    success: function(event){
-                        $('#combinationtable').load(" #combinationtable", function(){$(this).children().unwrap()});
-                    }
-                });
+    window.location.href = "{% url 'multipolls:updatePrefGraph' question.id %}" + choicesStr; // redirect
+//    $.ajax({
+//                    url:"{% url 'multipolls:updatePrefGraph' question.id %}" + choicesStr,
+ //                   success: function(event){
+ //                       $('#combinationtable').load(" #combinationtable", function(){$(this).children().unwrap()});
+ //                   }
+ //               });
     return false;
 }
          
@@ -67,7 +67,7 @@ $(function(){
 <div class="container-fluid">
 
 <!-- Title and description -->
-<div class="grid">
+
 	<div class="row">
 		{% if question.imageURL != Null and question.imageURL != '' %}
 		<div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
@@ -103,15 +103,10 @@ $(function(){
 			</h3>
 			{% endif %}
 		</div>
-	</div>
-</div>
-        
-<hr />
-        
-<div class="row">
-    <div class="col-md-6">
+	
+<div class="col-md-3">
         <div align="center">
-            <p>Your preferences for {{question.question_text}} depends on:</p>
+            <h4>Your preferences for {{question.question_text}} depends on:</h4>
         {% for poll in question.multipoll_set.all.0.questions.all %}
             {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
             <label class="checkbox-inline">
@@ -131,12 +126,18 @@ $(function(){
         </div>
         
     </div>
-    <div class="col-md-6">
-        <div style="left: 50%;">
+    <div class="col-md-3">
+        <div style="left: 60%; top:10%;">
             <div id="cy" ></div>
         </div>
     </div>
+    </div>
 </div>
+        
+
+        
+<div class="row">
+    
 <br /> 
 </div>
 

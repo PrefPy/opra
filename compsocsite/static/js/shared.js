@@ -68,25 +68,24 @@ function checkStyle(){
 function moveToPref(obj) {
 	var time = 100
 	var prefcolumn = $('#left-sortable');
-    $('#left-sortable li').each(function(){
-        $(this).removeAttr('onclick')
-    });
 	var currentli = document.getElementById(obj.id);
     console.log(obj.id);
 	prefcolumn.append(currentli);
-	if ($('#right-sortable li').length == 0) {
-		enableSubmission();
-	}
     checkStyle();
-
+    if ($('#right-sortable li').length == 0) {
+        enableSubmission();
+    }
+    $('#left-sortable li').each(function(){
+        $(this).removeAttr('onclick');
+    });
 };
 
 function moveAll() {
  	$( '#left-sortable' ).html( $( '#left-sortable' ).html() + $( '#right-sortable' ).html() );
  	$( '#right-sortable' ).html("")
-    // $('#left-sortable li').each(function(){
-    //     $(this).removeAttr('onclick')
-    // });
+    $('#left-sortable li').each(function(){
+        $(this).removeAttr('onclick')
+    });
  	checkStyle();
 	enableSubmission();
 };

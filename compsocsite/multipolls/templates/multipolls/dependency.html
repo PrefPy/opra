@@ -30,7 +30,12 @@ function check()
         {% endif %}
     {% endfor %}
     
-    window.location.href = "{% url 'multipolls:updatePrefGraph' question.id %}" + choicesStr; // redirect
+    $.ajax({
+                    url:"{% url 'multipolls:updatePrefGraph' question.id %}" + choicesStr,
+                    success: function(event){
+                        $('#combinationtable').load(" #combinationtable", function(){$(this).children().unwrap()});
+                    }
+                });
     return false;
 }
          
@@ -43,7 +48,14 @@ $(function(){
                 choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&"; 
             {% endfor %}
 
-            window.location.href = "{% url 'multipolls:dependencyget' combination.id %}" + choicesStr; // redirect
+            //window.location.href = "{% url 'multipolls:dependencyget' combination.id %}" + choicesStr; // redirect
+            $.ajax({
+                    url:"{% url 'multipolls:dependencyget' combination.id %}" + choicesStr,
+                    success: function(event){
+                        $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap()});
+                        $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap()});
+                    }
+                });
             return false;
         });
     {% endfor %}

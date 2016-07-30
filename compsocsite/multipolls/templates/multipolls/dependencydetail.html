@@ -1,26 +1,9 @@
 {% load mathfilters %}
 
-<script>
-$(function(){
-    // bind change event to select
-    {% for poll in combination.dependent_questions.all %}
-        $('#dynamic_select' + '{{poll.id}}').on('change', function () {
-            var choicesStr = "?";
-            {% for poll in combination.dependent_questions.all %}
-                choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&"; 
-            {% endfor %}
-
-            window.location.href = "{% url 'multipolls:dependencyget' combination.id %}" + choicesStr; // redirect
-            return false;
-        });
-    {% endfor %}
-  });
-</script>
-
 <div>
     <form action="{% url 'multipolls:assignpreference' combination.id %}" method="post">
         {% csrf_token %}
-        <div style="clear:both" class="col-md-12">
+        <div style="clear:both" class="col-md-12" id="combinationtable">
         {% for poll in combination.dependent_questions.all %}
             <div class="col-md-4 margin-panel-top">
                 <h4>Poll {{ poll.question_text }}</h4>
@@ -52,7 +35,7 @@ $(function(){
         <div class="col-md-6 margin-panel-top">
         {% endif %}
         
-        <div class="panel panel-default">
+        <div class="panel panel-default" id="dependencypreference">
             <div class="panel-heading" >
                 <b>Your preferences:</b>
                 {% if request.flavour == "mobile" %}
@@ -120,7 +103,7 @@ $(function(){
         <div class="col-md-6 margin-panel-top">
         {% endif %}
         
-            <div class="panel panel-default panel-border">
+            <div class="panel panel-default panel-border" id="dependencyremain">
                 <div class="panel-heading">
                     <b>Remaining Options:</b>
                     

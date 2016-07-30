@@ -26,8 +26,7 @@
             $('[data-toggle="tooltip"]').tooltip(); 
         });
     </script>
-    <style>        
-        ul.empty { background-color:black; height: 10px; }
+    <style>
         .tier { float:left; }
     </style>
 
@@ -145,7 +144,7 @@
                                     <ul class="choice1">
                                         <div class="tier">{{ s.0.1 }}</div>
                                         {% for selection in s %}
-                                            <li class="item" id="item{{ selection.0.item_text }}">
+                                            <li class="li_item" id="item{{ selection.0.item_text }}">
                                                 {% if selection.0.image %}
                                                     <img class="item" src='/{{ selection.0.image.url }}'/>
                                                 {% endif %}
@@ -202,7 +201,7 @@
                                         {% with prev=forloop.counter|mul:2 %}
                                             <ul class="choice1" id="{{ prev|add:1 }}" onclick = "moveToPref(this)">
                                         {% endwith %}
-                                            <li class="item" id="item{{ item.item_text }}">
+                                            <li class="li_item" id="item{{ item.item_text }}">
                                                 {% if item.image %}
                                                     <img class="item" src='/{{ item.image.url }}'/>
                                                 {% endif %}

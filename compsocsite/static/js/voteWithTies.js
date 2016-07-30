@@ -1,6 +1,8 @@
 //  Helper JavaScript created for the voting page (detail.html)
 
 $( document ).ready(function() {
+
+!function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
     // Google Analytics
     // -----------------------------------------------------------------------
 //     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -90,7 +92,8 @@ function enableSubmission() {
                     $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
                     $( this ).before("<div class=\"tier\">" + tier + "</div>");
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
-                    if( $( this ).children().size() < 2 ){
+                    if( $( this ).children().size() < 2 
+                        || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
                         $( this ).children().css( "width", "85%" );
                     }else{
                         $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
@@ -112,12 +115,7 @@ function enableSubmission() {
                 var oldListId = parseInt($( oldList ).attr("id")); //the id of the old list
                 var listId;
                 var prevEmpty = false;
-
-
-                // if( !(oldListId == 1 && $(oldList).children().size() > 1) ){
-                //     $( "#" + (oldListId - 1).toString() ).addClass("line");
-                // }
-                // $( "#" + (oldListId + 1).toString() ).addClass("line");
+                
                 newItem = "<ul class=\"choice1 empty line\"></ul>";
                 var tier = 1;
 
@@ -141,7 +139,8 @@ function enableSubmission() {
                             $( this ).after(newItem);
                             $( this ).before(newItem);
                         }
-                        if( $( this ).children().size() < 2 ){
+                        if( $( this ).children().size() < 2
+                            || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
                             $( this ).children().css( "width", "85%" );
                         }else{
                             $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );

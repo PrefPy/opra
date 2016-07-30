@@ -216,3 +216,7 @@ ul.choice1{
     user-select:none;
     -o-user-select:none;
 }
+li.item{
+    display: inline-block;
+    padding: 20px;
+}

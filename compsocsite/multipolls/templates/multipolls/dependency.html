@@ -19,6 +19,10 @@
 }   
      
 ul.empty { background-color:black; height: 10px; }
+
+option:checked{
+    border: 3px solid blue;
+}
 </style>
 <script>
 function check()
@@ -60,6 +64,8 @@ $(function(){
         });
     {% endfor %}
 });
+
+
 </script>
 {% endblock %}
 

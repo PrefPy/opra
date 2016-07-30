@@ -3,12 +3,12 @@
 <div>
     <form action="{% url 'multipolls:assignpreference' combination.id %}" method="post">
         {% csrf_token %}
-        <div style="clear:both" class="col-md-12" id="combinationtable">
+        <div style="clear:both" class="col-md-12" >
         {% for poll in combination.dependent_questions.all %}
             <div class="col-md-4 margin-panel-top">
                 <h4>Poll {{ poll.question_text }}</h4>
                 Select a choice for this dependent poll: <br />
-                <select id="dynamic_select{{ poll.id }}" class="btn-group" name="{{ poll.id }}" size="{{poll.item_set.count}}">
+                <select id="dynamic_select{{ poll.id }}" class="btn-group" name="{{ poll.id }}" size="{{poll.item_set.count}}" id="combinationtable">
                     
                         {% for item in poll.item_set.all %}
                             {% for row in colorArray %}
@@ -19,7 +19,7 @@
                                     {% if condition_items %}{% if item in condition_items %} selected {% endif %} 
                                     {% elif poll_choice_dict %}{% if item in poll_choice_dict.values %} selected {% endif %}
                                     {% else %}{% if forloop.counter == 1 %} selected {% endif %}{% endif %} 
-                                    style='background-color: {{color}};'>{{item.item_text}}</option>
+                                    style='background-color: {{color}}; box-shadow: 0 0 10px 100px {{color}} inset;'>{{item.item_text}}</option>
                             {% endif %}
                             {% endfor %}
                             {% endfor %}

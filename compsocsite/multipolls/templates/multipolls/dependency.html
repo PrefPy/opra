@@ -86,7 +86,7 @@ $(function(){
 		{% endif %}
 		<div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
 			<h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
-				{{ question.question_text }}:    
+				{{ question.question_text }}:    <small class="text-muted">Created by {{ question.question_owner }}</small>
             </h3>
             <p>
             {% if prev_poll != None %}
@@ -101,18 +101,19 @@ $(function(){
             {% endif %} 
             </p>
 
-            <small class="text-muted">Created by {{ question.question_owner }}</small>
+            
 			
 			{% if question.question_desc %}
-			<h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
+			<h4 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
 				{{ question.question_desc }}
-			</h3>
+			</h4>
 			{% endif %}
 		</div>
 	
 <div class="col-md-3">
-        <div align="center">
+        <div align="center" style="position:relative;top:20px;">
             <h4>Your preferences for {{question.question_text}} depends on:</h4>
+            <div class="row">
         {% for poll in question.multipoll_set.all.0.questions.all %}
             {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
             <label class="checkbox-inline">
@@ -130,10 +131,11 @@ $(function(){
             {% endif %}
         {% endfor %}
         </div>
+        </div>
         
     </div>
     <div class="col-md-3">
-        <div style="left: 60%; top:10%;">
+        <div style="position:relative;left: 50%; top:10px;">
             <div id="cy" ></div>
         </div>
     </div>

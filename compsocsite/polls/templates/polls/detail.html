@@ -72,9 +72,9 @@
                 {% endif %}
                 <div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
                     <h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
-                        {{ question.question_text }}:
+                        {{ question.question_text }}: <small class="text-muted">Created by {{ question.question_owner }}</small>
                     </h3>
-                    <small class="text-muted">Created by {{ question.question_owner }}</small>
+                    
                     {% if question.question_desc %}
                         <h3 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
                             {{ question.question_desc }}

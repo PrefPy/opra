@@ -1,5 +1,90 @@
 //  Helper JavaScript created for the voting page (detail.html)
+function submitPref() {
+    var prefcolumn = $('#left-sortable');
+    var order = "";
+    prefcolumn.children().each(function( index ){
+        if( $( this ).children().size() > 0 ){
+            $( this ).children().each(function( index ){
+                order += $( this ).attr('id') + ",";
+            });
+            order += "|,";
+        }
+    });
+    $('#pref_order').val(order);
+    $('#pref_order').submit();
+};
 
+function enableSubmission() {
+    document.getElementById('submitbutton').disabled = false;
+}
+
+function insideEach(t, id, tier){
+    if( $( t ).children().size() < 1 ){
+        $( t ).remove();
+    }else{
+        $( t ).attr("id", id.toString());
+        id += 1;
+        $( t ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+        $( t ).before("<div class=\"tier\">" + tier + "</div>");
+        if( $( t ).attr('class').indexOf('empty')>-1 ){ $( t ).removeClass('empty').addClass('choice1'); }
+        if( $( t ).children().size() < 2 
+            || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
+            $( t ).children().css( "width", "85%" );
+        }else{
+            $( t ).children().css( "width", "40%" ).css( "display", "inline-block" );
+        }
+        tier += 1;
+        id += 1;
+    }
+    return [id, tier]
+}
+
+function checkStyle(){
+    newItem = "<ul class=\"choice1 empty\"></ul>";
+    var tier = 1;
+    var id = 0;
+    $( ".tier" ).each(function( index ) {
+        $( this ).remove();
+    });
+    $( "#left-sortable" ).children().each(function( index ) {
+        arr = insideEach(this, id, tier);
+        id = arr[0];
+        tier = arr[1];
+    });
+    $( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+    $( "#right-sortable" ).children().each(function( index ) {
+        arr = insideEach(this, id, tier);
+        id = arr[0];
+        tier = arr[1];
+    });
+    // if($( "#right-sortable" ).children().size() > 0){
+    //     $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+    // }
+    if( $( "#right-sortable" ).children().size() == 0 ){ enableSubmission(); }
+}
+
+function moveToPref(obj) {
+    var time = 100
+    var prefcolumn = $('#left-sortable');
+    var currentli = $(obj);
+    console.log(obj.id);
+    prefcolumn.append(currentli);
+    checkStyle();
+    if ($('#right-sortable li').length == 0) { enableSubmission(); }
+    $('#left-sortable li').each(function(){
+        $(this).removeAttr('onclick');
+    });
+};
+
+function moveAll() {
+    $( '#left-sortable' ).html( $( '#left-sortable' ).html() + $( '#right-sortable' ).html() );
+    $( '#right-sortable' ).html("")
+    $('#left-sortable li').each(function(){
+        $(this).removeAttr('onclick')
+    });
+    checkStyle();
+    enableSubmission();
+};
 $( document ).ready(function() {
 
 !function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
@@ -172,13 +257,24 @@ function enableSubmission() {
                         prevEmpty = true;
                     }
                 });
-                if( $(newList).children().size() > 1 ){ $( ui.item ).css("width", "40%"); }
-                else{ $( ui.item ).css("width", "85%"); }
+                if( $(newList).children().size() > 1 ){
+                    $( ui.item ).css("width", "40%");
+                    ui.placeholder.css("position", "absolute").css("width", "40%").css("clear", "both");
+                }else{
+                    $( ui.item ).css("width", "85%");
+                    ui.placeholder.css("position", "relative").css("width", "85%");
+                }
             }
         },
         placeholder: "ui-state-highlight",
         connectWith: "ul.choice1, ul.empty",
     }).disableSelection();
     }, 1000);
+
+    //if the user updates existing preferences, the submit button should be shown
+    if ($('#right-sortable li').length == 0) {
+        enableSubmission();
+    }
+    checkStyle();
           
 });

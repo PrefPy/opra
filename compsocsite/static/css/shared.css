@@ -216,7 +216,11 @@ ul.choice1{
     user-select:none;
     -o-user-select:none;
 }
-li.item{
+li.li_item{
     display: inline-block;
-    padding: 20px;
+    padding: 100px;
+}
+ul.empty {
+    background-color:black;
+    height: 5px;
 }

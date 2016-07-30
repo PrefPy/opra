@@ -177,11 +177,16 @@ ul.example li.placeholder:before {
 
 /* image */
 img.item {
-	width: 40px;
+	height: 40px;
+	width:auto;
+	max-width:100%;
+	
 }
 
 img.item:hover {
-	width: 40px;
+	height: 40px;
+	width:auto;
+	max-width:100%;
 }
 
 div{
@@ -219,7 +224,7 @@ ul.choice1{
 }
 li.li_item{
     display: inline-block;
-    padding: 100px;
+    padding: 10px;
 }
 ul.empty {
     background-color:black;

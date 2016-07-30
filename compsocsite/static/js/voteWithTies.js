@@ -92,7 +92,8 @@ function enableSubmission() {
                     $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
                     $( this ).before("<div class=\"tier\">" + tier + "</div>");
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
-                    if( $( this ).children().size() < 2 ){
+                    if( $( this ).children().size() < 2  
+                        || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
                         $( this ).children().css( "width", "85%" );
                     }else{
                         $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
@@ -111,7 +112,8 @@ function enableSubmission() {
                     $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
                     $( this ).before("<div class=\"tier\">" + tier + "</div>");
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
-                    if( $( this ).children().size() < 2 ){
+                    if( $( this ).children().size() < 2 
+                        || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
                         $( this ).children().css( "width", "85%" );
                     }else{
                         $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );

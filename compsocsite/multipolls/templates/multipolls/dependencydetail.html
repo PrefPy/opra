@@ -40,7 +40,7 @@
                 <b>Your preferences:</b>
                 {% if request.flavour == "mobile" %}
                     <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-                        <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+                        <span class="glyphicon glyphicon-upload" style="font-size:80%;">Submit</span>
                     </button>
                     <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right;">
                         Submit
@@ -62,18 +62,19 @@
 
                 <ul id="left-sortable" >
                     {% if condition_responses %}
+                    
                         {% for s in condition_responses %}
-                            {% if s.0 %} 
+                            {% if s.0 %}
                                 <ul class="choice1 empty"></ul>
                                 <ul class="choice1">
-                                    <div class="tier">{{ s.1 }}</div>
+                                    <div class="tier">{{ s.0.1 }}</div>
                                     {% for selection in s %}
-                                        <li style="padding:10px;" id="item{{ selection.0.item_text }}">
+                                        <li class="item" id="item{{ selection.0.item_text }}">
                                             {% if selection.0.image %}
                                                 <img class="item" src='/{{ selection.0.image.url }}'/>
                                             {% endif %}
                                             {% if selection.0.imageURL != Null %}
-                                                <img class="item" src='{{ item.imageURL }}'/>
+                                                <img class="item" src='{{ selection.0.imageURL }}'/>
                                             {% endif %}
 
                                             {{ selection.0 }}
@@ -81,6 +82,7 @@
                                                 <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{selection.0.item_description}}"></span>
                                             {% endif %}
                                         </li>
+
                                     {% endfor %}
                                 </ul>
                             {% endif %}

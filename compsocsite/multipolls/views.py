@@ -358,7 +358,8 @@ class DependencyView(generic.DetailView):
         # check if the condition already exists
         if len(conditionalSet) > 0 and conditionIndex > -1 and conditionIndex < len(conditionalSet) and conditionalSet[conditionIndex].response != None:
             selectedCondition = conditionalSet[conditionIndex]
-            ctx["condition_items"] = list(selectedCondition.items.all())
+            condition_items = list(selectedCondition.items.all())
+            ctx["condition_items"] = condition_items
             ctx["condition_responses"] = getCurrentSelection(selectedCondition.response)  
         else:
             # this combination of choices does not have a response

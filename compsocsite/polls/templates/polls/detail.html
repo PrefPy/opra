@@ -120,7 +120,7 @@
                     <b>Your preferences:</b>
                     {% if request.flavour == "mobile" %}
                         <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-                            <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+                            <span class="glyphicon glyphicon-upload" style="font-size:80%;">Submit</span>
                         </button>
                     {% else %}
                         <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background">

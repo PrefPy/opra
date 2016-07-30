@@ -25,7 +25,6 @@ function insideEach(t, id, tier){
         $( t ).attr("id", id.toString());
         id += 1;
         $( t ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-        $( t ).before("<div class=\"tier\">" + tier + "</div>");
         if( $( t ).attr('class').indexOf('empty')>-1 ){ $( t ).removeClass('empty').addClass('choice1'); }
         if( $( t ).children().size() < 2 
             || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
@@ -33,6 +32,7 @@ function insideEach(t, id, tier){
         }else{
             $( t ).children().css( "width", "40%" ).css( "display", "inline-block" );
         }
+        $( t ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
         tier += 1;
         id += 1;
     }
@@ -85,6 +85,7 @@ function moveAll() {
     checkStyle();
     enableSubmission();
 };
+
 $( document ).ready(function() {
 
 !function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
@@ -175,7 +176,6 @@ function enableSubmission() {
                     $( this ).attr("id", id.toString());
                     id += 1;
                     $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-                    $( this ).before("<div class=\"tier\">" + tier + "</div>");
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
                     if( $( this ).children().size() < 2  
                         || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
@@ -183,6 +183,7 @@ function enableSubmission() {
                     }else{
                         $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
                     }
+                    $( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
                     tier += 1;
                     id += 1;
                 }
@@ -195,7 +196,6 @@ function enableSubmission() {
                     $( this ).attr("id", id.toString());
                     id += 1;
                     $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-                    $( this ).before("<div class=\"tier\">" + tier + "</div>");
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
                     if( $( this ).children().size() < 2 
                         || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
@@ -203,6 +203,7 @@ function enableSubmission() {
                     }else{
                         $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
                     }
+                    $( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
                     tier += 1;
                     id += 1;
                 }
@@ -252,17 +253,17 @@ function enableSubmission() {
                         }else{
                             $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
                         }
-                        $( this ).before("<div class=\"tier\">" + tier + "</div>");
+                        $( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
                         tier += 1;
                         prevEmpty = true;
                     }
                 });
                 if( $(newList).children().size() > 1 ){
                     $( ui.item ).css("width", "40%");
-                    ui.placeholder.css("position", "absolute").css("width", "40%").css("clear", "both");
+                    ui.placeholder.css("width", "40%");
                 }else{
                     $( ui.item ).css("width", "85%");
-                    ui.placeholder.css("position", "relative").css("width", "85%");
+                    ui.placeholder.css("width", "85%");
                 }
             }
         },

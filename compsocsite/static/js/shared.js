@@ -61,20 +61,20 @@ function checkStyle(){
             id += 1;
         }
     });
-    $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-    if( $( "#right-sortable" ).children().size == 0 ){ enableSubmission(); }
+    if($( "#right-sortable" ).children().size() > 0){
+        $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+    }
+    if( $( "#right-sortable" ).children().size() == 0 ){ enableSubmission(); }
 }
 
 function moveToPref(obj) {
 	var time = 100
 	var prefcolumn = $('#left-sortable');
-	var currentli = document.getElementById(obj.id);
+	var currentli = $(obj);
     console.log(obj.id);
 	prefcolumn.append(currentli);
     checkStyle();
-    if ($('#right-sortable li').length == 0) {
-        enableSubmission();
-    }
+    if ($('#right-sortable li').length == 0) { enableSubmission(); }
     $('#left-sortable li').each(function(){
         $(this).removeAttr('onclick');
     });

@@ -83,7 +83,7 @@ function enableSubmission() {
             $( ".tier" ).each(function( index ) {
                 $( this ).remove();
             });
-            $( ".choice1" ).each(function( index ) {
+            $( "#left-sortable" ).children().each(function( index ) {
                 if( $( this ).children().size() < 1 ){
                     $( this ).remove();
                 }else{
@@ -92,8 +92,7 @@ function enableSubmission() {
                     $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
                     $( this ).before("<div class=\"tier\">" + tier + "</div>");
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
-                    if( $( this ).children().size() < 2 
-                        || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
+                    if( $( this ).children().size() < 2 ){
                         $( this ).children().css( "width", "85%" );
                     }else{
                         $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
@@ -102,8 +101,29 @@ function enableSubmission() {
                     id += 1;
                 }
             });
-            $( ".choice1" ).last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-            if( $( "#right-sortable" ).children().size() == 0 ){ enableSubmission(); }
+            $( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+            $( "#right-sortable" ).children().each(function( index ) {
+                if( $( this ).children().size() < 1 ){
+                    $( this ).remove();
+                }else{
+                    $( this ).attr("id", id.toString());
+                    id += 1;
+                    $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+                    $( this ).before("<div class=\"tier\">" + tier + "</div>");
+                    if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
+                    if( $( this ).children().size() < 2 ){
+                        $( this ).children().css( "width", "85%" );
+                    }else{
+                        $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
+                    }
+                    tier += 1;
+                    id += 1;
+                }
+            });
+            if($( "#right-sortable" ).children().size() > 0){
+                $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+            }
+            if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
             // alert(oldList.attr('id')+" TO "+newList.attr('id'));
         },
 

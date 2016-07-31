@@ -144,7 +144,7 @@ $( document ).ready(function() {
 // })(window,document,'script','dataLayer','GTM-59SLDM');
     // -----------------------------------------------------------------------
 
-
+/*
     var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
     var wholeHeight2 = $('#right-sortable')[0].scrollHeight;
     if (wholeHeight1 > wholeHeight2) {
@@ -152,6 +152,7 @@ $( document ).ready(function() {
     } else {
         $('#left-sortable').css("height", wholeHeight2);
     }
+    */
     // $('#left-sortable').sortable('refresh');
     // $('#right-sortable').sortable('refresh');
           
@@ -349,6 +350,7 @@ function enableSubmission() {
                 $( ".line" ).each(function( index ) { $( this ).remove(); }); //get rid of placeholder uls
 
                 //go through each list
+                
                 $( ".choice1" ).each(function( index ) {
                     listId = parseInt($( this ).attr("id"));
                     if( $( this ).children().size() < 1 ){
@@ -379,7 +381,9 @@ function enableSubmission() {
                         tier += 1;
                         prevEmpty = false;
                     }
-                });
+                   
+                }
+                );
                 if( $(newList).children().size() > 1 
                         && !( /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
                     ui.placeholder.css("width", "45%").css("display","inline-block").css("vertical-align","top");

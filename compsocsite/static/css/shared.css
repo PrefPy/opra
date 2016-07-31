@@ -227,6 +227,7 @@ div{
     -ms-user-select:none;
     user-select:none;
     -o-user-select:none;
+    padding-left: 10px;
 }
 ul.choice1{
     -moz-user-select: none;
@@ -234,7 +235,8 @@ ul.choice1{
     -ms-user-select:none;
     user-select:none;
     -o-user-select:none;
-    padding-left: 10px;
+    padding-left: 30px;
+    padding-right: 20px;
 }
 li.li_item{
     display: inline-block;
@@ -242,5 +244,5 @@ li.li_item{
 }
 ul.empty {
     background-color:grey;
-    height: 5px;
+    height: 15px;
 }

@@ -342,6 +342,11 @@ class DependencyView(generic.DetailView):
         conditionsSelected = [] 
         for poll in combination.dependent_questions.all():
             pollStr = "poll" + str(poll.id)
+            
+            # no options for this poll
+            if poll.item_set.count() == 0:
+                continue
+
             if pollStr in self.request.session:
                 # use the variable from the current session
                 option = poll.item_set.get(item_text=self.request.session[pollStr])
@@ -366,6 +371,10 @@ class DependencyView(generic.DetailView):
             pollChoiceDict = {}
             for poll in combination.dependent_questions.all():
                 pollStr = "poll" + str(poll.id)
+                # no options for this poll
+                if poll.item_set.count() == 0:
+                    continue                
+
                 if pollStr in self.request.session:
                     # use the variable from the current session
                     pollChoiceDict[pollStr] = poll.item_set.get(item_text=self.request.session[pollStr])
@@ -447,6 +456,11 @@ def assignPreference(request, combination_id):
     conditionsSelected = []
     for poll in combination.dependent_questions.all():
         s = str(poll.id)
+        
+        # this poll has no choices, so nothing can be selected
+        if poll.item_set.count() == 0:
+            continue
+
         itemtxt = request.POST[s]
         item = poll.item_set.get(item_text=itemtxt)
         conditionsSelected.append(item)

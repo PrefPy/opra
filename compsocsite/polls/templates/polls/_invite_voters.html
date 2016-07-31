@@ -51,7 +51,9 @@
                 {% endfor %}
             </select>
             <input type="submit" class="btn btn-success" value="Invite">
+            {% if question.status == 1 %}
             <input type="submit" class="btn btn-danger" value="Remove" formaction="{% url 'groups:removegroupvoters' question.id %}">
+            {% endif %}
         </div>
         <br />
         <label for="email">Email announcement</label>

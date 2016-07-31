@@ -168,7 +168,7 @@ img:hover{
         {% csrf_token %}
         <fieldset class="form-group">
             <label for="Mtitle">Title</label>
-            <input type="text" class="form-control" style="width:70%;" name="Mtitle" size="50" value="{{ mpoll.title }}"/>
+            <input type="text" class="form-control" style="width:70%;" name="Mtitle" size="50" value="{{ mpoll.title }}" {% if mpoll.status != 0 %} disabled {% endif %}/>
         </fieldset>
         <fieldset class="form-group">
             <label for="Mdesc">Description</label>

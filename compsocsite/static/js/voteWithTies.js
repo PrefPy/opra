@@ -168,6 +168,98 @@ function enableSubmission() {
     var oldList, newList, item;
       
     window.setInterval(function(){
+    // $("#left-sortable").sortable({
+    //     start: function(event, ui){
+    //         $( ".empty" ).each(function( index ) { $( this ).remove(); });
+    //         $( ".tier" ).each(function( index ) { $( this ).css("display", "none"); }); //get rid of the tier divs
+    //     },
+        
+    //     stop: function(event, ui) {
+    //         var len = $(".choice1").length;
+    //         newItem = "<ul class=\"choice1 empty\"></ul>";
+    //         var tier = 1;
+    //         var id = 0;
+    //         $( ".tier" ).each(function( index ) {
+    //             $( this ).remove();
+    //         });
+    //         $( "#left-sortable" ).children().each(function( index ) {
+    //             if( $( this ).children().size() < 1 ){
+    //                 $( this ).remove();
+    //             }else{
+    //                 $( this ).attr("id", id.toString());
+    //                 id += 1;
+    //                 $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+    //                 if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
+    //                 if( $( this ).children().size() < 2  
+    //                     || ( /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
+    //                     $( this ).children().css( "width", "93%" );
+    //                 }else{
+    //                     $( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
+    //                 }
+    //                 $( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
+    //                 tier += 1;
+    //                 id += 1;
+    //             }
+    //         });
+    //         $( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+    //         $( "#right-sortable" ).children().each(function( index ) {
+    //             if( $( this ).children().size() < 1 ){
+    //                 $( this ).remove();
+    //             }else{
+    //                 $( this ).attr("id", id.toString());
+    //                 id += 1;
+    //                 $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+    //                 if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
+    //                 if( $( this ).children().size() < 2 
+    //                     || ( /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
+    //                     $( this ).children().css( "width", "93%" );
+    //                 }else{
+    //                     $( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
+    //                 }
+    //                 $( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
+    //                 tier += 1;
+    //                 id += 1;
+    //             }
+    //         });
+    //         if($( "#right-sortable" ).children().size() > 0){
+    //             $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+    //         }
+    //         if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
+    //     },
+
+    //     change: function(event, ui) {  
+    //         if(ui.sender){
+                
+    //             //variables
+    //             newList = ui.placeholder.parent(); //the list the item is hovering over
+    //             var newListId = parseInt($( newList ).attr("id")); //the id of the list
+    //             var oldListId = parseInt($( oldList ).attr("id")); //the id of the old list
+    //             var listId;
+    //             var prevEmpty = false;
+                
+                
+    //             newItem = "<ul class=\"choice1 empty line\"></ul>";
+    //             var tier = 1;
+
+    //             $( ".tier" ).each(function( index ) { $( this ).remove(); }); //get rid of the tier divs
+    //             $( ".line" ).each(function( index ) { $( this ).remove(); }); //get rid of placeholder uls
+
+    //             $( "ul.choice1" ).each(function(index){
+    //                 console.log("this");
+    //                 if($( this ).children().size() != 0){
+    //                     console.log("hi");
+    //                     $( this ).before(newItem);
+    //                 }
+    //             });
+                
+    //             ui.placeholder.css("width", "93%");
+    //             ui.placeholder.height(ui.item.height());
+    //         }
+    //     },
+    //     placeholder: "ui-state-highlight",
+    //     items: "ul:not(.empty)"
+    // });
+
     $("ul.choice1").sortable({
        
         start: function(event, ui) {
@@ -237,7 +329,6 @@ function enableSubmission() {
                 $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
             }
             if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
-            // alert(oldList.attr('id')+" TO "+newList.attr('id'));
         },
 
         change: function(event, ui) {  

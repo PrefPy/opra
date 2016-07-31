@@ -70,7 +70,7 @@ nopadding {
 #left-sortable, #right-sortable {
     list-style-type: none;
     margin: 0;
-    padding: 10px;
+    padding: 0px;
 }
 #left-sortable li, #right-sortable li {
     display: block;
@@ -113,7 +113,23 @@ button:hover .greencolor {
 .margin-panel-top {
     margin-top: 12px;
 }
-	
+
+@media only screen and (max-device-width: 480px) {
+    .panel-body {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+
+    .container-fluid {
+        padding-left:0px;
+        padding-right:0px;
+    }
+
+    .margin-panel-top {
+        padding: 0;
+    }
+}
+
 
 .btn-danger.reset-button {
     background: rgb(201, 48, 44, 0.9);
@@ -218,6 +234,7 @@ ul.choice1{
     -ms-user-select:none;
     user-select:none;
     -o-user-select:none;
+    padding-left: 10px;
 }
 li.li_item{
     display: inline-block;

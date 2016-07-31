@@ -22,7 +22,12 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
         
     <link rel="stylesheet" type="text/css" href="{% static 'css/shared.css' %}"/>
-
+	
+	{% if request.flavour == "mobile" %}
+	<link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
+	{% else %}
+	<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
+	{% endif %}
 
 	<!-- Somehow else does not work, had to use two "if"'s 
 	{% if request.flavour == "mobile" %}
@@ -220,16 +225,16 @@
 				    <div class="container-fluid">
 				    {% endif %}
                         <div class="navbar-header" >
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" style="background-color:white;">
+                            <a type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" style="background-color:white;">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
-                              </button>
+                              </a>
                             
                             
-                            <a class="navbar-brand" href="/polls/" style ="font-size: 150%; {% if request.flavour == 'mobile' %}
-                            margin-top: 5px; 
+                            <a class="navbar-brand" href="/polls/" style ="font-size: 100%; {% if request.flavour == 'mobile' %}
+                            margin-top: 5px;
                             {% endif %}
                             {% if user.is_authenticated %}
                             color:white;

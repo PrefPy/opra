@@ -121,8 +121,7 @@ button:hover .greencolor {
 
 .reset-button-mobile {
     margin-bottom: 0;
-    border-radius: 25px;
-    background: linear-gradient(to bottom, orangered 0%,darkred 100%);
+    background: darkred;
 }
 
 .btn-success.submit-button {
@@ -132,13 +131,12 @@ button:hover .greencolor {
 
 .submit-button-mobile {
     border: none; 
-    border-radius: 30px;
     float: right; 
     width: 30%; 
     height: 1.25em; 
     margin: 0; 
     display: none;
-    background: linear-gradient(to bottom, lightgreen 0%,darkgreen 100%);
+    background: darkgreen;
 }
 
 .btn-primary.move-all-button {
@@ -147,12 +145,11 @@ button:hover .greencolor {
 
 .move-all-button-mobile {
     border: none; 
-    border-radius: 25px;
     float: right; 
     width: 30%; 
     height: 1.25em; 
     margin: 0;
-    background: linear-gradient(to bottom, lightblue 0%,darkblue 100%);
+    background: darkblue;
 }
 
 body.dragging, body.dragging * {
@@ -227,6 +224,6 @@ li.li_item{
     padding: 10px;
 }
 ul.empty {
-    background-color:black;
+    background-color:grey;
     height: 5px;
 }

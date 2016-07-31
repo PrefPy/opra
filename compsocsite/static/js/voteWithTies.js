@@ -30,7 +30,7 @@ function insideEach(t, id, tier){
             || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
             $( t ).children().css( "width", "85%" );
         }else{
-            $( t ).children().css( "width", "40%" ).css( "display", "inline-block" );
+            $( t ).children().css( "width", "40%" );
         }
         $( t ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
         tier += 1;
@@ -272,7 +272,7 @@ function enableSubmission() {
                             || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
                             $( this ).children().css( "width", "85%" );
                         }else{
-                            $( this ).children().css( "width", "40%" ).css( "display", "inline-block" );
+                            $( this ).children().css( "width", "40%" );
                         }
                         $( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
                         tier += 1;
@@ -280,11 +280,11 @@ function enableSubmission() {
                     }
                 });
                 if( $(newList).children().size() > 1 ){
-                    ui.item.width(ui.placeholder.width());
                     ui.placeholder.css("width", "40%");
-                }else{
                     ui.item.width(ui.placeholder.width());
+                }else{
                     ui.placeholder.css("width", "85%");
+                    ui.item.width(ui.placeholder.width());
                 }
             }
         },

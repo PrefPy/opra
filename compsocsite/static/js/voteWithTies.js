@@ -174,12 +174,13 @@ function enableSubmission() {
             ui.placeholder.height(ui.item.height());
             item = ui.item;
             
-            if (item.parent().children().size() <3){
-            		ui.placeholder.css("width", "93%");
-            		ui.item.width(ui.placeholder.width());
+            if (item.parent().children().size() <3
+                || ( /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
+        		ui.placeholder.css("width", "93%");
+        		ui.item.width(ui.placeholder.width());
             }else{
-            		ui.placeholder.css("width", "45%").css("display","inline-block").css("vertical-align","top");
-            		ui.item.width(ui.placeholder.width());
+        		ui.placeholder.css("width", "45%").css("display","inline-block").css("vertical-align","top");
+        		ui.item.width(ui.placeholder.width());
             };
             newList = oldList = oL = ui.item.parent();
             

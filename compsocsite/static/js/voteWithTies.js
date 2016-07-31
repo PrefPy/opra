@@ -28,9 +28,9 @@ function insideEach(t, id, tier){
         if( $( t ).attr('class').indexOf('empty')>-1 ){ $( t ).removeClass('empty').addClass('choice1'); }
         if( $( t ).children().size() < 2 
             || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
-            $( t ).children().css( "width", "85%" );
+            $( t ).children().css( "width", "93%" );
         }else{
-            $( t ).children().css( "width", "40%" ).css("display","inline-block").css("vertical-align","top");
+            $( t ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
         }
         $( t ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
         tier += 1;
@@ -78,12 +78,13 @@ function moveToPref(obj) {
 
 function moveAll() {
     $( '#left-sortable' ).html( $( '#left-sortable' ).html() + $( '#right-sortable' ).html() );
-    $( '#right-sortable' ).html("")
-    $('#left-sortable li').each(function(){
-        $(this).removeAttr('onclick')
-    });
+    $( '#right-sortable' ).html("")    
     checkStyle();
     enableSubmission();
+    $('#left-sortable li').each(function(){
+        $(this).removeAttr('onclick');
+    });
+    
 };
 
 function clearAll(){
@@ -170,10 +171,10 @@ function enableSubmission() {
             item = ui.item;
             
             if (item.parent().children().size() <3){
-            		ui.placeholder.css("width", "85%");
+            		ui.placeholder.css("width", "93%");
             		ui.item.width(ui.placeholder.width());
             }else{
-            		ui.placeholder.css("width", "40%").css("display","inline-block").css("vertical-align","top");
+            		ui.placeholder.css("width", "45%").css("display","inline-block").css("vertical-align","top");
             		ui.item.width(ui.placeholder.width());
             };
             newList = oldList = oL = ui.item.parent();
@@ -198,9 +199,9 @@ function enableSubmission() {
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
                     if( $( this ).children().size() < 2  
                         || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
-                        $( this ).children().css( "width", "85%" );
+                        $( this ).children().css( "width", "93%" );
                     }else{
-                        $( this ).children().css( "width", "40%" ).css("display","inline-block").css("vertical-align","top");
+                        $( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
                     }
                     $( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
                     tier += 1;
@@ -218,9 +219,9 @@ function enableSubmission() {
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
                     if( $( this ).children().size() < 2 
                         || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
-                        $( this ).children().css( "width", "85%" );
+                        $( this ).children().css( "width", "93%" );
                     }else{
-                        $( this ).children().css( "width", "40%" ).css("display","inline-block").css("vertical-align","top");
+                        $( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
                     }
                     $( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
                     tier += 1;
@@ -257,12 +258,17 @@ function enableSubmission() {
                     if( $( this ).children().size() < 1 ){
                         $( this ).addClass('empty');
                         if(prevEmpty){
-                            //$( this ).remove();
-                        }else{ prevEmpty = true; }
+                            $( this ).remove();
+                        }else{
+                        		prevEmpty = true;	
+                        }
+                        
                     }else if((listId == oldListId && listId != newListId
                         && $( oldList ).children().size() == 1)){
                         $( this ).css("height", "0");
+                        prevEmpty = true;
                     }else{
+						prevEmpty = false;
                         if( $( this ).attr('class').indexOf('empty')>-1 ){
                             $( this ).removeClass('empty');
                             $( this ).after(newItem);
@@ -270,20 +276,20 @@ function enableSubmission() {
                         }
                         if( $( this ).children().size() < 2
                             || ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
-                            $( this ).children().css( "width", "85%" );
+                            $( this ).children().css( "width", "93%" );
                         }else{
-                            $( this ).children().css( "width", "40%" ).css("display","inline-block").css("vertical-align","top");
+                            $( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
                         }
                         $( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
                         tier += 1;
-                        prevEmpty = true;
+                        prevEmpty = false;
                     }
                 });
                 if( $(newList).children().size() > 1 ){
-                    ui.placeholder.css("width", "40%").css("display","inline-block").css("vertical-align","top");
+                    ui.placeholder.css("width", "45%").css("display","inline-block").css("vertical-align","top");
                     ui.item.width(ui.placeholder.width());
                 }else{
-                    ui.placeholder.css("width", "85%");
+                    ui.placeholder.css("width", "93%");
                     ui.item.width(ui.placeholder.width());
                 }
             }

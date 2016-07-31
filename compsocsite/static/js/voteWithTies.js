@@ -168,7 +168,16 @@ function enableSubmission() {
         start: function(event, ui) {
             ui.placeholder.height(ui.item.height());
             item = ui.item;
+            
+            if (item.parent().children().size() <3){
+            		ui.placeholder.css("width", "85%");
+            		ui.item.width(ui.placeholder.width());
+            }else{
+            		ui.placeholder.css("width", "40%");
+            		ui.item.width(ui.placeholder.width());
+            };
             newList = oldList = oL = ui.item.parent();
+            
         },
         
         stop: function(event, ui) {
@@ -227,12 +236,14 @@ function enableSubmission() {
 
         change: function(event, ui) {  
             if(ui.sender){
+            	
                 //variables
                 newList = ui.placeholder.parent(); //the list the item is hovering over
                 var newListId = parseInt($( newList ).attr("id")); //the id of the list
                 var oldListId = parseInt($( oldList ).attr("id")); //the id of the old list
                 var listId;
                 var prevEmpty = false;
+                
                 
                 newItem = "<ul class=\"choice1 empty line\"></ul>";
                 var tier = 1;
@@ -269,10 +280,10 @@ function enableSubmission() {
                     }
                 });
                 if( $(newList).children().size() > 1 ){
-                    $( ui.item ).css("width", "40%");
+                    ui.item.width(ui.placeholder.width());
                     ui.placeholder.css("width", "40%");
                 }else{
-                    $( ui.item ).css("width", "85%");
+                    ui.item.width(ui.placeholder.width());
                     ui.placeholder.css("width", "85%");
                 }
             }

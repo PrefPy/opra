@@ -79,7 +79,7 @@ nopadding {
     background: #F5F5F5;
     border: solid;
     border-radius: 2px;
-    padding-left:50px;
+    padding-left:10px;
 }
 
 html > body #sortable li {

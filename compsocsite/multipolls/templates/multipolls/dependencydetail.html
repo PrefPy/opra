@@ -8,7 +8,7 @@
             <div class="col-md-4 margin-panel-top">
                 <h4>Poll {{ poll.question_text }}</h4>
                 Select a choice for this dependent poll: <br />
-                <select id="dynamic_select{{ poll.id }}" class="btn-group" name="{{ poll.id }}" size="{{poll.item_set.count}}" id="combinationtable">
+                <select id="dynamic_select{{ poll.id }}" class="btn-group" name="{{ poll.id }}" size="2" id="combinationtable">
                     
                         {% for item in poll.item_set.all %}
                             {% for row in colorArray %}

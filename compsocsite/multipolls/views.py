@@ -199,8 +199,9 @@ def progress(request, multipoll_id):
                     # save this response
                     if flag == True:
                         response = condition.response
-                        response.question = poll
-                        response.save()
+                        if response != None:
+                            response.question = poll
+                            response.save()
         elif poll.question_type == 2: # allocation
             user = request.user
             for combination in poll.combination_set.all():
@@ -215,8 +216,9 @@ def progress(request, multipoll_id):
                     # save this response
                     if flag == True:
                         response = condition.response
-                        response.question = poll
-                        response.save()
+                        if response != None:
+                            response.question = poll
+                            response.save()
     #all the polls have ended
     else:
         #end the last poll

@@ -276,6 +276,7 @@
                             
 							
 							{% else %}
+							
 							<ul class="nav navbar-nav navbar-right pull-right">
 								<li>
 									<a href="{% url 'appauth:register' %}" style="color:black;"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
@@ -284,8 +285,7 @@
 									<a data-toggle="modal" data-target="#loginmodal"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
 								</li>
 							</ul>
-
-
+							
 							{% endif %}
                             </div>
 						</div><!--/.container-fluid -->
@@ -311,6 +311,7 @@
                     </ul>
     
             {% else %}
+            <br>
                 <div name="MainPage">
             {% endif %}
             {% block content %}

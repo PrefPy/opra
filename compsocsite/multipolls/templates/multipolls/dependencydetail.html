@@ -1,14 +1,30 @@
 {% load mathfilters %}
 
+<style>
+	.btn-group:focus{
+		outline:none;
+		border-style:none;
+	}
+</style>
+
 <div>
     <form action="{% url 'multipolls:assignpreference' combination.id %}" method="post">
         {% csrf_token %}
-        <div style="clear:both" class="col-md-12" >
+        <div class="col-md-12">
+        <div class="panel panel-default panel-border">
+                <div class="panel-heading">
+                	Conditional Preferences
+                </div>
+        <div style="clear:both" class="panel-body" >
         {% for poll in combination.dependent_questions.all %}
-            <div class="col-md-4 margin-panel-top">
+        <div class = "col-md-4">
+        <div class="panel panel-default">
+		
+            <div class=" panel-heading">
                 <h4>Poll {{ poll.question_text }}</h4>
-                Select a choice for this dependent poll: <br />
-                <select id="dynamic_select{{ poll.id }}" class="btn-group" name="{{ poll.id }}" size="2" id="combinationtable">
+                </div>
+            <div class=" panel-body">   
+                <select id="dynamic_select{{ poll.id }}" class="btn-group" name="{{ poll.id }}" size="2" id="combinationtable" style="border-style: none;">
                     
                         {% for item in poll.item_set.all %}
                             {% for row in colorArray %}
@@ -27,7 +43,11 @@
              
                 </select>
             </div>
+        </div>
+        </div>
         {% endfor %}
+        </div>
+        </div>
         </div>
         {% if request.flavour == "mobile" %}
         <div class="col-md-6 margin-panel-top">
@@ -53,7 +73,7 @@
                         Submit
                     </button>
                 {% endif %}
-                <input type="checkbox" name="default_pref"> Set as default preferences</input>
+                <input type="checkbox" name="default_pref"> Set as default</input>
                 <input type="hidden" id="pref_order" name="pref_order" value=""/>
             </div>
       
@@ -108,7 +128,6 @@
             <div class="panel panel-default panel-border" id="dependencyremain">
                 <div class="panel-heading">
                     <b>Remaining Options:</b>
-                    
                     {% if request.flavour == "mobile" %}
                         <button onclick="moveAll(); return false;" class="move-all-button-mobile">
                             <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>

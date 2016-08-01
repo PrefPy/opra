@@ -66,7 +66,7 @@
 					<a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
 				</div>
 				{% endif %}
-				<div class="col-md-10" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
+				<div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>
 					<h4 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}><span class="caret" style="color:#377BB5;"></span> {{ question.question_text }} <small class="text-muted">(Created by {{ question.question_owner }})</small></h4>
 
 					<!-- <p>

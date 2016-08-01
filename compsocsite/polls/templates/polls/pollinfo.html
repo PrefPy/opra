@@ -215,14 +215,13 @@ img:hover{
     {% if question.open == False %}
         <a href="{% url 'polls:openpoll' question.id %}" class="btn btn-success btn-ok">Open Poll</a>
     {% else %}
-        <h4>Here is the QR Code for inviting users who have not logged in</h4>
         <div id="qrcode" style="margin-top:15px;">
             <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:detail' question.id %}" style="width:400px" />
         </div>
         <a href="#" id="showQRLink">Show Link</a>
         <a href="#" id="hideQRLink">Hide Link</a>
         <br />
-        <a href="{% url 'polls:detail' question.id %}" id="QRLink">{{request.get_host}}{% url 'polls:detail' question.id %}</a>
+        <h3 href="{% url 'polls:detail' question.id %}" id="QRLink">{{request.get_host}}{% url 'polls:detail' question.id %}</h3>
         <br />
         <a href="{% url 'polls:closepoll' question.id %}" class="btn btn-danger">Close Poll</a>
     {% endif %}

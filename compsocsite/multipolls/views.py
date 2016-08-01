@@ -187,38 +187,27 @@ def progress(request, multipoll_id):
         
         # check conditional preferences
         poll = multipoll.questions.all()[multipoll.status-1]
-        if poll.question_type == 1: # poll
-            for combination in poll.combination_set.all(): 
-                for condition in combination.conditionalitem_set.all(): 
-                    flag = True
-                    for item in condition.items.all():
+        for combination in poll.combination_set.all(): 
+            for condition in combination.conditionalitem_set.all(): 
+                flag = True
+                for item in condition.items.all():
+                    if poll.question_type == 1: # poll
                         # this combination does not have the winner
                         if item.item_text not in item.question.winner:
                             flag = False
-
-                    # save this response
-                    if flag == True:
-                        response = condition.response
-                        if response != None:
-                            response.question = poll
-                            response.save()
-        elif poll.question_type == 2: # allocation
-            user = request.user
-            for combination in poll.combination_set.all():
-                for condition in combination.conditionalitem_set.all():
-                    flag = True
-                    for item in condition.items.all():
+                    elif poll.question_type == 2:
+                        user = request.user
                         latest_response = item.question.response_set.all().filter(user=user)[0]
                         # this combination does not have the allocation
                         if latest_response.allocation != item:
-                            flag = False
+                            flag = False                        
 
-                    # save this response
-                    if flag == True:
-                        response = condition.response
-                        if response != None:
-                            response.question = poll
-                            response.save()
+                # save this response
+                if flag == True:
+                    response = condition.response
+                    if response != None:
+                        response.question = poll
+                        response.save()
     #all the polls have ended
     else:
         #end the last poll

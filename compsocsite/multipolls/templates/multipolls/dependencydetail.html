@@ -24,7 +24,8 @@
                 <h4>Poll {{ poll.question_text }}</h4>
                 </div>
             <div class=" panel-body">   
-                <select id="dynamic_select{{ poll.id }}" class="btn-group" name="{{ poll.id }}" size="2" id="combinationtable" style="border-style: none;">
+                <div class="table-responsive">
+                <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" size="2" id="combinationtable" style="border-style: none;">
                     
                         {% for item in poll.item_set.all %}
                             {% for row in colorArray %}
@@ -42,6 +43,7 @@
                         {% endfor %}
              
                 </select>
+                </div>
             </div>
         </div>
         </div>

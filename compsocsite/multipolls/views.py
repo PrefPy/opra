@@ -180,11 +180,11 @@ def endSubpoll(multipoll):
 
 # end the next poll in the sequence    
 def progress(request, multipoll_id):
-    multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
+    multipoll = get_object_or_404(MultiPoll, pk=multipoll_id) 
+    endSubpoll(multipoll)
+
     #poll in session
-    if multipoll.status < multipoll.number:
-        endSubpoll(multipoll)
-        
+    if multipoll.status < multipoll.number:        
         # check conditional preferences
         poll = multipoll.questions.all()[multipoll.status-1]
         for combination in poll.combination_set.all(): 
@@ -208,10 +208,7 @@ def progress(request, multipoll_id):
                     if response != None:
                         response.question = poll
                         response.save()
-    #all the polls have ended
-    else:
-        #end the last poll
-        endSubpoll(multipoll)
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class mpollinfoView(generic.DetailView):
@@ -290,12 +287,6 @@ def editBasicInfo(request, multipoll_id):
     question.description = new_desc    
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
-
-# check whether this poll is the first one in a multipoll
-def dependencyRedirect(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-
-    return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(question.id,)))
 
 # display the dependent polls selected 
 # allow the user to vote on this poll given the preferences for the previous dependent polls

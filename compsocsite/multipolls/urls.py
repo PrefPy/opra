@@ -26,7 +26,6 @@ urlpatterns = [
     url(r'^(?P<multipoll_id>[0-9]+)/start/$', views.start, name='start'), 
         
     # subpoll voting
-    url(r'^subpoll/(?P<question_id>[0-9]+)/dependency/$', views.dependencyRedirect, name='dependency'),
     url(r'^dependency/(?P<combination_id>[0-9]+)/get/$', views.getConditionalResponse, name='dependencyget'),
     url(r'^subpoll/(?P<pk>[0-9]+)/dependency/view/$', views.DependencyView.as_view(), name='dependencyview'),
     url(r'^subpoll/(?P<question_id>[0-9]+)/dependency/view/prefgraph$', views.updatePrefGraph, name='updatePrefGraph'),

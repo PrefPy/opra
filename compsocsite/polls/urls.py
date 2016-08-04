@@ -6,12 +6,11 @@ from . import email
 
 app_name = 'polls'
 urlpatterns = [
-               
     url(r'^$', login_required(views.IndexView.as_view()), name='index'),
     url(r'^main$', views.MainView.as_view(), name='index_guest'),
     #Two main types of polls
-    url(r'^regular_polls$',views.RegularPollsView.as_view(), name='regular_polls'),
-    url(r'^m_polls$',views.MultiPollsView.as_view(), name='m_polls'),
+    url(r'^regular_polls$', login_required(views.RegularPollsView.as_view()), name='regular_polls'),
+    url(r'^m_polls$', login_required(views.MultiPollsView.as_view()), name='m_polls'),
     url(r'^(?P<pk>[0-9]+)/demo$', views.DemoView.as_view(), name='voting_demo'),
    
     # Create a new poll

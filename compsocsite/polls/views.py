@@ -382,7 +382,6 @@ def getCurrentSelection(mostRecentResponse):
     for itr in range(len(rd)):
         array.append([]);
         array[rd[itr][1] - 1].append(rd[itr])
-    print(array)
     return array
 
 # view for question detail
@@ -818,7 +817,6 @@ def getRecommendedOrder(otherUserResponses, request, defaultOrder):
     final_list = []
     for p in reversed(l):
         final_list.append(candMap[p[0]])
-    print(final_list)
     return final_list    
  
 # function to add voter to voter list (invite only)
@@ -921,7 +919,6 @@ class AllocationOrder(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(AllocationOrder, self).get_context_data(**kwargs)
         currentAllocationOrder = self.object.allocationvoter_set.all()
-        print(currentAllocationOrder)
         tempOrderStr = self.request.GET.get('order', '')
         if tempOrderStr == "null":
             ctx['question_voters'] = self.object.question_voters.all()

@@ -465,9 +465,8 @@ class PollInfoView(generic.DetailView):
         
         # display this user's history
         currentUserResponses = (self.object.response_set.filter(user=self.request.user).reverse())
-        ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
-        ctx['mostRecentSelection'] = getCurrentSelection(currentUserResponses[0]) if (len(currentUserResponses) > 0) else None
-        ctx['history'] = getSelectionList(currentUserResponses[1:])
+        ctx['user_latest_responses'] = getSelectionList([currentUserResponses[0]]) if (len(currentUserResponses) > 0) else None
+        ctx['user_previous_responses'] = getSelectionList(currentUserResponses[1:])
         
         # get history of all users
         all_responses = self.object.response_set.reverse()
@@ -579,7 +578,7 @@ def parseWmg(latest_responses):
 
     return (nodes, edges)
 
-# format a list of votes
+# format a list of votes to account for ties
 def getSelectionList(responseList):
     selectList = []
     for response in responseList:

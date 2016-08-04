@@ -461,15 +461,19 @@ class PollInfoView(generic.DetailView):
         ctx['items'] = self.object.item_set.all()
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
-        ctx['alloc_methods'] = getAllocMethods()     
-        currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
-        ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
-        ctx['history'] = currentUserResponses[1:]
+        ctx['alloc_methods'] = getAllocMethods()
         
+        # display this user's history
+        currentUserResponses = (self.object.response_set.filter(user=self.request.user).reverse())
+        ctx['mostRecentResponse'] = currentUserResponses[0] if (len(currentUserResponses) > 0) else None
+        ctx['mostRecentSelection'] = getCurrentSelection(currentUserResponses[0]) if (len(currentUserResponses) > 0) else None
+        ctx['history'] = getSelectionList(currentUserResponses[1:])
+        
+        # get history of all users
         all_responses = self.object.response_set.reverse()
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
-        ctx['latest_responses'] = latest_responses
-        ctx['previous_responses'] = previous_responses    
+        ctx['latest_responses'] = getSelectionList(latest_responses)
+        ctx['previous_responses'] = getSelectionList(previous_responses)    
         return ctx
     def get_queryset(self):
         """
@@ -574,6 +578,13 @@ def parseWmg(latest_responses):
                 edges.append(data)
 
     return (nodes, edges)
+
+# format a list of votes
+def getSelectionList(responseList):
+    selectList = []
+    for response in responseList:
+        selectList.append((response, getCurrentSelection(response)))
+    return selectList
 
 #separate the user votes into two categories: (1)most recent (2)previous history
 def categorizeResponses(all_responses):

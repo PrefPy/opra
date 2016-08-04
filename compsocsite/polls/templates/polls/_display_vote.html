@@ -1,0 +1,16 @@
+{% for s in currentSelection %}
+    {% if s.0 %}
+    <button type="button" class="btn btn-default">
+        ({{ s.0.1 }})
+
+        {% for selection in s %}
+            {{ selection.0 }} {% if forloop.counter != s|length %},{% endif %}
+        {% endfor %}
+    </button>
+    {% endif %}
+{% endfor %}
+
+{% if response.comment %}
+    <p>Comment: {{response.comment}}</p>
+{% endif %}
+<br />

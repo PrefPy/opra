@@ -371,64 +371,49 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="general">
     {% include 'polls/_voters_generalinfo.html' %}
 </div>
-            {% endif %}  
-                  
-                  
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo">
-      <h3 class="page-header">History votes of {{ question.question_text }} </h3>
+{% endif %}  
+                                    
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo">
+    <h3 class="page-header">History votes of {{ question.question_text }} </h3>
         <!-- Display most recent vote -->
         {% if question.question_owner == request.user %}
             {% if latest_responses|length > 0 %}
-                {% for response in latest_responses %}
+                {% for response, currentSelection in latest_responses %}
+                    <!-- display name -->
                     {% if response.user %}
-                    {% if response.user.first_name == "" %}
-                        <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
-                    {% else %}
-                        {{ response.user.first_name }} {{ response.user.last_name }} (<a href="mailto:{{ response.user.email }}">{{ response.user.email }}</a>)
-                        (last voted on {{ response.timestamp }}) <br />
-                    {% endif %}
+                        {% if response.user.first_name == "" %}
+                            <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
+                        {% else %}
+                            {{ response.user.first_name }} {{ response.user.last_name }} (<a href="mailto:{{ response.user.email }}">{{ response.user.email }}</a>)
+                            (last voted on {{ response.timestamp }}) <br />
+                        {% endif %}
                     {% else %}
                         <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br />
                     {% endif %}
-                    <div >
-                    {% for d in response.dictionary_set.all %}
-                        {% for item in d.sorted_values %}
-                        <button type="button" class="btn btn-default"> ({{ item.1 }}) {{ item.0 }} </button>
-                        {% endfor %}
-                    {% endfor %}
-                    </div>
-                    {% if response.comment %}
-                        <p>Comment: {{response.comment}}</p>
-                    {% endif %}
+
+                    {% include 'polls/_display_vote.html' %}
                 {% endfor %} <!-- for response-->
                 <br />
                 <br />
                 {% if previous_responses %}
-                <button data-toggle="collapse" data-target="#history" class="btn btn-info" >Show/Hide More History</button>
-                <div id="history" class="collapse">
-                    <div class="well">
-                    {% for response in previous_responses %}
-                        <div class="btn-group">
-                            {% if response.user %}
-                            <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
-                            {% else %}
-                            <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br />
-                            {% endif %} 
-                            {% for d in response.dictionary_set.all %}
-                                {% for item in d.sorted_values %}
-                            <button type="button" class="btn btn-default"> ({{ item.1 }}) {{ item.0 }} </button>
-                                {% endfor %}
-                            {% endfor %}
-                            {% if response.comment %}
-                        <p>Comment: {{response.comment}}</p>
-                        {% endif %}
+                    <button data-toggle="collapse" data-target="#history" class="btn btn-info" >Show/Hide More History</button>
+                    <div id="history" class="collapse">
+                        <div class="well">
+                        {% for response, currentSelection in previous_responses %}
+                            <div class="btn-group">
+                                <!-- display name -->
+                                {% if response.user %}
+                                    <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
+                                {% else %}
+                                    <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br />
+                                {% endif %} 
+
+                                {% include 'polls/_display_vote.html' %}
+                            </div>
+                        {% endfor %}
                         </div>
-                        
-                    {% endfor %}
                     </div>
-                </div>
-                {% endif %} <!--previous reoinses-->
-        
+                {% endif %} <!--previous responses-->
             {% else %} 
                 <p>No one has voted on this poll yet.</p>
             {% endif %} <!-- no response-->
@@ -437,13 +422,19 @@
             {% if mostRecentResponse %}
                 <div>
                     <b>{{ mostRecentResponse.user.username }}</b> (last voted on {{ mostRecentResponse.timestamp }}) <br /> 
-                    {% for d in mostRecentResponse.dictionary_set.all %}
-                        {% for item in d.sorted_values %}
-                   <button type="button" class="btn btn-default">({{ item.1 }}) {{ item.0 }} </button>
-                        {% endfor %}
+                    {% for s in mostRecentSelection %}
+                        {% if s.0 %}
+                        <button type="button" class="btn btn-default">
+                            ({{ s.0.1 }})
+
+                            {% for selection in s %}
+                                {{ selection.0 }} {% if forloop.counter != s|length %},{% endif %}
+                            {% endfor %}
+                        </button>
+                        {% endif %}
                     {% endfor %}
-                    {% if response.comment %}
-                        <p>Comment: {{response.comment}}</p>
+                    {% if mostRecentResponse.comment %}
+                        <p>Comment: {{mostRecentResponse.comment}}</p>
                     {% endif %}
                 </div>
                 <br />
@@ -452,18 +443,12 @@
                 <button data-toggle="collapse" data-target="#history" class="btn btn-info">Show/Hide History</button>
                 <div id="history" class="collapse">
                     <div class="well">
-                    {% for response in history %}
-                        <ul class="list-group">
-                            <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
-                            {% for d in response.dictionary_set.all %}
-                                {% for item in d.sorted_values %}
-                            <li class="list-group-item">   ({{ item.1 }}) {{ item.0 }} </li>
-                                {% endfor %}
-                            {% endfor %}
-                            {% if response.comment %}
-                        <p>Comment: {{response.comment}}</p>
-                        {% endif %}
-                        </ul>
+                    {% for response, currentSelection in history %}
+                    <ul class="list-group">
+                        <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
+
+                        {% include 'polls/_display_vote.html' %}
+                    </ul>
                     {% endfor %}
                     </div>
                 </div>
@@ -478,40 +463,28 @@
             {% if question.display_pref == 1 %}
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
                 <p>The owner allows everyone to see all votes cast.</p>
-                {% for response in latest_responses %}
+                {% for response, currentSelection in latest_responses %}
                 {% if response.user %}
                     {% if response.user != request.user %}
                         <div class="btn-group">
                             <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
-                            {% for d in response.dictionary_set.all %}
-                                {% for item in d.sorted_values %}
-                            <button type="button" class="btn btn-default"> {{ item.1 }}) {{ item.0 }} </button>
-                                {% endfor %}
-                            {% endfor %}
-                            {% if response.comment %}
-                        <p>Comment: {{response.comment}}</p>
-                        {% endif %}
+                            
+                            {% include 'polls/_display_vote.html' %}
                         </div>
                     {% endif %}
                 {% else %}
-                <div class="btn-group">
-                            <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br /> 
-                            {% for d in response.dictionary_set.all %}
-                                {% for item in d.sorted_values %}
-                            <button type="button" class="btn btn-default"> {{ item.1 }}) {{ item.0 }} </button>
-                                {% endfor %}
-                            {% endfor %}
-                            {% if response.comment %}
-                        <p>Comment: {{response.comment}}</p>
-                        {% endif %}
-                        </div>
+                    <div class="btn-group">
+                        <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br /> 
+                        
+                        {% include 'polls/_display_vote.html' %}
+                    </div>
                 {% endif %}
                 {% endfor %}
             {% elif question.display_pref == 2 %}
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
                 <p>The following voters have voted on this poll:</p>
                 <ul>
-                    {% for response in latest_responses %}
+                    {% for response, currentSelection in latest_responses %}
                         <li>{{response.user.username}} (last voted on {{ response.timestamp }})</li>
                     {% endfor %}
                 </ul>

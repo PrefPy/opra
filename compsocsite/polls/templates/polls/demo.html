@@ -2,17 +2,8 @@
 {% load mathfilters %}
 {% load staticfiles %}
 {% block extra_head %}
-    <!-- Google Tag Manager -->
-    <noscript>
-        <iframe src="//www.googletagmanager.com/ns.html?id=GTM-59SLDM" height="0" width="0" style="display:none;visibility:hidden">
-        </iframe>
-    </noscript>
-    <!-- End Google Tag Manager -->
-
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  
     <script src='/static/js/shared.js'></script>
-    <script src='/static/js/intro.js'></script>
     {% if request.flavour == "mobile" %}
         <script src='/static/js/mobile.js'></script>
     {% else %}
@@ -21,7 +12,7 @@
     {% endif %}
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/introjs.css' %}"/>
+    
     <script>
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip(); 
@@ -103,7 +94,7 @@
                 <div class="col-md-6 margin-panel-top">
             {% endif %}
                      
-            <div class="panel panel-default" data-step="3" data-intro="After you click, options will jump to this box. And then you can drag them to change the original ranking or have ties.">
+            <div class="panel panel-default" data-step="2" data-intro="After you click, options will jump to this box. And then you can drag them to change the original ranking or have ties.">
                 <div class="panel-heading" >
                     <b>Your preferences:</b>
                     {% if request.flavour == "mobile" %}
@@ -185,7 +176,7 @@
                                     </span>
                                 </button>
                             {% else %}
-                                <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" data-step="2" data-intro="Clikc Move All, and then the remaining options will move to left in default rank.">
+                                <button onclick="moveAll(); return false;">
                                     Move All
                                 </button>
                             {% endif %}
@@ -216,7 +207,7 @@
         		</div>
         	
         	</div>
-        	<div data-step="4" data-intro="You can enter your coments about this poll here.">
+        	<div data-step="3" data-intro="You can enter your coments about this poll here.">
         		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">{{lastcomment}}</textarea>
         	</div>
         </form>

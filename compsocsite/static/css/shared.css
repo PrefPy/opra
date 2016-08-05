@@ -30,6 +30,10 @@ nopadding {
 	margin: 0 !important;
 }
 
+input[type="submit"] {
+    font-family: FontAwesome;
+}
+
 .greycolor {
 	color: grey;
 }

@@ -511,17 +511,19 @@ class VoteResultsView(generic.DetailView):
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['margin_victory'] = getMarginOfVictory(latest_responses)
         
-        previous_winners = OldWinner.objects.all().filter(question=self.object)
+        previous_results = self.object.voteresult_set.all()
         ctx['previous_winners'] = []
-        for pw in previous_winners:
+        for pw in previous_results:
             obj = {}
-            responses = self.object.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp])
-            (lr, pr) = categorizeResponses(responses)
-            obj['title'] = str(pw)
-            obj['latest_responses'] = lr
-            obj['previous_responses'] = pr
-            obj['vote_results'] = getVoteResults(lr)
-            obj['margin_victory'] = getMarginOfVictory(lr)
+            obj['title'] = str(pw.timestamp.time())
+            tempResults = []
+            for map in pw.scoremap_set.all():
+                tempResults.append(map.asPyDict())
+            obj['vote_results'] = tempResults
+            tempMargin = []
+            for margin in pw.mov_set.all():
+                tempMargin.append(margin.value)
+            obj['margin_victory'] = tempMargin
             ctx['previous_winners'].append(obj)
         return ctx
 
@@ -696,6 +698,29 @@ def getVoteResults(latest_responses):
     scoreVectorList.append(MechanismMaximin().getCandScoresMap(pollProfile))
     
     return scoreVectorList
+    
+def calculatePreviousResults(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.voteresult_set.clear()
+    previous_winners = question.oldwinner_set.all()
+    for pw in previous_winners:
+        result = VoteResult(question=question,timestamp=pw.response.timestamp)
+        result.save()
+        responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp])
+        (lr, pr) = categorizeResponses(responses)
+        scorelist = getVoteResults(lr)
+        mov = getMarginOfVictory(lr)
+        for x in range(0,len(scorelist)):
+            scoremap = ScoreMap(result=result,order=x)
+            scoremap.save()
+            for key,value in scorelist[x].items():
+                candscorepair = CandScorePair(container=scoremap,cand=key,score=value)
+                candscorepair.save()
+        for x in range(0,len(mov)):
+            movobj = MoV(result=result,value=mov[x],order=x)
+            movobj.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
 
 # return lighter (+lum) or darker (-lum) color as a hex string
 # pass original hex string and luminosity factor, e.g. -0.1 = 10% darker
@@ -765,7 +790,7 @@ def getMarginOfVictory(latest_responses):
     marginList.append(MechanismKApproval(3).getMov(pollProfile))
     #if len(latest_responses) > 1:
      #   marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
-    marginList.append("-")
+    #marginList.append("-")
     return marginList
 
 # used to help find the recommended order

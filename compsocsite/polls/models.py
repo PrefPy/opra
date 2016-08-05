@@ -241,3 +241,35 @@ class KeyValuePair(models.Model):
     container = models.ForeignKey(Dictionary, db_index=True)
     key = models.ForeignKey(Item, default=None, on_delete=models.CASCADE, db_index=True) # changed from original model
     value = models.IntegerField(default=0, db_index=True) # changed from original model
+
+class VoteResult(models.Model):
+    question = models.ForeignKey(Question, null=True)
+    timestamp = models.DateTimeField('result timestamp')
+    class Meta:
+        ordering = ['timestamp']
+        
+class MoV(models.Model):
+    result = models.ForeignKey(VoteResult)
+    value = models.IntegerField(default=0)
+    order = models.IntegerField(default=0)
+    class Meta:
+        ordering = ['order']
+    
+class ScoreMap(models.Model):
+    result = models.ForeignKey(VoteResult)
+    order = models.IntegerField(default=0)
+    def asPyDict(self):
+        """Get a python dictionary that represents this Dictionary object.
+        This object is read-only.
+        """
+        fieldDict = dict()
+        for kvp in self.candscorepair_set.all():
+            fieldDict[kvp.cand] = kvp.score
+        return fieldDict
+    class Meta:
+        ordering = ['order']
+
+class CandScorePair(models.Model):
+    container = models.ForeignKey(ScoreMap)
+    cand = models.IntegerField(default = 0)
+    score = models.FloatField(default = 0.0)

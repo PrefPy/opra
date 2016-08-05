@@ -180,11 +180,11 @@ def endSubpoll(multipoll):
 
 # end the next poll in the sequence    
 def progress(request, multipoll_id):
-    multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
+    multipoll = get_object_or_404(MultiPoll, pk=multipoll_id) 
+    endSubpoll(multipoll)
+
     #poll in session
-    if multipoll.status < multipoll.number:
-        endSubpoll(multipoll)
-        
+    if multipoll.status < multipoll.number:        
         # check conditional preferences
         poll = multipoll.questions.all()[multipoll.status-1]
         for combination in poll.combination_set.all(): 
@@ -208,10 +208,7 @@ def progress(request, multipoll_id):
                     if response != None:
                         response.question = poll
                         response.save()
-    #all the polls have ended
-    else:
-        #end the last poll
-        endSubpoll(multipoll)
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class mpollinfoView(generic.DetailView):
@@ -290,12 +287,6 @@ def editBasicInfo(request, multipoll_id):
     question.description = new_desc    
     question.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
-
-# check whether this poll is the first one in a multipoll
-def dependencyRedirect(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-
-    return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(question.id,)))
 
 # display the dependent polls selected 
 # allow the user to vote on this poll given the preferences for the previous dependent polls
@@ -443,27 +434,29 @@ def assignPreference(request, combination_id):
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))    
 
-    # for each depedent poll, get the choice selected
-    conditionsSelected = []
-    for poll in combination.dependent_questions.all():
-        s = str(poll.id)
-        
-        # this poll has no choices, so nothing can be selected
-        if poll.item_set.count() == 0:
-            continue
-
-        itemtxt = request.POST[s]
-        item = poll.item_set.get(item_text=itemtxt)
-        conditionsSelected.append(item)
-    
-    # check if a response has been submitted for this condition    
-    condition = getConditionFromResponse(conditionsSelected, combination)
-
     # make Response object to store data
     response = Response(question=question, user=request.user, timestamp=timezone.now())
     response.save()
-    condition.response = response
-    condition.save()
+   
+    # submit conditional preferences 
+    if "default_pref" not in request.POST:  
+        # for each depedent poll, get the choice selected
+        conditionsSelected = []
+        for poll in combination.dependent_questions.all():
+            s = str(poll.id)
+            
+            # this poll has no choices, so nothing can be selected
+            if poll.item_set.count() == 0:
+                continue
+    
+            itemtxt = request.POST[s]
+            item = poll.item_set.get(item_text=itemtxt)
+            conditionsSelected.append(item)
+        
+        # check if a response has been submitted for this condition    
+        condition = getConditionFromResponse(conditionsSelected, combination)
+        condition.response = response
+        condition.save()
     
     # update response dictionary
     buildResponseDict(response, question, prefOrder)    

@@ -82,6 +82,8 @@
         </div>
     
         <!-- Panel for previous winners (closed by default) -->
+
+        <a href="{% url 'polls:calculateprev' question.id %}"><button type="button" class="btn btn-primary" >Calculate Previous Winners</button></a>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -121,8 +123,6 @@
                             {% endfor %}
                             {% if forloop.counter < 5 %}
                                 <td>{{ previous_winners.margin_victory.0 }} </td>
-                            {% elif forloop.counter == 5 %}
-                                <td>{{ previous_winners.margin_victory.4 }}</td>
                             {% else %}
                                 <td>-</td>
                             {% endif %}

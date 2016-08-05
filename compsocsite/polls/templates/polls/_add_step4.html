@@ -23,7 +23,7 @@
             {% csrf_token %}
             
             {% if question.question_type == 1 %}
-                <label for="pollpreferences">Select a voting algorithm</label>
+                <label for="pollpreferences">Select a voting algorithm <i class="fa fa-question-circle" aria-hidden="true" data-toggle="modal" data-target=".bs-example-modal-lg" style="color:GoldenRod;"></i></label>
                 <select name="pollpreferences" class="form-control">
                 {% for item in poll_algorithms %}
                     <option value="{{ forloop.counter }}">
@@ -32,8 +32,26 @@
                 {% endfor %}
                 </select>
                 <br />
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">More information about Voting Algorithm</h4>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Plurality: </strong><br/>
+                    Plurality is xxxxxxx<br/>
+                    <strong>Bordas:</strong><br/>
+                    Bordas is xxxx<br/>
+                    <strong>Veto: </strong><br/>
+                    Veto is xxxxxxx<br/></p>
+                </div>
+                </div> <!--modal content-->
+              </div>
+            </div>
             {% elif question.question_type == 2 %}
-                <label for="pollpreferences">Select an allocation method</label>
+                <label for="pollpreferences">Select an allocation method <i class="fa fa-question-circle" aria-hidden="true" data-toggle="modal" data-target=".bs-example-modal-lg" style="color:GoldenRod;"></i></label>
                 <select name="pollpreferences" class="form-control">
                 {% for item in alloc_methods %}
                     <option value="{{ forloop.counter }}">
@@ -42,11 +60,26 @@
                 {% endfor %}
                 </select>
                 <br />
+                <!--Explaination Model-->
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">More information about Allocation Method</h4>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Poll: </strong><br/>
+                    Poll is xxxxxxx<br/>
+                    <strong>Allocation:</strong><br/>
+                    Allocation is xxxx</p><br/>
+                </div>
+                </div> <!--modal content-->
+              </div>
+            </div>
             {% endif %}
 
-            <label for="viewpreferences">Information visible to voters.</label>
-   
-
+            <label for="viewpreferences">Information visible to voters</label>
             <select name="viewpreferences" class="form-control">
                 {% for item in view_preferences %}
                 <option value="{{ forloop.counter0 }}" {% if forloop.counter == preference %} selected {% endif %}>
@@ -56,12 +89,16 @@
             </select>
             <br />
 
-            <label for="openpoll">Choose if anonymous voters can join and vote. QR Code can be accessed in poll settings page.</label>
-
-            <select name="openpoll" class="form-control">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
+            <label for="openpoll">Allow anonymous voting? (QR Code can be accessed under poll settings)</label> <br />
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default active">
+                <input type="radio" name="openpoll" value="yes" checked>Yes</option>
+                </label>
+                <label class="btn btn-default">
+                <input type="radio" name="openpoll" value="no">No</option>
+                </label>
+            </div>
+            <br /><br />
             
             <br />
             <div class="col-md-6 col-md-offset-3" align="center">

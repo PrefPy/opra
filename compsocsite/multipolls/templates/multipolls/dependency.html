@@ -96,12 +96,12 @@ $(function(){
             </h3>
             <p>
             {% if prev_poll != None %}
-                <a href="{% url 'multipolls:dependency' prev_poll.id %}">
+                <a href="{% url 'multipolls:dependencyview' prev_poll.id %}">
                     <span class="glyphicon glyphicon-arrow-left"></span>
                 </a>
             {% endif %}
             {% if next_poll != None %}
-                <a href="{% url 'multipolls:dependency' next_poll.id %}">
+                <a href="{% url 'multipolls:dependencyview' next_poll.id %}">
                     <span class="glyphicon glyphicon-arrow-right"></span>
                 </a>
             {% endif %} 

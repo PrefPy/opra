@@ -1,37 +1,38 @@
-
-
-
 <ul class="list-group" id="choicesetting">
     <form id="choiceform"  action="{% url 'polls:editchoice' question.id %}" method="post">
         {% csrf_token %}
-    {% for item in items %}
-            <li class="list-group-item ">
-                {% if item.image %}  
-                    <img src='/{{ item.image }}'/>
-                {% endif %}
-                {% if item.imageURL != Null %}
-                    <img src='{{ item.imageURL }}'/>
-                {% endif %}
+        {% for item in items %}
+            <li class="list-group-item " data-toggle="collapse" data-target="#iteminfo{{item.id}}">
                 <div class="row">
-                    <div class="form-group col-xs-1" data-toggle="collapse" data-target="#iteminfo{{item.id}}">
-                        <span  class="caret" style="color:#377BB5;"></span>   
+                    <div class="form-group col-xs-1"   >
+                        <span class="caret" style="color:#377BB5;"></span>   
                     </div>   
+                    {% if item.image %}
+                        <div class="col-xs-1">
+                        <img src='/{{ item.image }}' width="40px"/>
+                        </div>
+                    {% endif %}
+                    {% if item.imageURL != Null %}
+                        <div class="col-xs-1">
+                        <img src='{{ item.imageURL }}' width="40px"/>
+                        </div>
+                    {% endif %}
                     <div class="form-group col-xs-7">
                         {% if question.status == 1 %}
-                        <input type="text" class="form-control auto_submit" name="item{{item.id}}" size="50" value="{{ item }}" />
+                        <input type="text" class="form-control auto_submit" name="item{{item.id}}" size="50" value="{{ item }}"/>
                         {% else %}
                         {{item}}
                         {% endif %}
                     </div>
                     {% if question.status == 1 %}
-                    <div class="form-group col-xs-4">
-                    <a href="{% url 'polls:delchoice' item.id %}">
-                        <div class="pull-right">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </div>
-                    </a>
-                </div>
-				{% endif %}
+                    <div class="form-group {% if item.image or item.imageURL != Null %} col-xs-3 {% else %} col-xs-4 {% endif %}">
+                        <a href="{% url 'polls:delchoice' item.id %}">
+                            <div class="pull-right">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </div>
+                        </a>
+                    </div>
+				    {% endif %}
                 </div>
                 <div id="iteminfo{{item.id}}" class="accordian-body collapse">
                     <div class="row">

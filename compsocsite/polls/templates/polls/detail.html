@@ -35,7 +35,12 @@
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+<script>
 
+$(function() {
+    $("#successMessage").delay(2000).fadeOut('slow');
+});
+</script>
 {% endblock %}
 
 {% block content %}
@@ -102,16 +107,32 @@
             {% endif %}
 					<div class="panel panel-default"  data-step="2" data-intro="After you click, options will jump to this box. And then you can drag them to change the original ranking or have ties.">
 						<div class="panel-heading" >
-							<h4>Your preferences:
-							{% if request.flavour == "mobile" %}
-							<button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-								<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-							</button> {% else %} <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
-							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
-								Submit
-							</button> {% endif %}
-							<input type="hidden" id="pref_order" name="pref_order" value=""/>
-							</h4>
+                        <h4>
+                            Your preferences:
+                            {% if request.flavour == "mobile" %}
+                                <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+                                    <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">
+                                        Submit 
+                                    </span>
+                                </button> 
+                            {% else %} 
+                                <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
+                                <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
+                                    Submit
+                                </button> 
+                            {% endif %}
+                            <input type="hidden" id="pref_order" name="pref_order" value=""/>
+                            
+                            <div class="pull-right">
+                            {% if messages %}
+                                    {% for message in messages %}
+                                    <span id="successMessage" {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                                        {{ message }}
+                                    </span>
+                                    {% endfor %}
+                            {% endif %}
+                            </div>
+                        </h4>
 						</div>
 
 						<div class="panel-body" >
@@ -208,19 +229,6 @@
 				</div>
 	</form>
 
-	<p>
-		<br />
-
-		{% if messages %}
-		<ul class="messages">
-			{% for message in messages %}
-			<div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-				{{ message }} {% if request.user.username != "" %} <a href="{% url 'polls:regular_polls'%}">Return home</a>{% endif %}
-			</div>
-			{% endfor %}
-		</ul>
-		{% endif %}
-	</p>
 	{% endif %}
 	{% elif question.status == 1%}
 	<p>

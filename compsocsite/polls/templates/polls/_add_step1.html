@@ -23,13 +23,14 @@
 
     <form id="add_poll" method="post" action="/polls/add_step1/" name="add_step1" onsubmit="return validateForm() " style="font-size:100%" enctype="multipart/form-data">
         {% csrf_token %}
-        <label for="questionTitle">Title:</label> <br />
-        <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="20" size="100" autofocus/>
+        <label for="questionTitle">Title:</label> <small class="text-muted"> * </small> <br />
+        <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="20" size="50" autofocus/>
         <small class="text-muted">Required (at most 20 characters) </small> <br/><br/>
         
         <label for="desc">Question description:</label> <br />
         <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
         
+<<<<<<< HEAD
         <label for="questiontype">Question Type:    <i class="fa fa-question-circle" aria-hidden="true" data-toggle="modal" data-target=".bs-example-modal-lg" style="color:GoldenRod;"></i></label> <br />
         
         <!--Explaination Model-->
@@ -51,10 +52,18 @@
         </div>
         
         <div class="form-control">
+=======
+        <label for="questiontype">Question Type:</label> <small class="text-muted"> * </small> <br />
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-default active">
+>>>>>>> origin/master
             <input type="radio" name="questiontype" value="1" checked>Poll</option>
+            </label>
+            <label class="btn btn-default">
             <input type="radio" name="questiontype" value="2">Allocation</option>
+            </label>
         </div>
-        
+        <br /><br />
         <label for="imageURL">Image:</label> <br />
         <input type="text" class="form-control input-sm" id="imageURL" name="imageURL" value="" />
 

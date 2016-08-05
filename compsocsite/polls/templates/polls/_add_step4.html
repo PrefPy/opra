@@ -44,9 +44,7 @@
                 <br />
             {% endif %}
 
-            <label for="viewpreferences">Information visible to voters.</label>
-   
-
+            <label for="viewpreferences">Information visible to voters</label>
             <select name="viewpreferences" class="form-control">
                 {% for item in view_preferences %}
                 <option value="{{ forloop.counter0 }}" {% if forloop.counter == preference %} selected {% endif %}>
@@ -56,12 +54,16 @@
             </select>
             <br />
 
-            <label for="openpoll">Choose if anonymous voters can join and vote. QR Code can be accessed in poll settings page.</label>
-
-            <select name="openpoll" class="form-control">
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
+            <label for="openpoll">Allow anonymous voting? (QR Code can be accessed under poll settings)</label> <br />
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default active">
+                <input type="radio" name="openpoll" value="yes" checked>Yes</option>
+                </label>
+                <label class="btn btn-default">
+                <input type="radio" name="openpoll" value="no">No</option>
+                </label>
+            </div>
+            <br /><br />
             
             <br />
             <div class="col-md-6 col-md-offset-3" align="center">

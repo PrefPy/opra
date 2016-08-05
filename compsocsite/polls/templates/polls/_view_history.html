@@ -1,6 +1,6 @@
 <h3 class="page-header">History votes of {{ question.question_text }} </h3>
         <!-- Display most recent vote -->
-        {% if question.question_owner == request.user %}
+        {% if question.question_owner == request.user and question.display_pref != 5 %}
             {% if latest_responses|length > 0 %}
                 {% for response, currentSelection in latest_responses %}
                     <!-- display name -->
@@ -42,7 +42,7 @@
                 <p>No one has voted on this poll yet.</p>
             {% endif %} <!-- no response-->
             </div>
-        {% else %} <!--question.question_owner != request.user-->
+        {% else %} <!--question.question_owner != request.user or display_pref = 5 -->
             {% if user_latest_responses %}
                 {% for response, currentSelection in user_latest_responses %}
                     <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 

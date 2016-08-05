@@ -922,8 +922,10 @@ def setPollingSettings(request, question_id):
         question.display_pref = 2
     elif displayChoice == "justnumber":
         question.display_pref = 3
-    else:
+    elif displayChoice == "nothing":
         question.display_pref = 4
+    else:
+        question.display_pref = 5
     question.save()
     request.session['setting'] = 2
     messages.success(request, 'Your changes have been saved.')

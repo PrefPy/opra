@@ -6,12 +6,11 @@ from . import email
 
 app_name = 'polls'
 urlpatterns = [
-               
     url(r'^$', login_required(views.IndexView.as_view()), name='index'),
     url(r'^main$', views.MainView.as_view(), name='index_guest'),
     #Two main types of polls
-    url(r'^regular_polls$',views.RegularPollsView.as_view(), name='regular_polls'),
-    url(r'^m_polls$',views.MultiPollsView.as_view(), name='m_polls'),
+    url(r'^regular_polls$', login_required(views.RegularPollsView.as_view()), name='regular_polls'),
+    url(r'^m_polls$', login_required(views.MultiPollsView.as_view()), name='m_polls'),
     url(r'^(?P<pk>[0-9]+)/demo$', views.DemoView.as_view(), name='voting_demo'),
    
     # Create a new poll
@@ -58,4 +57,7 @@ urlpatterns = [
     # anonymous voting
     url(r'^(?P<question_id>[0-9]+)/anonymousjoin/$', views.anonymousJoin, name='anonymousjoin'),
     url(r'^(?P<question_id>[0-9]+)/anonymousvote/$', views.anonymousVote, name='anonymousvote'),
+    
+    # vote result
+    url(r'^(?P<question_id>[0-9]+)/calculateprev/$', views.calculatePreviousResults, name='calculateprev'),
 ]

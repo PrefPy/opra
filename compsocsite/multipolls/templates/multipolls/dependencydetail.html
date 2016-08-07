@@ -12,21 +12,19 @@
         {% csrf_token %}
         <div class="col-md-12">
         <div class="panel panel-default panel-border">
-                <div class="panel-heading">
-                	Conditional Preferences
-                </div>
-        <div style="clear:both" class="panel-body" >
-        {% for poll in combination.dependent_questions.all %}
-        <div class = "col-md-4">
-        <div class="panel panel-default">
-		
-            <div class=" panel-heading">
-                <h4>Poll {{ poll.question_text }}</h4>
-                </div>
-            <div class=" panel-body">   
-                <div class="table-responsive">
-                <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" size="2" id="combinationtable" style="border-style: none;">
-                    
+            <div class="panel-heading">
+                Conditional Preferences
+            </div>
+            <div style="clear:both" class="panel-body">
+            {% for poll in combination.dependent_questions.all %}
+            <div class="col-md-{{12|intdiv:combination.dependent_questions.count}}">
+            <div class="panel panel-default">
+                <div class=" panel-heading">
+                    <h4>Poll {{ poll.question_text }}</h4>
+                    </div>
+                <div class=" panel-body">   
+                    <div class="table-responsive">
+                    <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" size="2" id="combinationtable" style="border-style: none;">
                         {% for item in poll.item_set.all %}
                             {% for row in colorArray %}
                             {% for color in row %}
@@ -41,14 +39,13 @@
                             {% endfor %}
                             {% endfor %}
                         {% endfor %}
-             
-                </select>
+                    </select>
+                    </div>
                 </div>
             </div>
-        </div>
-        </div>
-        {% endfor %}
-        </div>
+            </div>
+            {% endfor %}
+            </div>
         </div>
         </div>
         {% if request.flavour == "mobile" %}
@@ -75,7 +72,7 @@
                         Submit
                     </button>
                 {% endif %}
-                <input type="checkbox" name="default_pref"> Set as default</input>
+                <button type="submit" onclick="submitPref();" class="btn btn-info" name="default_pref">Set as default</button>
                 <input type="hidden" id="pref_order" name="pref_order" value=""/>
             </div>
       

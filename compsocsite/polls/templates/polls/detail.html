@@ -1,6 +1,6 @@
 {% extends 'polls/base.html' %}
 {% load mathfilters %}
-
+{% load staticfiles %}
 {% block extra_head %}
 <!-- Google Tag Manager -->
 <noscript>
@@ -10,6 +10,7 @@
 
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
 {% if request.flavour == "mobile" %}
 <script src='/static/js/mobile.js'></script>
 {% else %}
@@ -34,7 +35,12 @@
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+<script>
 
+$(function() {
+    $("#successMessage").delay(2000).fadeOut('slow');
+});
+</script>
 {% endblock %}
 
 {% block content %}
@@ -45,14 +51,16 @@
 		<strong>{{ error_message }}</strong>
 	</p>
 	{% endif %}
-
+    
 	{% if question.status == 2 %}
 	{% if question.open == False and request.user.username == ""%}
 	You have no permission to vote on this poll.
 	{% elif question.open == False and request.user not in question.question_voters.all %}
 	You are not invited to this poll.
 	{% else %}
-
+    <div class="contanier-fluid">
+        <a href="javascript:void(0);" onclick="javascript:introJs().setOption('showProgress', true).start();"><i class="fa fa-question-circle" aria-hidden="true" style="float:right;" ></i></a></div>
+    <br/>
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<a class="panel-title" data-toggle="collapse" href="#collapse_des">
@@ -66,19 +74,10 @@
 					<a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
 				</div>
 				{% endif %}
+                
 				<div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>
 					<h4 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}><span class="caret" style="color:#377BB5;"></span> {{ question.question_text }} <small class="text-muted">(Created by {{ question.question_owner }})</small></h4>
 
-					<!-- <p>
-					<b>Voters: </b>
-					{% for voter in question.question_voters.all %}
-					{% if voter == request.user %}
-					<i>{{ voter }}</i>,
-					{% else %}
-					{{ voter }},
-					{% endif %}
-					{% endfor %}
-					</p> -->
 				</div>
 			</div> </a>
 
@@ -96,31 +95,44 @@
 
 			{% csrf_token %}
 			{% if request.user.username == "" and 'anonymousid' not in request.session %}
-
 			<div class="col-md-12" style="clear:right; ">
 				<h4>Please enter your name: </h4>
 				<input type="text" size="50" class="form-control" style="width=50%; clear:right;" name="anonymousname"/>
-
 			</div>
-
 			{% endif %}
 			{% if request.flavour == "mobile" %}
 			<div class="col-md-6 margin-panel-top">
-				{% else %}
-				<div class="col-md-6 margin-panel-top">
-					{% endif %}
-					<div class="panel panel-default">
+            {% else %}
+            <div class="col-md-6 margin-panel-top">
+            {% endif %}
+					<div class="panel panel-default"  data-step="2" data-intro="After you click, options will jump to this box. And then you can drag them to change the original ranking or have ties.">
 						<div class="panel-heading" >
-							<h4>Your preferences:
-							{% if request.flavour == "mobile" %}
-							<button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-								<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-							</button> {% else %} <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
-							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
-								Submit
-							</button> {% endif %}
-							<input type="hidden" id="pref_order" name="pref_order" value=""/>
-							</h4>
+                        <h4>
+                            Your preferences:
+                            {% if request.flavour == "mobile" %}
+                                <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+                                    <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">
+                                        Submit 
+                                    </span>
+                                </button> 
+                            {% else %} 
+                                <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
+                                <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
+                                    Submit
+                                </button> 
+                            {% endif %}
+                            <input type="hidden" id="pref_order" name="pref_order" value=""/>
+                            
+                            <div class="pull-right">
+                            {% if messages %}
+                                    {% for message in messages %}
+                                    <span id="successMessage" {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                                        {{ message }}
+                                    </span>
+                                    {% endfor %}
+                            {% endif %}
+                            </div>
+                        </h4>
 						</div>
 
 						<div class="panel-body" >
@@ -165,71 +177,58 @@
 				</div>
 				{% if request.flavour == "mobile" %}
 				<div class="col-md-6 margin-panel-top">
-					{% else %}
-					<div class="col-md-6 margin-panel-top">
-						{% endif %}
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h4>Remaining Options:
-								{% if request.flavour == "mobile" %}
-								<button onclick="moveAll(); return false;" class="move-all-button-mobile">
-									<span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;"> All </span>
-								</button> {% else %}
-								<button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
-									Move All
-								</button> {% endif %} </h4>
-							</div>
-							<div class="panel-body">
-								<ul id="right-sortable" class="list-group">
-									{% if currentSelection == None %}
-									{% for item in items %}
-									<ul class="choice1 empty"></ul>
-									<div class="tier">
-										{{ forloop.counter }}
-									</div>
-									{% with prev=forloop.counter|mul:2 %}
-									<ul class="choice1" id="{{ prev|add:1 }}" onclick = "moveToPref(this)">
-										{% endwith %}
-										<li class="li_item" id="item{{ item.item_text }}">
-											{% if item.image %}
-											<img class="item" src='/{{ item.image.url }}'/>
-											{% endif %}
-											{% if item.imageURL != Null %}
-											<img class="item" src='{{ item.imageURL }}'/>
-											{% endif %}
-											{{ item.item_text }}
-											{% if item.item_description %}
-											<span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}"></span>
-											{% endif %}
-										</li>
-									</ul>
-									{% endfor %}
-									<ul class="choice1 empty"></ul>
-									{% endif %}
-								</ul>
-							</div>
+				{% else %}
+				<div class="col-md-6 margin-panel-top">
+				{% endif %}
+				<div class="panel panel-default" data-step="1" data-intro="Here are all options creator set for this poll. They will jump to the left when you click.">
+                    <div class="panel-heading">
+                        <h4>Remaining Options:
+                        {% if request.flavour == "mobile" %}
+                        <button onclick="moveAll(); return false;" class="move-all-button-mobile">
+                            <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;"> All </span>
+                        </button> {% else %}
+                        <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
+                            Move All
+                        </button> {% endif %} </h4>
+                    </div>
+                    <div class="panel-body">
+                        <ul id="right-sortable" class="list-group">
+                            {% if currentSelection == None %}
+                            {% for item in items %}
+                            <ul class="choice1 empty"></ul>
+                            <div class="tier">
+                                {{ forloop.counter }}
+                            </div>
+                            {% with prev=forloop.counter|mul:2 %}
+                            <ul class="choice1" id="{{ prev|add:1 }}" onclick = "moveToPref(this)">
+                                {% endwith %}
+                                <li class="li_item" id="item{{ item.item_text }}">
+                                    {% if item.image %}
+                                    <img class="item" src='/{{ item.image.url }}'/>
+                                    {% endif %}
+                                    {% if item.imageURL != Null %}
+                                    <img class="item" src='{{ item.imageURL }}'/>
+                                    {% endif %}
+                                    {{ item.item_text }}
+                                    {% if item.item_description %}
+                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}"></span>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                            {% endfor %}
+                            <ul class="choice1 empty"></ul>
+                            {% endif %}
+                        </ul>
+                    </div>
 						</div>
 					</div>
 
 				</div>
-				<div>
-					<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here">{{lastcomment}}</textarea>
+				<div data-step="3" data-intro="You can enter your coments about this poll here.">
+					<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here" >{{lastcomment}}</textarea>
 				</div>
 	</form>
 
-	<p>
-		<br />
-
-		{% if messages %}
-		<ul class="messages">
-			{% for message in messages %}
-			<div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-				{{ message }} {% if request.user.username != "" %} <a href="{% url 'polls:regular_polls'%}">Return home</a>{% endif %}
-			</div>
-			{% endfor %}
-		</ul>
-		{% endif %}
-	</p>
 	{% endif %}
 	{% elif question.status == 1%}
 	<p>

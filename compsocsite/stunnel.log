@@ -1,0 +1,11 @@
+2016.08.06 22:51:47 LOG5[ui]: stunnel 5.31 on i686-pc-cygwin platform
+2016.08.06 22:51:47 LOG5[ui]: Compiled with OpenSSL 1.0.2f  28 Jan 2016
+2016.08.06 22:51:47 LOG5[ui]: Running  with OpenSSL 1.0.2h  3 May 2016
+2016.08.06 22:51:47 LOG5[ui]: Update OpenSSL shared libraries or rebuild stunnel
+2016.08.06 22:51:47 LOG5[ui]: Threading:PTHREAD Sockets:POLL,IPv6 TLS:ENGINE,OCSP,PSK,SNI Auth:LIBWRAP
+2016.08.06 22:51:47 LOG5[ui]: Reading configuration from file /cygdrive/c/cs/urp/opra/compsocsite/stunnel/dev_https.config
+2016.08.06 22:51:47 LOG5[ui]: UTF-8 byte order mark not detected
+2016.08.06 22:51:47 LOG4[ui]: Insecure file permissions on stunnel/stunnel.pem
+2016.08.06 22:51:47 LOG5[ui]: Configuration successful
+2016.08.06 22:52:47 LOG5[cron]: Updating DH parameters
+2016.08.06 22:56:52 LOG5[cron]: DH parameters updated

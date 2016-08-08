@@ -178,6 +178,10 @@ def allocation_manual(allocation_order, responses):
     for order_item in allocation_order:
         question = order_item.question
         user = order_item.user
+        # skip if no vote
+        if question.response_set.reverse().filter(user=user).count() == 0:
+            continue
+        
         response = question.response_set.reverse().filter(user=user)[0]
         order_item.response = response
         order_item.save()

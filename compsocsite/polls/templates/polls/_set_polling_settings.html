@@ -19,11 +19,19 @@
         {% endfor %}
         </select>
         <br />
+        {% if question.poll_algorithm == 3 %}
+            <span class="btn btn-group">
+            {% for item in question.allocationvoter_set.all %}
+                <span class="btn btn-default">{{ item.user }}</span>
+            {% endfor %} 
+            </span>
+        {% endif %}
         {% if question.status == 1 or question.status == 2 %}
             {% if question.poll_algorithm == 3 %}    
                 <a href="{% url 'polls:viewAllocationOrder' question.id %}" class ="btn btn-dark" role="button">Set Allocation Order</a> <br />
             {% endif %}
         {% endif %}
+        <br />
     {% endif %}
     
     <br />

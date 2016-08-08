@@ -32,6 +32,10 @@ function resetDefault()
     }
     return false;
 }
+     
+$(function() {
+    $("#successMessage").delay(2000).fadeOut('slow');
+});
 </script>
 
 <div>
@@ -66,7 +70,7 @@ function resetDefault()
                     </div>
                 <div class=" panel-body">   
                     <div class="table-responsive bloc">
-                    <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" size="2" id="combinationtable" onchange="resetDefault()">
+                    <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" size="2" id="combinationtable" onchange="resetDefault()" multiple>
                         {% for item in poll.item_set.all %}
                             {% for row in colorArray %}
                             {% for color in row %}
@@ -98,7 +102,7 @@ function resetDefault()
         
         <div class="panel panel-default" id="dependencypreference">
             <div class="panel-heading" >
-                <b>Your preferences:</b>
+                <h4>Your preferences:
                 {% if request.flavour == "mobile" %}
                     <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
                         <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
@@ -115,6 +119,16 @@ function resetDefault()
                     </button>
                 {% endif %}
                 <input type="hidden" id="pref_order" name="pref_order" value=""/>
+                <div class="pull-right">
+                {% if messages %}
+                        {% for message in messages %}
+                        <span id="successMessage" {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                            {{ message }}
+                        </span>
+                        {% endfor %}
+                {% endif %}
+                </div>
+                </h4>
             </div>
       
                     
@@ -206,20 +220,6 @@ function resetDefault()
     </form>
 </div>
     
-<!-- Display confirmation message -->
-<div class="row">
-    <p>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-            {{ message }}  <a href="{% url 'polls:m_polls'%}">Return home</a>
-        </div>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    </p>       
-</div>
 <script>
     var wholeHeight1 = $('#left-sortable')[0].scrollHeight;
     var wholeHeight2 = $('#right-sortable')[0].scrollHeight;

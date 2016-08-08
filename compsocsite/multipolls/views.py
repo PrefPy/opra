@@ -15,6 +15,8 @@ from polls.views import getPollWinner
 from polls.algorithms import *
 from polls.views import *
 
+from itertools import *
+
 def AddStep1(request):
     context = RequestContext(request)
     if request.method == 'POST':
@@ -338,7 +340,11 @@ class DependencyView(generic.DetailView):
             if pollStr in self.request.session:
                 selectedChoice = self.request.session[pollStr]
                 if selectedChoice == 'null':
+                    # default: use the first option in the list
                     option = poll.item_set.all()[0]
+                elif ',' in selectedChoice:
+                    # if multiple options were selected, pick the first one
+                    option = poll.item_set.get(item_text=selectedChoice.split(',')[0])
                 else:
                     # use the variable from the current session
                     option = poll.item_set.get(item_text=selectedChoice)
@@ -458,27 +464,34 @@ def assignPreference(request, combination_id):
     # submit conditional preferences 
     if "default_pref" not in request.POST:  
         # for each depedent poll, get the choice selected
-        conditionsSelected = []
+ 
+        # get all the choices selected for each poll
+        subpollChoicesList = []
         for poll in combination.dependent_questions.all():
             s = str(poll.id)
-            
-            # this poll has no choices, so nothing can be selected
-            if poll.item_set.count() == 0:
-                continue
-        
-            # skip if no option was selected
             if s not in request.POST:
                 continue
-    
-            itemtxt = request.POST[s]
-            item = poll.item_set.get(item_text=itemtxt)
-            conditionsSelected.append(item)
-        
-        # check if a response has been submitted for this condition    
-        condition = getConditionFromResponse(conditionsSelected, combination)
-        condition.response = response
-        condition.save()
-    
+            itemList = request.POST.getlist(s)
+            subpollChoicesList.append(itemList)
+
+        # iterate through all possible conditions
+        for tupleChoices in itertools.product(*subpollChoicesList):
+            listChoices = list(tupleChoices)
+            
+            # get the conditions selected
+            index = 0
+            conditionsSelected = []
+            for choice in listChoices:
+                poll = combination.dependent_questions.all()[index]
+                item = poll.item_set.get(item_text = choice)
+                conditionsSelected.append(item)
+                index += 1
+            
+            # check if a response has been submitted for this condition    
+            condition = getConditionFromResponse(conditionsSelected, combination)
+            condition.response = response
+            condition.save()
+
     # update response dictionary
     buildResponseDict(response, question, prefOrder)    
 
@@ -498,8 +511,8 @@ def assignPreference(request, combination_id):
         defaultCondition.save()
     
     # notify the user that the vote has been updated
-    messages.success(request, 'Your preferences have been updated.')        
-
+    messages.success(request, 'Updated!')
+        
     return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(combination.target_question.id,)))
 
 # build a preference graph given the question dependencies

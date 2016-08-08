@@ -922,8 +922,10 @@ def setPollingSettings(request, question_id):
         question.display_pref = 2
     elif displayChoice == "justnumber":
         question.display_pref = 3
-    else:
+    elif displayChoice == "nothing":
         question.display_pref = 4
+    else:
+        question.display_pref = 5
     question.save()
     request.session['setting'] = 2
     messages.success(request, 'Your changes have been saved.')
@@ -1029,6 +1031,8 @@ def getPrefOrder(orderStr, question):
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
 
+    prevResponseCount = question.response_set.filter(user=request.user).count()
+
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
@@ -1048,8 +1052,11 @@ def vote(request, question_id):
     old_winner = OldWinner(question=question, response=response)
     old_winner.save()
 
-    # notify the user that the vote has been updated
-    messages.success(request, 'Your preferences have been updated.')
+    # notify the user that the vote has been saved/updated
+    if prevResponseCount == 0:
+        messages.success(request, 'Saved!')
+    else:
+        messages.success(request, 'Updated!')
 
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 

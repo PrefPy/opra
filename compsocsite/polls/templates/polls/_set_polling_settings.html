@@ -19,11 +19,19 @@
         {% endfor %}
         </select>
         <br />
+        {% if question.poll_algorithm == 3 %}
+            <span class="btn btn-group">
+            {% for item in question.allocationvoter_set.all %}
+                <span class="btn btn-default">{{ item.user }}</span>
+            {% endfor %} 
+            </span>
+        {% endif %}
         {% if question.status == 1 or question.status == 2 %}
             {% if question.poll_algorithm == 3 %}    
                 <a href="{% url 'polls:viewAllocationOrder' question.id %}" class ="btn btn-dark" role="button">Set Allocation Order</a> <br />
             {% endif %}
         {% endif %}
+        <br />
     {% endif %}
     
     <br />
@@ -33,7 +41,8 @@
         <option value="allpermit" {% if question.display_pref == 1 %} selected {% endif %} >Everyone can see all votes</option>
         <option value="voternames" {% if question.display_pref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
         <option value="justnumber" {% if question.display_pref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
-        <option value="nothing" {% if question.display_pref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>
+        <option value="nothing" {% if question.display_pref == 4 %} selected {% endif %}>Everyone can only see own vote</option>
+        <option value="5" {% if question.display_pref == 5 %} selected {% endif %}>Creator can only see his/her own vote</option>
     </select>  
     <br /><br />
     

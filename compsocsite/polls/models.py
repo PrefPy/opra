@@ -246,7 +246,7 @@ class VoteResult(models.Model):
     question = models.ForeignKey(Question, null=True)
     timestamp = models.DateTimeField('result timestamp')
     class Meta:
-        ordering = ['timestamp']
+        ordering = ['-timestamp']
         
 class MoV(models.Model):
     result = models.ForeignKey(VoteResult)

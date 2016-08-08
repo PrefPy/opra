@@ -21,21 +21,27 @@
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
-<script>
-	$(document).ready(function() {
-		$('[data-toggle="tooltip"]').tooltip();
-	}); 
-	
-</script>
+
 <style>
 	.tier {
 		float: left;
-	}
+    }
+    .hint{
+        visibility:hidden;
+    }
 </style>
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+
+<script>
+$(function() {
+    $("#successMessage").delay(2000).fadeOut('slow');
+});
+</script>
 {% endblock %}
 
 {% block content %}
@@ -53,9 +59,8 @@
 	{% elif question.open == False and request.user not in question.question_voters.all %}
 	You are not invited to this poll.
 	{% else %}
-    <div class="contanier-fluid">
-        <a href="javascript:void(0);" onclick="javascript:introJs().setOption('showProgress', true).start();"><i class="fa fa-question-circle" aria-hidden="true" style="float:right;" ></i></a></div>
-    <br/>
+    <input class="btn btn-primary" type='button' id='toggle-button' value='Hide/Show All Hints' style="float:right;">
+    <br/><br/>
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<a class="panel-title" data-toggle="collapse" href="#collapse_des">
@@ -100,18 +105,33 @@
             {% else %}
             <div class="col-md-6 margin-panel-top">
             {% endif %}
-					<div class="panel panel-default"  data-step="2" data-intro="After you click, options will jump to this box. And then you can drag them to change the original ranking or have ties.">
+					<div class="panel panel-default" >
 						<div class="panel-heading" >
 							<h4>Your preferences:
 							{% if request.flavour == "mobile" %}
 							<button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
 								<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-							</button> {% else %} <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
+							</button> 
+                            {% else %} 
+                            <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
 							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
 								Submit
-							</button> {% endif %}
+							</button> 
+                            {% endif %}
 							<input type="hidden" id="pref_order" name="pref_order" value=""/>
-							</h4>
+                                
+                            <div class="pull-right">
+                            {% if messages %}
+                                    {% for message in messages %}
+                                    <span id="successMessage" {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                                        {{ message }}
+                                    </span>
+                                    {% endfor %}
+                            {% endif %}
+                            </div>    
+                            <i class="hint fa fa-question-circle" style="float:right;" data-placement="top" data-toggle="popover" data-content="This will be your final preferences"></i>
+                            </h4>
+
 						</div>
 
 						<div class="panel-body" >
@@ -159,7 +179,7 @@
 				{% else %}
 				<div class="col-md-6 margin-panel-top">
 				{% endif %}
-				<div class="panel panel-default" data-step="1" data-intro="Here are all options creator set for this poll. They will jump to the left when you click.">
+				<div class="panel panel-default">
                     <div class="panel-heading">
                         <h4>Remaining Options:
                         {% if request.flavour == "mobile" %}
@@ -168,7 +188,8 @@
                         </button> {% else %}
                         <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
                             Move All
-                        </button> {% endif %} </h4>
+                        </button> {% endif %} 
+                        <i class="hint fa fa-question-circle" style="float:right;" data-placement="top" data-toggle="popover" data-content="Here are all the options for this poll. Each time you click on one of them, they will move to the left panel." data-hintPosition="top-middle."></i> </h4>
                     </div>
                     <div class="panel-body">
                         <ul id="right-sortable" class="list-group">
@@ -190,7 +211,7 @@
                                     {% endif %}
                                     {{ item.item_text }}
                                     {% if item.item_description %}
-                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}"></span>
+                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}" data-title="Meddelanden"></span>
                                     {% endif %}
                                 </li>
                             </ul>
@@ -203,24 +224,13 @@
 					</div>
 
 				</div>
-				<div data-step="3" data-intro="You can enter your coments about this poll here.">
+				<div>
+                    <br/>
+                    <i class="hint fa fa-question-circle" style="float:right;" data-placement="top" data-toggle="popover" data-content="You can enter your comments here."></i>
 					<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here" >{{lastcomment}}</textarea>
 				</div>
 	</form>
 
-	<p>
-		<br />
-
-		{% if messages %}
-		<ul class="messages">
-			{% for message in messages %}
-			<div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
-				{{ message }} {% if request.user.username != "" %} <a href="{% url 'polls:regular_polls'%}">Return home</a>{% endif %}
-			</div>
-			{% endfor %}
-		</ul>
-		{% endif %}
-	</p>
 	{% endif %}
 	{% elif question.status == 1%}
 	<p>
@@ -232,4 +242,42 @@
 	</p>
 	{% endif %}
 </div>
+    
+    <script>
+	$(document).ready(function() {
+		$('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="popover"]').popover({
+            title : '<span class="text-info"><strong>Hint</strong></span>',
+            html: 'true',
+        }); 
+	}); 
+
+document.getElementById('toggle-button').addEventListener('click', function () {
+    toggle(document.querySelectorAll('.hint'));
+});
+
+function toggle (elements, specifiedDisplay) {
+  var element, index;
+
+  elements = elements.length ? elements : [elements];
+  for (index = 0; index < elements.length; index++) {
+    element = elements[index];
+
+    if (isElementHidden(element)) {
+      element.style.visibility = '';
+
+      // If the element is still hidden after removing the inline display
+      if (isElementHidden(element)) {
+        element.style.visibility = specifiedDisplay || 'visible';
+      }
+    } else {
+      element.style.visibility = 'hidden';
+    }
+  }
+  function isElementHidden (element) {
+    return window.getComputedStyle(element, null).getPropertyValue('visibility') === 'hidden';
+  }
+}
+        
+</script>
 {% endblock %}

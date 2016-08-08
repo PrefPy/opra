@@ -1,0 +1,3 @@
+c:/cygwin/bin/stunnel.exe stunnel/dev_https.config &
+python manage.py runserver&
+HTTPS=1 python manage.py runserver 8001

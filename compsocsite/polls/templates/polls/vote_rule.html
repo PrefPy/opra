@@ -83,14 +83,15 @@
     
         <!-- Panel for previous winners (closed by default) -->
 
-        <a href="{% url 'polls:calculateprev' question.id %}"><button type="button" class="btn btn-primary" >Calculate Previous Winners</button></a>
+        
         <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" data-toggle="collapse" href="#collapse_pw">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#collapse_pw">
+                    <a >
                        Previous Winners <span class="caret" style="color:#377BB5;"></span>
                     </a>
                 </h4>
+                <a href="{% url 'polls:calculateprev' question.id %}"><button type="button" class="btn btn-primary" >{% if {{question.voteresult_set.all|length = 0}}%}C{% else %}Rec{% endif %}alculate Previous Winners</button></a>
             </div>
             <div id="collapse_pw" class="panel-body collapse">
                 {% for pw in previous_winners %}

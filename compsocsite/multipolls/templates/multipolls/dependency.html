@@ -140,7 +140,7 @@ $(function(){
                 {% else %}
                     <input type="checkbox" name="polls" value="{{poll.id}}" id="checkbox{{poll.id}}" onclick="check();">
                 {% endif %}
-                <label for="{{poll.id}}">{{ poll.question_text }}</label>
+                {{ poll.question_text }}
             </label>
 
             <!--<div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>

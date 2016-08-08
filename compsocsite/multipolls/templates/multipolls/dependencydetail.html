@@ -44,6 +44,7 @@ function resetDefault()
             </div>
             <div style="clear:both" class="panel-body">
             {% if combination.dependent_questions.all|length > 0 %}
+            <div class="col-md-12">
             <div class="bloc">
                 <select id="default_pref" name="default_pref" size="2" onchange="resetChoices()">
                     {% if default_response %}
@@ -54,6 +55,7 @@ function resetDefault()
                             style='background-color: #FA8072; box-shadow: 0 0 10px 100px #FA8072 inset;'>Default</option>
                     {% endif %}
                 </select>
+            </div>
             </div>
             {% endif %}
             {% for poll in combination.dependent_questions.all %}

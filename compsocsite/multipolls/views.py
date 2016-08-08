@@ -331,13 +331,17 @@ class DependencyView(generic.DetailView):
             if poll.item_set.count() == 0:
                 continue
             
+            # default option is selected
             if "set_default" in self.request.session:
                 break
             
             if pollStr in self.request.session:
-                selectedChoice = self.request.session[pollStr]                
-                # use the variable from the current session
-                option = poll.item_set.get(item_text=selectedChoice)
+                selectedChoice = self.request.session[pollStr]
+                if selectedChoice == 'null':
+                    option = poll.item_set.all()[0]
+                else:
+                    # use the variable from the current session
+                    option = poll.item_set.get(item_text=selectedChoice)
             else:
                 # default: use the first option in the list
                 option = poll.item_set.all()[0]
@@ -368,8 +372,11 @@ class DependencyView(generic.DetailView):
                     continue                
 
                 if pollStr in self.request.session:
-                    # use the variable from the current session
-                    pollChoiceDict[pollStr] = poll.item_set.get(item_text=self.request.session[pollStr])
+                    if self.request.session[pollStr] == 'null':
+                        pollChoiceDict[pollStr] = poll.item_set.all()[0]
+                    else:
+                        # use the variable from the current session
+                        pollChoiceDict[pollStr] = poll.item_set.get(item_text=self.request.session[pollStr])
                 else:
                     # default: use the first option in the list
                     pollChoiceDict[pollStr] = poll.item_set.all()[0]                    
@@ -457,6 +464,10 @@ def assignPreference(request, combination_id):
             
             # this poll has no choices, so nothing can be selected
             if poll.item_set.count() == 0:
+                continue
+        
+            # skip if no option was selected
+            if s not in request.POST:
                 continue
     
             itemtxt = request.POST[s]

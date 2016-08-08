@@ -24,9 +24,6 @@ option:checked{
     border: 3px solid blue;
 }
 
-option:hover{
-    border: 3px solid blue;
-}
 .tier {
 		float: left;
 	}
@@ -68,6 +65,17 @@ $(function(){
                         $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap(); checkStyle();});
                         $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap(); checkStyle();});
                         
+                    }
+                });
+            return false;
+        });
+             
+        $('#default_pref').on('change', function () {
+            $.ajax({
+                    url:"{% url 'multipolls:dependencyget' combination.id %}" + "?set_default=true",
+                    success: function(event){
+                        $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap(); checkStyle();});
+                        $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap(); checkStyle();});
                     }
                 });
             return false;

@@ -330,10 +330,14 @@ class DependencyView(generic.DetailView):
             # no options for this poll
             if poll.item_set.count() == 0:
                 continue
-
+            
+            if "set_default" in self.request.session:
+                break
+            
             if pollStr in self.request.session:
+                selectedChoice = self.request.session[pollStr]                
                 # use the variable from the current session
-                option = poll.item_set.get(item_text=self.request.session[pollStr])
+                option = poll.item_set.get(item_text=selectedChoice)
             else:
                 # default: use the first option in the list
                 option = poll.item_set.all()[0]
@@ -343,6 +347,10 @@ class DependencyView(generic.DetailView):
         # if the user has responded to this question, then load the response
         conditionalSet = combination.conditionalitem_set.all()
         ctx["colorArray"] = getConditionColor(combination)
+
+        # get the default preferences if there are any
+        defaultResponse = getConditionFromResponse([], combination).response        
+    
         # check if the condition already exists
         if len(conditionalSet) > 0 and conditionIndex > -1 and conditionIndex < len(conditionalSet) and conditionalSet[conditionIndex].response != None:
             selectedCondition = conditionalSet[conditionIndex]
@@ -365,12 +373,12 @@ class DependencyView(generic.DetailView):
                 else:
                     # default: use the first option in the list
                     pollChoiceDict[pollStr] = poll.item_set.all()[0]                    
-            ctx["poll_choice_dict"] = pollChoiceDict
-            
-            # get the default preferences if there are any
-            defaultResponse = getConditionFromResponse([], combination).response
+            ctx["poll_choice_dict"] = pollChoiceDict            
             if defaultResponse != None:
-                ctx["condition_responses"] = getCurrentSelection(defaultResponse)
+                ctx["condition_responses"] = getCurrentSelection(defaultResponse)   
+        
+        if defaultResponse != None:
+            ctx["default_response"] = getCurrentSelection(defaultResponse)        
         ctx['items'] = self.get_order(ctx)        
         return ctx
 
@@ -439,7 +447,7 @@ def assignPreference(request, combination_id):
     # make Response object to store data
     response = Response(question=question, user=request.user, timestamp=timezone.now())
     response.save()
-   
+
     # submit conditional preferences 
     if "default_pref" not in request.POST:  
         # for each depedent poll, get the choice selected
@@ -569,6 +577,9 @@ def getConditionalResponse(request, combination_id):
     # save the poll responses
     for poll in combination.dependent_questions.all():
         request.session["poll" + str(poll.id)] = request.GET["poll" + str(poll.id)]
+
+    if "set_default" in request.GET:
+        request.session["set_default"] = True
 
     # set a parameter to the condition index, so that the response to that conditon will be preloaded
     return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(combination.target_question.id,)))

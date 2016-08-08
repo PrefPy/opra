@@ -5,7 +5,34 @@
 		outline:none;
 		border-style:none;
 	}
+ .bloc { display:inline-block; vertical-align:top; overflow:hidden; border-style: none; }
+ .bloc select { padding:5px; margin:-5px -20px -5px -5px; }
+    
 </style>
+
+<script>
+function resetChoices()
+{
+    {% for poll in combination.dependent_questions.all %}
+        var elements = document.getElementById("dynamic_select" + {{ poll.id }}).selectedOptions;
+        for (var i = 0; i < elements.length; i++)
+        {
+            elements[i].selected = false;
+        }
+    {% endfor %}
+    return false;
+}
+     
+function resetDefault()
+{
+    var elements = document.getElementById("default_pref").selectedOptions;
+    for (var i = 0; i < elements.length; i++)
+    {
+        elements[i].selected = false;
+    }
+    return false;
+}
+</script>
 
 <div>
     <form action="{% url 'multipolls:assignpreference' combination.id %}" method="post">
@@ -16,6 +43,19 @@
                 Conditional Preferences
             </div>
             <div style="clear:both" class="panel-body">
+            {% if combination.dependent_questions.all|length > 0 %}
+            <div class="bloc">
+                <select id="default_pref" name="default_pref" size="2" onchange="resetChoices()">
+                    {% if default_response %}
+                    <option value="default_pref" class="btn btn-default" 
+                            style='background-color: #3CB371; box-shadow: 0 0 10px 100px #3CB371 inset;'>Default</option>
+                    {% else %}
+                    <option value="default_pref" class="btn btn-default" 
+                            style='background-color: #FA8072; box-shadow: 0 0 10px 100px #FA8072 inset;'>Default</option>
+                    {% endif %}
+                </select>
+            </div>
+            {% endif %}
             {% for poll in combination.dependent_questions.all %}
             <div class="col-md-{{12|intdiv:combination.dependent_questions.count}}">
             <div class="panel panel-default">
@@ -23,8 +63,8 @@
                     <h4>Poll {{ poll.question_text }}</h4>
                     </div>
                 <div class=" panel-body">   
-                    <div class="table-responsive">
-                    <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" size="2" id="combinationtable" style="border-style: none;">
+                    <div class="table-responsive bloc">
+                    <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" size="2" id="combinationtable" onchange="resetDefault()">
                         {% for item in poll.item_set.all %}
                             {% for row in colorArray %}
                             {% for color in row %}
@@ -72,7 +112,6 @@
                         Submit
                     </button>
                 {% endif %}
-                <button type="submit" onclick="submitPref();" class="btn btn-info" name="default_pref">Set as default</button>
                 <input type="hidden" id="pref_order" name="pref_order" value=""/>
             </div>
       

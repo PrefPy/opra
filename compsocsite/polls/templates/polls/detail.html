@@ -33,16 +33,11 @@
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-<<<<<<< Updated upstream
-<script>
-=======
-<script   src="https://code.jquery.com/jquery-3.1.0.js"   integrity="sha256-slogkvB1K3VOkzAI8QITxV3VzpOnkeNVsKvtkYLMjfk="   crossorigin="anonymous"></script>
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
 
->>>>>>> Stashed changes
-
+<script>
 $(function() {
     $("#successMessage").delay(2000).fadeOut('slow');
 });
@@ -112,23 +107,19 @@ $(function() {
             {% endif %}
 					<div class="panel panel-default" >
 						<div class="panel-heading" >
-<<<<<<< Updated upstream
-                        <h4>
-                            Your preferences:
-                            {% if request.flavour == "mobile" %}
-                                <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-                                    <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">
-                                        Submit 
-                                    </span>
-                                </button> 
+							<h4>Your preferences:
+							{% if request.flavour == "mobile" %}
+							<button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+								<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+							</button> 
                             {% else %} 
-                                <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
-                                <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
-                                    Submit
-                                </button> 
+                            <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
+							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
+								Submit
+							</button> 
                             {% endif %}
-                            <input type="hidden" id="pref_order" name="pref_order" value=""/>
-                            
+							<input type="hidden" id="pref_order" name="pref_order" value=""/>
+                                
                             <div class="pull-right">
                             {% if messages %}
                                     {% for message in messages %}
@@ -137,22 +128,10 @@ $(function() {
                                     </span>
                                     {% endfor %}
                             {% endif %}
-                            </div>
-                        </h4>
-=======
-							<h4>Your preferences:
-							{% if request.flavour == "mobile" %}
-							<button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-								<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-							</button> {% else %} <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
-							<button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
-								Submit
-							</button> {% endif %}
-							<input type="hidden" id="pref_order" name="pref_order" value=""/>
-                                
-                            <i class="hint fa fa-question-circle" style="float:right;" data-placement="top" data-toggle="popover" data-content="This is xxxxxxxxxxx."></i>
+                            </div>    
+                            <i class="hint fa fa-question-circle" style="float:right;" data-placement="top" data-toggle="popover" data-content="This will be your final preferences"></i>
                             </h4>
->>>>>>> Stashed changes
+
 						</div>
 
 						<div class="panel-body" >
@@ -210,7 +189,7 @@ $(function() {
                         <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
                             Move All
                         </button> {% endif %} 
-                        <i class="hint fa fa-question-circle" style="float:right;" data-placement="top" data-toggle="popover" data-content="Here are all options creator set for this poll. They will jump to the left when you click." data-hintPosition="top-middle."></i> </h4>
+                        <i class="hint fa fa-question-circle" style="float:right;" data-placement="top" data-toggle="popover" data-content="Here are all the options for this poll. Each time you click on one of them, they will move to the left panel." data-hintPosition="top-middle."></i> </h4>
                     </div>
                     <div class="panel-body">
                         <ul id="right-sortable" class="list-group">
@@ -247,7 +226,7 @@ $(function() {
 				</div>
 				<div>
                     <br/>
-                    <i class="hint fa fa-question-circle" style="float:right;" data-placement="top" data-toggle="popover" data-content="You can enter your coments about this poll here."></i>
+                    <i class="hint fa fa-question-circle" style="float:right;" data-placement="top" data-toggle="popover" data-content="You can enter your comments here."></i>
 					<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here" >{{lastcomment}}</textarea>
 				</div>
 	</form>

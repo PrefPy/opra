@@ -43,7 +43,15 @@
                         <label for="emailStop">Send email when the poll stops</label>
                         <input type="checkbox" name="emailStop" id="emailStop" value="email" {% if request.user.userprofile.emailStop %} checked {% endif %} onchange="this.form.submit()">
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                        <label for="showHint">Show all hints</label>
+                        <input type="checkbox" name="showHint" id="showHint" value="hint" {% if request.user.userprofile.showHint == True %} checked {% endif %} onchange="this.form.submit()">
+                        </div>
+                    </div>
+                    <div class="row">
                     <input type="submit" value="Save Settings" class="btn btn-success">
+                    </div>
                 </form>
             </div>
         </div>

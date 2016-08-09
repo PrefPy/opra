@@ -130,9 +130,19 @@ def updateGlobalSettings(request):
         request.user.userprofile.emailDelete = request.POST.get('emailDelete') == 'email'
         request.user.userprofile.emailStart = request.POST.get('emailStart') == 'email'
         request.user.userprofile.emailStop = request.POST.get('emailStop') == 'email'
+        request.user.userprofile.showHint = request.POST.get('showHint') == 'hint'
         request.user.userprofile.save()
         
     return HttpResponseRedirect(reverse('appauth:globalSettings'))
+
+@login_required
+def disableHint(request):
+    context = RequestContext(request)
+    if request.method == 'POST':
+        request.user.userprofile.showHint = False
+        request.user.userprofile.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required
 def user_logout(request):

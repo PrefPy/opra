@@ -27,7 +27,6 @@
 		float: left;
     }
     .hint{
-    
     }
 </style>
 
@@ -130,8 +129,8 @@ $(function() {
                                     {% endfor %}
                             {% endif %}
                             </div>    
-
-                                <a tabindex="0" style="float:right;"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="This is your prefence xxxxxxx. <br/><button id='toggle-button' class='btn btn-primary btn-sm assignedGroup' type='button' data-target-id='NewInvestor' >Disable All Hints</button> <br/>"></a>
+                                
+                                <a tabindex="0" style="float:right; {%if request.user.userprofile.showHint == True%} visibility:visible;{% else %}visibility:hidden; {%endif%}"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="This is your prefence xxxxxxx. <br/><form action='{% url 'appauth:disableHint' %}' method='POST'>{% csrf_token %}<input id='toggle-button' class='btn btn-primary btn-sm' type='submit' value='Disable All Hints'/></form> <br/>"></a>
                             </h4>
 
 						</div>
@@ -191,7 +190,7 @@ $(function() {
                         <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
                             Move All
                         </button> {% endif %} 
-                        <a tabindex="0" style="float:right;"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="This is your choice xxxxxxx. <br/><button id='toggle-button' class='btn btn-primary btn-sm assignedGroup' type='button' data-target-id='NewInvestor' >Disable All Hints</button> <br/>"></a> </h4>
+                        <a tabindex="0" style="float:right; {%if request.user.userprofile.showHint == True%} visibility:visible;{% else %}visibility:hidden; {%endif%}"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="This is your choice xxxxxxx. <form action='{% url 'appauth:disableHint' %}' method='POST'>{% csrf_token %}<input id='toggle-button' class='btn btn-primary btn-sm' type='submit' value='Disable All Hints'/></form><br/>"></a> </h4>
                     </div>
                     <div class="panel-body">
                         <ul id="right-sortable" class="list-group">
@@ -228,7 +227,7 @@ $(function() {
 				</div>
 				<div>
                     <br/>
-                    <a tabindex="0" style="float:right;"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="You can leave your comments here. <br/><button id='toggle-button' class='btn btn-primary btn-sm assignedGroup' type='button' data-target-id='NewInvestor' >Disable All Hints</button> <br/>"></a>
+                    <a tabindex="0" style="float:right; {%if request.user.userprofile.showHint == True%} visibility:visible;{% else %}visibility:hidden; {%endif%}"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="You can leave your comments here. <br/><form action='{% url 'appauth:disableHint' %}' method='POST'>{% csrf_token %}<input id='toggle-button' class='btn btn-primary btn-sm' type='submit' value='Disable All Hints'/></form>"></a>
 					<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here" >{{lastcomment}}</textarea>
 				</div>
 	</form>
@@ -266,6 +265,7 @@ $(function() {
    });
             
 function toggle (elements, specifiedDisplay) {
+    
   var element, index;
 
   elements = elements.length ? elements : [elements];

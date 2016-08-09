@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^passwordpage/changepassword/$', views.changepassword, name='changepassword'),
     url(r'^settings/global/$', views.globalSettings, name='globalSettings'),
     url(r'^settings/update/$', views.updateSettings, name='updateSettings'),
+    url(r'^settings/diablehint/$', views.disableHint, name='disableHint'),
     url(r'^settings/update/global$', views.updateGlobalSettings, name='updateGlobalSettings'),
 ]

@@ -16,11 +16,12 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 from .prefpy.mechanism import *
+from polls.prefpy.allocation_mechanism import *
 from .email import sendEmail, setupEmail
 from groups.models import *
 from django.conf import settings
 from multipolls.models import *
-from .algorithms import *
+
 import json
 
 # view for homepage - index of questions & results
@@ -337,7 +338,8 @@ def stopPoll(request, question_id):
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
-        allocation(question)
+        (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
+        allocation(question, latest_responses)
     question.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

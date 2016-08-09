@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 from polls.views import getPollWinner
-from polls.algorithms import *
+from polls.prefpy.allocation_mechanism import *
 from polls.views import *
 
 from itertools import *
@@ -173,7 +173,9 @@ def endSubpoll(multipoll):
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
-        allocation(question, multipoll)
+        # the latest and previous responses are from latest to earliest
+        (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())         
+        allocation(question, latest_responses, multipoll)
     question.save()
     
     #move to the next poll
@@ -335,7 +337,6 @@ class DependencyView(generic.DetailView):
             if "set_default" in self.request.session:
                 break
 
-            pollStr = "poll" + str(poll.id)
             option = getSelectedItem(self.request.session, poll)
             conditionsSelected.append(option)
         conditionIndex = getConditionIndex(conditionsSelected, combination)
@@ -374,7 +375,7 @@ class DependencyView(generic.DetailView):
 # get the item that is currently selected for each subpoll
 def getSelectedItem(session, poll):
     pollStr = "poll" + str(poll.id)
-
+    
     # check if there is a session in progress
     if pollStr in session:
         selectedChoice = session[pollStr]

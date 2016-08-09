@@ -2,36 +2,6 @@ from polls.models import *
 import operator
 import random
 
-#separate the user votes into two categories: (1)most recent (2)previous history
-def categorizeResponses(all_responses):
-    latest_responses = []
-    previous_responses = []
-    
-    if len(all_responses) > 0:
-        #the first response must be the most recent 
-        latest_responses.append(all_responses[0])   
-    
-    others = all_responses[1:]
-    
-    #the outer loop goes through all the responses
-    for response1 in others:
-        if response1.user == None:
-            continue
-        
-        add = True
-        #check if the user has voted multiple times
-        for response2 in latest_responses:
-            if response1.user.username == response2.user.username:
-                add = False
-                previous_responses.append(response1)
-                break
-
-        #this is the most recent vote
-        if add:
-            latest_responses.append(response1)   
-    
-    return (latest_responses, previous_responses)
-
 def getAllocationOrder(question, latest_responses):
     if len(latest_responses) == 0:
         return
@@ -52,10 +22,7 @@ def getAllocationOrder(question, latest_responses):
     return 
 
 # ALLOCATION ALGORITHM FUNCTIONS HERE:
-def allocation(question, multipoll = None):
-    # the latest and previous responses are from latest to earliest
-    (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())     
-
+def allocation(question, latest_responses, multipoll = None):
     # get the allocation order from the first multipoll
     allocation_order = []
     if multipoll != None:

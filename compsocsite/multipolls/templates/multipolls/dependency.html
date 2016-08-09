@@ -24,9 +24,6 @@ option:checked{
     border: 3px solid blue;
 }
 
-option:hover{
-    border: 3px solid blue;
-}
 .tier {
 		float: left;
 	}
@@ -68,6 +65,17 @@ $(function(){
                         $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap(); checkStyle();});
                         $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap(); checkStyle();});
                         
+                    }
+                });
+            return false;
+        });
+             
+        $('#default_pref').on('change', function () {
+            $.ajax({
+                    url:"{% url 'multipolls:dependencyget' combination.id %}" + "?set_default=true",
+                    success: function(event){
+                        $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap(); checkStyle();});
+                        $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap(); checkStyle();});
                     }
                 });
             return false;
@@ -132,7 +140,7 @@ $(function(){
                 {% else %}
                     <input type="checkbox" name="polls" value="{{poll.id}}" id="checkbox{{poll.id}}" onclick="check();">
                 {% endif %}
-                <label for="{{poll.id}}">{{ poll.question_text }}</label>
+                {{ poll.question_text }}
             </label>
 
             <!--<div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>

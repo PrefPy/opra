@@ -2,8 +2,8 @@
     <form id="choiceform"  action="{% url 'polls:editchoice' question.id %}" method="post">
         {% csrf_token %}
         {% for item in items %}
-            <li class="list-group-item " data-toggle="collapse" data-target="#iteminfo{{item.id}}">
-                <div class="row">
+            <li class="list-group-item " >
+                <div class="row" data-toggle="collapse" data-target="#iteminfo{{item.id}}">
                     <div class="form-group col-xs-1"   >
                         <span class="caret" style="color:#377BB5;"></span>   
                     </div>   

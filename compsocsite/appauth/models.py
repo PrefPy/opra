@@ -15,6 +15,7 @@ class UserProfile(models.Model):
     emailDelete = models.BooleanField(default=True)
     emailStart = models.BooleanField(default=True)
     emailStop = models.BooleanField(default=True)
+    showHint = models.BooleanField(default=True)
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
         return self.user.username

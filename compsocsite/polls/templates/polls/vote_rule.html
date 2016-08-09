@@ -83,15 +83,21 @@
     
         <!-- Panel for previous winners (closed by default) -->
 
-        <a href="{% url 'polls:calculateprev' question.id %}"><button type="button" class="btn btn-primary" >{% if question.voteresult_set.all.count == 0%}C{% else %}Rec{% endif %}alculate Previous Winners</button></a>
+        
         <div class="panel panel-default">
-            <div class="panel-heading" data-toggle="collapse" href="#collapse_pw">
-                <h4 class="panel-title">
+            <div class="panel-heading">
+                <div class="row">
+                <div class="col-md-10"  data-toggle="collapse" href="#collapse_pw">
+                <h4 class="panel-title ">
                     <a >
                        Previous Winners {% if question.voteresult_set.all.count == 0%}(Empty){% endif %} <span class="caret" style="color:#377BB5;"></span>
                     </a>
                 </h4>
-                
+                </div>
+                <div class="col-md-2">
+                <a href="{% url 'polls:calculateprev' question.id %}"><button type="button" class="btn btn-primary" >{% if question.voteresult_set.all.count == 0%}C{% else %}Rec{% endif %}alculate Previous Winners</button></a>
+                </div>
+                </div>
             </div>
             <div id="collapse_pw" class="panel-body collapse">
                 {% for pw in previous_winners %}
@@ -136,9 +142,9 @@
         </div>
         <!-- Panel for weighted majority graph (closed by default) -->
         <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" data-toggle="collapse" href="#collapse_wmg">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#collapse_wmg">
+                    <a >
                         Weighted Majority Graph <span class="caret" style="color:#377BB5;"></span>
                     </a>
                 </h4>

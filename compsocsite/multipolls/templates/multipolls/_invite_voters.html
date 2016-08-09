@@ -14,7 +14,7 @@
         <input type="checkbox" name="email" id="email2" value="email" {% if multipoll.emailDelete == True or multipoll.emailDelete == None %} checked {% endif %} onchange="this.form.submit()">
         {% if multipoll.status == 0 %}
         <br />
-        <input type="submit" class="btn btn-danger" value="Remove">
+        <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span></button>
         {% endif %}
     </form> 
     </div>     
@@ -30,7 +30,7 @@
                 {% endif %}
             {% endfor %}
             </select>
-            <input type="submit" class="btn btn-success" value="Invite">
+            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>
         </div>
         <br />
         <label for="email1">Email announcement</label>
@@ -50,9 +50,9 @@
                         {% endif %}
                     {% endfor %}
                 </select>
-                <input type="submit" class="btn btn-success" value="Invite">
+                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>
                 {% if multipoll.status == 0 %}
-                <input type="submit" class="btn btn-danger" value="Remove" formaction="{% url 'multipolls:removeGroupVoters' multipoll.id %}">
+                <button type="submit" class="btn btn-danger" formaction="{% url 'multipolls:removeGroupVoters' multipoll.id %}"><span class="glyphicon glyphicon-minus"></span></button>
                 {% endif %}
             </div>
             <br />

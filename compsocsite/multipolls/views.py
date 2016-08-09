@@ -157,25 +157,35 @@ def removeGroupVoters(request, multipoll_id):
                             question.question_voters.remove(voterObj.id)                    
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# start all subpolls in the multipoll
 def start(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
+    
+    # start the multipoll
     multipoll.status = 1
+    
+    # start all subpolls
     for question in multipoll.questions.all():
         question.status = 2
         question.save()
     multipoll.save()
+    
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+# end the current subpoll in the sequence
 def endSubpoll(multipoll):
     #end the previous poll
     question = multipoll.questions.all()[multipoll.status - 1]
     question.status = 3
+    
+    # get results for this subpoll
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
         # the latest and previous responses are from latest to earliest
-        (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())         
-        allocation(question, latest_responses, multipoll)
+        (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
+        allocation_order = getCurrentAllocationOrder(question, latest_responses)       
+        allocation(question, allocation_order, latest_responses)
     question.save()
     
     #move to the next poll

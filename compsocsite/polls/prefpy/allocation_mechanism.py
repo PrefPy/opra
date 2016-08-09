@@ -2,7 +2,26 @@ from polls.models import *
 import operator
 import random
 
-def getAllocationOrder(question, latest_responses):
+# ALLOCATION ALGORITHM FUNCTIONS HERE:
+def allocation(question, allocation_order, latest_responses):
+    #make sure there is at least one response  
+    if len(latest_responses) == 0:
+        return
+    
+    if question.poll_algorithm == 1:
+        #SD early first
+        allocation_serial_dictatorship(allocation_order, latest_responses, early_first = 1)
+    elif question.poll_algorithm == 2:
+        #SD late first
+        allocation_serial_dictatorship(list(reversed(allocation_order)), latest_responses, early_first = 0)
+    elif question.poll_algorithm == 3:
+        if len(allocation_order) != 0:
+            allocation_manual(allocation_order, latest_responses)
+        else:
+            allocation_random_assignment(latest_responses)
+
+# if the allocation mechanism is early-first or late-first serial dictatorship, assign the order based off of latest response time
+def getInitialAllocationOrder(question, latest_responses):
     if len(latest_responses) == 0:
         return
 
@@ -21,17 +40,20 @@ def getAllocationOrder(question, latest_responses):
         voter.save()     
     return 
 
-# ALLOCATION ALGORITHM FUNCTIONS HERE:
-def allocation(question, latest_responses, multipoll = None):
+# get the current allocation order for this poll
+# if this poll is part of a multi-poll, then it must consider the order of the previous subpolls
+def getCurrentAllocationOrder(question, latest_responses):
     # get the allocation order from the first multipoll
     allocation_order = []
-    if multipoll != None:
+    if question.m_poll == True:
+        multipoll = question.multipoll_set.all()[0]
         firstSubpoll = multipoll.questions.all()[0]
         allocation_order = firstSubpoll.allocationvoter_set.all()
+        
         # fix the allocation order from the first subpoll
         if len(allocation_order) == 0:
             # get allocation order
-            getAllocationOrder(question, latest_responses)
+            getInitialAllocationOrder(question, latest_responses)
         else:
             # copy a new allocation order based off of the first subpoll
             for alloc_item in allocation_order:
@@ -40,26 +62,56 @@ def allocation(question, latest_responses, multipoll = None):
                 voter.save()
         allocation_order = question.allocationvoter_set.all()
     else:
-        # calculate the allocation order 
-        # get the allocation order
+        # calculate the allocation order
         allocation_order = question.allocationvoter_set.all()
 
-        # calculate the allocaiton order once
         if len(allocation_order) == 0:    
-            getAllocationOrder(question, latest_responses)
-            allocation_order = question.allocationvoter_set.all()
+            getInitialAllocationOrder(question, latest_responses)
+            allocation_order = question.allocationvoter_set.all()    
+    
+    return allocation_order
 
-    if question.poll_algorithm == 1:
-        #SD early first
-        allocation_serial_dictatorship(allocation_order, latest_responses, early_first = 1)
-    elif question.poll_algorithm == 2:
-        #SD late first
-        allocation_serial_dictatorship(list(reversed(allocation_order)), latest_responses, early_first = 0)
-    elif question.poll_algorithm == 3:
-        if len(allocation_order) != 0:
-            allocation_manual(allocation_order, latest_responses)
-        else:
-            allocation_random_assignment(latest_responses)
+# order user responses similar to the allocation order
+def getResponseOrder(allocation_order):
+    response_set = []
+    for order_item in allocation_order:
+        question = order_item.question
+        user = order_item.user
+        
+        # skip if no vote
+        if question.response_set.reverse().filter(user=user).count() == 0:
+            continue        
+
+        # save response
+        response = question.response_set.reverse().filter(user=user)[0]
+        order_item.response = response
+        order_item.save()
+        
+        # add to the list
+        response_set.append(response)
+    return response_set
+
+# iterate through each response and assign the highest ranking choice that is still available 
+def assignAllocation(items, response_set):
+    for user_response in response_set:
+        # no more items left to allocate
+        if len(items) == 0:
+            return
+        
+        highest_rank = len(items)
+        myitem = items[0]
+        prefs = user_response.dictionary_set.all()[0]
+        # here we find the item remaining that this user ranked the highest
+        for item in items:
+            if prefs.get(item) < highest_rank:
+                highest_rank = prefs.get(item)
+                myitem = item
+        print ("Allocating item " + myitem.item_text + " to user " + user_response.user.username)
+        # now we allocate that item to this user and remove that item from consideration for other students
+        user_response.allocation = myitem
+        user_response.save()
+        items.remove(myitem)    
+    return
 
 # Serial dictatorship algorithm to allocate items to students for a given question.
 # It takes as an argument the response set to run the algorithm on.
@@ -67,13 +119,9 @@ def allocation(question, latest_responses, multipoll = None):
 # order of the timestamps on the responses for novel questions, and reverse
 # order of the timestamps on the original question for follow-up questions.
 def allocation_serial_dictatorship(allocation_order, responses, early_first = 1):
-    #make sure there is at least one response    
-    if len(responses) == 0:
-        return
-    
     item_set = responses[0].question.item_set.all()
     student_response_order = responses
-    
+
     # it's a follow-up question, so run it in reverse order of timestamp from original question
     if responses[0].question.follow_up != None:
         response_set = []
@@ -89,99 +137,39 @@ def allocation_serial_dictatorship(allocation_order, responses, early_first = 1)
             response_set.sort(key = operator.attrgetter('timestamp'), reverse = True)
         else: 
             response_set.sort(key = operator.attrgetter('timestamp'), reverse = False)
-        student_response_order = response_set
-    
+        student_response_order = response_set    
+
     # here we acquire copies of each item to use for allocation
     items = []
     for item in item_set:
         items.append(item)
         
     # get the list of responses in the specified order   
-    response_set = []
-    for order_item in allocation_order:
-        question = order_item.question
-        user = order_item.user
-        response = question.response_set.reverse().filter(user=user)[0]
-        order_item.response = response
-        order_item.save()
-        response_set.append(response)
+    response_set = getResponseOrder(allocation_order)
     
     # allocate items to responses
-    for user_response in response_set:
-        # no more items left to allocate
-        if len(items) == 0:
-            return
-        
-        highest_rank = len(items)
-        myitem = items[0]
-        prefs = user_response.dictionary_set.all()[0]
-        # here we find the item remaining that this user ranked the highest
-        for item in items:
-            if prefs.get(item) < highest_rank:
-                highest_rank = prefs.get(item)
-                myitem = item
-        print ("Allocating item " + myitem.item_text + " to user " + user_response.user.username)
-        # now we allocate that item to this user and remove that item from consideration for other students
-        user_response.allocation = myitem
-        user_response.save()
-        items.remove(myitem)
+    assignAllocation(items, response_set)
     return
 
 # the poll owner can specify an order to allocate choices to voters
 def allocation_manual(allocation_order, responses):
-    #make sure there is at least one response    
-    if len(responses) == 0:
-        return        
-
     item_set = responses[0].question.item_set.all()
     items = []
-    response_set = []
-
+    
     # get a list of choices
     for item in item_set:
         items.append(item)
     
     # get the list of responses in the specified order   
-    for order_item in allocation_order:
-        question = order_item.question
-        user = order_item.user
-        # skip if no vote
-        if question.response_set.reverse().filter(user=user).count() == 0:
-            continue
-        
-        response = question.response_set.reverse().filter(user=user)[0]
-        order_item.response = response
-        order_item.save()
-        response_set.append(response)
-    
+    response_set = getResponseOrder(allocation_order)
+
     # allocate items to responses
-    for user_response in response_set:
-        # no more items left to allocate
-        if len(items) == 0:
-            return
-        
-        highest_rank = len(items)
-        myitem = items[0]
-        prefs = user_response.dictionary_set.all()[0]
-        # here we find the item remaining that this user ranked the highest
-        for item in items:
-            if prefs.get(item) < highest_rank:
-                highest_rank = prefs.get(item)
-                myitem = item
-        print ("Allocating item " + myitem.item_text + " to user " + user_response.user.username)
-        # now we allocate that item to this user and remove that item from consideration for other students
-        user_response.allocation = myitem
-        user_response.save()
-        items.remove(myitem)
+    assignAllocation(items, response_set)
     return
 
 # This is a toy algorithm present for testing certain system functionality. It will simply allocate a random item
 # to each user in the response set.
 def allocation_random_assignment(responses):
-    #make sure there is at least one response    
-    if len(responses) == 0:
-        return    
-
     item_set = responses[0].question.item_set.all()
     student_response_order = responses
     items = []

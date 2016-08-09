@@ -338,8 +338,10 @@ def stopPoll(request, question_id):
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
+        # the latest and previous responses are from latest to earliest
         (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
-        allocation(question, latest_responses)
+        allocation_order = getCurrentAllocationOrder(question, latest_responses)
+        allocation(question, allocation_order, latest_responses)
     question.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

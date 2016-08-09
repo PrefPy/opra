@@ -4,6 +4,18 @@ This project is a web app that assists in the assignment of presentations to stu
 
 The web app is built on Django, and uses an SQLite database. [Click here](https://docs.djangoproject.com/en/1.9/) for more information on how Django works.
 
+##Installation
+1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3 (as of now, 3.4 or 3.5).
+2. Install Django. The easiest way to do this is through pip, which can be found [here] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py). Then you can install django simply by entering the command: 
+
+   <code>pip install django</code>
+3. Install the dependencies listed below in the Dependencies section.
+4. Clone this project from Github
+5. To run the project, you open the command line (terminal), change to the current directory of the project. Then in the root of the project, enter the following commands:
+  
+  <code>cd composcite</code>
+  
+  <code>python3 manage.py runserver</code>
 
 ##Dependencies
 * **Django-mathfilters**:
@@ -20,18 +32,15 @@ The following models are used to organize information:
 * **KeyValuePair:** a helper model for key-value pairs in the dictionary model. The key is an item of a question and the value is the ranking the student assigned to that item
 
 
-##Admin-Side Usage
-The administrator can add, view, edit, and delete questions, items, and students. Currently the administrator can only view and delete responses, but this will be changed in the future to allow full access. All lists of data are sortable by name and (when applicable) date.
+##Poll Owner Usage
+The poll owner can add, view, edit, and delete questions, items, and voters. All lists of data are sortable by name and (when applicable) date.
 
-To display a question for students to respond to, the administrator must make a new question, entering the relevant text and items. If the question is a follow-up to another question (e.g. date preference is a follow-up to topic preference), the question that preceded it should be selected in the "follow-up" drop-down menu. The question will be publicly viewable starting on the publication date and time specified by the administrator. In the Students section, the administrator must add each student in the class, filling in a name and email address. If the administrator does not add a student, the student will not be able to respond to questions.
+To display a question for users to respond to, the poll owner must make a new question, entering the relevant text and items. The poll owner can look in the history section to see which users have responded to which questions. When you wish to allocate the items for a question, click stop to end the poll.This will run the algorithm, update the allocated item field in each response, and publish the results.
 
-The administrator can look in the Responses section to see which students have responded to which questions. When you wish to allocate the items for a question, filter the Responses section to only view responses to that question, then select all responses. Lastly, from the drop-down menu at the top, select the admin action corresponding to the desired allocation algorithm. This will run the algorithm, update the allocated item field in each response, and publish the results.
+##Voter Usage
+From the home page (/polls/), all available questions may be viewed. To view a specific question, click on it. The screen will show a simplfied voter interface, which allows you to visualize your preferences. One rank per item may be selected, but ties are allowed. Only complete preferences are accepted. A question response may either be submitted with a registered account or under an anonymous name, if the poll owner has agreed to allow anonymous voting. When the "Submit" button is clicked, a response will be submitted, associated with the given question, and with the preferences indicated. A small alert will be displayed.
 
-
-##Student-Side Usage
-From the home page (/polls/), all available questions may be viewed. To view a specific question, click on it. The screen will show the question with a radio grid containing all the items as rows and a number of ranks equal to the number of items as columns. One rank per item may be selected. Ties are allowed, and if desired, it is possible to report no preference for a given item by not selecting a radio button in that row. Beneath this section, there is a drop-down menu to select a student name that should be associated with the reported preferences. A question response may not be submitted without choosing a name. When the "Submit" button is clicked, a response will be submitted, associated with the given question and the selected student name, and with the preferences indicated in the radio button grid. The student will be redirected to a confirmation screen.
-
-Also on the home page is a list of links to results for each question. A given link will not be clickable until the results for that question have been published by the administrator (by performing the allocation algorithm action). Clicking on a link to a set of results will bring the student to a list of all students and the item they have been allocated for that particular question.
+Also on the home page is a list of links to results for each question. A given link will not be clickable until the results for that question have been published by the poll owner (by performing the allocation algorithm action). Clicking on a link to a set of results will bring the student to a list of all students and the item they have been allocated for that particular question.
 
 
 ##Allocation Algorithms
@@ -39,13 +48,3 @@ The project is currently equipped with a serial dictatorship allocation algorith
 
 More algorithms can easily be added. Within the algorithms.py file inside the polls directory, add a function def for the desired algorithm, with the response set as a parameter. Then, at the top of the admin.py file inside the polls directory, add a function def for an admin action corresponding to the new algorithm. The preexisting admin action function can be used as a guide for the necessary syntax to add a new admin action. Lastly, in the ResponseAdmin class at the bottom of admin.py, add the new admin action function to the list of actions.
 
-
-##Future Additions
-* **User Authentication:**
-	Students will be able to create password-protected user accounts, and will use these instead of selecting their names from a drop-down menu when responding to questions. This will reduce the risk of response forgery.
-* **Automated Emailing:**
-	Students will automatically be notified via email when new questions or results have been published.
-* **Project Containers:**
-	The administrator will be able to group questions into containers, such as all the questions that belong to a particular project, or all the questions for a given semester of a course. Students will be able to view the questions and results grouped together accordingly.
-* **Aesthetic Improvements:**
-	Template files for the student-side views will be updated to be more aesthetically pleasing. Additionally, a third party can easily add or modify their own templates, available in the /polls/templates directory of the project.

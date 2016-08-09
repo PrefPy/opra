@@ -327,8 +327,6 @@ class DependencyView(generic.DetailView):
         # calculate condition index based off of the current session
         conditionsSelected = [] 
         for poll in combination.dependent_questions.all():
-            pollStr = "poll" + str(poll.id)
-            
             # no options for this poll
             if poll.item_set.count() == 0:
                 continue
@@ -336,21 +334,9 @@ class DependencyView(generic.DetailView):
             # default option is selected
             if "set_default" in self.request.session:
                 break
-            
-            if pollStr in self.request.session:
-                selectedChoice = self.request.session[pollStr]
-                if selectedChoice == 'null':
-                    # default: use the first option in the list
-                    option = poll.item_set.all()[0]
-                elif ',' in selectedChoice:
-                    # if multiple options were selected, pick the first one
-                    option = poll.item_set.get(item_text=selectedChoice.split(',')[0])
-                else:
-                    # use the variable from the current session
-                    option = poll.item_set.get(item_text=selectedChoice)
-            else:
-                # default: use the first option in the list
-                option = poll.item_set.all()[0]
+
+            pollStr = "poll" + str(poll.id)
+            option = getSelectedItem(self.request.session, poll)
             conditionsSelected.append(option)
         conditionIndex = getConditionIndex(conditionsSelected, combination)
 
@@ -372,36 +358,56 @@ class DependencyView(generic.DetailView):
             # mark these choices as selected instead of the default ones
             pollChoiceDict = {}
             for poll in combination.dependent_questions.all():
-                pollStr = "poll" + str(poll.id)
                 # no options for this poll
                 if poll.item_set.count() == 0:
-                    continue                
+                    continue
 
-                if pollStr in self.request.session:
-                    if self.request.session[pollStr] == 'null':
-                        pollChoiceDict[pollStr] = poll.item_set.all()[0]
-                    else:
-                        # use the variable from the current session
-                        pollChoiceDict[pollStr] = poll.item_set.get(item_text=self.request.session[pollStr])
-                else:
-                    # default: use the first option in the list
-                    pollChoiceDict[pollStr] = poll.item_set.all()[0]                    
-            ctx["poll_choice_dict"] = pollChoiceDict            
-            if defaultResponse != None:
-                ctx["condition_responses"] = getCurrentSelection(defaultResponse)   
-        
+                pollStr = "poll" + str(poll.id)
+                pollChoiceDict[pollStr] = getSelectedItem(self.request.session, poll)
+            ctx["poll_choice_dict"] = pollChoiceDict
+
         if defaultResponse != None:
             ctx["default_response"] = getCurrentSelection(defaultResponse)        
         ctx['items'] = self.get_order(ctx)        
         return ctx
 
+# get the item that is currently selected for each subpoll
+def getSelectedItem(session, poll):
+    pollStr = "poll" + str(poll.id)
+
+    # check if there is a session in progress
+    if pollStr in session:
+        selectedChoice = session[pollStr]
+
+        if selectedChoice == 'null':
+            # default: use the first option in the list
+            option = poll.item_set.all()[0]
+        elif ',' in selectedChoice:
+            # if multiple options were selected, pick the first one
+            option = poll.item_set.get(item_text = selectedChoice.split(',')[0])
+        else:
+            # use the variable from the current session
+            option = poll.item_set.get(item_text = selectedChoice)
+    else:
+        # default: use the first option in the list
+        option = poll.item_set.all()[0]    
+    
+    return option
+
 # color the conditions so that you know which conditions have preferences submitted
 def getConditionColor(combination):
     colorsArray = []
     greenColor = "#3CB371"
+    yellowColor = "#F0F090"
     redColor = "#FA8072"    
 
     conditionalSet = combination.conditionalitem_set.all()
+
+    subpollChoicesList = []
+    for poll in combination.dependent_questions.all():
+        itemList = list(poll.item_set.all())           
+        subpollChoicesList.append(itemList)
+    totalOptions = len(list(itertools.product(*subpollChoicesList)))
     
     # iterate through all the polls
     for poll in combination.dependent_questions.all():
@@ -410,13 +416,21 @@ def getConditionColor(combination):
         for item in poll.item_set.all():
             found = False
             # check if that choice has been used in a conditional preference
+            counter = 0
             for condition in conditionalSet:
                 if item in condition.items.all():
+                    counter += 1
                     found = True
 
+            totalForOption = totalOptions / len(poll.item_set.all())
             if found == True:
-                colorRow.append(greenColor)
+                # partially filled
+                if counter < totalForOption:
+                    colorRow.append(yellowColor)
+                else: # completely filled 
+                    colorRow.append(greenColor)
             else:
+                # none
                 colorRow.append(redColor)
         colorsArray.append(colorRow)
     return colorsArray
@@ -431,7 +445,7 @@ def chooseDependency(request, question_id):
     for poll in l:
         i = int(poll)
         dependencies.append(poll)
-        
+
     # use a single combination object
     combination, created = Combination.objects.get_or_create(target_question=question, user=request.user)
     if created == False:

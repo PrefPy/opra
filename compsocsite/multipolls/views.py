@@ -184,8 +184,9 @@ def endSubpoll(multipoll):
     elif question.question_type == 2: #allocation
         # the latest and previous responses are from latest to earliest
         (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
-        allocation_order = getCurrentAllocationOrder(question, latest_responses)       
-        allocation(question, allocation_order, latest_responses)
+        allocation_order = getCurrentAllocationOrder(question, latest_responses)  
+        response_set = getResponseOrder(allocation_order)   # get the list of responses in the specified order   
+        allocation(question.poll_algorithm, response_set, latest_responses)
     question.save()
     
     #move to the next poll

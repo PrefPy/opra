@@ -341,7 +341,8 @@ def stopPoll(request, question_id):
         # the latest and previous responses are from latest to earliest
         (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
         allocation_order = getCurrentAllocationOrder(question, latest_responses)
-        allocation(question, allocation_order, latest_responses)
+        response_set = getResponseOrder(allocation_order)   # get the list of responses in the specified order 
+        allocation(question.poll_algorithm, response_set, latest_responses)
     question.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1010,6 +1011,78 @@ def setAllocationOrder(request, question_id):
         item_num += 1    
     
     return HttpResponseRedirect(reverse('polls:viewAllocationOrder', args=(question.id,)))
+
+# if the allocation mechanism is early-first or late-first serial dictatorship, assign the order based off of latest response time
+def getInitialAllocationOrder(question, latest_responses):
+    if len(latest_responses) == 0:
+        return
+
+    # assign the default allocation order from earliest to latest
+    counter = len(question.item_set.all())
+    for user_response in (list(reversed(latest_responses))):
+        # no more items left to allocate
+        if counter == 0:
+            return
+
+        counter -= 1
+        # create the object
+        voter, created = AllocationVoter.objects.get_or_create(question=user_response.question, user=user_response.user)
+        # save the most recent response
+        voter.response = user_response
+        voter.save()     
+    return 
+
+# get the current allocation order for this poll
+# if this poll is part of a multi-poll, then it must consider the order of the previous subpolls
+def getCurrentAllocationOrder(question, latest_responses):
+    # get the allocation order from the first multipoll
+    allocation_order = []
+    if question.m_poll == True:
+        multipoll = question.multipoll_set.all()[0]
+        firstSubpoll = multipoll.questions.all()[0]
+        allocation_order = firstSubpoll.allocationvoter_set.all()
+        
+        # fix the allocation order from the first subpoll
+        if len(allocation_order) == 0:
+            # get allocation order
+            getInitialAllocationOrder(question, latest_responses)
+        else:
+            # copy a new allocation order based off of the first subpoll
+            for alloc_item in allocation_order:
+                voter, created = AllocationVoter.objects.get_or_create(question=question, user=alloc_item.user)
+                voter.response = question.response_set.reverse().filter(user=alloc_item.user)[0]
+                voter.save()
+        allocation_order = question.allocationvoter_set.all()
+    else:
+        # get the allocation order
+        allocation_order = question.allocationvoter_set.all()
+
+        # calculate initial order if there is none or if new voters are added during the poll
+        if len(allocation_order) == 0 or len(allocation_order) != len(latest_responses):    
+            getInitialAllocationOrder(question, latest_responses)
+            allocation_order = question.allocationvoter_set.all()    
+    
+    return allocation_order
+
+# order user responses similar to the allocation order
+def getResponseOrder(allocation_order):
+    response_set = []
+    for order_item in allocation_order:
+        question = order_item.question
+        user = order_item.user
+        
+        # skip if no vote
+        if question.response_set.reverse().filter(user=user).count() == 0:
+            continue        
+
+        # save response
+        response = question.response_set.reverse().filter(user=user)[0]
+        order_item.response = response
+        order_item.save()
+        
+        # add to the list
+        response_set.append(response)
+    return response_set
 
 #function to get preference order from a string 
 def getPrefOrder(orderStr, question):

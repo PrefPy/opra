@@ -1,0 +1,25 @@
+1. Structure of OPRA project:
+
+compsocsite/
+	1. manage.py 
+	//we use this file to run this project
+
+	2. appauth 
+	// This folder is for login/logout/global setting things.
+
+	3. compsocsite
+	// This is the global folder for OPRA.
+
+	4. polls
+	// For single polls
+
+	5. multipolls
+	// For multi-polls
+
+	6. groups
+	// For groups
+
+	7. static
+	// For image/js/css files
+
+	

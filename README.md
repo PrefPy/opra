@@ -5,7 +5,8 @@ This project is a web app that assists in the assignment of presentations to stu
 The web app is built on Django, and uses an SQLite database. [Click here](https://docs.djangoproject.com/en/1.9/) for more information on how Django works.
 
 ##Installation
-For Windows
+* **For Windows**:
+
 1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3 (as of now, 3.4 or 3.5).
 2. Install Django. The easiest way to do this is through pip, which can be found [here] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py). Then you can install django simply by entering the command: 
 
@@ -18,21 +19,28 @@ For Windows
   
   <code>python3 manage.py runserver</code>
 
-For Mac
+* **For Mac**:
 1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3 (as of now, 3.4 or 3.5). For Mac, the default python version is python 2. You can check your python version by entering the command in terminal:
 
-    <code> python -V </code> or 
+    <code> python -V </code>
+
+    or 
+
     <code> python3 -V </code>
 
 2. Install Django. The easiest way to do this is through pip. You can install pip by entering the command in terminal:
+
     <code> sudo easy_install pip </code>
     More about pip can be found [here] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py).
     Then you can install django simply by entering the command: 
+
     <code>pip install django</code>
     You can verify by entering the command:
+
     <code> import django </code>
     <code> print(django.get_version()) </code>
 3. Install the dependencies listed below in the Dependencies section by entering:
+
     <code>  pip install Package-Name </code>
 4. Clone this project from Github (You can download Github Desktop for Mac or clone this project direclt from Github Website.)
 5. To run the project, you open the command line (terminal), change to the current directory of the project. Then in the root of the project, enter the following commands:

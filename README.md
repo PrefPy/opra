@@ -37,6 +37,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
     Then you can install django simply by entering the command: 
 
     <code>pip install django</code>
+
     You can verify by entering the command:
 
     <code> import django </code>

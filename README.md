@@ -8,9 +8,16 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 * **For Windows**:
 
 1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3 (as of now, 3.4 or 3.5).
-2. Install [Django](https://www.djangoproject.com). The easiest way to do this is through pip, which can be found [here] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py). Then you can install django simply by entering the command: 
+2. Install [Django](https://www.djangoproject.com). The easiest way to do this is through [pip] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py). Then you can install django simply by entering the command: 
 
    <code>pip install django</code>
+   
+   You can verify installation by entering the command:
+   
+   <code> import django </code>
+   
+   <code> print(django.get_version()) </code>
+    
 3. Install the dependencies listed below in the Dependencies section.
 4. Clone this project from Github
 5. To run the project, you open the command line (terminal), change to the current directory of the project. Then in the root of the project, enter the following commands:
@@ -18,6 +25,10 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
   <code>cd composcite</code>
   
   <code>python3 manage.py runserver</code>
+
+6. To view the page, go to your web browser and visit this address:
+
+  <code>http://127.0.0.1:8000</code>
 
 * **For Mac**:
 
@@ -38,7 +49,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 
     <code>pip install django</code>
 
-    You can verify by entering the command:
+    You can verify installation by entering the command:
 
     <code> import django </code>
 
@@ -52,7 +63,9 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
     <code>cd composcite</code>
     
     <code>python3 manage.py runserver</code>
+6. To view the page, go to your web browser and visit this address:
 
+    <code>http://127.0.0.1:8000</code>
 
 ##Dependencies
 * **Django-mathfilters**:
@@ -61,7 +74,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 
 ##Models
 The following models are used to organize information:
-* **Student:** includes a student's name and email address
+* **User:** includes username, password, and personalized settings
 * **Question:** includes the text of a question, its publication date, and whether it is a follow-up to another question
 * **Item:** an option within a question that can be ranked by users. Includes the text of the item and the question it is associated with
 * **Response:** the response of one student to one question. Includes a dictionary of the input preferences, the question and student it is associated with, the submission timestamp, and the item from this response the student has been allocated. This last field starts out blank, and is updated when an allocation algorithm is run

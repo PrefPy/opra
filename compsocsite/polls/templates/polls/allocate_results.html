@@ -6,13 +6,15 @@
 
         <ul>
         {% for response in question.response_set.all %}
-            {{ response.user.username }}: {{ response.allocation.item_text }} (last Updated: {{ response.timestamp }}) <br />
-            {% for dict in response.dictionary_set.all %}
-                {% for item in dict.sorted_values %}
-                   <button type="button" class="btn btn-default"> {{ item.0 }}: {{ item.1 }} </button>
+            {% if response.allocation.item_text %}
+                {{ response.user.username }}: {{ response.allocation.item_text }} (last Updated: {{ response.timestamp }}) <br />
+                {% for dict in response.dictionary_set.all %}
+                    {% for item in dict.sorted_values %}
+                       <button type="button" class="btn btn-default">({{ item.1 }}) {{ item.0 }}</button>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-            <br />
+                <br />
+            {% endif %}
         {% endfor %}
         </ul>
 

@@ -1,10 +1,5 @@
 {% extends 'polls/base.html' %}
 {% block extra_head %}
-<!--
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
--->
 
 <script src='/static/js/qrcodejs/qrcode.js'></script>
 
@@ -24,6 +19,7 @@
 /* Hide for mobile, show later */
 .sidebar {
   display: none;
+  margin-top:53px;
 }
 @media (min-width: 768px) {
   .sidebar {
@@ -46,6 +42,7 @@
   margin-right: -21px; /* 20px padding + 1px border */
   margin-bottom: 20px;
   margin-left: -20px;
+  
 }
 .nav-sidebar > li > a {
   padding-right: 20px;

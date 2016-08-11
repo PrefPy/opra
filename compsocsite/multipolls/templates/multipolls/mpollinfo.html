@@ -26,6 +26,7 @@
 /* Hide for mobile, show later */
 .sidebar {
   display: none;
+  margin-top:53px;
 }
 @media (min-width: 768px) {
   .sidebar {
@@ -127,7 +128,7 @@ img:hover{
 
 
 
-<div class="col-sm-3 col-md-2 sidebar">
+<div class="col-sm-3 col-md-2 sidebar" >
     <ul class="nav nav-sidebar">
         {% if mpoll.owner == request.user %}
             <li><a data-toggle="tab" href="#Mtitle">Basic Info</a></li>

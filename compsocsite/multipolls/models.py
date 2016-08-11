@@ -17,6 +17,8 @@ class MultiPoll(models.Model):
     voters = models.ManyToManyField(User, related_name='multipoll_participated')
     pos = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
+    emailInvite = models.BooleanField(default=True)
+    emailDelete = models.BooleanField(default=True)    
     #pub_date = models.DateTimeField('date published')
     def __str__(self):
         return self.title

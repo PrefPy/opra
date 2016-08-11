@@ -26,6 +26,8 @@ def AddStep1(request):
         description = request.POST['desc']
         questionType = request.POST['questiontype']
         multipoll = MultiPoll(number=number, pos=0, status=0, title=title, description=description, owner=request.user)
+        multipoll.emailInvite = request.user.userprofile.emailInvite
+        multipoll.emailDelete = request.user.userprofile.emailDelete        
         multipoll.save()
         for x in range(0, number):
             question = Question(question_text="Multipoll Issue", question_desc="",
@@ -105,7 +107,10 @@ def setInitialSettings(request, multipoll_id):
 
 # remove a single voter from all subpolls
 def removeVoter(request, multipoll_id):
-    multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
+    multipoll = get_object_or_404(MultiPoll, pk=multipoll_id)
+    email = request.POST.get('email') == 'email'
+    multipoll.emailDelete = email
+    multipoll.save()    
     newVoters = request.POST.getlist('voters')
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
@@ -117,6 +122,9 @@ def removeVoter(request, multipoll_id):
 # add a single voter to all subpolls
 def addVoter(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
+    email = request.POST.get('email') == 'email'
+    multipoll.emailInvite = email  
+    multipoll.save()
     newVoters = request.POST.getlist('voters')
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
@@ -128,6 +136,9 @@ def addVoter(request, multipoll_id):
 # add everyone in the group to all subpolls
 def addGroupVoters(request, multipoll_id):
     multipoll = get_object_or_404(MultiPoll,pk=multipoll_id)
+    email = request.POST.get('email') == 'email'
+    multipoll.emailInvite = email  
+    multipoll.save()    
     newGroups = request.POST.getlist('groups')
     for group in newGroups:
         for cur in Group.objects.all():

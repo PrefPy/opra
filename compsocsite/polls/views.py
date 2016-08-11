@@ -15,8 +15,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
-from .prefpy.mechanism import *
-from polls.prefpy.allocation_mechanism import *
+from prefpy.mechanism import *
+from prefpy.allocation_mechanism import *
 from .email import sendEmail, setupEmail
 from groups.models import *
 from django.conf import settings

@@ -71,6 +71,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 * **Django-mathfilters**:
 * **Django-mobile**:
 * **pillow**:
+* **prefpy**:
 
 ##Models
 The following models are used to organize information:

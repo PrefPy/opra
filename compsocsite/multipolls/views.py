@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 from polls.views import getPollWinner
-from polls.prefpy.allocation_mechanism import *
+from prefpy.allocation_mechanism import *
 from polls.views import *
 
 from itertools import *

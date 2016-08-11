@@ -1,25 +1,47 @@
-1. Structure of OPRA project:
+## 1. Structure of OPRA:
 
 compsocsite/
 	1. manage.py 
-	//we use this file to run this project
+	// Use this file to run this project
 
 	2. appauth 
-	// This folder is for login/logout/global setting things.
+	// This folder is for registering users and login/logout. Also includes global settings. 
 
 	3. compsocsite
 	// This is the global folder for OPRA.
 
 	4. polls
-	// For single polls
+	// For single polls. This is the core of the project.
 
 	5. multipolls
-	// For multi-polls
+	// For multi-polls. Polling can be done in multiple rounds. Code is built off of polls.
 
 	6. groups
-	// For groups
+	// For groups. Groups are used to making adding and removing a large number of voters convenient 
 
 	7. static
-	// For image/js/css files
+	// For image, js, css files
 
+## 2. Structure of each folder
+
+Generally, each main app folder (polls, multipolls, groups) will follow a similar structure. 
+
+migrations (folder): Used to store database changes as the model is updated. The files are updated automatically using the commands:
+ 
+<code> python3 manage.py makemigrations </code> 
+
+<code> python3 manage.py migrate </code>
+
+templates (folder): This contains all the view files, which are a mix of HTML and Django template language. You can customize the display of each file in your browser. 
+
+models.py: Contains all the model (class) definitions.
+
+urls.py: Contains a list of links displayed in the browser, where each link has its own function. The function can either render the view or perform calculations. 
+
+views.py: Contains all the logic required to retrieve data from the database and perform calculations.
+
+Keep in mind:
+Every time you add a new model, you update models.py and then migrate the database. 
+
+Every time you want to add a new template page, you add a new file to the templates folder and then update urls.py and views.py so that Django will know how to render the page.
 	

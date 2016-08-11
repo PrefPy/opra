@@ -1,15 +1,13 @@
 {% for s in currentSelection %}
     {% if s.0 %}
-    <div class="btn btn-default">
+    <div class="btn btn-default disabled">
         ({{ s.0.1 }})
 
-        <span class="">
-            {% for selection in s %}
-                <span class="btn btn-default">
-                {{ selection.0 }}
-                </span>
-            {% endfor %}
-        </span>   
+        {% for selection in s %}
+            <span class="btn btn-default disabled">
+            {{ selection.0 }}
+            </span>
+        {% endfor %}
     </div>
     {% endif %}
 {% endfor %}

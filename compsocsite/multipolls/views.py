@@ -182,11 +182,7 @@ def endSubpoll(multipoll):
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
-        # the latest and previous responses are from latest to earliest
-        (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
-        allocation_order = getCurrentAllocationOrder(question, latest_responses)  
-        response_set = getResponseOrder(allocation_order)   # get the list of responses in the specified order   
-        allocation(question.poll_algorithm, response_set, latest_responses)
+        getFinalAllocation(question)
     question.save()
     
     #move to the next poll

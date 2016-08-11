@@ -338,11 +338,7 @@ def stopPoll(request, question_id):
     if question.question_type == 1: #poll
         question.winner = getPollWinner(question)
     elif question.question_type == 2: #allocation
-        # the latest and previous responses are from latest to earliest
-        (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
-        allocation_order = getCurrentAllocationOrder(question, latest_responses)
-        response_set = getResponseOrder(allocation_order)   # get the list of responses in the specified order 
-        allocation(question.poll_algorithm, response_set, latest_responses)
+        getFinalAllocation(question)
     question.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1084,6 +1080,37 @@ def getResponseOrder(allocation_order):
         response_set.append(response)
     return response_set
 
+# update the database with the new allocation results
+def assignAllocation(question, allocationResults):
+    for username, item in allocationResults.items():
+        currentUser = User.objects.filter(username = username)
+        allocatedItem = question.item_set.get(item_text = item)
+        mostRecentResponse = question.response_set.reverse().filter(user=currentUser)[0]
+        mostRecentResponse.allocation = allocatedItem
+        mostRecentResponse.save()
+    return
+
+def getFinalAllocation(question):
+    # the latest and previous responses are from latest to earliest
+    (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
+    allocation_order = getCurrentAllocationOrder(question, latest_responses)
+    response_set = getResponseOrder(allocation_order)   # get the list of responses in the specified order 
+
+    # make items and responses generic
+    item_set = latest_responses[0].question.item_set.all()
+    itemList = []
+    for item in item_set:
+        itemList.append(item.item_text)          
+    responseList = []
+    for response in response_set:
+        tempDict = {}
+        for item, rank in response.dictionary_set.all()[0].items():
+            tempDict[item.item_text] = rank
+        responseList.append((response.user.username, tempDict))
+        
+    allocationResults = allocation(question.poll_algorithm, itemList, responseList)
+    assignAllocation(question, allocationResults)    
+            
 #function to get preference order from a string 
 def getPrefOrder(orderStr, question):
     # empty string

@@ -341,7 +341,7 @@ class DependencyView(generic.DetailView):
                 continue
             
             # default option is selected
-            if "set_default" in self.request.session:
+            if "set_default" in self.request.session and self.request.session["set_default"] == True:
                 break
 
             option = getSelectedItem(self.request.session, poll)
@@ -622,10 +622,14 @@ def getConditionalResponse(request, combination_id):
     
     # save the poll responses
     for poll in combination.dependent_questions.all():
-        request.session["poll" + str(poll.id)] = request.GET["poll" + str(poll.id)]
+        pollStr = "poll" + str(poll.id)
+        if pollStr in request.GET:
+            request.session[pollStr] = request.GET[pollStr]
 
     if "set_default" in request.GET:
         request.session["set_default"] = True
+    else:
+        request.session["set_default"] = False
 
     # set a parameter to the condition index, so that the response to that conditon will be preloaded
     return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(combination.target_question.id,)))

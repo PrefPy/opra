@@ -26,8 +26,6 @@
     .tier {
         float: left;
     }
-    .hint{
-    }
 </style>
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -282,7 +280,7 @@ $(function() {
 </div>
     
 <script>
-    // tooltip toggle
+    
     $(function(){
         $(document).ready(function() {
     $(".dropdown-toggle").dropdown();
@@ -296,17 +294,14 @@ $(function() {
 }); 
 
         
-    // pop up #example1, #example2, #example3 with same content
+    // tooltip toggle (Popover function for hints)
     $(document).on('click',"#toggle-button",function () {
-      //alert("test button clicked");
      toggle(document.querySelectorAll('.hint'));
    });
       
-//Toggle display hints
-function toggle (elements, specifiedDisplay) {
-    
+//Toggle: hide/show hints
+function toggle (elements, specifiedDisplay) {  
   var element, index;
-
   elements = elements.length ? elements : [elements];
   for (index = 0; index < elements.length; index++) {
     element = elements[index];

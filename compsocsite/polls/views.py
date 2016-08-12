@@ -80,7 +80,7 @@ class MainView(generic.ListView):
         
         return ctx
 
-#demo for voting page in main page
+# demo for voting page in main page
 # view for question detail
 class DemoView(generic.DetailView):
     model = Question
@@ -344,6 +344,8 @@ def stopPoll(request, question_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # find the winner(s) using the polling algorithm selected earlier 
+# Question question
+# return String winnerStr
 def getPollWinner(question):
     all_responses = question.response_set.reverse()
     if len(all_responses) == 0:
@@ -376,6 +378,8 @@ def isPrefReset(request):
     return False 
 
 # given a list of responses, return the response's selection data
+# List<Response> mostRecentResponse
+# return List<List<(Item, int)>> array
 def getCurrentSelection(mostRecentResponse):
     responseDict = mostRecentResponse.dictionary_set.all()[0]
     rd = responseDict.sorted_values() 
@@ -529,18 +533,23 @@ class VoteResultsView(generic.DetailView):
         return ctx
 
 # get a list of algorithms supported by the system
+# return List<String>
 def getListPollAlgorithms():
     return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
 
 # get a list of allocation methods
+# return List<String>
 def getAllocMethods():
     return ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
 
 # get a list of visibility settings
+# return List<String>
 def getViewPreferences():
     return ["Everyone can see all votes at all times", "Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
 
 # build a graph of nodes and edges from a 2d dictionary
+# List<Response> latest_responses
+# return (List<Dict> nodes, List<Dict> edges)
 def parseWmg(latest_responses):
     pollProfile = getPollProfile(latest_responses)
     if pollProfile == None:
@@ -589,6 +598,8 @@ def getSelectionList(responseList):
     return selectList
 
 #separate the user votes into two categories: (1)most recent (2)previous history
+# List<Response> all_responses
+# return (List<Response> latest_responses, List<Response> previous_responses)
 def categorizeResponses(all_responses):
     latest_responses = []
     previous_responses = []
@@ -629,7 +640,9 @@ def categorizeResponses(all_responses):
     
     return (latest_responses, previous_responses)
 
-#get a list of options for this poll
+# get a list of options for this poll
+# Response response
+# return Dict<int, Item> candMap
 def getCandidateMap(response):
     d = Dictionary.objects.get(response=response)
     candMap = {}
@@ -641,6 +654,8 @@ def getCandidateMap(response):
     return candMap
 
 #convert a user's preference into a 2d map
+# Response response
+# return Dict<int, Dict<int, int>> prefGraph
 def getPreferenceGraph(response):
     prefGraph = {}
     dictionary = Dictionary.objects.get(response=response)
@@ -664,10 +679,12 @@ def getPreferenceGraph(response):
             else:
                 tempDict[cand2Index] = 0
         prefGraph[cand1Index] = tempDict
-    
+
     return prefGraph
 
-#initialize a profile object using all the preferences
+# initialize a profile object using all the preferences
+# List<Response> latest_responses
+# return Profile object
 def getPollProfile(latest_responses):
     if len(latest_responses) == 0:
         return None
@@ -680,6 +697,8 @@ def getPollProfile(latest_responses):
     return Profile(getCandidateMap(latest_responses[0]), prefList)
 
 #calculate the results of the vote using different algorithms
+# List<Response> latest_responses
+# return a List<List<Double>>
 def getVoteResults(latest_responses):
     pollProfile = getPollProfile(latest_responses)
     if pollProfile == None:
@@ -725,6 +744,8 @@ def calculatePreviousResults(request, question_id):
 
 # return lighter (+lum) or darker (-lum) color as a hex string
 # pass original hex string and luminosity factor, e.g. -0.1 = 10% darker
+# String hexVal
+# double lum
 def colorLuminance(hexVal, lum):
     #convert to decimal and change luminosity
     rgb = "#"
@@ -736,6 +757,8 @@ def colorLuminance(hexVal, lum):
     return rgb
 
 # get a range of colors from green to red 
+# List<int> scoreVectorList
+# return a List<List<String>> shadeValues
 def getShadeValues(scoreVectorList):
     shadeValues = []
 
@@ -776,6 +799,8 @@ def getShadeValues(scoreVectorList):
     return shadeValues
 
 # find the minimum number of votes needed to change the poll results
+# List<Response> latest_responses
+# return List<int> marginList
 def getMarginOfVictory(latest_responses):
     pollProfile = getPollProfile(latest_responses)
     if pollProfile == None:
@@ -795,6 +820,9 @@ def getMarginOfVictory(latest_responses):
     return marginList
 
 # used to help find the recommended order
+# User user
+# User otherUser
+# return double KT
 def getKTScore(user, otherUser):
     KT = 0
     num = 0
@@ -818,6 +846,10 @@ def getKTScore(user, otherUser):
 
 # use other responses to recommend a response order for you
 # responses are sorted from latest to earliest
+# List<Response> response
+# request request
+# List<Item> defaultOrder
+# return List<Item> final_list
 def getRecommendedOrder(otherUserResponses, request, defaultOrder):  
     # no responses
     if len(otherUserResponses) == 0:
@@ -1009,6 +1041,8 @@ def setAllocationOrder(request, question_id):
     return HttpResponseRedirect(reverse('polls:viewAllocationOrder', args=(question.id,)))
 
 # if the allocation mechanism is early-first or late-first serial dictatorship, assign the order based off of latest response time
+# Question question
+# List<Response> latest_responses
 def getInitialAllocationOrder(question, latest_responses):
     if len(latest_responses) == 0:
         return
@@ -1030,6 +1064,9 @@ def getInitialAllocationOrder(question, latest_responses):
 
 # get the current allocation order for this poll
 # if this poll is part of a multi-poll, then it must consider the order of the previous subpolls
+# Question question
+# List<Response> latest_responses
+# return Query<AllocationVoter> allocation_order
 def getCurrentAllocationOrder(question, latest_responses):
     # get the allocation order from the first multipoll
     allocation_order = []
@@ -1061,6 +1098,8 @@ def getCurrentAllocationOrder(question, latest_responses):
     return allocation_order
 
 # order user responses similar to the allocation order
+# Query<AllocationVoter> allocation_order
+# return List<Response>
 def getResponseOrder(allocation_order):
     response_set = []
     for order_item in allocation_order:
@@ -1081,6 +1120,8 @@ def getResponseOrder(allocation_order):
     return response_set
 
 # update the database with the new allocation results
+# Question question
+# Dict<String, String> allocationResults
 def assignAllocation(question, allocationResults):
     for username, item in allocationResults.items():
         currentUser = User.objects.filter(username = username)
@@ -1090,6 +1131,9 @@ def assignAllocation(question, allocationResults):
         mostRecentResponse.save()
     return
 
+# organize the data into items and responses (most recent) and then apply allocation algorithms 
+# to get the final result
+# Question question
 def getFinalAllocation(question):
     # the latest and previous responses are from latest to earliest
     (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
@@ -1116,7 +1160,10 @@ def getFinalAllocation(question):
     allocationResults = allocation(question.poll_algorithm, itemList, responseList)
     assignAllocation(question, allocationResults)    
             
-#function to get preference order from a string 
+# function to get preference order from a string 
+# String orderStr
+# Question question
+# return List<List<String>> prefOrder
 def getPrefOrder(orderStr, question):
     # empty string
     if orderStr == "":
@@ -1170,6 +1217,9 @@ def vote(request, question_id):
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 
 # create a new dictionary that stores the preferences and rankings
+# Response response
+# Question question
+# List<List<String>> prefOrder
 def buildResponseDict(response, question, prefOrder):
     d = response.dictionary_set.create(name = response.user.username + " Preferences")
 

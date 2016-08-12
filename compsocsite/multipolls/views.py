@@ -184,6 +184,7 @@ def start(request, multipoll_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # end the current subpoll in the sequence
+# MultiPoll multipoll
 def endSubpoll(multipoll):
     #end the previous poll
     question = multipoll.questions.all()[multipoll.status - 1]
@@ -391,6 +392,9 @@ class DependencyView(generic.DetailView):
         return ctx
 
 # get the item that is currently selected for each subpoll
+# request.session session
+# Question poll
+# return Item option
 def getSelectedItem(session, poll):
     pollStr = "poll" + str(poll.id)
     
@@ -414,6 +418,8 @@ def getSelectedItem(session, poll):
     return option
 
 # color the conditions so that you know which conditions have preferences submitted
+# Combination combination
+# return List<List<String>> colorsArray
 def getConditionColor(combination):
     colorsArray = []
     greenColor = "#3CB371"
@@ -549,6 +555,9 @@ def assignPreference(request, combination_id):
     return HttpResponseRedirect(reverse('multipolls:dependencyview', args=(combination.target_question.id,)))
 
 # build a preference graph given the question dependencies
+# request request
+# Question question
+# return (List<Dict> nodes, List<Dict> edges)
 def getPrefenceGraph(request, question):
     multipoll = question.multipoll_set.all()[0] 
     # get the nodes
@@ -598,6 +607,9 @@ def updatePrefGraph(request, question_id):
 
 # check if there is a response for this set of conditions and return the condition object
 # create a new one if there is no existing objects
+# List<Item> conditionsSelected
+# Combination combination
+# return Condition condition
 def getConditionFromResponse(conditionsSelected, combination):
     # check if a response has been submitted for this condition    
     allConditions = ConditionalItem.objects.filter(combination=combination)
@@ -615,6 +627,9 @@ def getConditionFromResponse(conditionsSelected, combination):
     return condition
 
 # find the index in the array
+# List<Item> conditionsSelected
+# Combination combination
+# return int conditionIndex
 def getConditionIndex(conditionsSelected, combination):
     # check if a response has been submitted for this condition    
     allConditions = ConditionalItem.objects.filter(combination=combination)

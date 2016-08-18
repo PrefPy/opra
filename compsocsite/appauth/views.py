@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.views import generic
+from django.core import mail
 
 from .models import *
 
@@ -38,7 +39,10 @@ def register(request):
             profile.save()
             # Update our variable to tell the template registration was successful.
             registered = True
-
+            user.is_active = False
+            user.save()
+            htmlstr = request.build_absolute_uri( "confirm/" +str(user.id ))
+            mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
         #else    print (user_form.errors)
 
 # Not a HTTP POST, so we render our form using two ModelForm instances.
@@ -50,6 +54,13 @@ def register(request):
                               'register.html',
                               {'user_form': user_form, 'registered': registered},
                               context)
+
+							  
+def confirm(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    user.is_active = True
+    user.save()
+    return HttpResponse("Your account has been activated.")
 
 def user_login(request):
     context = RequestContext(request)
@@ -65,7 +76,7 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-            return HttpResponse("Your account is disabled.")
+            return HttpResponse("Your account is not active.")
         else:
             print ("Invalid login details")
             return HttpResponse("Invalid login details supplied.")
@@ -152,6 +163,25 @@ def user_logout(request):
     # Take the user back to the homepage.
     return HttpResponseRedirect(reverse('polls:index_guest'))
     
+def forgetPasswordView(request):
+    context = RequestContext(request)
+    return render_to_response('forgetpassword.html', {}, context)
+
+def forgetPassword(request):
+    email = request.POST['email']
+    username = request.POST['username']
+    if email == "" or username == "":
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    user = get_object_or_404(User, email=email, username=username)
+    htmlstr = request.build_absolute_uri("resetpassword/"+str(user.id))
+    mail.send_mail("OPRA Forget Password","Please click the following link to reset password.",'oprahprogramtest@gmail.com',[email],html_message=htmlstr)
+    return HttpResponse("An email has been sent to your email account. Please click on the link in that email and reset your password.")
+    
+def resetPassword(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    login(request, user)
+    return HttpResponseRedirect(reverse('appauth:passwordpage'))
+
 @login_required
 def changepassword(request):
     user = request.user

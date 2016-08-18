@@ -1,6 +1,12 @@
 <h3 class="page-header">History votes of {{ question.question_text }} </h3>
         <!-- Display most recent vote -->
         {% if question.question_owner == request.user and question.display_pref != 5 %}
+			<div class="progress">
+				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
+					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
+				    </div>
+				</div>
+			<p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
             {% if latest_responses|length > 0 %}
                 {% for response, currentSelection in latest_responses %}
                     <!-- display name -->
@@ -43,6 +49,11 @@
             {% endif %} <!-- no response-->
             </div>
         {% else %} <!--question.question_owner != request.user or display_pref = 5 -->
+			<div class="progress">
+				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
+					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
+				    </div>
+				</div>
             {% if user_latest_responses %}
                 {% for response, currentSelection in user_latest_responses %}
                     <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br /> 
@@ -73,6 +84,11 @@
         {% if question.question_owner != request.user %}
             <!-- Display other user votes -->
             {% if question.display_pref == 1 %}
+				<div class="progress">
+				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
+					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
+				    </div>
+				</div>
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
                 <p>The owner allows everyone to see all votes cast.</p>
                 {% for response, currentSelection in latest_responses %}
@@ -93,6 +109,11 @@
                 {% endif %}
                 {% endfor %}
             {% elif question.display_pref == 2 %}
+				<div class="progress">
+				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
+					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
+				    </div>
+				</div>
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
                 <p>The following voters have voted on this poll:</p>
                 <ul>
@@ -101,7 +122,26 @@
                     {% endfor %}
                 </ul>
             {% elif question.display_pref == 3 %}
+				<div class="progress">
+				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
+					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
+				    </div>
+				</div>
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
+				
+			{% elif question.display_pref == 6 %}
+				<div class="progress">
+				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
+					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
+				    </div>
+				</div>
+				<p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
+                <p>The following votes have been cast on this poll:</p>
+                <ul>
+                    {% for response, currentSelection in latest_responses %}
+                        <li>Hidden Username (last voted on {{ response.timestamp }})</li>
+                    {% endfor %}
+                </ul>
             {% endif %}
         {% endif %}
         

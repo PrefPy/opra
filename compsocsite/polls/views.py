@@ -478,6 +478,10 @@ class PollInfoView(generic.DetailView):
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
         ctx['latest_responses'] = getSelectionList(latest_responses)
         ctx['previous_responses'] = getSelectionList(previous_responses)    
+        
+        if self.object.question_voters.all().count() > 0:
+            progressPercentage = len(latest_responses) / self.object.question_voters.all().count() * 100
+            ctx['progressPercentage'] = progressPercentage
         return ctx
     def get_queryset(self):
         """

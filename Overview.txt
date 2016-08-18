@@ -44,4 +44,30 @@ Keep in mind:
 Every time you add a new model, you update models.py and then migrate the database. 
 
 Every time you want to add a new template page, you add a new file to the templates folder and then update urls.py and views.py so that Django will know how to render the page.
-	
+
+
+## 3. Detailed structure of each app
+
+	1. appauth:
+		
+		Models:
+			User: Borrowed from Django implementation of User. It stores a user's username, password, email address, etc. For more information on Django implementation of User model, please go to corresponding Django documentation page.
+			UserProfile: This model is implemented to record global settings for a single user to avoid modifying Django's User model. It is in an one-to-one relationship to User model.
+			
+		Functions:
+			register: This functions runs when a registration form is submitted. A user instance and a userprofile instance are created if username is valid.
+			user_login: A function for checking the authenticity of a user's request and processes login information.
+			displaySettings, globalSettings, updateSettings, disableHint, changePassword: These functions are used in global setting and account setting pages.
+			
+	2. groups:
+		Models:
+			Group: A group model that links several users together into a group for user's convenience in inviting voters.
+			
+		Functions:
+			IndexView, AddGroupView, MembersView: Pages for group settings and adding groups.
+			addgroup, addmember, removemember, deletegroup: Functions used for group settings.
+			addGroupVoters, removeGroupVoters: Used at group voter invitations.
+			
+	3. polls:
+		Models:
+			Question: Also known as poll. Aside from basic data such as title and description, it stores a number of relationship fields as well.

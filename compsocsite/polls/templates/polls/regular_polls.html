@@ -30,7 +30,9 @@
                     </td>
                     <td style="vertical-align:middle">
                         {% if question.status == 2 %}
-                            <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button" >Vote</a>
+							{% if request.user in question.question_voters.all %}
+								<a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button" >Vote</a>
+							{% endif %}
                             {% if question.display_pref == 0 and question.question_type == 1 %}
                                 <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" >Current Winners</a>
                             {% endif %}

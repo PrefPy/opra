@@ -87,7 +87,7 @@
                                     </td>
 
                                     <td style="float:middle;"> 
-                                        {% if question.status == 2 %} 
+                                        {% if question.status == 2 and request.user in question.question_voters.all %} 
                                             <a href="{% url 'multipolls:dependencyview' question.id %}" class ="btn btn-dark" style='float:middle;font-size=60%;'>Vote</a> 
                                         {% endif %} 
                                     </td>

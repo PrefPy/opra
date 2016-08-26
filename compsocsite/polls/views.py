@@ -154,7 +154,7 @@ def AddStep1View(request):
             pub_date=timezone.now(), question_owner=request.user,
             display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
             emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
-            emailStop=request.user.userprofile.emailStop)
+            emailStop=request.user.userprofile.emailStop, creator_pref=1)
         if request.FILES.get('docfile') != None:
             question.image = request.FILES.get('docfile')
         elif imageURL != '':
@@ -961,10 +961,13 @@ def setPollingSettings(request, question_id):
         question.display_pref = 3
     elif displayChoice == "nothing":
         question.display_pref = 4
-    elif displayChoice == "5":
-        question.display_pref = 5
     else:
-        question.display_pref = 6
+        question.display_pref = 5
+    creatorChoice = request.POST['creatorpreferences']
+    if creatorChoice == "1":
+        question.creator_pref = 1
+    else:
+        question.creator_pref= 2
     question.save()
     request.session['setting'] = 2
     messages.success(request, 'Your changes have been saved.')

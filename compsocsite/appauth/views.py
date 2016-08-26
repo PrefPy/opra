@@ -41,7 +41,7 @@ def register(request):
             registered = True
             user.is_active = False
             user.save()
-            htmlstr = request.build_absolute_uri( "confirm/" +str(user.id ))
+            htmlstr =  "<p><a href='" + request.build_absolute_uri( "confirm/" +str(user.id )) + "'>Click This Link To Activate Your Account</a></p>"
             mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
         #else    print (user_form.errors)
 
@@ -57,10 +57,11 @@ def register(request):
 
 							  
 def confirm(request, user_id):
+    context = RequestContext(request)
     user = get_object_or_404(User, pk=user_id)
     user.is_active = True
     user.save()
-    return HttpResponse("Your account has been activated.")
+    return render_to_response('activation.html', {}, context)
 
 def user_login(request):
     context = RequestContext(request)
@@ -129,14 +130,18 @@ def updateGlobalSettings(request):
     context = RequestContext(request)
     if request.method == 'POST':
         displayChoice = request.POST['viewpreferences']
+        if displayChoice == "always":
+            request.user.userprofile.displayPref = 0
         if displayChoice == "allpermit":
             request.user.userprofile.displayPref = 1
         elif displayChoice == "voternames":
             request.user.userprofile.displayPref = 2
         elif displayChoice == "justnumber":
             request.user.userprofile.displayPref = 3
-        else:
+        elif displayChoice == "nothing":
             request.user.userprofile.displayPref = 4
+        else:
+            request.user.userprofile.displayPref = 5
         request.user.userprofile.emailInvite = request.POST.get('emailInvite') == 'email'
         request.user.userprofile.emailDelete = request.POST.get('emailDelete') == 'email'
         request.user.userprofile.emailStart = request.POST.get('emailStart') == 'email'
@@ -166,6 +171,10 @@ def user_logout(request):
 def forgetPasswordView(request):
     context = RequestContext(request)
     return render_to_response('forgetpassword.html', {}, context)
+    
+class resetPasswordView(generic.DetailView):
+    model = User
+    template_name = "resetpassword.html"
 
 def forgetPassword(request):
     email = request.POST['email']
@@ -173,14 +182,22 @@ def forgetPassword(request):
     if email == "" or username == "":
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     user = get_object_or_404(User, email=email, username=username)
-    htmlstr = request.build_absolute_uri("resetpassword/"+str(user.id))
+    htmlstr = "<p><a href='" + request.build_absolute_uri("resetpassword/"+str(user.id)) + "'>Click This Link To Reset Password</a></p>"
+    print(htmlstr)
     mail.send_mail("OPRA Forget Password","Please click the following link to reset password.",'oprahprogramtest@gmail.com',[email],html_message=htmlstr)
     return HttpResponse("An email has been sent to your email account. Please click on the link in that email and reset your password.")
     
 def resetPassword(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    login(request, user)
-    return HttpResponseRedirect(reverse('appauth:passwordpage'))
+    new = request.POST['newpassword']
+    con = request.POST['confirmpassword']
+    if new != "" and new == con:
+        user.set_password(new)
+        user.save()
+        context = RequestContext(request)
+        return render_to_response('success.html', {}, context)
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required
 def changepassword(request):

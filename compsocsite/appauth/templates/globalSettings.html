@@ -21,7 +21,9 @@
                     {% csrf_token %}
                     <label for="viewpreferences">Visibility setting for all future polls</label>
                     <select name="viewpreferences" class="form-control" onchange="this.form.submit()">
+						<option value="always" {% if request.user.userprofile.displayPref == 0 %} selected {% endif %} >Everyone can see all votes at all times</option>
                         <option value="allpermit" {% if request.user.userprofile.displayPref == 1 %} selected {% endif %} >Everyone can see all votes</option>
+						<option value="5" {% if request.user.userprofile.displayPref == 5 %} selected {% endif %}>All votes will be shown, but usernames will be hidden</option>
                         <option value="voternames" {% if request.user.userprofile.displayPref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
                         <option value="justnumber" {% if request.user.userprofile.displayPref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
                         <option value="nothing" {% if request.user.userprofile.displayPref == 4 %} selected {% endif %}>Everyone can only see his/her own votes</option>

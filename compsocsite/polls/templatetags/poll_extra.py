@@ -9,3 +9,7 @@ def largest(l):
 @register.filter
 def smallest(l):
     return min(l)
+    
+@register.filter
+def index(sequence, position):
+    return sequence[position]

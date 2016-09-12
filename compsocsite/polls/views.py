@@ -526,14 +526,22 @@ class VoteResultsView(generic.DetailView):
         for pw in previous_results:
             obj = {}
             obj['title'] = str(pw.timestamp.time())
+            candnum = pw.cand_num
+            resultstr = pw.result_string
+            movstr = pw.mov_string
+            resultlist = resultstr.split(",")
+            movlist = movstr.split(",")
             tempResults = []
-            for map in pw.scoremap_set.all():
-                tempResults.append(map.asPyDict())
+            algonum = len(getListPollAlgorithms())
+            for x in range(0,algonum):
+                tempList = []
+                for y in range(x*candnum, (x+1)*candnum):
+                    tempList.append(resultlist[y])
+                tempResults.append(tempList)
             obj['vote_results'] = tempResults
             tempMargin = []
-            for margin in pw.mov_set.all():
-                tempMargin.append(margin.value)
-                print(margin.value)
+            for margin in movstr:
+                tempMargin.append(margin)
             obj['margin_victory'] = tempMargin
             ctx['previous_winners'].append(obj)
         return ctx
@@ -730,28 +738,26 @@ def calculatePreviousResults(request, question_id):
     question.voteresult_set.clear()
     previous_winners = question.oldwinner_set.all()
     for pw in previous_winners:
-        print(str(time.clock())+" Test 1")
-        result = VoteResult(question=question,timestamp=pw.response.timestamp)
+        result = VoteResult(question=question,timestamp=pw.response.timestamp,result_string="",mov_string="",cand_num=len(pw.response.dictionary_set.all()[0].values()))
         result.save()
+        resultstr = ""
+        movstr = ""
         responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp])
         (lr, pr) = categorizeResponses(responses)
         scorelist = getVoteResults(lr)
         mov = getMarginOfVictory(lr)
-        print(str(time.clock())+" Test 2")
         for x in range(0,len(scorelist)):
-            scoremap = ScoreMap(result=result,order=x)
-            scoremap.save()
-            print(str(time.clock())+" Test 3")
             for key,value in scorelist[x].items():
-                print(str(time.clock())+" Test 4")
-                candscorepair = CandScorePair(container=scoremap,cand=key,score=value)
-                candscorepair.save()
-                print(str(time.clock())+" Test 4.4")
-        print(str(time.clock())+" Test 5")
+                resultstr += str(value)
+                resultstr += ","
         for x in range(0,len(mov)):
-            movobj = MoV(result=result,value=mov[x],order=x)
-            print(str(mov[x]))
-            movobj.save()
+            movstr += str(mov[x])
+            movstr += ","
+        resultstr = resultstr[:-1]
+        movstr = movstr[:-1]
+        result.result_string = resultstr
+        result.mov_string = movstr
+        result.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 

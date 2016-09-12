@@ -245,6 +245,9 @@ class KeyValuePair(models.Model):
 
 class VoteResult(models.Model):
     question = models.ForeignKey(Question, null=True)
+    result_string = models.CharField(max_length=500,default="")
+    mov_string = models.CharField(max_length=200,default="")
+    cand_num = models.IntegerField(default = 1)
     timestamp = models.DateTimeField('result timestamp')
     class Meta:
         ordering = ['-timestamp']

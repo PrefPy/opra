@@ -119,10 +119,10 @@
                                     <td {% if question.poll_algorithm == forloop.parentloop.counter %}class="info"{% endif %}>{{ algorithm }}</td>
                                 {% endif %}
                             {% endfor %}
-                            {% for score in item.values %}
-                                {% if score == item.values|smallest and forloop.parentloop.counter == 5 %}
+                            {% for score in item %}
+                                {% if score == item|smallest and forloop.parentloop.counter == 5 %}
                                     <td class="success">{{ score }}</td>
-                                {% elif score == item.values|largest and forloop.parentloop.counter != 5 %}
+                                {% elif score == item|largest and forloop.parentloop.counter != 5 %}
                                     <td class="success">{{ score }}</td>
                                 {% else %}
                                     <td {% if question.poll_algorithm == forloop.parentloop.counter %}class="info"{% endif %}>{{ score }}</td>

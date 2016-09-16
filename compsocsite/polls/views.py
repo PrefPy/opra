@@ -385,11 +385,10 @@ def getCurrentSelection(mostRecentResponse):
     responseDict = mostRecentResponse.dictionary_set.all()[0]
     rd = responseDict.sorted_values() 
     array = []
-    for itr in range(len(rd)):
+    for itr in range(mostRecentResponse.question.item_set.all().count()):
         array.append([])
     for itr in range(len(rd)):
-        temp = rd[itr][1] - 1
-        array[temp].append(rd[itr])
+        array[rd[itr][1] - 1].append(rd[itr])
     return array
 
 # view for question detail
@@ -535,11 +534,12 @@ class VoteResultsView(generic.DetailView):
             movlist = movstr.split(",")
             tempResults = []
             algonum = len(getListPollAlgorithms())
-            for x in range(0,algonum):
-                tempList = []
-                for y in range(x*candnum, (x+1)*candnum):
-                    tempList.append(resultlist[y])
-                tempResults.append(tempList)
+            if len(resultlist) > 0:
+                for x in range(0,algonum):
+                    tempList = []
+                    for y in range(x*candnum, (x+1)*candnum):
+                        tempList.append(resultlist[y])
+                    tempResults.append(tempList)
             obj['vote_results'] = tempResults
             tempMargin = []
             for margin in movstr:

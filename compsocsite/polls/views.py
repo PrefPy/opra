@@ -388,7 +388,8 @@ def getCurrentSelection(mostRecentResponse):
     for itr in range(len(rd)):
         array.append([])
     for itr in range(len(rd)):
-        array[rd[itr][1] - 1].append(rd[itr])
+        temp = rd[itr][1] - 1
+        array[temp].append(rd[itr])
     return array
 
 # view for question detail

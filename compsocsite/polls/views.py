@@ -1218,7 +1218,6 @@ def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
 
     prevResponseCount = question.response_set.filter(user=request.user).count()
-
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
@@ -1237,7 +1236,6 @@ def vote(request, question_id):
     #get current winner
     old_winner = OldWinner(question=question, response=response)
     old_winner.save()
-
     # notify the user that the vote has been saved/updated
     if prevResponseCount == 0:
         messages.success(request, 'Saved!')
@@ -1272,8 +1270,7 @@ def buildResponseDict(response, question, prefOrder):
         #     rank = (prefOrder.index("item" + str(item))) + 1
         #     # add pref to response dict
         #     d[item] = rank
-        d.save()
-        item_num += 1
+    d.save()
 
 # join a poll without logging in
 def anonymousJoin(request, question_id):

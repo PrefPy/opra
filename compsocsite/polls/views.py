@@ -530,6 +530,8 @@ class VoteResultsView(generic.DetailView):
             candnum = pw.cand_num
             resultstr = pw.result_string
             movstr = pw.mov_string
+            if resultstr == "" and movstr == "":
+                continue
             resultlist = resultstr.split(",")
             movlist = movstr.split(",")
             tempResults = []

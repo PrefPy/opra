@@ -399,7 +399,9 @@ class DetailView(generic.DetailView):
     def get_order(self, ctx):
         otherUserResponses = self.object.response_set.reverse()
         defaultOrder = ctx['object'].item_set.all()
-        return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)
+        return defaultOrder
+        #commented out to improve performance
+        #return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)
 
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)

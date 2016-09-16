@@ -13,6 +13,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
+import time
 
 class IndexView(generic.ListView):
     template_name = 'groups/index.html'

@@ -386,7 +386,8 @@ def getCurrentSelection(mostRecentResponse):
     rd = responseDict.sorted_values() 
     array = []
     for itr in range(len(rd)):
-        array.append([]);
+        array.append([])
+    for itr in range(len(rd)):
         array[rd[itr][1] - 1].append(rd[itr])
     return array
 

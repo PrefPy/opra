@@ -206,12 +206,12 @@
         <a href="{% url 'polls:openpoll' question.id %}" class="btn btn-success btn-ok">Open Poll</a>
     {% else %}
         <div id="qrcode" style="margin-top:15px;">
-            <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl={{request.get_host}}{% url 'polls:detail' question.id %}" style="width:400px" />
+            <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl=https://opra.cs.rpi.edu{% url 'polls:detail' question.id %}" style="width:400px" />
         </div>
         <a href="#" id="showQRLink">Show Link</a>
         <a href="#" id="hideQRLink">Hide Link</a>
         <br />
-        <h3 href="{% url 'polls:detail' question.id %}" id="QRLink">{{request.get_host}}{% url 'polls:detail' question.id %}</h3>
+        <h3 href="{% url 'polls:detail' question.id %}" id="QRLink">https://opra.cs.rpi.edu{% url 'polls:detail' question.id %}</h3>
         <br />
         <a href="{% url 'polls:closepoll' question.id %}" class="btn btn-danger">Close Poll</a>
     {% endif %}

@@ -388,8 +388,6 @@ def getCurrentSelection(mostRecentResponse):
     else:
         responseDict = buildResponseDict(mostRecentResponse,mostRecentResponse.question,getPrefOrder(mostRecentResponse.resp_str, mostRecentResponse.question))
     rd = responseDict
-    for key in rd:
-        print(str(key) + " " + str(rd[key]))
     array = []
     for itr in range(mostRecentResponse.question.item_set.all().count()):
         array.append([])

@@ -1252,7 +1252,7 @@ def vote(request, question_id):
         response.comment = comment
     response.save()
     
-    print(orderStr)
+    #print(orderStr)
     
     #get current winner
     old_winner = OldWinner(question=question, response=response)

@@ -532,7 +532,7 @@ def assignPreference(request, combination_id):
             condition.save()
 
     # update response dictionary
-    buildResponseDict(response, question, prefOrder)    
+    #buildResponseDict(response, question, prefOrder)    
 
     # set default pref
     if "default_pref" in request.POST:

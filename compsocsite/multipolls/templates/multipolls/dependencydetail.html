@@ -141,21 +141,21 @@ $(function() {
                     {% if condition_responses %}
                     
                         {% for s in condition_responses %}
-                            {% if s.0 %}
+                            {% if s %}
                                 <ul class="choice1 empty"></ul>
                                 <ul class="choice1">
-                                    <div class="tier">{{ s.0.1 }}</div>
+                                    <div class="tier">{{ forloop.counter }}</div>
                                     {% for selection in s %}
-                                        <li class="li_item" id="item{{ selection.0.item_text }}">
-                                            {% if selection.0.image %}
-                                                <img class="item" src='/{{ selection.0.image.url }}'/>
+                                        <li class="li_item" id="item{{ selection.item_text }}">
+                                            {% if selection.image %}
+                                                <img class="item" src='/{{ selection.image.url }}'/>
                                             {% endif %}
-                                            {% if selection.0.imageURL != Null %}
-                                                <img class="item" src='{{ selection.0.imageURL }}'/>
+                                            {% if selection.imageURL != Null %}
+                                                <img class="item" src='{{ selection.imageURL }}'/>
                                             {% endif %}
 
-                                            {{ selection.0 }}
-                                            {% if selection.0.item_description %}
+                                            {{ selection }}
+                                            {% if selection.item_description %}
                                                 <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{selection.0.item_description}}"></span>
                                             {% endif %}
                                         </li>

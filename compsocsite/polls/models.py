@@ -64,13 +64,17 @@ class Item(models.Model):
     item_description = models.CharField(max_length=1000, blank=True, null=True)
     image = models.ImageField(upload_to='static/img/items/', blank=True, null=True)
     imageURL = models.CharField(max_length=500, blank=True, null=True)
+    timestamp = models.DateTimeField('item timestamp')
     def __str__(self):
         return self.item_text
+    class Meta:
+        ordering = ['timestamp']
 
 # all information pertaining to a response that a student made to a question
 @python_2_unicode_compatible
 class Response(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+    resp_str = models.CharField(max_length=200, null=True, blank=True)
     user = models.ForeignKey(User, null = True, blank = True)
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function

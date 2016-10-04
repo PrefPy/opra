@@ -151,29 +151,29 @@ $(function() {
                                 {% if currentSelection %}
                                 <!-- Display a previously submitted vote -->
                                 {% for s in currentSelection %}
-                                {% if s.0 %}
+                                {% if s %}
                                 <ul class="choice1 empty"></ul>
                                 <ul class="choice1">
                                     <!-- Display the tier number -->
                                     <div class="tier">
-                                        {{ s.0.1 }}
+                                        {{ forloop.counter }}
                                     </div>
                                     
                                     <!-- Display all the options selected for this tier -->
                                     {% for selection in s %}
-                                    <li class="li_item" id="item{{ selection.0.item_text }}">
+                                    <li class="li_item" id="item{{ selection.item_text }}">
                                         <!-- Display image (uploaded) -->
-                                        {% if selection.0.image %}
-                                            <img class="item" src='/{{ selection.0.image.url }}'/>
+                                        {% if selection.image %}
+                                            <img class="item" src='/{{ selection.image.url }}'/>
                                         {% endif %}
                                         <!-- Display image (external URL) -->
-                                        {% if selection.0.imageURL != Null %}
-                                            <img class="item" src='{{ selection.0.imageURL }}'/>
+                                        {% if selection.imageURL != Null %}
+                                            <img class="item" src='{{ selection.imageURL }}'/>
                                         {% endif %}
                                         <!-- Display option text -->
-                                        {{ selection.0 }}
+                                        {{ selection }}
                                         <!-- Display tooltip for option description -->
-                                        {% if selection.0.item_description %}
+                                        {% if selection.item_description %}
                                             <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{selection.0.item_description}}"
                                             </span>
                                         {% endif %}

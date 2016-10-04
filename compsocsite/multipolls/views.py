@@ -497,7 +497,7 @@ def assignPreference(request, combination_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))    
 
     # make Response object to store data
-    response = Response(question=question, user=request.user, timestamp=timezone.now())
+    response = Response(question=question, user=request.user, timestamp=timezone.now(),resp_str = orderStr)
     response.save()
 
     # submit conditional preferences 

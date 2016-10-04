@@ -1,11 +1,11 @@
 {% for s in currentSelection %}
     {% if s.0 %}
     <div class="btn btn-default disabled">
-        ({{ s.0.1 }})
+        ({{ forloop.counter }})
 
         {% for selection in s %}
             <span class="btn btn-default disabled">
-            {{ selection.0 }}
+            {{ selection }}
             </span>
         {% endfor %}
     </div>

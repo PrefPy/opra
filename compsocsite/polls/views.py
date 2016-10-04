@@ -232,7 +232,7 @@ def addChoice(request, question_id):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
     # create the choice
-    item = Item(question=question, item_text=item_text)
+    item = Item(question=question, item_text=item_text, timestamp=timezone.now())
     
     # if the user uploaded an image or set a URL, add it to the item
     if request.FILES.get('docfile') != None:
@@ -382,13 +382,19 @@ def isPrefReset(request):
 # List<Response> mostRecentResponse
 # return List<List<(Item, int)>> array
 def getCurrentSelection(mostRecentResponse):
-    responseDict = mostRecentResponse.dictionary_set.all()[0]
-    rd = responseDict.sorted_values() 
+    responseDict = {}
+    if mostRecentResponse.dictionary_set.all().count() > 0:
+        responseDict = mostRecentResponse.dictionary_set.all()[0]
+    else:
+        responseDict = buildResponseDict(mostRecentResponse,mostRecentResponse.question,getPrefOrder(mostRecentResponse.resp_str, mostRecentResponse.question))
+    rd = responseDict
+    for key in rd:
+        print(str(key) + " " + str(rd[key]))
     array = []
     for itr in range(mostRecentResponse.question.item_set.all().count()):
         array.append([])
-    for itr in range(len(rd)):
-        array[rd[itr][1] - 1].append(rd[itr])
+    for itr in rd:
+        array[rd[itr] - 1].append(itr)
     return array
 
 # view for question detail
@@ -664,7 +670,11 @@ def categorizeResponses(all_responses):
 # Response response
 # return Dict<int, Item> candMap
 def getCandidateMap(response):
-    d = Dictionary.objects.get(response=response)
+    d = {}
+    if response.dictionary_set.all().count() > 0:
+        d = Dictionary.objects.get(response=response)
+    else:
+        d = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
     candMap = {}
 
     counter = 0
@@ -678,7 +688,11 @@ def getCandidateMap(response):
 # return Dict<int, Dict<int, int>> prefGraph
 def getPreferenceGraph(response):
     prefGraph = {}
-    dictionary = Dictionary.objects.get(response=response)
+    dictionary = {}
+    if response.dictionary_set.all().count() > 0:
+        dictionary = Dictionary.objects.get(response=response)
+    else:
+        dictionary = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
     candMap = getCandidateMap(response)
 
     for cand1Index in candMap:
@@ -744,7 +758,8 @@ def calculatePreviousResults(request, question_id):
     question.voteresult_set.clear()
     previous_winners = question.oldwinner_set.all()
     for pw in previous_winners:
-        result = VoteResult(question=question,timestamp=pw.response.timestamp,result_string="",mov_string="",cand_num=len(pw.response.dictionary_set.all()[0].values()))
+        
+        result = VoteResult(question=question,timestamp=pw.response.timestamp,result_string="",mov_string="",cand_num=question.item_set.all().count())
         result.save()
         resultstr = ""
         movstr = ""
@@ -1183,7 +1198,12 @@ def getFinalAllocation(question):
     responseList = []
     for response in response_set:
         tempDict = {}
-        for item, rank in response.dictionary_set.all()[0].items():
+        dictionary = {}
+        if response.dictionary_set.all().count() > 0:
+            dictionary = Dictionary.objects.get(response=response)
+        else:
+            dictionary = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
+        for item, rank in dictionary.items():
             tempDict[item.item_text] = rank
         responseList.append((response.user.username, tempDict))
         
@@ -1227,11 +1247,12 @@ def vote(request, question_id):
     
     # make Response object to store data
     comment = request.POST['comment']
-    response = Response(question=question, user=request.user, timestamp=timezone.now())
+    response = Response(question=question, user=request.user, timestamp=timezone.now(), resp_str = orderStr)
     if comment != "":
         response.comment = comment
     response.save()
-    buildResponseDict(response, question, prefOrder)
+    
+    print(orderStr)
     
     #get current winner
     old_winner = OldWinner(question=question, response=response)
@@ -1249,7 +1270,7 @@ def vote(request, question_id):
 # Question question
 # List<List<String>> prefOrder
 def buildResponseDict(response, question, prefOrder):
-    d = response.dictionary_set.create(name = response.user.username + " Preferences")
+    d = {}
 
     # find ranking user gave for each item under the question
     item_num = 1
@@ -1270,7 +1291,7 @@ def buildResponseDict(response, question, prefOrder):
         #     rank = (prefOrder.index("item" + str(item))) + 1
         #     # add pref to response dict
         #     d[item] = rank
-    d.save()
+    return d
 
 # join a poll without logging in
 def anonymousJoin(request, question_id):
@@ -1305,24 +1326,12 @@ def anonymousVote(request, question_id):
     
     # make Response object to store data
     comment = request.POST['comment']
-    response = Response(question=question, timestamp=timezone.now(), anonymous_voter = voter, anonymous_id=id)
+    response = Response(question=question, timestamp=timezone.now(), anonymous_voter = voter, anonymous_id=id, resp_str = orderStr)
     if comment != "":
         response.comment = comment
     response.save()
-    d = response.dictionary_set.create(name = voter + " Preferences")
 
     # find ranking student gave for each item under the question
-    item_num = 1
-    for item in question.item_set.all():
-        rank = 1
-        for l in prefOrder:
-            string = "item" + str(item)
-            if string in l:
-                d[item] = rank
-                break
-            rank += 1
-        d.save()
-        item_num += 1
 
     #get current winner
     old_winner = OldWinner(question=question, response=response)
@@ -1331,3 +1340,4 @@ def anonymousVote(request, question_id):
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+    

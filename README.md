@@ -103,27 +103,27 @@ More algorithms can easily be added. Within the algorithms.py file inside the po
 
 OPRA stands for online preference reporting and aggregation, which is essentially an online voting system. The system is built up by taking advantage of Django free and open-source web framework written extensively in Python. It maintains Django’s basic model-view-template (MVT) architectural pattern.  This documentation basically consists of two parts. The first part will give you an overarching view of the major components of OPRA. The second part will dive into each component and detail each constituted function. 
 
-Part I: Bird-view of OPRA
-A. The model layer 
+**Part I: Bird-view of OPRA**
+* **A. The model layer** 
 A model is the single, definitive source of information about the data created by the OPRA administrator and users. It contains the essential fields and behaviors of the data you’re storing in the database. In other words, each model maps to a single database table. Essentially, each model is a Python class and each attribute of the class represents a database field. 
 
-B. The view layer
+* **B. The view layer**
 The view layer basically encapsulates the logic responsible for processing a user’s request and for returning the response. It consists of a bunch of view functions, and each function is simply a Python function that takes a Web request and returns a Web response. The response can be the HTML contents of a Web page, or a redirect, or a 404 Error, or an XML document, or an image … or anything. The view itself contains whatever arbitrary logic is necessary to return the response. The code can live anywhere you want, as long as it’s on your Python path. For convenience and safety, the convention is to put all the views in a file called view.py. In order to make the views work well, OPRA also needs an URLs module. This module is pure Python code and is a simple mapping between URL patterns to your view functions. 
 
-C. The template layer
+* **C. The template layer**
 The template layer provides a designer-friendly syntax for rendering the information to be presented to the users. It provides a convenient way to generate HTML dynamically, and contains the static parts of the desired HTML output as well as some special syntax describing how the dynamic content will be inserted. 
 
-Part II: Dive into OPRA component functions
+##Part II: Dive into OPRA component functions
 The outer compsocsite/ root directory is just a container for OPRA. You can rename it without any problems.
-•	manage.py: A Python command-line utility that lets the user interact with OPRA in various ways. 
-•	Appauth: This folder is responsible for registering users and login/logout setting. 
-•	Polls: A Python package for single poll application. Modify this folder if you want to customize this application. 
-•	Multipolls: Another Python package for multiple poll application. Modify this folder if you want to customize this application. 
-•	Groups: This folder is responsible for editing group members to vote for a specific subject. The administrator can add or remove voters from the group.
-•	Static: For image, js, css files.
-•	Compsocsite: This inner directory is the actual Python package for OPRA. Its name is the Python package name you’ll need to use to import anything inside it. 
-•	Template: The folder contains a list of configurations, one for each engine.
-•	Stunnel: 
+•	**manage.py:** A Python command-line utility that lets the user interact with OPRA in various ways. 
+•	**Appauth:** This folder is responsible for registering users and login/logout setting. 
+•	**Polls:** A Python package for single poll application. Modify this folder if you want to customize this application. 
+•	**Multipolls:** Another Python package for multiple poll application. Modify this folder if you want to customize this application. 
+•	**Groups:** This folder is responsible for editing group members to vote for a specific subject. The administrator can add or remove voters from the group.
+•	**Static:** For image, js, css files.
+•	**Compsocsite:** This inner directory is the actual Python package for OPRA. Its name is the Python package name you’ll need to use to import anything inside it. 
+•	**Template:** The folder contains a list of configurations, one for each engine.
+•	**Stunnel:** 
 
 Roughly speaking, the architecture of each aforementioned folder follows a similar file structure. For instance, you will see the following files in the polls/ directory.
 •	Migrations: The folder is created to store database changes as models are updated.  Here are two handy commands to achieve this: python3 manage.py makemigrations </code>, and <code> python3 manage.py migrate </code>.

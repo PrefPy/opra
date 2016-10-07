@@ -99,7 +99,7 @@ The project is currently equipped with a serial dictatorship allocation algorith
 
 More algorithms can easily be added. Within the algorithms.py file inside the polls directory, add a function def for the desired algorithm, with the response set as a parameter. Then, at the top of the admin.py file inside the polls directory, add a function def for an admin action corresponding to the new algorithm. The preexisting admin action function can be used as a guide for the necessary syntax to add a new admin action. Lastly, in the ResponseAdmin class at the bottom of admin.py, add the new admin action function to the list of actions.
 
-OPRA DOCUMENTATON
+##OPRA DOCUMENTATON
 
 OPRA stands for online preference reporting and aggregation, which is essentially an online voting system. The system is built up by taking advantage of Django free and open-source web framework written extensively in Python. It maintains Django’s basic model-view-template (MVT) architectural pattern.  This documentation basically consists of two parts. The first part will give you an overarching view of the major components of OPRA. The second part will dive into each component and detail each constituted function. 
 

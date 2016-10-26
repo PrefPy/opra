@@ -1,5 +1,7 @@
 //  Helper JavaScript created for the voting page (detail.html)
 var record = "";
+var submissionURL = "";
+
 
 function submitPref() {
     var prefcolumn = $('#left-sortable');
@@ -13,8 +15,9 @@ function submitPref() {
         }
     });
     $('#pref_order').val(order);
+    
 	$.ajax({
-		url: "{% url 'polls:record' question.id%}",
+		url: submissionURL,
 		type: "POST",
 		data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
 		success: function(){}

@@ -19,6 +19,7 @@
 <script src='/static/js/shared.js'></script>
 <script src='/static/js/voteWithTies.js'></script>
 
+
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 
 <style>
@@ -38,6 +39,8 @@
 $(function() {
     $("#successMessage").delay(2000).fadeOut('slow');
 });
+//set the webpage for ajax to report user behavior
+submissionURL="{% url 'polls:record' question.id%}";
 </script>
 {% endblock %}
 
@@ -276,6 +279,7 @@ $(function() {
     </p>
     {% endif %}
 </div>
+
     
 <script>
     
@@ -321,25 +325,6 @@ function toggle (elements, specifiedDisplay) {
 }
 });
 
-function submitPref() {
-    var prefcolumn = $('#left-sortable');
-    var order = "";
-    prefcolumn.children().each(function( index ){
-        if( $( this ).children().size() > 0 ){
-            $( this ).children().each(function( index ){
-                order += $( this ).attr('id') + ",";
-            });
-            order += "|,";
-        }
-    });
-    $('#pref_order').val(order);
-	$.ajax({
-		url: "{% url 'polls:record' question.id%}",
-		type: "POST",
-		data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
-		success: function(){}
-		});
-    $('#pref_order').submit();
-};
 </script>
+
 {% endblock %}

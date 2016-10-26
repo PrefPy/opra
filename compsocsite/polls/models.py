@@ -281,3 +281,13 @@ class CandScorePair(models.Model):
     container = models.ForeignKey(ScoreMap)
     cand = models.IntegerField(default = 0)
     score = models.FloatField(default = 0.0)
+    
+class UserVoteRecord(models.Model):
+    timestamp = models.DateTimeField('record timestamp')
+    user = models.ForeignKey(User)
+    question = models.ForeignKey(Question,default=None)
+    record = models.CharField(max_length=300)
+    
+    class Meta:
+        ordering = ['timestamp']
+    

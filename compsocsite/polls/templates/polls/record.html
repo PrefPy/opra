@@ -1,0 +1,22 @@
+{% extends 'polls/base.html' %}
+{% load mathfilters %}
+{% load staticfiles %}
+{% block extra_head %}
+
+{% endblock %}
+
+{% block content %}
+<br/>
+
+<ul>
+	{% for record in user_records%}
+	{% for r in record %}
+	{% if forloop.counter == 1%} <p>Username: {{r.0}}  Time submitted: {{r.1}}</p> 
+	{% else %}
+	<li>Time: {{r.0}}  Position:{{r.1}}  Item:{{r.2}}   Tier:{{r.3}}</li>
+	{% endif %}
+	{% endfor %}
+	<p></p>
+	{% endfor %}
+</ul>
+{% endblock %}

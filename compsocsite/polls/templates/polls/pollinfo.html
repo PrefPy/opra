@@ -146,6 +146,7 @@
                 <li {% if request.session.setting == 5 %} class="active" {% endif %}><a data-toggle="tab" href="#emailsetting">Email</a></li>
                 <li {% if request.session.setting == 4 %} class="active" {% endif %}><a data-toggle="tab" href="#qr">Anonymous Voting</a></li>
                 <li><a data-toggle="tab" href="#delete">Delete</a></li>
+				<li><a href="{% url 'polls:recordView' question.id %}">User Records</a></li>
             {% endif %}
             
         {% else %}  

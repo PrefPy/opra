@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from . import views
 from . import email
+from . import record
 
 app_name = 'polls'
 urlpatterns = [
@@ -60,4 +61,8 @@ urlpatterns = [
     
     # vote result
     url(r'^(?P<question_id>[0-9]+)/calculateprev/$', views.calculatePreviousResults, name='calculateprev'),
+    
+    
+    url(r'^(?P<question_id>[0-9]+)/record/$', record.writeUserAction, name='record'),
+    url(r'^(?P<pk>[0-9]+)/recordView/$', record.RecordView.as_view(), name='recordView'),
 ]

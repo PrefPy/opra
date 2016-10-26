@@ -155,13 +155,11 @@ $(function() {
                                 <ul class="choice1 empty"></ul>
                                 <ul class="choice1">
                                     <!-- Display the tier number -->
-                                    <div class="tier">
-                                        {{ forloop.counter }}
-                                    </div>
+                                    <div class="tier">{{ forloop.counter }}</div>
                                     
                                     <!-- Display all the options selected for this tier -->
                                     {% for selection in s %}
-                                    <li class="li_item" id="item{{ selection.item_text }}">
+                                    <li class="li_item" id="item{{ selection.item_text }}" alt="{{forloop.parentloop.counter}}">
                                         <!-- Display image (uploaded) -->
                                         {% if selection.image %}
                                             <img class="item" src='/{{ selection.image.url }}'/>
@@ -174,7 +172,7 @@ $(function() {
                                         {{ selection }}
                                         <!-- Display tooltip for option description -->
                                         {% if selection.item_description %}
-                                            <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{selection.0.item_description}}"
+                                            <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{selection.0.item_description}}">
                                             </span>
                                         {% endif %}
                                     </li>
@@ -322,5 +320,26 @@ function toggle (elements, specifiedDisplay) {
   }
 }
 });
+
+function submitPref() {
+    var prefcolumn = $('#left-sortable');
+    var order = "";
+    prefcolumn.children().each(function( index ){
+        if( $( this ).children().size() > 0 ){
+            $( this ).children().each(function( index ){
+                order += $( this ).attr('id') + ",";
+            });
+            order += "|,";
+        }
+    });
+    $('#pref_order').val(order);
+	$.ajax({
+		url: "{% url 'polls:record' question.id%}",
+		type: "POST",
+		data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
+		success: function(){}
+		});
+    $('#pref_order').submit();
+};
 </script>
 {% endblock %}

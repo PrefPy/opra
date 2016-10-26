@@ -1,4 +1,6 @@
 //  Helper JavaScript created for the voting page (detail.html)
+var record = "";
+
 function submitPref() {
     var prefcolumn = $('#left-sortable');
     var order = "";
@@ -11,6 +13,12 @@ function submitPref() {
         }
     });
     $('#pref_order').val(order);
+	$.ajax({
+		url: "{% url 'polls:record' question.id%}",
+		type: "POST",
+		data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
+		success: function(){}
+		});
     $('#pref_order').submit();
 };
 
@@ -276,7 +284,16 @@ function enableSubmission() {
         		ui.item.width(ui.placeholder.width());
             };
             newList = oldList = oL = ui.item.parent();
-            
+			var d = Date.now();
+			record += d+ "::start::" + item.attr("id") + "::"+ item.attr("alt")+";;";
+			/*
+			$.ajax({
+				url: "{% url 'polls:record' question.id%}",
+				type: "POST",
+				data: {'time': Data.now(), 'status':"start",'item': item.attr("id"), 'position': item.parent().children().first().html(), 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
+				success: function(){}
+			});
+			*/
         },
         
         stop: function(event, ui) {
@@ -330,6 +347,8 @@ function enableSubmission() {
                 $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
             }
             if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
+			var d = Date.now();
+			record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt")+";;";
         },
 
         change: function(event, ui) {  
@@ -392,6 +411,7 @@ function enableSubmission() {
                     ui.placeholder.css("width", "93%");
                     ui.item.width(ui.placeholder.width());
                 }
+				
             }
         },
         placeholder: "ui-state-highlight",

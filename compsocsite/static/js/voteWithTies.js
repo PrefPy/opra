@@ -356,8 +356,7 @@ function enableSubmission() {
 
         change: function(event, ui) {  
             if(ui.sender){
-            		checkStyle();
-
+            		
                 //variables
                 newList = ui.placeholder.parent(); //the list the item is hovering over
                 var newListId = parseInt($( newList ).attr("id")); //the id of the list
@@ -396,7 +395,10 @@ function enableSubmission() {
                             $( this ).removeClass('empty');
                             //should remove empty and add new "empty" lists around it
                             $( this ).after(newItem);                            
-                            $( this ).before(newItem);
+                            //if($( oldList ).children().size() != 1 || newListID != oldListId+3)
+                            {
+                                $( this ).before(newItem);
+                            }
                             	
                         }
                         if( $( this ).children().size() < 2

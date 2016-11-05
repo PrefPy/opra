@@ -356,7 +356,8 @@ function enableSubmission() {
 
         change: function(event, ui) {  
             if(ui.sender){
-            	
+            		checkStyle();
+
                 //variables
                 newList = ui.placeholder.parent(); //the list the item is hovering over
                 var newListId = parseInt($( newList ).attr("id")); //the id of the list
@@ -371,27 +372,32 @@ function enableSubmission() {
                 $( ".tier" ).each(function( index ) { $( this ).remove(); }); //get rid of the tier divs
                 $( ".line" ).each(function( index ) { $( this ).remove(); }); //get rid of placeholder uls
 
-                //go through each list
-                
+                //go through each list from the top
+         
                 $( ".choice1" ).each(function( index ) {
                     listId = parseInt($( this ).attr("id"));
                     if( $( this ).children().size() < 1 ){
+                    	// if this list does not have contain any alternative, then mark it to be "empty"
                         $( this ).addClass('empty');
+                    // if there are two empty lists next to each other, then remove the current one     
                         if(prevEmpty){
                             $( this ).remove();
                         }else{
                         	prevEmpty = true;
-                        }
-                        
+                        }     
                     }else if((listId == oldListId && listId != newListId
                         && $( oldList ).children().size() == 1)){
                         $( this ).css("height", "0");
                         prevEmpty = true;
                     }else{
+                    	
+                    	//current list contains at least one alternative but is marked "empty"
                         if( $( this ).attr('class').indexOf('empty')>-1 ){
                             $( this ).removeClass('empty');
-                            $( this ).after(newItem);
+                            //should remove empty and add new "empty" lists around it
+                            $( this ).after(newItem);                            
                             $( this ).before(newItem);
+                            	
                         }
                         if( $( this ).children().size() < 2
                             || ( /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
@@ -403,9 +409,12 @@ function enableSubmission() {
                         tier += 1;
                         prevEmpty = false;
                     }
-                   
                 }
+                
                 );
+                
+                
+                
                 if( $(newList).children().size() > 1 
                         && !( /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) )){
                     ui.placeholder.css("width", "45%").css("display","inline-block").css("vertical-align","top");
@@ -416,6 +425,7 @@ function enableSubmission() {
                 }
 				
             }
+            
         },
         placeholder: "ui-state-highlight",
         connectWith: "ul.choice1, ul.empty",

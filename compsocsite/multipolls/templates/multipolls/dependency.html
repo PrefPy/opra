@@ -1,6 +1,6 @@
 {% extends 'polls/base.html' %}
 {% block extra_head %}
-<script src="http://js.cytoscape.org/js/cytoscape.min.js"></script>
+<script src="/static/js/cytoscape.min.js"></script>
 
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -89,51 +89,69 @@ $(function(){
 
 {% block content %}
 <div class="container-fluid">
-    <!-- Title and description -->
-    <div class="row">
-        {% if question.imageURL != Null and question.imageURL != '' %}
-        <!-- Display image (external URL) -->
-        <div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-            <a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
-        </div>
-        {% elif question.image %}
-        <!-- Display image (uploaded image) -->
-        <div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
-            <a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
-        </div>
-        {% endif %}
-        <!-- Display the title and creator -->
-        <div class="col-md-4" {% if request.flavour == "mobile" %} style="width:70%;" {% endif %}>
-            <h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}>
-                {{ question.question_text }}:    <small class="text-muted">Created by {{ question.question_owner }}</small>
-            </h3>
-            <p>
-            <!-- Left button to go back to previous subpoll -->
-            {% if prev_poll != None %}
-                <a href="{% url 'multipolls:dependencyview' prev_poll.id %}">
-                    <span class="glyphicon glyphicon-arrow-left"></span>
-                </a>
-            {% endif %}
-            <!-- Right button to go to the next subpoll -->
-            {% if next_poll != None %}
-                <a href="{% url 'multipolls:dependencyview' next_poll.id %}">
-                    <span class="glyphicon glyphicon-arrow-right"></span>
-                </a>
-            {% endif %} 
-            </p>
-
-            <!-- Display the description -->
-            {% if question.question_desc %}
-            <h4 {% if request.flavour == "mobile" %} style="width:70%" {% endif %}>
-                {{ question.question_desc }}
-            </h4>
-            {% endif %}
-        </div>
     
-    <!-- Display a list of checkboxes to indicate dependent subpolls -->
+<!-- Title panel -->
+    <div class="panel panel-default">
+        <!-- Panel header contains image and title -->
+        <div class="panel-heading">
+            <a class="panel-title" data-toggle="collapse" href="#collapse_des">
+            <div class="row">
+                <!-- Display poll image (from external url) -->
+                {% if question.imageURL != Null and question.imageURL != '' %}
+                <div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+                    <a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
+                </div>
+                <!-- Display poll image (uploaded to the server) -->
+                {% elif question.image %}
+                <div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+                    <a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
+                </div>
+                {% endif %}
+                
+                <!-- Display title and creator in the header -->
+                <div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>            
+                    <h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}><span class="caret" style="color:#377BB5;"></span> 
+                    
+                    <!-- Left button to go back to previous subpoll -->
+            {% if prev_poll != None %}
+                <a href="{% url 'multipolls:dependencyview' prev_poll.id %}" class="glyphicon glyphicon-arrow-left">
+                </a>
+            {% endif %}
+                    <span>{{ question.question_text }}</span> <span class="text-muted">(Created by {{ question.question_owner }})</span> 
+                    	<!-- Right button to go to the next subpoll -->
+                    	{% if next_poll != None %}
+                <a href="{% url 'multipolls:dependencyview' next_poll.id %}" class="glyphicon glyphicon-arrow-right">
+                </a>
+            {% endif %}
+            </h3>
+                </div>
+                 
+            </div> </a>
+        </div>
+
+        <!-- Display the description in the panel body -->
+        <div id="collapse_des" class="panel-body">
+           <div class="panel panel-default">
+            Description: {% if question.question_desc %}
+            <span {% if request.flavour == "mobile" %} style="width:70%" {% endif %}> {{ question.question_desc }} </span>
+            {% endif %}
+            </div>
+            
+            
+            <div class="panel panel-default">
+        <!-- Dependency graph -->
+        <div class="panel-heading">
+            <div class="panel-title" data-toggle="collapse" href="#collapse_cond">
+            <h3><span class="caret" style="color:#377BB5;"></span> Dependencies </h3>
+            </div>
+        </div>
+
+        <!-- Display the description in the panel body (initially hidden) -->
+        <div id="collapse_cond" class="panel-body">
+            <!-- Display a list of checkboxes to indicate dependent subpolls -->
     <div class="col-md-3">
         <div align="center" style="position:relative;top:20px;">
-            <h4>Your preferences for {{question.question_text}} depends on:</h4>
+            <h4>{{question.question_text}} depends on:</h4>
             <div class="row">
                 <!-- Iterate through all subpolls -->
         {% for poll in question.multipoll_set.all.0.questions.all %}
@@ -160,14 +178,22 @@ $(function(){
         </div>
         
     </div>
-    
     <!-- Display preference graph -->
     <div class="col-md-3">
         <div style="position:relative;left: 50%; top:10px;">
             <div id="cy" ></div>
         </div>
     </div>
+        </div>
     </div>
+        </div>
+    </div>
+    
+    
+    
+    
+    
+    
 </div>
         
 
@@ -192,31 +218,31 @@ $(function(){
         .selector('node')
           .css({
             'shape': 'data(faveShape)',
-            'width': 'mapData(weight, 40, 80, 20, 60)',
+            'width': '80',
+            'height': '40',
+            'text-max-width':  '80',
+            'text-wrap': 'wrap',
             'content': 'data(name)',
             'text-valign': 'center',
-            'text-outline-width': 2,
+            'text-outline-width': 0,
             'text-outline-color': 'data(faveColor)',
-            'background-color': 'data(faveColor)',
-            'color': '#fff'
+            'background-color': '#FFFFFF',
+            'color': '#000',
+            'font-size': '30px',
           })
-        .selector(':selected')
-          .css({
-            'border-width': 3,
-            'border-color': '#333'
-          })
+        
         .selector('edge')
           .css({
             'curve-style': 'bezier',
             'opacity': 0.666,
-            'width': 'mapData(strength, 70, 100, 2, 6)',
-            'target-arrow-shape': 'triangle',
+            'width': '8',
+            'target-arrow-shape': 'triangle-backcurve',
             'line-color': 'data(faveColor)',
             'target-arrow-color': 'data(faveColor)'
           })
         .selector('edge.dotted')
           .css({
-            'line-style': 'dotted'
+            'line-style': 'dashed'
           })
         .selector('.faded')
           .css({
@@ -228,15 +254,22 @@ $(function(){
       elements: {
         nodes: [
          {% for row in pref_nodes %}
-            {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 10, faveColor: '#6FB1FC', faveShape: {% if row.id == question.id %}'rectangle'{% else %}'ellipse'{% endif %} } },
+            //{data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 10, faveColor: '#000', faveShape: {% if row.id == question.id %}'rectangle'{% else %}'ellipse'{% endif %} } },
+            {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 50, faveColor: '#000', faveShape: {% if row.id == question.id %}'rectangle'{% else %}'ellipse'{% endif %}, 
+            href: "{% url 'multipolls:dependencyview' row.id %}" } },
         {% endfor %}
         ],
         edges: [
          {% for row in pref_edges %}
-            {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#6FB1FC', strength: 50 }, {% if row.to != question.id %}classes: 'dotted'{% endif %} },
+            {data : { source: '{{ row.from }}', target: '{{ row.to }}', faveColor: '#000', strength: 50 }, {% if row.to != question.id %}classes: 'dotted'{% endif %} },
         {% endfor %}
         ]
       },
     });
+    
+cy.on('click','node', function(e){
+  var url=this.data('href');
+   window.location.replace(url);
+});
 </script>
 {% endblock %}

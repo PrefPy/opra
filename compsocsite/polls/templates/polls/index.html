@@ -22,7 +22,7 @@
     <header id="top" class="header">
         <div class="text-vertical-center">
             <h1>OPRA</h1>
-            <h3>Online Preference Reporting And Allocation</h3>
+            <h3>Online Preference Reporting and Aggregation</h3>
             <br>
             <a href="#about" class="btn btn-dark btn-lg">Find Out More</a>
         </div>
@@ -259,7 +259,7 @@
                     <p class="lead"> It is very easy to learn. </p>
                 
                     {%with question=voting_question%}
-                    <a  class="btn btn-dark" href="{% url 'polls:voting_demo' question.id %}">See Voting Page Demo</a>
+                    <a  class="btn btn-dark" href="{% url 'polls:voting_demo' 95 %}">See Voting Page Demo</a>
                     {%endwith%}
             
                 <div class="col-lg-5 col-lg-offset-2 col-sm-6">

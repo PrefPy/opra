@@ -3,35 +3,30 @@
 {% load staticfiles %}
 {% block extra_head %}
   
-    <script src='/static/js/shared.js'></script>
-    {% if request.flavour == "mobile" %}
-        <script src='/static/js/mobile.js'></script>
-    {% else %}
-        <script src='/static/js/desktop.js'></script>
-        <script src='/static/js/voteWithTies.js'></script>
-    {% endif %}
+   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-    
-    <script>
-        $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip(); 
-        });
-    </script>
-    <style>        
-        ul.empty { background-color:black; height: 10px; }
-    </style>
+{% if request.flavour == "mobile" %}
+<script src='/static/js/mobile.js'></script>
+{% else %}
+<script src='/static/js/desktop.js'></script>
+{% endif %}
+<script src='/static/js/shared.js'></script>
+<script src='/static/js/voteWithTies.js'></script>
 
 
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-    
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 
+<style>
+    .tier {
+        float: left;
+       
+    }
+</style>
 
 {% endblock %}
 
 {% block content %}
-<br/><br/><br/>
 <div class="container">
     {% if error_message %}
     <p>
@@ -40,9 +35,7 @@
     {% endif %}
 
     {% if request.flavour == "mobile"%}
-    <br />
-    <br />
-    <br />
+   
     <br />
     {% endif %}
 
@@ -176,7 +169,7 @@
                                     </span>
                                 </button>
                             {% else %}
-                                <button onclick="moveAll(); return false;">
+                                <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button">
                                     Move All
                                 </button>
                             {% endif %}

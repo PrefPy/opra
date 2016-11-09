@@ -65,12 +65,14 @@ function checkStyle(){
         arr = insideEach(this, id, tier);
         id = arr[0];
         tier = arr[1];
+		$( this ).attr("alt",tier.toString());
     });
     $( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
     $( "#right-sortable" ).children().each(function( index ) {
         arr = insideEach(this, id, tier);
         id = arr[0];
         tier = arr[1];
+		$( this ).attr("alt",tier.toString());
     });
     if($( "#right-sortable" ).children().size() > 0){
         $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
@@ -82,13 +84,17 @@ function moveToPref(obj) {
     var time = 100
     var prefcolumn = $('#left-sortable');
     var currentli = $(obj);
+	var d = Date.now();
     console.log(obj.id);
     prefcolumn.append(currentli);
+	record += d+ "::click::" + currentli.attr("id") + "::"+ currentli.attr("alt")+";;";
     checkStyle();
     if ($('#right-sortable').children().size() == 0) { enableSubmission(); }
     $('#left-sortable li').each(function(){
         $(this).removeAttr('onclick');
     });
+	d = Date.now();
+	record += d+ "::click::" + currentli.attr("id") + "::"+ currentli.attr("alt")+";;";
 };
 
 function moveAll() {
@@ -312,6 +318,9 @@ function enableSubmission() {
                     $( this ).remove();
                 }else{
                     $( this ).attr("id", id.toString());
+					$( this ).children().each(function( index ) {
+						$( this ).attr("alt", tier.toString());
+					});
                     id += 1;
                     $( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
                     if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }

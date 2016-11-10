@@ -39,6 +39,7 @@ function resetDefault()
 $(function() {
     $("#successMessage").delay(2000).fadeOut('slow');
 });
+
 </script>
 
 <div>
@@ -49,7 +50,7 @@ $(function() {
             <div class="panel-heading">
                 Conditional Preferences {% if combination.dependent_questions.all|length > 0 %}
           
-                <select id="default_pref" name="default_pref" size="2" onchange="resetChoices()">
+                <select id="default_pref" name="default_pref" size="2" onchange="resetChoices()" style="height:25.2pt !important">
                     {% if default_response %}
                     <option value="default_pref" class="btn btn-default" 
                             style='background-color: #3CB371; box-shadow: 0 0 10px 100px #3CB371 inset;'>Default</option>
@@ -62,16 +63,67 @@ $(function() {
             {% endif %}
             </div>
             <div style="clear:both" class="panel-body">
+            	
+            	<div class = "col-md-6">
+            	<div class="panel panel-default">
+        <!-- Dependency graph -->
+        <div class="panel-heading">
+            <div class="panel-title">
+            <h4></span> Dependencies </h4>
+            </div>
+        </div>
+
+        <!-- Display the description in the panel body (initially hidden) -->
+        <div id="collapse_cond" class="panel-body">
+            <!-- Display a list of checkboxes to indicate dependent subpolls -->
+    <div class="col-md-3">
+        <div align="center" style="position:relative;top:20px;">
+            <h4>{{question.question_text}} depends on:</h4>
+            <div class="row">
+                <!-- Iterate through all subpolls -->
+        {% for poll in question.multipoll_set.all.0.questions.all %}
+                <!-- Only display subpolls before the current poll -->
+            {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
+            <label class="checkbox-inline">
+                {% if combination %}
+                    <!-- Load old value -->
+                    <input type="checkbox" name="polls" value="{{poll.id}}" id="checkbox{{poll.id}}" class="pull-right" {% if poll in combination.dependent_questions.all %} checked="checked" {% endif %} onclick="check()">
+                {% else %}
+                    <!-- Default is unchecked -->
+                    <input type="checkbox" name="polls" value="{{poll.id}}" id="checkbox{{poll.id}}" onclick="check();">
+                {% endif %}
+                <!-- Previous subpoll title -->
+                {{ poll.question_text }}
+            </label>
+
+            <!--<div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>
+            <p><input type="checkbox" name="polls" value="{{poll.id}}" align="center" class="form-control"> </p>-->
+
+            {% endif %}
+        {% endfor %}
+        </div>
+        </div>
+        
+    </div>
+    <!-- Display preference graph -->
+    <div class="col-md-3">
+        <div style="position:relative;left: 50%; top:10px;">
+            <div id="cy" ></div>
+        </div>
+    </div>
+        </div>
+    </div>
+            </div>
             
             {% for poll in combination.dependent_questions.all %}
-            <div class="col-md-{{12|intdiv:combination.dependent_questions.count}}">
+            <div class="col-md-{{6|intdiv:combination.dependent_questions.count}}">
             <div class="panel panel-default">
                 <div class=" panel-heading">
                     <h4>Poll {{ poll.question_text }}</h4>
                     </div>
                 <div class=" panel-body">   
                     <div class="table-responsive bloc">
-                    <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" size="2" id="combinationtable" onchange="resetDefault()" multiple>
+                    <select id="dynamic_select{{ poll.id }}" name="{{ poll.id }}" size="2" id="combinationtable" onchange="resetDefault()" multiple style="height:40pt !important">
                         {% for item in poll.item_set.all %}
                             {% for row in colorArray %}
                             {% for color in row %}

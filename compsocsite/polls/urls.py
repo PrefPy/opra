@@ -7,7 +7,7 @@ from . import record
 
 app_name = 'polls'
 urlpatterns = [
-    url(r'^', login_required(views.IndexView.as_view()), name='index'),
+    url(r'^$', login_required(views.IndexView.as_view()), name='index'),
     url(r'^main$', views.MainView.as_view(), name='index_guest'),
     #Two main types of polls
     url(r'^regular_polls$', login_required(views.RegularPollsView.as_view()), name='regular_polls'),

@@ -88,6 +88,7 @@ $(function(){
 {% endblock %}
 
 {% block content %}
+<br>
 <div class="container-fluid">
     
 <!-- Title panel -->
@@ -130,78 +131,20 @@ $(function(){
         </div>
 
         <!-- Display the description in the panel body -->
-        <div id="collapse_des" class="panel-body">
-           <div class="panel panel-default">
+        <div id="collapse_des" class="panel-body" hidden>
+           
             Description: {% if question.question_desc %}
             <span {% if request.flavour == "mobile" %} style="width:70%" {% endif %}> {{ question.question_desc }} </span>
             {% endif %}
-            </div>
             
             
-            <div class="panel panel-default">
-        <!-- Dependency graph -->
-        <div class="panel-heading">
-            <div class="panel-title" data-toggle="collapse" href="#collapse_cond">
-            <h3><span class="caret" style="color:#377BB5;"></span> Dependencies </h3>
-            </div>
-        </div>
-
-        <!-- Display the description in the panel body (initially hidden) -->
-        <div id="collapse_cond" class="panel-body">
-            <!-- Display a list of checkboxes to indicate dependent subpolls -->
-    <div class="col-md-3">
-        <div align="center" style="position:relative;top:20px;">
-            <h4>{{question.question_text}} depends on:</h4>
-            <div class="row">
-                <!-- Iterate through all subpolls -->
-        {% for poll in question.multipoll_set.all.0.questions.all %}
-                <!-- Only display subpolls before the current poll -->
-            {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
-            <label class="checkbox-inline">
-                {% if combination %}
-                    <!-- Load old value -->
-                    <input type="checkbox" name="polls" value="{{poll.id}}" id="checkbox{{poll.id}}" class="pull-right" {% if poll in combination.dependent_questions.all %} checked="checked" {% endif %} onclick="check()">
-                {% else %}
-                    <!-- Default is unchecked -->
-                    <input type="checkbox" name="polls" value="{{poll.id}}" id="checkbox{{poll.id}}" onclick="check();">
-                {% endif %}
-                <!-- Previous subpoll title -->
-                {{ poll.question_text }}
-            </label>
-
-            <!--<div align="center"><label for="{{poll.id}}" style="font-size:1.2em">{{poll.question_text}}</label></div>
-            <p><input type="checkbox" name="polls" value="{{poll.id}}" align="center" class="form-control"> </p>-->
-
-            {% endif %}
-        {% endfor %}
-        </div>
-        </div>
-        
-    </div>
-    <!-- Display preference graph -->
-    <div class="col-md-3">
-        <div style="position:relative;left: 50%; top:10px;">
-            <div id="cy" ></div>
+            
         </div>
     </div>
-        </div>
-    </div>
-        </div>
-    </div>
-    
-    
-    
-    
-    
-    
+   
 </div>
         
 
-        
-<div class="row">
-    
-<br /> 
-</div>
 
 <!-- Main voting page -->
 {% include 'multipolls/dependencydetail.html' %}
@@ -218,7 +161,7 @@ $(function(){
         .selector('node')
           .css({
             'shape': 'data(faveShape)',
-            'width': '80',
+            'width': '100',
             'height': '40',
             'text-max-width':  '80',
             'text-wrap': 'wrap',

@@ -1,6 +1,7 @@
 //  Helper JavaScript created for the voting page (detail.html)
 var record = "";
 var submissionURL = "";
+var order1 = "";
 
 
 function submitPref() {
@@ -19,7 +20,7 @@ function submitPref() {
 	$.ajax({
 		url: submissionURL,
 		type: "POST",
-		data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()},
+		data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order':order1},
 		success: function(){}
 		});
     $('#pref_order').submit();
@@ -100,7 +101,7 @@ function moveToPref(obj) {
         $(this).removeAttr('onclick');
     });
 	d = Date.now();
-	record += d+ "::clickTo::" + item + "::"+ tier+";;";
+	record += d+ "::clickTo::" + item + "::"+ tier+";;;";
 };
 
 function moveAll() {
@@ -111,7 +112,8 @@ function moveAll() {
     $('#left-sortable li').each(function(){
         $(this).removeAttr('onclick');
     });
-    
+	var d = Date.now();
+    record += d + ";;;"
 };
 
 function clearAll(){
@@ -366,7 +368,7 @@ function enableSubmission() {
             }
             if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
 			var d = Date.now();
-			record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt")+";;";
+			record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt")+";;;";
         },
 
         change: function(event, ui) {  

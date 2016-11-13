@@ -40,6 +40,7 @@ $(function() {
 });
 //set the webpage for ajax to report user behavior
 submissionURL="{% url 'polls:record' question.id%}";
+
 </script>
 {% endblock %}
 
@@ -292,6 +293,11 @@ submissionURL="{% url 'polls:record' question.id%}";
         title : '<span class="text-info"><strong>Hint</strong></span>',
         html: 'true',
     }); 
+	$( "#right-sortable" ).children().each(function( index ) {
+	if($(this).children().size()>0){
+		order1 += $(this).children().first().attr("id") + ";"
+	}
+});
 	checkStyle();
 }); 
 

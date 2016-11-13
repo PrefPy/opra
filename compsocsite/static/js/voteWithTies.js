@@ -48,6 +48,7 @@ function insideEach(t, id, tier){
             $( t ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
         }
         $( t ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
+		$( t ).children().each(function(index){$(this).attr("alt",tier.toString()); });
         tier += 1;
         id += 1;
     }
@@ -65,14 +66,16 @@ function checkStyle(){
         arr = insideEach(this, id, tier);
         id = arr[0];
         tier = arr[1];
-		$( this ).attr("alt",tier.toString());
+		if($(this).children().size() >=1 ){
+			$(this).attr("class","choice1");
+		}
     });
     $( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+	tier = 1;
     $( "#right-sortable" ).children().each(function( index ) {
         arr = insideEach(this, id, tier);
         id = arr[0];
         tier = arr[1];
-		$( this ).attr("alt",tier.toString());
     });
     if($( "#right-sortable" ).children().size() > 0){
         $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
@@ -84,17 +87,20 @@ function moveToPref(obj) {
     var time = 100
     var prefcolumn = $('#left-sortable');
     var currentli = $(obj);
+	var tier = currentli.children().first().attr("alt");
 	var d = Date.now();
+	var item = currentli.children().first().attr("id");
     console.log(obj.id);
     prefcolumn.append(currentli);
-	record += d+ "::click::" + currentli.attr("id") + "::"+ currentli.attr("alt")+";;";
+	record += d+ "::clickFrom::" + item + "::"+ tier+";;";
     checkStyle();
+	tier = currentli.children().first().attr("alt");
     if ($('#right-sortable').children().size() == 0) { enableSubmission(); }
     $('#left-sortable li').each(function(){
         $(this).removeAttr('onclick');
     });
 	d = Date.now();
-	record += d+ "::click::" + currentli.attr("id") + "::"+ currentli.attr("alt")+";;";
+	record += d+ "::clickTo::" + item + "::"+ tier+";;";
 };
 
 function moveAll() {

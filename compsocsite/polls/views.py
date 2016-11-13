@@ -515,14 +515,19 @@ class VoteResultsView(generic.DetailView):
         ctx = super(VoteResultsView, self).get_context_data(**kwargs)
         
         all_responses = self.object.response_set.reverse()
+        print(str(time.clock()))
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
+        print(str(time.clock()))
         ctx['latest_responses'] = latest_responses
         ctx['previous_responses'] = previous_responses
         ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
+        print(str(time.clock()))
         voteResults = getVoteResults(latest_responses) 
         ctx['vote_results'] = voteResults
         ctx['shade_values'] = getShadeValues(voteResults)
+        print(str(time.clock()))
         (nodes, edges) = parseWmg(latest_responses)
+        print(str(time.clock()))
         ctx['wmg_nodes'] = nodes
         ctx['wmg_edges'] = edges
         ctx['poll_algorithms'] = getListPollAlgorithms()

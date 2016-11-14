@@ -10,7 +10,9 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3 (as of now, 3.4 or 3.5).
 2. Install [Django](https://www.djangoproject.com). The easiest way to do this is through [pip] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py). Then you can install django simply by entering the command: 
 
-   <code>pip install django</code>
+   <code>pip install django==1.9</code>
+
+**IMPORTANT: Use Django version 1.9 because of compatibility issues the system is having with 1.10 or higher.
    
    You can verify installation by entering the command:
    

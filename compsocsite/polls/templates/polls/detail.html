@@ -295,7 +295,7 @@ submissionURL="{% url 'polls:record' question.id%}";
     }); 
 	$( "#right-sortable" ).children().each(function( index ) {
 	if($(this).children().size()>0){
-		order1 += $(this).children().first().attr("id") + ";"
+		order1 += $(this).children().first().attr("id") + ";;"
 	}
 });
 	checkStyle();

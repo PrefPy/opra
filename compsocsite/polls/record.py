@@ -36,11 +36,18 @@ def writeUserAction(request, question_id):
     
 def interpretRecord(record):
     order = record.initial_order
+    order_arr = order.split(";;")
+    order = ""
+    for i in order_arr:
+        order += i[4:] + "; "
     r = record.record
     action_arr = r.split(";;;")
     record_arr = []
     temp = ""
-    temp += record.user.username + " voted at " + str(record.timestamp) + "\n"
+    if record.user.username != "":
+        temp += record.user.username + " voted at " + str(record.timestamp) + "\n"
+    else:
+        temp += "Anonymous voter voted at " + str(record.timestamp) + "\n"
     if order != "":
         temp += "\nInitial order: " + order
     record_arr.append(temp)

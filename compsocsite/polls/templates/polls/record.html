@@ -11,8 +11,11 @@
 <ul>
 	{% for record in user_records%}
 	{% for r in record %}
+	{% if forloop.counter != 2%}
 	<p>{{r}}</p>
+	{% endif %}
 	{% if forloop.counter == 1%}
+	<p>Accessed from {{record.1}}</p>
 	<a data-toggle="collapse" data-target="#detail{{forloop.parentloop.counter}}">Show/Hide Detail</a>
 	<div id="detail{{forloop.parentloop.counter}}" class="collapse">
 	{% endif %}

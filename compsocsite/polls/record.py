@@ -28,8 +28,9 @@ def writeUserAction(request, question_id):
         #f = open(str, 'w+')
         data = request.POST['data']
         order = request.POST['order']
+        device = request.POST['device']
         #print(data)
-        r = UserVoteRecord(timestamp=timezone.now(),user=request.user,record=data,question=question,initial_order=order)
+        r = UserVoteRecord(timestamp=timezone.now(),user=request.user,record=data,question=question,initial_order=order,device=device)
         r.save()
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -51,6 +52,7 @@ def interpretRecord(record):
     if order != "":
         temp += "\nInitial order: " + order
     record_arr.append(temp)
+    record_arr.append(record.device)
     for str1 in action_arr:
         if str1.find(";;") != -1:
             pair = str1.split(";;")
@@ -61,7 +63,11 @@ def interpretRecord(record):
                 t2[2] = t2[2][4:]
                 if t1[1] == "start":
                     str2 = ""
-                    str2 += "Moved item " + t1[2] + " from tier " + t1[3] + " to tier " + t2[3] + " at time " + t1[0] + "."
+                    item_arr = t2[3].split("||")
+                    str2 += "Moved item " + t1[2] + " from tier " + t1[3] + " to tier " + item_arr[0] + " at time " + t1[0] + ", tier " + item_arr[0] + " has items: "
+                    for index in range(1,len(item_arr)):
+                        if(item_arr[index] != ""):
+                            str2 += item_arr[index][4:] + ", "
                     record_arr.append(str2)
                 else:
                     str2 = ""

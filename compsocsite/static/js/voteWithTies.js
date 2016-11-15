@@ -2,6 +2,7 @@
 var record = "";
 var submissionURL = "";
 var order1 = "";
+var flavor = "";
 
 
 function submitPref() {
@@ -20,7 +21,7 @@ function submitPref() {
 	$.ajax({
 		url: submissionURL,
 		type: "POST",
-		data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order':order1},
+		data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order':order1,'device':flavor},
 		success: function(){}
 		});
     $('#pref_order').submit();
@@ -367,8 +368,22 @@ function enableSubmission() {
                 $( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
             }
             if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
+			var t = parseInt(item.attr("alt"));
+			var count = 0;
+			var itemsSameTier = "";
+			$( "#left-sortable" ).children().each(function(index){
+				if($(this).children().size()>=1){
+					count++;
+				}
+				if(count == t){
+					$(this).children().each(function(index){
+						itemsSameTier += $(this).attr("id") + "||";
+					});
+					return false;
+				}
+			});
 			var d = Date.now();
-			record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt")+";;;";
+			record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt") + "||" + itemsSameTier +";;;";
         },
 
         change: function(event, ui) {  

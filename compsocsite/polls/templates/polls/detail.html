@@ -297,7 +297,13 @@ submissionURL="{% url 'polls:record' question.id%}";
 	if($(this).children().size()>0){
 		order1 += $(this).children().first().attr("id") + ";;"
 	}
+	
 });
+	{% if request.flavour == "mobile" %}
+		flavor = "Mobile";
+	{% else %}
+		flavor = "PC";
+	{% endif %}
 	checkStyle();
 }); 
 

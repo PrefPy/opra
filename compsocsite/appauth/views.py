@@ -50,7 +50,7 @@ def register(request):
     else:
         user_form = UserForm()
 
-    return render_to_response(
+    return render(request,
                               'register.html',
                               {'user_form': user_form, 'registered': registered},
                               context)
@@ -61,7 +61,7 @@ def confirm(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     user.is_active = True
     user.save()
-    return render_to_response('activation.html', {}, context)
+    return render('activation.html', {}, context)
 
 def user_login(request):
     context = RequestContext(request)
@@ -84,23 +84,23 @@ def user_login(request):
 	
 # Display the login form.
     else:
-        return render_to_response('login.html', {}, context)
+        return render(request,'login.html', {}, context)
 
 
 @login_required
 def displaySettings(request):
     context = RequestContext(request)
-    return render_to_response('settings.html', {}, context)
+    return render(request,'settings.html', {}, context)
 
 @login_required
 def changePasswordView(request):
     context = RequestContext(request)
-    return render_to_response('changepassword.html', {}, context)
+    return render(request,'changepassword.html', {}, context)
 
 @login_required
 def globalSettings(request):
     context = RequestContext(request)
-    return render_to_response('globalSettings.html', {}, context)
+    return render(request,'globalSettings.html', {}, context)
 
 @login_required
 def updateSettings(request):
@@ -170,7 +170,7 @@ def user_logout(request):
     
 def forgetPasswordView(request):
     context = RequestContext(request)
-    return render_to_response('forgetpassword.html', {}, context)
+    return render(request,'forgetpassword.html', {}, context)
     
 class resetPasswordView(generic.DetailView):
     model = User
@@ -195,7 +195,7 @@ def resetPassword(request, user_id):
         user.set_password(new)
         user.save()
         context = RequestContext(request)
-        return render_to_response('success.html', {}, context)
+        return render(request,'success.html', {}, context)
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

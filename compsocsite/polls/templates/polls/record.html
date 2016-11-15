@@ -11,11 +11,15 @@
 <ul>
 	{% for record in user_records%}
 	{% for r in record %}
-	{% if forloop.counter == 1%} <p>Username: {{r.0}}  Time submitted: {{r.1}}</p> 
-	{% else %}
-	<li>Time: {{r.0}}  Position:{{r.1}}  Item:{{r.2}}   Tier:{{r.3}}</li>
+	<p>{{r}}</p>
+	{% if forloop.counter == 1%}
+	<a data-toggle="collapse" data-target="#detail{{forloop.parentloop.counter}}">Show/Hide Detail</a>
+	<div id="detail{{forloop.parentloop.counter}}" class="collapse">
 	{% endif %}
+	
+	
 	{% endfor %}
+	</div>
 	<p></p>
 	{% endfor %}
 </ul>

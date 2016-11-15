@@ -286,8 +286,8 @@ class UserVoteRecord(models.Model):
     timestamp = models.DateTimeField('record timestamp')
     user = models.ForeignKey(User)
     question = models.ForeignKey(Question,default=None)
-    record = models.CharField(max_length=300)
-    
+    record = models.CharField(max_length=1000)
+    initial_order = models.CharField(max_length=400,default="")
     class Meta:
         ordering = ['timestamp']
     

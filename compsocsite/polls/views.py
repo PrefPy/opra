@@ -402,7 +402,8 @@ class DetailView(generic.DetailView):
 
     def get_order(self, ctx):
         otherUserResponses = self.object.response_set.reverse()
-        defaultOrder = ctx['object'].item_set.all()
+        defaultOrder = list(ctx['object'].item_set.all())
+        random.shuffle(defaultOrder)
         return defaultOrder
         #commented out to improve performance
         #return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)

@@ -7,7 +7,6 @@
     <iframe src="//www.googletagmanager.com/ns.html?id=GTM-59SLDM" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager -->
-
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
@@ -41,6 +40,7 @@ $(function() {
 });
 //set the webpage for ajax to report user behavior
 submissionURL="{% url 'polls:record' question.id%}";
+
 </script>
 {% endblock %}
 
@@ -222,7 +222,7 @@ submissionURL="{% url 'polls:record' question.id%}";
                             {% if currentSelection == None %}
                             <!-- The user hasn't voted on this poll yet -->
                             {% for item in items %}
-                            <ul class="choice1 empty"></ul>
+                            <ul class="choice2 empty"></ul>
                             <div class="tier">
                                 <!-- Display tier number -->
                                 {{ forloop.counter }}
@@ -230,7 +230,7 @@ submissionURL="{% url 'polls:record' question.id%}";
                             
                             <!-- Display each option. Each option gets its own tier -->
                             {% with prev=forloop.counter|mul:2 %}
-                            <ul class="choice1" id="{{ prev|add:1 }}" onclick = "moveToPref(this)">
+                            <ul class="choice2" id="{{ prev|add:1 }}" onclick = "moveToPref(this)">
                             {% endwith %}
                                 <li class="li_item" id="item{{ item.item_text }}">
                                     <!-- Display image (uploaded) -->
@@ -251,7 +251,7 @@ submissionURL="{% url 'polls:record' question.id%}";
                                 </li>
                             </ul>
                             {% endfor %}
-                            <ul class="choice1 empty"></ul>
+                            <ul class="choice2 empty"></ul>
                             {% endif %}
                         </ul>
                     </div> <!-- end of panel body (right-sortable)-->
@@ -293,6 +293,12 @@ submissionURL="{% url 'polls:record' question.id%}";
         title : '<span class="text-info"><strong>Hint</strong></span>',
         html: 'true',
     }); 
+	$( "#right-sortable" ).children().each(function( index ) {
+	if($(this).children().size()>0){
+		order1 += $(this).children().first().attr("id") + ";;"
+	}
+});
+	checkStyle();
 }); 
 
         

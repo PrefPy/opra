@@ -83,32 +83,43 @@ class MembersView(generic.DetailView):
         ctx['users'] = User.objects.all()
         return ctx
 
+#def addgroupvoters(request, question_id):
+#    question = get_object_or_404(Question, pk=question_id)
+#    creator_obj = User.objects.get(id=question.question_owner_id)
+#    title = question.question_text
+#    creator = creator_obj.username
+#    newGroups = request.POST.getlist('groups')
+#    email = request.POST.get('email') == 'email'
+#    question.send_email = email
+#    question.save()
+#    for group in newGroups:
+#        for cur in Group.objects.all():
+#           if cur.owner == request.user and cur.name == group:
+#               groupObj = cur
+#               for voter in groupObj.members.all():
+#                  if voter not in question.question_voters.all():
+#                     voterObj = User.objects.get(username=voter)
+#                     question.question_voters.add(voterObj.id)
+#                        if email:
+#                            mail.send_mail('You have been invited to vote on ' + title,
+#                                'Hello ' + voterObj.username + ',\n\n' + creator
+#                                + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
+#                                + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
+#                                'oprahprogramtest@gmail.com',[voterObj.email])
+#    request.session['setting'] = 1
+#    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 def addgroupvoters(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    creator_obj = User.objects.get(id=question.question_owner_id)
-    title = question.question_text
-    creator = creator_obj.username
     newGroups = request.POST.getlist('groups')
-    email = request.POST.get('email') == 'email'
-    question.send_email = email
-    question.save()
     for group in newGroups:
-        for cur in Group.objects.all():
-            if cur.owner == request.user and cur.name == group:
-                groupObj = cur
-                for voter in groupObj.members.all():
-                    if voter not in question.question_voters.all():
-                        voterObj = User.objects.get(username=voter)
-                        question.question_voters.add(voterObj.id)
-                        if email:
-                            mail.send_mail('You have been invited to vote on ' + title,
-                                'Hello ' + voterObj.username + ',\n\n' + creator
-                                + ' has invited you to vote on a poll. Please visit http://localhost:8000/polls/'
-                                + question_id + ' to vote.\n\nSincerely,\nOPRAH Staff',
-                                'oprahprogramtest@gmail.com',[voterObj.email])
+        groupObj = Group.objects.get(name=group)
+        voters = groupObj.members.all()
+        question.question_voters.add(*voters)
     request.session['setting'] = 1
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
+
 def removegroupvoters(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     removeGroups = request.POST.getlist('groups')

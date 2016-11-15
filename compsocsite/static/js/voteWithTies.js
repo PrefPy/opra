@@ -3,6 +3,7 @@ var record = "";
 var submissionURL = "";
 var order1 = "";
 var flavor = "";
+var startTime = 0;
 
 
 function submitPref() {
@@ -90,7 +91,7 @@ function moveToPref(obj) {
     var prefcolumn = $('#left-sortable');
     var currentli = $(obj);
 	var tier = currentli.children().first().attr("alt");
-	var d = Date.now();
+	var d = Date.now() - startTime;
 	var item = currentli.children().first().attr("id");
     console.log(obj.id);
     prefcolumn.append(currentli);
@@ -101,7 +102,7 @@ function moveToPref(obj) {
     $('#left-sortable li').each(function(){
         $(this).removeAttr('onclick');
     });
-	d = Date.now();
+	d = Date.now() - startTime;
 	record += d+ "::clickTo::" + item + "::"+ tier+";;;";
 };
 
@@ -113,7 +114,7 @@ function moveAll() {
     $('#left-sortable li').each(function(){
         $(this).removeAttr('onclick');
     });
-	var d = Date.now();
+	var d = Date.now() - startTime;
     record += d + ";;;"
 };
 
@@ -302,7 +303,7 @@ function enableSubmission() {
         		ui.item.width(ui.placeholder.width());
             };
             newList = oldList = oL = ui.item.parent();
-			var d = Date.now();
+			var d = Date.now() - startTime;
 			record += d+ "::start::" + item.attr("id") + "::"+ item.attr("alt")+";;";
 			/*
 			$.ajax({
@@ -382,7 +383,7 @@ function enableSubmission() {
 					return false;
 				}
 			});
-			var d = Date.now();
+			var d = Date.now() - startTime;
 			record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt") + "||" + itemsSameTier +";;;";
         },
 

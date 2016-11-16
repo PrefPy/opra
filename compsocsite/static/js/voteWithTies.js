@@ -99,7 +99,7 @@ function moveToPref(obj) {
     checkStyle();
 	tier = currentli.children().first().attr("alt");
     if ($('#right-sortable').children().size() == 0) { enableSubmission(); }
-    $('#left-sortable li').each(function(){
+    $('#left-sortable').children().each(function(){
         $(this).removeAttr('onclick');
     });
 	d = Date.now() - startTime;
@@ -108,7 +108,7 @@ function moveToPref(obj) {
 
 function moveAll() {
     $( '#left-sortable' ).html( $( '#left-sortable' ).html() + $( '#right-sortable' ).html() );
-    $( '#right-sortable' ).html("")    
+    $( '#right-sortable' ).html("");
     checkStyle();
     enableSubmission();
     $('#left-sortable li').each(function(){
@@ -119,13 +119,28 @@ function moveAll() {
 };
 
 function clearAll(){
-	$( '#right-sortable' ).html( $( '#right-sortable' ).html() + $( '#left-sortable' ).html() );
+	
+	$("#left-sortable").children().each(function(index){
+		if($(this).children().size() > 0){
+			var tier = 1;
+			$(this).children().each(function(index){
+				var temp = $("#right-sortable" ).html();
+				$("#right-sortable" ).html( temp + "<ul class=\"choice2 empty\"></ul>" +"<div class=\"tier\">" + tier + "</div>" + "<ul class=\"choice2\" onclick =\"moveToPref(this)\">" + $(this)[0].outerHTML + "</ul>" );
+			});
+		}
+	});
+	
 	$( '#left-sortable' ).html("");
-	$('#right-sortable ul').each(function(){
-		$(this).removeAttr('onclick');
-        $(this).attr('onclick','moveToPref(this)')
-    });
+
 	checkStyle();
+	var d = Date.now() - startTime;
+	record += d + "||";
+	$( "#right-sortable" ).children().each(function( index ) {
+		if($(this).children().size()>0){
+			record += $(this).children().first().attr("id") + "||"
+		}
+	});
+	record += ";;;";
 }
 
 $( document ).ready(function() {

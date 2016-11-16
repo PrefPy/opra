@@ -126,7 +126,7 @@ submissionURL="{% url 'polls:record' question.id%}";
                                 <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
                             </button> 
                             {% else %} 
-                            <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background"> Clear </a>
+                            <button onclick="clearAll(); return false;" class="btn btn-danger reset-button" style="background"> Clear </button>
                             <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
                                 Submit
                             </button> 
@@ -189,8 +189,8 @@ submissionURL="{% url 'polls:record' question.id%}";
                         
                         {% if request.flavour == "mobile" %}
                         <!-- Clear button (mobile version) -->
-                        <button onclick="javascript:window.location.href='{% url 'polls:detail' question.id %}?order=null'; return false;" class="reset-button-mobile">
-                            <a href="{% url 'polls:detail' question.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+                        <button onclick="clearAll()" class="reset-button-mobile">
+                            <a class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
                         </button>
                         {% endif %}
                     </div>

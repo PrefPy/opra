@@ -75,8 +75,15 @@ def interpretRecord(record):
                     record_arr.append(str2)
         else:
             if len(str1) != 0:
-                str2 = "Clicked move all at time " + str1 + "."
-                record_arr.append(str2)
+                if str1.find("||") == -1:
+                    str2 = "Clicked move all at time " + str1 + "."
+                    record_arr.append(str2)
+                else:
+                    clear_arr = str1.split("||")
+                    str2 = "Clicked clear at time " + clear_arr[0] + ", order on the right is: "
+                    for i in range(1,len(clear_arr)):
+                        str2 += clear_arr[i][4:] + "; "
+                    record_arr.append(str2)
     return record_arr
     
 class RecordView(generic.DetailView):

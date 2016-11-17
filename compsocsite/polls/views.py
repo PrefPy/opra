@@ -90,8 +90,9 @@ class DemoView(generic.DetailView):
     def get_order(self, ctx):
         otherUserResponses = self.object.response_set.reverse()
         defaultOrder = ctx['object'].item_set.all()
-        random.shuffle(defaultOrder)
-        return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)
+        #random.shuffle(defaultOrder)
+        return defaultOrder
+        #return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)
 
     def get_context_data(self, **kwargs):
         ctx = super(DemoView, self).get_context_data(**kwargs)

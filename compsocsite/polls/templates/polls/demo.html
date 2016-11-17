@@ -98,7 +98,7 @@
                             Submit
                         </button>
                     {% else %}
-                        <a href="{% url 'polls:detail' question.id %}?order=null" class="btn btn-danger reset-button" style="background">
+                        <a href="clearAll(); return false;" class="btn btn-danger reset-button" style="background">
                             Clear
                         </a>
                         <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
@@ -148,8 +148,8 @@
                     </ul> <!-- left-sortable-->
                 </div>
                 {% if request.flavour == "mobile" %}
-                    <button onclick="javascript:window.location.href='{% url 'polls:detail' question.id %}?order=null'; return false;" class="reset-button-mobile">
-                        <a href="{% url 'polls:detail' question.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
+                    <button onclick="clearAll(); return false;" class="reset-button-mobile">
+                        <a class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
                     </button>
                 {% endif %}
             </div>

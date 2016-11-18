@@ -146,6 +146,7 @@
                 <li {% if request.session.setting == 5 %} class="active" {% endif %}><a data-toggle="tab" href="#emailsetting">Email</a></li>
                 <li {% if request.session.setting == 4 %} class="active" {% endif %}><a data-toggle="tab" href="#qr">Anonymous Voting</a></li>
                 <li><a data-toggle="tab" href="#delete">Delete</a></li>
+				<li><a data-toggle="tab" href="#duplicate">Duplicate</a></li>
 				<li><a href="{% url 'polls:recordView' question.id %}">User Records</a></li>
             {% endif %}
             
@@ -333,6 +334,10 @@
         </div>
     </div>
 </div>
+</div>
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="duplicate">
+	<a class="btn btn-ok" href="{% url 'polls:duppoll' question.id %}">Duplicate Poll</a>
 </div>
     
 {% else %}

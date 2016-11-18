@@ -25,6 +25,7 @@ function submitPref() {
 		data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order':order1,'device':flavor},
 		success: function(){}
 		});
+	//document.getElementById('submitbutton').disabled = true;
     $('#pref_order').submit();
 };
 

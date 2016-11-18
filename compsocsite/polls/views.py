@@ -988,6 +988,29 @@ def closePoll(request,question_id):
     request.session['setting'] = 4
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+def duplicatePoll(request,question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    title = question.question_text + "_COPY"
+    desc = question.question_desc
+    voters = question.question_voters.all()
+    user = request.user
+    items = question.item_set.all()
+    new_question = Question(question_text=title, question_desc=desc,
+            pub_date=timezone.now(), question_owner=user,
+            display_pref=user.userprofile.displayPref, emailInvite=user.userprofile.emailInvite,
+            emailDelete=user.userprofile.emailDelete, emailStart=user.userprofile.emailStart,
+            emailStop=user.userprofile.emailStop, creator_pref=1)
+    new_question.save()
+    new_question.question_voters.add(*voters)
+    new_items = []
+    for item in items:
+        new_item = Item(question=new_question,item_text=item.item_text,item_description=item.item_description,timestamp=timezone.now(),image=item.image,imageURL=item.imageURL)
+        new_item.save()
+        new_items.append(new_item)
+    new_question.item_set.add(*new_items)
+    setupEmail(new_question)
+    return HttpResponseRedirect(reverse('polls:regular_polls'))
 
 # view for ordering voters for allocation
 class AllocationOrder(generic.DetailView):

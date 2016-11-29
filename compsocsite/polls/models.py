@@ -284,7 +284,7 @@ class CandScorePair(models.Model):
     
 class UserVoteRecord(models.Model):
     timestamp = models.DateTimeField('record timestamp')
-    user = models.ForeignKey(User)
+    user =models.CharField(max_length=100,default="(Anonymous)")
     question = models.ForeignKey(Question,default=None)
     record = models.CharField(max_length=1000)
     initial_order = models.CharField(max_length=400,default="")

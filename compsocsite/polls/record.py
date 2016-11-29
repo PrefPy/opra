@@ -30,8 +30,14 @@ def writeUserAction(request, question_id):
         order = request.POST['order']
         device = request.POST['device']
         #print(data)
-        r = UserVoteRecord(timestamp=timezone.now(),user=request.user,record=data,question=question,initial_order=order,device=device)
-        r.save()
+        if request.user.username == "":
+            anonymous_name = ""
+            new_name = "(Anonymous)" + anonymous_name
+            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=order,device=device)
+            r.save()
+        else:
+            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=order,device=device)
+            r.save()
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
@@ -45,10 +51,7 @@ def interpretRecord(record):
     action_arr = r.split(";;;")
     record_arr = []
     temp = ""
-    if record.user.username != "":
-        temp += record.user.username + " voted at " + str(record.timestamp) + "\n"
-    else:
-        temp += "Anonymous voter voted at " + str(record.timestamp) + "\n"
+    temp += record.user + " voted at " + str(record.timestamp) + "\n"
     if order != "":
         temp += "\nInitial order: " + order
     record_arr.append(temp)

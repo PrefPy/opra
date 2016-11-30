@@ -319,9 +319,9 @@ def getPollWinner(question):
     vote_results = getVoteResults(latest_responses)
     indexVoteResults = question.poll_algorithm - 1
     current_result = vote_results[indexVoteResults]
-    
+
     winnerStr = ""
-    item_set = list(question.item_set.all())
+    item_set = getCandidateMap(latest_responses[0])
     for index, score in current_result.items():
         # index 5 uses Simplified Bucklin, where score is rank. A low score means it has a high rank (e.g. rank 1 > rank 2), so the best score is the minimum.
         # All other indices rank score from highest to lowest, so the best score would be the maximum.  
@@ -1237,7 +1237,6 @@ def vote(request, question_id):
         response.comment = comment
     response.save()
     
-    #print(orderStr)
     
     #get current winner
     old_winner = OldWinner(question=question, response=response)

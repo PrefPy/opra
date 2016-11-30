@@ -47,7 +47,8 @@ $(function() {
 
 <style>
  .newbloc { display:inline-block; vertical-align:top; overflow:hidden; border:none; background-color:transparent}
- .newbloc select { padding:0px; margin:0px -11px 0px 0px; border:none !important; }
+ .newbloc select { padding:0px; margin:0px -12px 0px 0px; border:none !important;outline:none }
+ 
 </style>
 
 <div>
@@ -169,7 +170,7 @@ $(function() {
         
         <div class="panel panel-default" id="dependencypreference">
             <div class="panel-heading" >
-                <h4>Your preferences:
+                Your preferences:
                 {% if request.flavour == "mobile" %}
                     <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
                         <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
@@ -195,7 +196,6 @@ $(function() {
                         {% endfor %}
                 {% endif %}
                 </div>
-                </h4>
             </div>
       
                     
@@ -248,7 +248,7 @@ $(function() {
         
             <div class="panel panel-default panel-border" id="dependencyremain">
                 <div class="panel-heading">
-                    <b>Remaining Options:</b>
+                    Remaining Options:
                     {% if request.flavour == "mobile" %}
                         <button onclick="moveAll(); return false;" class="move-all-button-mobile">
                             <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>

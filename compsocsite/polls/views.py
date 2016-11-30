@@ -916,6 +916,7 @@ def addVoter(request, question_id):
         voterObj = User.objects.get(username=voter)
         question.question_voters.add(voterObj.id)
     request.session['setting'] = 1
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # remove voters from a poll.
@@ -941,10 +942,12 @@ def setInitialSettings(request, question_id):
     question.poll_algorithm = request.POST['pollpreferences']
     question.display_pref = request.POST['viewpreferences']
     openstring = request.POST['openpoll']
-    if openstring == "yes":
-        question.open = True
+    if openstring == "anon":
+        question.open = 1
+    elif openstring == "invite":
+        question.open = 0
     else:
-        question.open = False
+        question.open = 2
     question.save()
     return HttpResponseRedirect(reverse('polls:regular_polls'))
 
@@ -983,7 +986,7 @@ def setPollingSettings(request, question_id):
 # poll is open to anonymous voters
 def openPoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
-    question.open = True
+    question.open = 1
     question.save()
     request.session['setting'] = 4
     messages.success(request, 'Your changes have been saved.')
@@ -992,7 +995,16 @@ def openPoll(request,question_id):
 # poll is closed to anonymous voters
 def closePoll(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
-    question.open = False
+    question.open = 0
+    question.save()
+    request.session['setting'] = 4
+    messages.success(request, 'Your changes have been saved.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# poll is closed to anonymous voters, open to people logged in
+def uninvitedPoll(request,question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    question.open = 2
     question.save()
     request.session['setting'] = 4
     messages.success(request, 'Your changes have been saved.')
@@ -1255,6 +1267,9 @@ def vote(request, question_id):
         messages.success(request, 'Saved!')
     else:
         messages.success(request, 'Updated!')
+
+    if question.open == 2 and request.user not in question.question_voters.all():
+        question.question_voters.add(request.user.id)
 
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 

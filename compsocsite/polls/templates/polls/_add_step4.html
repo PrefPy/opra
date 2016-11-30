@@ -93,13 +93,16 @@
             </select>
             <br />
 
-            <label for="openpoll">Allow anonymous voting? (QR Code can be accessed under poll settings)</label> <br />
+            <label for="openpoll">Voting? (QR Code can be accessed under poll settings)</label> <br />
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-default active">
-                <input type="radio" name="openpoll" value="yes" checked>Yes</option>
+                <input type="radio" name="openpoll" value="anon" checked>Anonymous</option>
                 </label>
                 <label class="btn btn-default">
-                <input type="radio" name="openpoll" value="no">No</option>
+                <input type="radio" name="openpoll" value="invite">Invited</option>
+                </label>
+                <label class="btn btn-default">
+                <input type="radio" name="openpoll" value="uninvite">Uninvited</option>
                 </label>
             </div>
             <br /><br />

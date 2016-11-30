@@ -316,12 +316,14 @@ def getPollWinner(question):
         return ""
 
     (latest_responses, previous_responses) = categorizeResponses(all_responses)
-    vote_results = getVoteResults(latest_responses)
+    candMap = getCandidateMapFromList(list(question.item_set.all()))
+    vote_results = getVoteResults(latest_responses,candMap)
     indexVoteResults = question.poll_algorithm - 1
     current_result = vote_results[indexVoteResults]
 
     winnerStr = ""
-    item_set = getCandidateMap(latest_responses[0])
+    
+    #item_set = getCandidateMap(latest_responses[0])
     for index, score in current_result.items():
         # index 5 uses Simplified Bucklin, where score is rank. A low score means it has a high rank (e.g. rank 1 > rank 2), so the best score is the minimum.
         # All other indices rank score from highest to lowest, so the best score would be the maximum.  
@@ -330,7 +332,7 @@ def getPollWinner(question):
             if winnerStr != "":
                 winnerStr += ", "
             #add the winner
-            winnerStr += item_set[index].item_text
+            winnerStr += candMap[index].item_text
     return winnerStr
 
 # check whether the user clicked 'reset' when ordering preferences
@@ -478,20 +480,20 @@ class VoteResultsView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(VoteResultsView, self).get_context_data(**kwargs)
         
-        all_responses = self.object.response_set.reverse()
+        all_responses = self.object.response_set.reverse()    
+        candMap = getCandidateMapFromList(list(self.object.item_set.all()))
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
         ctx['latest_responses'] = latest_responses
         ctx['previous_responses'] = previous_responses
-        ctx['cand_map'] = getCandidateMap(latest_responses[0]) if (len(latest_responses) > 0) else None
-        voteResults = getVoteResults(latest_responses) 
+        ctx['cand_map'] = candMap# if (len(latest_responses) > 0) else None
+        voteResults = getVoteResults(latest_responses,candMap) 
         ctx['vote_results'] = voteResults
         ctx['shade_values'] = getShadeValues(voteResults)
-        (nodes, edges) = parseWmg(latest_responses)
+        (nodes, edges) = parseWmg(latest_responses,candMap)
         ctx['wmg_nodes'] = nodes
         ctx['wmg_edges'] = edges
         ctx['poll_algorithms'] = getListPollAlgorithms()
-        ctx['margin_victory'] = getMarginOfVictory(latest_responses)
-        
+        ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
         previous_results = self.object.voteresult_set.all()
         ctx['previous_winners'] = []
         for pw in previous_results:
@@ -538,8 +540,8 @@ def getViewPreferences():
 # build a graph of nodes and edges from a 2d dictionary
 # List<Response> latest_responses
 # return (List<Dict> nodes, List<Dict> edges)
-def parseWmg(latest_responses):
-    pollProfile = getPollProfile(latest_responses)
+def parseWmg(latest_responses,candMap):
+    pollProfile = getPollProfile(latest_responses,candMap)
     if pollProfile == None:
         return ([], [])
    
@@ -552,7 +554,6 @@ def parseWmg(latest_responses):
         return ([], [])
         
     # get nodes (the options)
-    candMap = getCandidateMap(latest_responses[0])
     nodes = []
     for rowIndex in candMap:
         data = {}
@@ -644,18 +645,23 @@ def getCandidateMap(response):
         candMap[counter] = item[0]
         counter += 1
     return candMap
-
+def getCandidateMapFromList(candlist):
+    candMap = {}
+    counter = 0
+    for item in candlist:
+        candMap[counter] = item
+        counter += 1
+    return candMap
 #convert a user's preference into a 2d map
 # Response response
 # return Dict<int, Dict<int, int>> prefGraph
-def getPreferenceGraph(response):
+def getPreferenceGraph(response,candMap):
     prefGraph = {}
     dictionary = {}
     if response.dictionary_set.all().count() > 0:
         dictionary = Dictionary.objects.get(response=response)
     else:
         dictionary = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
-    candMap = getCandidateMap(response)
 
     for cand1Index in candMap:
         tempDict = {}
@@ -681,22 +687,22 @@ def getPreferenceGraph(response):
 # initialize a profile object using all the preferences
 # List<Response> latest_responses
 # return Profile object
-def getPollProfile(latest_responses):
+def getPollProfile(latest_responses,candMap):
     if len(latest_responses) == 0:
         return None
     
     prefList = []
     for response in latest_responses:
-        prefGraph = getPreferenceGraph(response)
+        prefGraph = getPreferenceGraph(response,candMap)
         userPref = Preference(prefGraph)
         prefList.append(userPref)
-    return Profile(getCandidateMap(latest_responses[0]), prefList)
+    return Profile(candMap, prefList)
 
 #calculate the results of the vote using different algorithms
 # List<Response> latest_responses
 # return a List<List<Double>>
-def getVoteResults(latest_responses):
-    pollProfile = getPollProfile(latest_responses)
+def getVoteResults(latest_responses,candMap):
+    pollProfile = getPollProfile(latest_responses,candMap)
     if pollProfile == None:
         return []
 
@@ -715,7 +721,7 @@ def getVoteResults(latest_responses):
     
     return scoreVectorList
     
-def calculatePreviousResults(request, question_id):
+def calculatePreviousResults(request, question_id,candMap):
     question = get_object_or_404(Question, pk=question_id)
     question.voteresult_set.clear()
     previous_winners = question.oldwinner_set.all()
@@ -727,8 +733,8 @@ def calculatePreviousResults(request, question_id):
         movstr = ""
         responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp])
         (lr, pr) = categorizeResponses(responses)
-        scorelist = getVoteResults(lr)
-        mov = getMarginOfVictory(lr)
+        scorelist = getVoteResults(lr,candMap)
+        mov = getMarginOfVictory(lr,candMap)
         for x in range(0,len(scorelist)):
             for key,value in scorelist[x].items():
                 resultstr += str(value)
@@ -803,8 +809,8 @@ def getShadeValues(scoreVectorList):
 # find the minimum number of votes needed to change the poll results
 # List<Response> latest_responses
 # return List<int> marginList
-def getMarginOfVictory(latest_responses):
-    pollProfile = getPollProfile(latest_responses)
+def getMarginOfVictory(latest_responses,candMap):
+    pollProfile = getPollProfile(latest_responses,candMap)
     if pollProfile == None:
         return []
     
@@ -871,7 +877,7 @@ def getRecommendedOrder(otherUserResponses, request, defaultOrder):
         
         # get current user and other user preferences
         KT = getKTScore(user, otherUser)
-        prefGraph = getPreferenceGraph(resp)
+        prefGraph = getPreferenceGraph(resp,candMap)
         preferences.append(Preference(prefGraph, KT))
     
     candMap = getCandidateMap(otherUserResponses[0])        

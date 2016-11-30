@@ -1,4 +1,5 @@
 {% extends 'polls/base.html' %}
+{% load staticfiles %}
 
 {% block extra_head %}
 <style type="text/css">
@@ -155,13 +156,56 @@
                 </div>
             </div>
         </div>
+        <!-- Panel for plackett luce mixtures (closed by default) -->
+        <div class="panel panel-default">
+            <div class="panel-heading" data-toggle="collapse" href="#collapse_wmg">
+                <h4 class="panel-title">
+                    <a >
+                        Mixtures <span class="caret" style="color:#377BB5;"></span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse_wmg" class="panel-body">
+                <div class="table-responsive">
+                    <canvas id="mixtures" width="700" height="400"></canvas>
+                    <button id="bigger" onclick="enlarge()">Make Larger</button>
+                    <button id="smaller" onclick="smaller()">Make Smaller</button>
+                    <button id="download" onclick="download()">Download</button>
+                </div>
+            </div>
+        </div>
 
         {% endif %}
         {% endif %}
     
         <a href="{% url 'polls:index' %}"> Return Home</a>
     </div>
+<script src='/static/js/colorPicker.js'></script>
+<script src="https://parall.ax/parallax/js/jspdf.js"></script>
 <script>
+    function createGraph (height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size) {
+        var l1 = left1;
+        ctx.font=font_size.toString().concat("px Arial");
+        for (var i = 0; i < len; i++) {
+            ctx.fillStyle=colors[i];
+            ctx.fillRect(left1,down1,(nums[i + 1] * length),height * (nums[0]));
+            left1 += (nums[i + 1] * length) + (15 / (len - 1));
+
+            ctx.fillRect(left2,down2,(nums[i + len + 1] * length),height * (1 - nums[0]));
+            left2 += (nums[i + len + 1] * length) + (15 / (len - 1));
+
+            ctx.fillRect(safeDist + 2,down1 * (i + 1) + breadth,breadth,breadth);
+            ctx.fillStyle="#000000";
+            ctx.fillText(names[i],safeDist + breadth + 5,down1 * (i + 1) + 2 *breadth);
+        };
+        ctx.fillStyle="#000000";
+        // ctx.rect(l1 - 1,down1 - 1,length + 15,(height * nums[0]) + 2);
+        // ctx.rect(l1 - 1,(height * nums[0]) + down1 + breadth - 1,length + 15,(height * (1 - nums[0])) + 2);
+        ctx.stroke();
+        ctx.fillText("Mixture 1: ".concat((Math.round(100 * nums[0])).toString()).concat("%"),length + 45,((height * nums[0])/ 2) + 15);
+        ctx.fillText("Mixture 2: ".concat((Math.round(100 * (1 - nums[0]))).toString()).concat("%"),length + 45,(height * nums[0]) + 40 + ((height * (1 - nums[0])) / 2));
+    }
+
     var cy = cytoscape({
         container: document.getElementById('cy'),
         layout: {
@@ -172,7 +216,7 @@
       style: cytoscape.stylesheet()
         .selector('node')
           .css({
-          	'shape': 'rectangle',
+            'shape': 'rectangle',
             'width': '80',
             'text-max-width':  '80',
             'text-wrap': 'wrap',
@@ -217,5 +261,66 @@
         ]
       },
     });
+    
+    var canvas = document.getElementById("mixtures");
+    var ctx = canvas.getContext("2d");
+    var nums = [];
+    var names = [];
+    var colors = [];
+    {% for num in mixtures_pl %}
+        nums.push({{num}});
+    {% endfor %}
+    {% for option in cand_map.values %}
+        names.push("{{ option }}");
+    {% endfor %}
+    // draw bar chart
+    var len = (nums.length - 1) / 2;
+    for (var i = 0; i < len; i++) {
+        colors.push(randomColor());
+    };
+    height = 125; //total height of the bars
+    breadth = 10; //distance between bars
+    length = 215;
+    safeDist = 350;
+    left1 = 20;
+    down1 = 20;
+    left2 = 20;
+    down2 = 30 + (height * nums[0]);
+    font_size = 10;
+    ctx.fillStyle="#FFFFFF";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    createGraph(height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size);
+    function enlarge () {
+        height += 5; //total height of the bars
+        //breadth += 5; //distance between bars
+        length += 5;
+        safeDist += 19;
+        down2 = 30 + (height * nums[0]);
+        font_size += 1;
+        ctx.fillStyle="#FFFFFF";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        createGraph(height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size);
+    }
+    function smaller () {
+        height -= 5; //total height of the bars
+        //breadth += 5; //distance between bars
+        length -= 5;
+        safeDist -= 19;
+        down2 = 30 + (height * nums[0]);
+        font_size -= 1;
+        ctx.fillStyle="#FFFFFF";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        createGraph(height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size);
+    }
+    function download () {
+        var imgData = canvas.toDataURL("image/jpeg", 1.0);
+        var pdf = new jsPDF();
+
+        pdf.addImage(imgData, 'JPEG', 0, 0);
+        var download = document.getElementById('download');
+
+        pdf.save("{{ question.question_text }}.pdf");
+    }
+
 </script>
 {% endblock %}

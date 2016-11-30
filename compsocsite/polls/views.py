@@ -18,6 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.core import mail
 from prefpy.mechanism import *
 from prefpy.allocation_mechanism import *
+from prefpy.gmm_mixpl import *
 from .email import sendEmail, setupEmail
 from groups.models import *
 from django.conf import settings
@@ -317,7 +318,7 @@ def getPollWinner(question):
 
     (latest_responses, previous_responses) = categorizeResponses(all_responses)
     candMap = getCandidateMapFromList(list(question.item_set.all()))
-    vote_results = getVoteResults(latest_responses,candMap)
+    vote_results, mixtures = getVoteResults(latest_responses,candMap)
     indexVoteResults = question.poll_algorithm - 1
     current_result = vote_results[indexVoteResults]
 
@@ -486,7 +487,7 @@ class VoteResultsView(generic.DetailView):
         ctx['latest_responses'] = latest_responses
         ctx['previous_responses'] = previous_responses
         ctx['cand_map'] = candMap# if (len(latest_responses) > 0) else None
-        voteResults = getVoteResults(latest_responses,candMap) 
+        voteResults, mixtures = getVoteResults(latest_responses,candMap) 
         ctx['vote_results'] = voteResults
         ctx['shade_values'] = getShadeValues(voteResults)
         (nodes, edges) = parseWmg(latest_responses,candMap)
@@ -494,6 +495,7 @@ class VoteResultsView(generic.DetailView):
         ctx['wmg_edges'] = edges
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
+        ctx['mixtures_pl'] = mixtures[0]
         previous_results = self.object.voteresult_set.all()
         ctx['previous_winners'] = []
         for pw in previous_results:
@@ -718,8 +720,9 @@ def getVoteResults(latest_responses,candMap):
     scoreVectorList.append(MechanismSimplifiedBucklin().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismCopeland(1).getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismMaximin().getCandScoresMap(pollProfile))
+    gmm = GMMMixPLAggregator(list(pollProfile.candMap.values()), use_matlab=False)
     
-    return scoreVectorList
+    return scoreVectorList, gmm.aggregate(pollProfile.getOrderVectors(), algorithm="top3_full", epsilon=.1, max_iters=100, approx_step=.1)
     
 def calculatePreviousResults(request, question_id,candMap):
     question = get_object_or_404(Question, pk=question_id)
@@ -733,7 +736,7 @@ def calculatePreviousResults(request, question_id,candMap):
         movstr = ""
         responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp])
         (lr, pr) = categorizeResponses(responses)
-        scorelist = getVoteResults(lr,candMap)
+        scorelist, mixtures = getVoteResults(lr,candMap)
         mov = getMarginOfVictory(lr,candMap)
         for x in range(0,len(scorelist)):
             for key,value in scorelist[x].items():

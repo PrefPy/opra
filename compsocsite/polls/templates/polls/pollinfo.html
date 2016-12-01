@@ -204,19 +204,32 @@
     
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 4 %}active{% endif %}" id="qr">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
-    {% if question.open == False %}
-        <a href="{% url 'polls:openpoll' question.id %}" class="btn btn-success btn-ok">Open Poll</a>
-    {% else %}
-        <div id="qrcode" style="margin-top:15px;">
-            <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl=https://opra.cs.rpi.edu{% url 'polls:detail' question.id %}" style="width:400px" />
+
+    <div id="qrcode" style="margin-top:15px;">
+        <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl=https://opra.cs.rpi.edu{% url 'polls:detail' question.id %}" style="width:400px" />
+    </div>
+    <a href="#" id="showQRLink">Show Link</a>
+    <a href="#" id="hideQRLink">Hide Link</a>
+    <br />
+    <h3 href="{% url 'polls:detail' question.id %}" id="QRLink">https://opra.cs.rpi.edu{% url 'polls:detail' question.id %}</h3>
+    <br />
+    <form class="form-group" method="post" action="{% url 'polls:changeType' question.id %}">
+        {% csrf_token %}
+
+        <div class="btn-group" data-toggle="buttons">
+            <label class="btn btn-default {% if question.open == 1 %}active{% endif %}">
+            <input type="radio" name="openpoll" value="anon" {% if question.open == 1 %}checked{% endif %}>Anonymous</option>
+            </label>
+            <label class="btn btn-default {% if question.open == 0 %}active{% endif %}">
+            <input type="radio" name="openpoll" value="invite" {% if question.open == 0 %}checked{% endif %}>Invited</option>
+            </label>
+            <label class="btn btn-default {% if question.open == 2 %}active{% endif %}">
+            <input type="radio" name="openpoll" value="uninvite" {% if question.open == 2 %}checked{% endif %}>Users-Only</option>
+            </label>
         </div>
-        <a href="#" id="showQRLink">Show Link</a>
-        <a href="#" id="hideQRLink">Hide Link</a>
-        <br />
-        <h3 href="{% url 'polls:detail' question.id %}" id="QRLink">https://opra.cs.rpi.edu{% url 'polls:detail' question.id %}</h3>
-        <br />
-        <a href="{% url 'polls:closepoll' question.id %}" class="btn btn-danger">Close Poll</a>
-    {% endif %}
+
+        <input type="submit" value="Finish" class="btn btn-primary">
+    </form>
 </div>
 
 

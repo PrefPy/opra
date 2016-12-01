@@ -52,8 +52,7 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/emailNow/$', email.emailNow, name='emailNow'),
     url(r'^(?P<question_id>[0-9]+)/emailOptions/$', email.emailOptions, name='emailOptions'),
     url(r'^(?P<question_id>[0-9]+)/emailSettings/$', email.emailSettings, name='emailSettings'),
-    url(r'^(?P<question_id>[0-9]+)/openpoll/$', views.openPoll, name='openpoll'), 
-    url(r'^(?P<question_id>[0-9]+)/closepoll/$', views.closePoll, name='closepoll'), 
+    url(r'^(?P<question_id>[0-9]+)/changeType/$', views.changeType, name='changeType'),
     url(r'^(?P<question_id>[0-9]+)/duplicatepoll/$', views.duplicatePoll, name='duppoll'), 
        
     # anonymous voting

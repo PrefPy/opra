@@ -984,10 +984,17 @@ def setPollingSettings(request, question_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # poll is open to anonymous voters
-def openPoll(request,question_id):
+def changeType(request,question_id):
     question = get_object_or_404(Question, pk=question_id)
-    question.open = 1
+    openstring = request.POST['openpoll']
+    if openstring == "anon":
+        question.open = 1
+    elif openstring == "invite":
+        question.open = 0
+    else:
+        question.open = 2
     question.save()
+    print(question.open)
     request.session['setting'] = 4
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

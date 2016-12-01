@@ -722,7 +722,7 @@ def getVoteResults(latest_responses,candMap):
     scoreVectorList.append(MechanismMaximin().getCandScoresMap(pollProfile))
     gmm = GMMMixPLAggregator(list(pollProfile.candMap.values()), use_matlab=False)
     
-    return scoreVectorList, gmm.aggregate(pollProfile.getOrderVectors(), algorithm="top3_full", epsilon=.1, max_iters=100, approx_step=.1)
+    return scoreVectorList, gmm.aggregate(pollProfile.getOrderVectors(), algorithm="top3_full", epsilon=.1, max_iters=10, approx_step=.1)
     
 def calculatePreviousResults(request, question_id,candMap):
     question = get_object_or_404(Question, pk=question_id)

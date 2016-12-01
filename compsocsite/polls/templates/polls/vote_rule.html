@@ -156,7 +156,7 @@
                 </div>
             </div>
         </div>
-        <!-- Panel for plackett luce mixtures (closed by default) -->
+        <!-- Panel for plackett luce mixtures (closed by default)
         <div class="panel panel-default">
             <div class="panel-heading" data-toggle="collapse" href="#collapse_wmg">
                 <h4 class="panel-title">
@@ -173,7 +173,7 @@
                     <button id="download" onclick="download()">Download</button>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         {% endif %}
         {% endif %}
@@ -262,6 +262,7 @@
       },
     });
     
+/*    //uncomment for mixtures
     var canvas = document.getElementById("mixtures");
     var ctx = canvas.getContext("2d");
     var nums = [];
@@ -320,7 +321,7 @@
         var download = document.getElementById('download');
 
         pdf.save("{{ question.question_text }}.pdf");
-    }
+    }*/
 
 </script>
 {% endblock %}

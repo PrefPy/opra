@@ -122,11 +122,11 @@ submissionURL="{% url 'polls:record' question.id%}";
                     <div class="panel-heading" >
                         <h4>Your preferences:
                             {% if request.flavour == "mobile" %}
-                            <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+                            <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" style="position:absolute;">
                                 <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;position:absolute;">Submit</span>
                             </button> 
-							<button id="submitting" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-                                <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;position:absolute;visibility:hidden;">Submitting</span>
+							<button id="submitting" type="submit" onclick="submitPref();" class="submit-button-mobile" style="position:absolute;visibility:hidden;">
+                                <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submitting</span>
                             </button> 
                             {% else %} 
                             <button onclick="clearAll(); return false;" class="btn btn-danger reset-button" style="background"> Clear </button>

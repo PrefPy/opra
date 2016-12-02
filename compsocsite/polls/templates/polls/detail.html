@@ -54,9 +54,12 @@ submissionURL="{% url 'polls:record' question.id%}";
     {% endif %}
     
 {% if question.status == 2 %}
-    {% if question.open != 1 and request.user.username == "" %}
+    {% if question.open == 0 and request.user.username == "" %}
         <!-- Poll is not open for anonymous voting and the current user isn't logged in -->
         You have no permission to vote on this poll.
+    {% elif question.open == 2 and request.user.username == "" %}
+        <!-- Poll is not open for anonymous voting and the current user isn't logged in -->
+        Please log in to vote on this poll.
     {% elif question.open == 0 and request.user not in question.question_voters.all %}
         <!-- Poll is not open for anonymous voting and the current user isn't invited -->
         You are not invited to this poll.

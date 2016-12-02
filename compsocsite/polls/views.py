@@ -724,9 +724,10 @@ def getVoteResults(latest_responses,candMap):
     
     return scoreVectorList, [[.1] * 10]#gmm.aggregate(pollProfile.getOrderVectors(), algorithm="top3_full", epsilon=.1, max_iters=10, approx_step=.1)
     
-def calculatePreviousResults(request, question_id,candMap):
+def calculatePreviousResults(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.voteresult_set.clear()
+    candMap = getCandidateMapFromList(list(question.item_set.all()))
     previous_winners = question.oldwinner_set.all()
     for pw in previous_winners:
         

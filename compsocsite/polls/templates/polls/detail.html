@@ -123,12 +123,18 @@ submissionURL="{% url 'polls:record' question.id%}";
                         <h4>Your preferences:
                             {% if request.flavour == "mobile" %}
                             <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
-                                <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+                                <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;position:absolute;">Submit</span>
+                            </button> 
+							<button id="submitting" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+                                <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;position:absolute;visibility:hidden;">Submitting</span>
                             </button> 
                             {% else %} 
                             <button onclick="clearAll(); return false;" class="btn btn-danger reset-button" style="background"> Clear </button>
-                            <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" disabled>
+                            <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style="position:absolute;" disabled>
                                 Submit
+                            </button> 
+							<button id="submitting" type="button" class="btn btn-default" style="visibility:hidden;position:relative;position:absolute;z-index:1;">
+                                Submitting...
                             </button> 
                             {% endif %}
                             <input type="hidden" id="pref_order" name="pref_order" value=""/>

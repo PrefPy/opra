@@ -61,7 +61,7 @@ def confirm(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     user.is_active = True
     user.save()
-    return render('activation.html', {}, context)
+    return render(request, 'activation.html', {}, context)
 
 def user_login(request):
     context = RequestContext(request)

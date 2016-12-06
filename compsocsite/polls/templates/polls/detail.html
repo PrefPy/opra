@@ -7,28 +7,19 @@
     <iframe src="//www.googletagmanager.com/ns.html?id=GTM-59SLDM" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager -->
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 {% if request.flavour == "mobile" %}
 <script src='/static/js/mobile.js'></script>
 {% else %}
 <script src='/static/js/desktop.js'></script>
 {% endif %}
-<script src='/static/js/shared.js'></script>
 <script src='/static/js/voteWithTies.js'></script>
-
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 
 <style>
     .tier {
         float: left;
     }
 </style>
-
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
@@ -52,7 +43,7 @@ submissionURL="{% url 'polls:record' question.id%}";
         <strong>{{ error_message }}</strong>
     </p>
     {% endif %}
-    
+
 {% if question.status == 2 %}
     {% if question.open == 0 and request.user.username == "" %}
         <!-- Poll is not open for anonymous voting and the current user isn't logged in -->
@@ -66,7 +57,7 @@ submissionURL="{% url 'polls:record' question.id%}";
     {% else %}
 
     <br/><br/>
-    
+
     <!-- Title panel -->
     <div class="panel panel-default">
         <!-- Panel header contains image and title -->
@@ -84,7 +75,7 @@ submissionURL="{% url 'polls:record' question.id%}";
                     <a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
                 </div>
                 {% endif %}
-                
+
                 <!-- Display title and creator in the header -->
                 <div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>
                     <h4 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}><span class="caret" style="color:#377BB5;"></span> {{ question.question_text }} <small class="text-muted">(Created by {{ question.question_owner }})</small></h4>
@@ -112,13 +103,13 @@ submissionURL="{% url 'polls:record' question.id%}";
                 <input type="text" size="50" class="form-control" style="width=50%; clear:right;" name="anonymousname"/>
             </div>
             {% endif %}
-            
+
             {% if request.flavour == "mobile" %}
             <div class="col-md-6 margin-panel-top">
             {% else %}
             <div class="col-md-6 margin-panel-top">
             {% endif %}
-                
+
                 <!-- Panel for your preferences -->
                 <div class="panel panel-default" >
                     <!-- Your preferences header -->
@@ -127,21 +118,21 @@ submissionURL="{% url 'polls:record' question.id%}";
                             {% if request.flavour == "mobile" %}
                             <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" style="position:absolute;">
                                 <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-                            </button> 
+                            </button>
 							<button id="submitting" type="submit" onclick="submitPref();" class="submit-button-mobile" style="position:absolute;visibility:hidden;">
                                 <span class="glyphicon glyphicon-upload" style="font-size:80%;color:blue;">Submitting</span>
-                            </button> 
-                            {% else %} 
+                            </button>
+                            {% else %}
                             <button onclick="clearAll(); return false;" class="btn btn-danger reset-button" style="background"> Clear </button>
                             <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style="position:absolute;" disabled>
                                 Submit
-                            </button> 
+                            </button>
 							<button id="submitting" type="button" class="btn btn-default" style="visibility:hidden;position:relative;position:absolute;z-index:1;">
                                 Submitting...
-                            </button> 
+                            </button>
                             {% endif %}
                             <input type="hidden" id="pref_order" name="pref_order" value=""/>
-                                
+
                             <div class="pull-right">
                             {% if messages %}
                                     {% for message in messages %}
@@ -152,8 +143,8 @@ submissionURL="{% url 'polls:record' question.id%}";
                             {% endif %}
                                 <!-- Hints button -->
                                 <a tabindex="0" style="float:right; {%if request.user.userprofile.showHint == True%} visibility:visible;{% else %}visibility:hidden; {%endif%}"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="These are your final preferences. <br/><form action='{% url 'appauth:disableHint' %}' method='POST'>{% csrf_token %}<input id='toggle-button' class='btn btn-primary btn-sm' type='submit' value='Disable All Hints'/></form> <br/>"></a>
-                            </div>    
-                                
+                            </div>
+
                             </h4>
                         </div> <!-- end of header -->
 
@@ -168,7 +159,7 @@ submissionURL="{% url 'polls:record' question.id%}";
                                 <ul class="choice1">
                                     <!-- Display the tier number -->
                                     <div class="tier">{{ forloop.counter }}</div>
-                                    
+
                                     <!-- Display all the options selected for this tier -->
                                     {% for selection in s %}
                                     <li class="li_item" id="item{{ selection.item_text }}" alt="{{forloop.parentloop.counter}}">
@@ -195,7 +186,7 @@ submissionURL="{% url 'polls:record' question.id%}";
                                 {% endif %}
                             </ul> <!-- end of main panel (left-sortable) -->
                         </div>
-                        
+
                         {% if request.flavour == "mobile" %}
                         <!-- Clear button (mobile version) -->
                         <button onclick="clearAll()" class="reset-button-mobile">
@@ -216,15 +207,15 @@ submissionURL="{% url 'polls:record' question.id%}";
                         {% if request.flavour == "mobile" %}
                         <button onclick="moveAll(); return false;" class="move-all-button-mobile">
                             <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;"> All </span>
-                        </button> 
+                        </button>
                         {% else %}
                         <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
                             Move All
-                        </button> 
-                            {% endif %} 
+                        </button>
+                            {% endif %}
                         <a tabindex="0" style="float:right; {%if request.user.userprofile.showHint == True%} visibility:visible;{% else %}visibility:hidden; {%endif%}"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="These are the available options <form action='{% url 'appauth:disableHint' %}' method='POST'>{% csrf_token %}<input id='toggle-button' class='btn btn-primary btn-sm' type='submit' value='Disable All Hints'/></form><br/>"></a> </h4>
                     </div> <!-- end of panel header -->
-                    
+
                     <!-- Remaining options panel body -->
                     <div class="panel-body">
                         <ul id="right-sortable" class="list-group">
@@ -236,7 +227,7 @@ submissionURL="{% url 'polls:record' question.id%}";
                                 <!-- Display tier number -->
                                 {{ forloop.counter }}
                             </div>
-                            
+
                             <!-- Display each option. Each option gets its own tier -->
                             {% with prev=forloop.counter|mul:2 %}
                             <ul class="choice2" id="{{ prev|add:1 }}" onclick = "moveToPref(this)">
@@ -267,7 +258,7 @@ submissionURL="{% url 'polls:record' question.id%}";
                 </div>
             </div>
         </div>
-                    
+
         <!-- Comments section -->
         <div>
             <br/>
@@ -289,9 +280,9 @@ submissionURL="{% url 'polls:record' question.id%}";
     {% endif %}
 </div>
 
-    
+
 <script>
-    
+
     $(function(){
         $(document).ready(function() {
     $(".dropdown-toggle").dropdown();
@@ -301,12 +292,12 @@ submissionURL="{% url 'polls:record' question.id%}";
     $('[data-toggle="popover"]').popover({
         title : '<span class="text-info"><strong>Hint</strong></span>',
         html: 'true',
-    }); 
+    });
 	$( "#right-sortable" ).children().each(function( index ) {
 	if($(this).children().size()>0){
 		order1 += $(this).children().first().attr("id") + ";;"
 	}
-	
+
 });
 	{% if request.flavour == "mobile" %}
 		flavor = "Mobile";
@@ -315,16 +306,16 @@ submissionURL="{% url 'polls:record' question.id%}";
 	{% endif %}
 	checkStyle();
 	startTime = Date.now();
-}); 
+});
 
-        
+
     // tooltip toggle (Popover function for hints)
     $(document).on('click',"#toggle-button",function () {
      toggle(document.querySelectorAll('.hint'));
    });
-      
+
 //Toggle: hide/show hints
-function toggle (elements, specifiedDisplay) {  
+function toggle (elements, specifiedDisplay) {
   var element, index;
   elements = elements.length ? elements : [elements];
   for (index = 0; index < elements.length; index++) {

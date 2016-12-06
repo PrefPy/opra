@@ -1,10 +1,5 @@
 {% extends 'polls/base.html' %}
 {% block extra_head %}
-<!--
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
--->
 <script src='/static/js/qrcodejs/qrcode.js'></script>
 
 <style>
@@ -98,14 +93,14 @@
   display: inline-block;
   border-radius: 50%;
 }
- 
+
 img{
     width:40px;
 }
 img:hover{
     width:80px;
 }
-    
+
   #feedback { font-size: 1.4em; }
   #selectable .ui-selecting { background: #FECA40; }
   #selectable .ui-selected { background: #F39814; color: white; }
@@ -142,10 +137,10 @@ img:hover{
                     <li style="padding:3px;"><a data-toggle="tab" href="#algorithm{{question.id}}">Algorithms and Visibility</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#historyinfo{{question.id}}">History</a></li>
                 </ul>
-    
+
             {% endfor %}
-        <li><a data-toggle="tab" href="#delete">Delete</a></li>        
-        {% else %}  
+        <li><a data-toggle="tab" href="#delete">Delete</a></li>
+        {% else %}
             {% for question in mpoll.questions.all %}
                 <!--<li><a href="{% url 'polls:pollinfo' question.id %}" >{{question.question_text}}</a></li>-->
         <li><a data-toggle="collapse" data-target="#products{{forloop.counter}}" class="collapsed">{{question.question_text}} <span class="glyphicon glyphicon-menu-down" style="font-size:60%"></span></a></li>
@@ -153,16 +148,16 @@ img:hover{
                     <li style="padding:3px;"><a data-toggle="tab" href="#general{{question.id}}">General Info</a></li>
                     <li style="padding:3px;"><a data-toggle="tab" href="#historyinfo{{question.id}}">History</a></li>
                 </ul>
-    
+
             {% endfor %}
             <li><a data-toggle="tab" href="#quit">Quit</a></li>
-        {% endif %}  
-        
-    </ul>  
+        {% endif %}
+
+    </ul>
 </div>
 
 <div class="tab-content">
-    
+
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="Mtitle">
     <h3 class="page-header">Title Setting of {{ mpoll.title }} <br/></h3>
     <form action="{% url 'multipolls:editBasicInfo' mpoll.id %}" method="post">
@@ -180,47 +175,47 @@ img:hover{
         <input type="submit" class="btn btn-primary" value="Save Changes"/>
     </form>
 </div>
-    
-    
+
+
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="voters">
     <h3 class="page-header">Voters Setting of {{ mpoll.title }} <br/><small class="text-muted"> All subquestions of {{ mpoll.title }} share the same voters.</small></h3>
-     
+
         {% include 'multipolls/_invite_voters.html' %}
-  
+
 
 </div>
-    
-  {% for question in mpoll.questions.all %}  
+
+  {% for question in mpoll.questions.all %}
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="title{{question.id}}">
     {% include 'polls/_change_title_and_desc.html' %}
     </div>
-    
+
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="choices{{question.id}}">
- 
+
         <h3 class="page-header">Info and settings of {{ question.question_text }}</h3>
                 {% with items=question.item_set.all%}
                     {% include 'polls/_add_choice.html' %}
                 {% endwith %}
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="algorithm{{question.id}}">
-        {% include 'polls/_set_polling_settings.html' %}    
+        {% include 'polls/_set_polling_settings.html' %}
     </div>
-    
+
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo{{question.id}}">
-        
-        {% for s in lr %}     
+
+        {% for s in lr %}
             {% if s.id == question.id %}
                 {% for p in pr %}
                     {%if p.id == question.id %}
-                        {% for m in mrr %}     
+                        {% for m in mrr %}
                             {% if m.id == question.id %}
                                 {% for h in hist %}
                                     {%if h.id == question.id %}
-                                        {%with latest_responses=s.main%} 
+                                        {%with latest_responses=s.main%}
                                         {%with previous_responses=p.main%}
-                                        {%with mostRecentResponse=m.main%} 
+                                        {%with mostRecentResponse=m.main%}
                                         {%with history=h.main%}
-                                             {% include 'multipolls/_view_history.html' %} 
+                                             {% include 'multipolls/_view_history.html' %}
                                         {% endwith %}
                                         {% endwith %}
                                         {% endwith %}
@@ -230,17 +225,17 @@ img:hover{
                             {% endif%}
                         {% endfor %}<!-- for m in mrr-->
                     {% endif%}
-                {% endfor %} <!-- for p in previous_responses--> 
-            {%endif%}    
+                {% endfor %} <!-- for p in previous_responses-->
+            {%endif%}
         {%endfor%} <!--s in lr-->
     </div>
-    
+
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="general{{question.id}}">
         {% include 'polls/_voters_generalinfo.html' %}
     </div>
     {% endfor %}
-      
-    
+
+
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="delete">
     <h3 class="page-header">Info and settings of {{ mpoll.title }} </h3>
 
@@ -259,7 +254,7 @@ img:hover{
                             Confirm Delete Poll
                         </div>
                         <div class="modal-body">
-                            Are you absolutely sure you want to delete this poll? All voting information, settings, etc. will be erased permanently. 
+                            Are you absolutely sure you want to delete this poll? All voting information, settings, etc. will be erased permanently.
                         </div>
                         <div class="modal-footer">
                             <a class="btn btn-danger btn-ok" href="{% url 'multipolls:delmpoll' mpoll.id %}">Yes</a>
@@ -273,7 +268,7 @@ img:hover{
 </div>
 
 
-    
+
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="quit">
     <h3 class="page-header">Info and settings of {{ mpoll.title }} </h3>
 
@@ -292,7 +287,7 @@ img:hover{
                             Confirm Quit Multi Poll
                         </div>
                         <div class="modal-body">
-                            Are you absolutely sure you want to quit this multi poll? All voting information, settings, etc. will be erased permanently. 
+                            Are you absolutely sure you want to quit this multi poll? All voting information, settings, etc. will be erased permanently.
                         </div>
                         <div class="modal-footer">
                             <a class="btn btn-danger btn-ok" href="{% url 'multipolls:delmpoll' mpoll.id %}">Yes</a>
@@ -304,8 +299,8 @@ img:hover{
         </div>
     </div>
 </div>
-    
-    
+
+
 </div>
 
 {% endblock %}

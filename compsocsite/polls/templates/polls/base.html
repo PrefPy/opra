@@ -11,33 +11,34 @@
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
-    
+
+		<!-- jQuery UI CSS (base theme) -->
+		<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/stylish-portfolio.css' %}" />
-    
-
+		<link rel="stylesheet" type="text/css" href="{% static 'css/shared.css' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/introjs.css' %}"/>
     <!-- Custom Fonts -->
-    
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
-        
-    <link rel="stylesheet" type="text/css" href="{% static 'css/shared.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/introjs.css' %}"/>
+
+
     <!-- Select2 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-	{% if request.flavour == "mobile" %}
-	<link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
-	{% else %}
-	<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
-	{% endif %}
+		{% if request.flavour == "mobile" %}
+		<link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
+		{% else %}
+		<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
+		{% endif %}
 
-	<!-- Somehow else does not work, had to use two "if"'s 
-	{% if request.flavour == "mobile" %}
-	<link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
-	{% endif %}
-	{% if request.flavour == "full" %}
-	<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
-	{% endif %}
-	-->
+		<!-- Somehow else does not work, had to use two "if"'s
+		{% if request.flavour == "mobile" %}
+		<link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
+		{% endif %}
+		{% if request.flavour == "full" %}
+		<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
+		{% endif %}
+		-->
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -45,243 +46,248 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
+
     <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script
+			src="https://code.jquery.com/jquery-2.2.4.min.js"
+			integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+			crossorigin="anonymous"></script>
+		<script
+		  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+		  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+		  crossorigin="anonymous"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://use.fontawesome.com/5f5c1e4fb0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src='/static/js/intro.js'></script>
     <script type="text/javascript">
-        $(document).ready(function() {
-      $('.multiple-select').select2();
-            });
+      $(document).ready(function() {
+      	$('.multiple-select').select2();
+      });
     </script>
-        
-    <script>
-        var QueryString = function () {
-              // This function is anonymous, is executed immediately and 
-              // the return value is assigned to QueryString!
+		<script src='/static/js/shared.js'></script>
 
-              var query_string = {};
-              var query = window.location.search.substring(1);
-              var vars = query.split("&");
-              for (var i=0;i<vars.length;i++) {
-                var pair = vars[i].split("=");
-                    // If first entry with this name
-                if (typeof query_string[pair[0]] === "undefined") {
-                  query_string[pair[0]] = decodeURIComponent(pair[1]);
-                    // If second entry with this name
-                } else if (typeof query_string[pair[0]] === "string") {
-                  var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
-                  query_string[pair[0]] = arr;
-                    // If third or later entry with this name
-                } else {
-                  query_string[pair[0]].push(decodeURIComponent(pair[1]));
-                }
-              }
-              return query_string;
-            }();
+    <script>
+      var QueryString = function () {
+	      // This function is anonymous, is executed immediately and
+	      // the return value is assigned to QueryString!
+
+	      var query_string = {};
+	      var query = window.location.search.substring(1);
+	      var vars = query.split("&");
+	      for (var i=0;i<vars.length;i++) {
+	        var pair = vars[i].split("=");
+	            // If first entry with this name
+	        if (typeof query_string[pair[0]] === "undefined") {
+	          query_string[pair[0]] = decodeURIComponent(pair[1]);
+	            // If second entry with this name
+	        } else if (typeof query_string[pair[0]] === "string") {
+	          var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+	          query_string[pair[0]] = arr;
+	            // If third or later entry with this name
+	        } else {
+	          query_string[pair[0]].push(decodeURIComponent(pair[1]));
+	        }
+	      }
+      	return query_string;
+      }();
     </script>
-    
+
     <!-- Custom Theme JavaScript -->
     <script>
-        //tooltip 
-        $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+      //tooltip
+      $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+      });
 
-        // Scrolls to the selected menu item on the page
-        $(function() {
-            $('a[href*=#]:not([href=#])').click(function() {
-                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
-                    var target = $(this.hash);
-                    target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-                    if (target.length) {
-                        $('html,body').animate({
-                            scrollTop: target.offset().top
-                        }, 1000);
-                        return false;
-                    }
-                }
-            });
-        });
-        //#to-top button appears after scrolling
-        var fixed = false;
-        $(document).scroll(function() {
-            if ($(this).scrollTop() > 250) {
-                if (!fixed) {
-                    fixed = true;
-                    // $('#to-top').css({position:'fixed', display:'block'});
-                    $('#to-top').show("slow", function() {
-                        $('#to-top').css({
-                            position: 'fixed',
-                            display: 'block'
-                        });
-                    });
-                }
-            } else {
-                if (fixed) {
-                    fixed = false;
-                    $('#to-top').hide("slow", function() {
-                        $('#to-top').css({
-                            display: 'none'
-                        });
-                    });
-                }
+      // Scrolls to the selected menu item on the page
+      $(function() {
+        $("a[href*='#']:not([href='#'])").click(function() {
+          if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+            if (target.length) {
+              $('html,body').animate({
+                scrollTop: target.offset().top
+              }, 1000);
+							return true;
             }
+						return false;
+          }
         });
+      });
+      //#to-top button appears after scrolling
+      var fixed = false;
+      $(document).scroll(function() {
+        if ($(this).scrollTop() > 250) {
+          if (!fixed) {
+            fixed = true;
+            // $('#to-top').css({position:'fixed', display:'block'});
+            $('#to-top').show("slow", function() {
+              $('#to-top').css({
+                position: 'fixed',
+                display: 'block'
+              });
+            });
+          }
+		    } else {
+	        if (fixed) {
+            fixed = false;
+            $('#to-top').hide("slow", function() {
+              $('#to-top').css({
+                display: 'none'
+              });
+            });
+	        }
+		    }
+      });
     </script>
     <style>
-    .btn{
-    border-radius:0;
-    }
+	    .btn{
+	    	border-radius:0;
+	    }
     </style>
     {% block extra_head %}
     {% endblock %}
 	</head>
-    
+
 	<body>
-        <!-- nav bar login -->
-        <div class="modal fade" role="dialog" id="loginmodal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="login_form" method="post" action="/auth/login/">
-                    {% csrf_token %}
-                    <div class="modal-header">
-                        Login
-                    </div>
-                        <!--login model-->
-                    <div class="modal-body">
-                            <fieldset class="form-group">
-                                <label for="username">Username </label>
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" autofocus/>
-                            </fieldset>
-                            <fieldset class="form-group">
-                                <label for="username">Password</label> 
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
-                            </fieldset>
-                            <script>
-                            if (typeof(QueryString["name"]) != "undefined"){
-                                    $('#username').val(QueryString["name"]);
-                                    $('#password').focus();
-                            }
-                            else{
-                                    $('#username').focus();
-                            }
-                            </script>
-
-                    </div>
-                    <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="Login"/>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    </div>
-                        <!-- end for login model-->
-                    </form>
-                </div>
-            </div>
+    <!-- nav bar login -->
+    <div class="modal fade" role="dialog" id="loginmodal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="login_form" method="post" action="/auth/login/">
+		        {% csrf_token %}
+		        <div class="modal-header">
+	            Login
+		        </div>
+            <!--login model-->
+		        <div class="modal-body">
+              <fieldset class="form-group">
+                <label for="username">Username </label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" autofocus/>
+              </fieldset>
+              <fieldset class="form-group">
+                <label for="username">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
+              </fieldset>
+              <script>
+	              if (typeof(QueryString["name"]) != "undefined"){
+	                $('#username').val(QueryString["name"]);
+	                $('#password').focus();
+	              }
+	              else{
+	                $('#username').focus();
+	              }
+              </script>
+		        </div>
+		        <div class="modal-footer">
+	            <input type="submit" class="btn btn-primary" value="Login"/>
+	            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		        </div>
+		        <!-- end for login model-->
+          </form>
         </div>
-		
+      </div>
+		</div>
+
 		<!--nav bar for main page-->
-                {% if user.is_authenticated %}
-				 <nav class="navbar navbar-default navbar-fixed-top" style="background-color:#377BB5; border-color: transparent;">
-                {% else %}
-                 <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
-                {%endif%}
-					{% if request.flavour == "mobile" %}
-					<div class="container-fluid" style = "margin-left: 10px; margin-right: 10px;">
-				    {% else %}
-				    <div class="container-fluid">
-				    {% endif %}
-                        <div class="navbar-header" >
-                            <a type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" style="background-color:white;">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                              </a>
-                            <!-- Welcome Part-->
-                            <a class="navbar-brand" href="/polls/" style ="font-size: 100%; {% if request.flavour == 'mobile' %}
-                            margin-top: 5px;
-                            {% endif %}
-                            {% if user.is_authenticated %}
-                            color:white;
-                            {%else%}
-                            color:black;
-                            {% endif %}">
-                                 Welcome
-                                {% if user.is_authenticated %}
-                                {% if request.user.first_name == "" %}
-                                {{ request.user.username }}
-                                {% endif %}
-                                {% if request.user.first_name != "" %}
-                                {{ request.user.first_name }}
-                                {% endif %}
-                                {% endif %} </a>
-                           </div>   
-                        <!-- right side of nav bar-->
-                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-							{% if user.is_authenticated %}
-							<ul class="nav navbar-nav navbar-right">
-                                <!-- Home Icon-->
-                                <li><a href="{% url 'polls:index' %}" style="color:white;"><span class="glyphicon navbar-right glyphicon-home"></span></a></li>
-                                <!-- Dropdown Setting Icon-->
-								<li class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white;"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
-									<ul class="dropdown-menu" style="font-size:100%; ">
-										<li class="disabled">
-											<a href="#" >Signed in as {{ request.user.username }}</a>
-										</li>
-										<li role="separator" class="divider"></li>
-										<li >
-											<a href="{% url 'appauth:settings' %}" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}"><span >Settings</span></a>
-										</li>
-										<li>
-											<a href="{% url 'appauth:logout' %}" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}">Logout</a>
-										</li>
-									</ul>
-								</li> <!-- end of Dropdown setting icon-->
-							</ul>
-							{% else %}
-							<ul class="nav navbar-nav navbar-right pull-right">
-								<li>
-									<a href="{% url 'appauth:register' %}" style="color:black;"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
-								</li>
-								<li>
-									<a data-toggle="modal" data-target="#loginmodal"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
-								</li>
-							</ul>
-							
-							{% endif %}
-                            </div> <!-- end of right side of nav bar-->
-						</div><!--/.container-fluid -->
-
-				</nav>
-                     
-            <!-- subnav bar when you login-->
+    {% if user.is_authenticated %}
+		<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#377BB5; border-color: transparent;">
+    {% else %}
+    <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
+    {%endif%}
+			{% if request.flavour == "mobile" %}
+			<div class="container-fluid" style = "margin-left: 10px; margin-right: 10px;">
+	    {% else %}
+	    <div class="container-fluid">
+	    {% endif %}
+        <div class="navbar-header" >
+          <a type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" style="background-color:white;">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <!-- Welcome Part-->
+          <a class="navbar-brand" href="/polls/" style ="font-size: 100%; {% if request.flavour == 'mobile' %}
+          margin-top: 5px;
+          {% endif %}
+          {% if user.is_authenticated %}
+          color:white;
+          {%else%}
+          color:black;
+          {% endif %}">
+	          Welcome
             {% if user.is_authenticated %}
-				<div>
-                    <ul class="nav nav-tabs" style="margin-top:60px; position: fixed;">
-                        <!-- Poll Icon-->
-                        <li><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span>Regular Polls</a></li>
-                        <li><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span>Multi-Polls</a></li>
-
-                        <!--Group Icon-->
-                        <li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>   
-                    </ul>
-    
-            {% else %}
-                <br>
-                <div name="MainPage">
+            {% if request.user.first_name == "" %}
+            {{ request.user.username }}
             {% endif %}
-                <div style="padding:110px 20px;">
-                {% block content %}
-                {% endblock %}
-                </div>
-            
-            </div>
+            {% if request.user.first_name != "" %}
+            {{ request.user.first_name }}
+            {% endif %}
+            {% endif %}
+					</a>
+        </div>
+        <!-- right side of nav bar-->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					{% if user.is_authenticated %}
+					<ul class="nav navbar-nav navbar-right">
+            <!-- Home Icon-->
+            <li><a href="{% url 'polls:index' %}" style="color:white;"><span class="glyphicon navbar-right glyphicon-home"></span></a></li>
+            <!-- Dropdown Setting Icon-->
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white;"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
+							<ul class="dropdown-menu" style="font-size:100%; ">
+								<li class="disabled">
+									<a href="#" >Signed in as {{ request.user.username }}</a>
+								</li>
+								<li role="separator" class="divider"></li>
+								<li >
+									<a href="{% url 'appauth:settings' %}" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}"><span >Settings</span></a>
+								</li>
+								<li>
+									<a href="{% url 'appauth:logout' %}" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}">Logout</a>
+								</li>
+							</ul>
+						</li> <!-- end of Dropdown setting icon-->
+					</ul>
+					{% else %}
+					<ul class="nav navbar-nav navbar-right pull-right">
+						<li>
+							<a href="{% url 'appauth:register' %}" style="color:black;"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
+						</li>
+						<li>
+							<a data-toggle="modal" data-target="#loginmodal"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
+						</li>
+					</ul>
+					{% endif %}
+        </div> <!-- end of right side of nav bar-->
+			</div><!--/.container-fluid -->
+		</nav>
 
+    <!-- subnav bar when you login-->
+    {% if user.is_authenticated %}
+		<div>
+      <ul class="nav nav-tabs" style="margin-top:60px; position: fixed;">
+        <!-- Poll Icon-->
+        <li><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span>Regular Polls</a></li>
+        <li><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span>Multi-Polls</a></li>
+
+        <!--Group Icon-->
+        <li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
+      </ul>
+    {% else %}
+    <br>
+    <div name="MainPage">
+    {% endif %}
+      <div style="padding:110px 20px;">
+      {% block content %}
+      {% endblock %}
+      </div>
+
+    </div>
 
 	</body>
 

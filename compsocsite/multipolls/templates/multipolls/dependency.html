@@ -1,25 +1,21 @@
 {% extends 'polls/base.html' %}
 {% block extra_head %}
 <script src="/static/js/cytoscape.min.js"></script>
-
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src='/static/js/shared.js'></script>
 <script src='/static/js/voteWithTies.js'></script>
 {% if request.flavour == "mobile" %}
-    <script src='/static/js/mobile.js'></script>
+<script src='/static/js/mobile.js'></script>
 {% else %}
-    <script src='/static/js/desktop.js'></script>
+<script src='/static/js/desktop.js'></script>
 {% endif %}
 
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+
 <style type="text/css">
  #cy {
     width: 50%;
     height: 125px;
     border: 1px solid lightgray;
-}   
-    
+}
+
 option:checked{
     border: 3px solid blue;
 }
@@ -28,16 +24,14 @@ option:checked{
         float: left;
     }
 </style>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 <script>
 //If the user checks or unchecks a checkbox for dependent subpolls, then update the graph
 function check()
 {
     var choicesStr = "?";
     {% for poll in question.multipoll_set.all.0.questions.all %}
-        {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}    
-            choicesStr += "poll{{poll.id}}=" + document.getElementById("checkbox{{poll.id}}").checked + "&"; 
+        {% if poll.multipollquestion_set.all.0.order < question.multipollquestion_set.all.0.order and poll.status == 2 %}
+            choicesStr += "poll{{poll.id}}=" + document.getElementById("checkbox{{poll.id}}").checked + "&";
         {% endif %}
     {% endfor %}
     window.location.href = "{% url 'multipolls:updatePrefGraph' question.id %}" + choicesStr; // redirect
@@ -49,14 +43,14 @@ function check()
  //               });
     return false;
 }
-         
+
 $(function(){
     // bind change event to select
     {% for poll in combination.dependent_questions.all %}
         $('#dynamic_select' + '{{poll.id}}').on('change', function () {
             var choicesStr = "?";
             {% for poll in combination.dependent_questions.all %}
-                choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&"; 
+                choicesStr += "poll{{poll.id}}=" + $('#dynamic_select' + '{{poll.id}}').val() + "&";
             {% endfor %}
 
             //window.location.href = "{% url 'multipolls:dependencyget' combination.id %}" + choicesStr; // redirect
@@ -65,7 +59,7 @@ $(function(){
                     success: function(event){
                         $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap(); checkStyle();});
                         $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap(); checkStyle();});
-                        
+
                     }
                 });
             return false;
@@ -90,7 +84,7 @@ $(function(){
 {% block content %}
 <br>
 <div class="container-fluid">
-    
+
 <!-- Title panel -->
     <div class="panel panel-default">
         <!-- Panel header contains image and title -->
@@ -108,17 +102,17 @@ $(function(){
                     <a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
                 </div>
                 {% endif %}
-                
+
                 <!-- Display title and creator in the header -->
-                <div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>            
-                    <h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}><span class="caret" style="color:#377BB5;"></span> 
-                    
+                <div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>
+                    <h3 {% if request.flavour == "mobile" %} style="width:70%;display:inline" {% endif %}><span class="caret" style="color:#377BB5;"></span>
+
                     <!-- Left button to go back to previous subpoll -->
             {% if prev_poll != None %}
                 <a href="{% url 'multipolls:dependencyview' prev_poll.id %}" class="glyphicon glyphicon-arrow-left">
                 </a>
             {% endif %}
-                    <span>{{ question.question_text }}</span> <span class="text-muted">(Created by {{ question.question_owner }})</span> 
+                    <span>{{ question.question_text }}</span> <span class="text-muted">(Created by {{ question.question_owner }})</span>
                     	<!-- Right button to go to the next subpoll -->
                     	{% if next_poll != None %}
                 <a href="{% url 'multipolls:dependencyview' next_poll.id %}" class="glyphicon glyphicon-arrow-right">
@@ -126,24 +120,24 @@ $(function(){
             {% endif %}
             </h3>
                 </div>
-                 
+
             </div> </a>
         </div>
 
         <!-- Display the description in the panel body -->
         <div id="collapse_des" class="panel-body" hidden>
-           
+
             Description: {% if question.question_desc %}
             <span {% if request.flavour == "mobile" %} style="width:70%" {% endif %}> {{ question.question_desc }} </span>
             {% endif %}
-            
-            
-            
+
+
+
         </div>
     </div>
-   
+
 </div>
-        
+
 
 
 <!-- Main voting page -->
@@ -173,7 +167,7 @@ $(function(){
             'color': '#000',
             'font-size': '30px',
           })
-        
+
         .selector('edge')
           .css({
             'curve-style': 'bezier',
@@ -198,7 +192,7 @@ $(function(){
         nodes: [
          {% for row in pref_nodes %}
             //{data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 10, faveColor: '#000', faveShape: {% if row.id == question.id %}'rectangle'{% else %}'ellipse'{% endif %} } },
-            {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 50, faveColor: '#000', faveShape: {% if row.id == question.id %}'rectangle'{% else %}'ellipse'{% endif %}, 
+            {data: {id : '{{ row.id }}', name: '{{ row.label }}', weight: 50, faveColor: '#000', faveShape: {% if row.id == question.id %}'rectangle'{% else %}'ellipse'{% endif %},
             href: "{% url 'multipolls:dependencyview' row.id %}" } },
         {% endfor %}
         ],
@@ -209,7 +203,7 @@ $(function(){
         ]
       },
     });
-    
+
 cy.on('click','node', function(e){
   var url=this.data('href');
    window.location.replace(url);

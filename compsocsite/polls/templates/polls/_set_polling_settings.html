@@ -23,17 +23,17 @@
             <span class="btn btn-group">
             {% for item in question.allocationvoter_set.all %}
                 <span class="btn btn-default">{{ item.user }}</span>
-            {% endfor %} 
+            {% endfor %}
             </span>
         {% endif %}
         {% if question.status == 1 or question.status == 2 %}
-            {% if question.poll_algorithm == 3 %}    
+            {% if question.poll_algorithm == 3 %}
                 <a href="{% url 'polls:viewAllocationOrder' question.id %}" class ="btn btn-dark" role="button">Set Allocation Order</a> <br />
             {% endif %}
         {% endif %}
         <br />
     {% endif %}
-    
+
     <br />
     <label for="viewpreferences">Visibility setting for voters for this specific poll</label>
     <select name="viewpreferences" class="form-control">
@@ -43,13 +43,13 @@
         <option value="voternames" {% if question.display_pref == 2 %} selected {% endif %} >Only names of voters will be shown</option>
         <option value="justnumber" {% if question.display_pref == 3 %} selected {% endif %}>Only numbers of voters will be shown</option>
         <option value="nothing" {% if question.display_pref == 4 %} selected {% endif %}>Everyone can only see own vote</option>
-    </select>  
-    <br /><br />
-	
+    </select>
+    <br />
+
 	<label for="creatorpreferences">Visibility setting for creator for this specific poll</label>
     <select name="creatorpreferences" class="form-control">
         <option value="1" {% if question.creator_pref == 1 %} selected {% endif %}>Creator can see everyone's vote</option>
         <option value="2" {% if question.creator_pref == 2 %} selected {% endif %}>Creator can only see his/her own vote</option>
-    </select>  
+    </select>
     <input type="submit" value="Submit" class="btn btn-success">
 </form>

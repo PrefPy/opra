@@ -4,6 +4,7 @@ var submissionURL = "";
 var order1 = "";
 var flavor = "";
 var startTime = 0;
+var allowTies = true;
 
 // the VoteUtil object contains all the utility functions for the voting UI
 var VoteUtil = (function () {
@@ -335,7 +336,15 @@ $( document ).ready(function() {
 		//	 items: "ul:not(.empty)"
 		// });
 		
-		$("ul.choice1").sortable({
+		//$("ul.choice1").sortable({
+		
+		var sortableSelector = 'ul#left-sortable'
+		if (allowTies)
+			sortableSelector = 'ul.choice1'
+		else
+			$('ul.choice1.empty').remove()
+		
+		$(sortableSelector).sortable({
 		   
 			start: function(event, ui) {
 				ui.placeholder.height(ui.item.height());
@@ -344,7 +353,7 @@ $( document ).ready(function() {
 				if ( item.parent().children().size() < 3 || VoteUtil.isMobileAgent() ){
 					ui.placeholder.css("width", "93%");
 					ui.item.width(ui.placeholder.width());
-				}else{
+				} else if (allowTies) {
 					ui.placeholder.css("width", "45%").css("display","inline-block").css("vertical-align","top");
 					ui.item.width(ui.placeholder.width());
 				};
@@ -359,6 +368,12 @@ $( document ).ready(function() {
 					success: function(){}
 				});
 				*/
+				
+				if (!allowTies) {
+					ui.placeholder.css("width", "84%");
+					ui.placeholder.css("margin-left", "35px");
+					ui.item.width(ui.placeholder.width());
+				}
 			},
 			
 			stop: function(event, ui) {
@@ -378,7 +393,9 @@ $( document ).ready(function() {
 							$( this ).attr("alt", tier.toString());
 						});
 						id += 1;
-						$( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+						if (allowTies)
+							$( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+						
 						if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
 						if( $( this ).children().size() < 2 || VoteUtil.isMobileAgent() ){
 							$( this ).children().css( "width", "93%" );
@@ -390,7 +407,8 @@ $( document ).ready(function() {
 						id += 1;
 					}
 				});
-				$( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+				if (allowTies)
+					$( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
 				$( "#right-sortable" ).children().each(function( index ) {
 					if( $( this ).children().size() < 1 ){
 						$( this ).remove();
@@ -431,8 +449,8 @@ $( document ).ready(function() {
 				record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt") + "||" + itemsSameTier +";;;";
 			},
 
-			change: function(event, ui) {  
-				if(ui.sender){
+			change: function(event, ui) {
+				if(ui.sender || !allowTies){
 						
 					//variables
 					newList = ui.placeholder.parent(); //the list the item is hovering over
@@ -440,7 +458,6 @@ $( document ).ready(function() {
 					var oldListId = parseInt($( oldList ).attr("id")); //the id of the old list
 					var listId;
 					var prevEmpty = false;
-					
 					
 					newItem = "<ul class=\"choice1 empty line\"></ul>";
 					var tier = 1;
@@ -455,7 +472,7 @@ $( document ).ready(function() {
 						if( $( this ).children().size() < 1 ){
 							// if this list does not have contain any alternative, then mark it to be "empty"
 							$( this ).addClass('empty');
-						// if there are two empty lists next to each other, then remove the current one	 
+							// if there are two empty lists next to each other, then remove the current one	 
 							if(prevEmpty){
 								$( this ).remove();
 							}else{
@@ -490,18 +507,27 @@ $( document ).ready(function() {
 								
 									
 							}
-							if( $( this ).children().size() < 2 || VoteUtil.isMobileAgent() ){
+							if( $( this ).children().size() < 2 || VoteUtil.isMobileAgent() || ! allowTies){
 								$( this ).children().css( "width", "93%" );
 							}else{
 								$( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
 							}
-							$( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
-							tier += 1;
+							//if (allowTies && left)
+							//if (allowTies || !$(this).hasClass("ui-sortable-helper")) {
+							if (allowTies)
+								$( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
+								tier += 1;
+							//}
 							prevEmpty = false;
 						}
 					}
 					
 					);
+					
+					if (!allowTies)
+						$('#left-sortable > ul:not(.ui-sortable-helper)').each(function (i) {
+							$( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + (i + 1) + "</div>");
+						})
 					
 					//second scan to remove the double "empty" bars
 					prevEmpty = false;
@@ -510,7 +536,7 @@ $( document ).ready(function() {
 						if( $( this ).children().size() < 1 ){
 							// if this list does not have contain any alternative, then mark it to be "empty"
 							$( this ).addClass('empty');
-						// if there are two empty lists next to each other, then remove the current one	 
+							// if there are two empty lists next to each other, then remove the current one	 
 							if(prevEmpty){
 								$( this ).remove();
 							}else{
@@ -524,11 +550,17 @@ $( document ).ready(function() {
 					}
 					);
 					
-					if( $(newList).children().size() > 1 && !VoteUtil.isMobileAgent() ){
+					if( $(newList).children().size() > 1 && !VoteUtil.isMobileAgent() && allowTies){
 						ui.placeholder.css("width", "45%").css("display","inline-block").css("vertical-align","top");
 						ui.item.width(ui.placeholder.width());
 					}else{
 						ui.placeholder.css("width", "93%");
+						ui.item.width(ui.placeholder.width());
+					}
+					
+					if (!allowTies) {
+						ui.placeholder.css("width", "84%");
+						ui.placeholder.css("margin-left", "35px");
 						ui.item.width(ui.placeholder.width());
 					}
 					

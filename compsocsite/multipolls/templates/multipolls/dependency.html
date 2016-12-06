@@ -5,7 +5,7 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src='/static/js/shared.js'></script>
-<script src='/static/js/voteWithTies.js'></script>
+<script src='/static/js/voting.js'></script>
 {% if request.flavour == "mobile" %}
     <script src='/static/js/mobile.js'></script>
 {% else %}
@@ -63,8 +63,8 @@ $(function(){
             $.ajax({
                     url:"{% url 'multipolls:dependencyget' combination.id %}" + choicesStr,
                     success: function(event){
-                        $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap(); checkStyle();});
-                        $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap(); checkStyle();});
+                        $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap(); VoteUtil.checkStyle();});
+                        $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap(); VoteUtil.checkStyle();});
                         
                     }
                 });
@@ -75,8 +75,8 @@ $(function(){
         $.ajax({
                 url:"{% url 'multipolls:dependencyget' combination.id %}" + "?set_default=true",
                 success: function(event){
-                    $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap(); checkStyle();});
-                    $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap(); checkStyle();});
+                    $('#dependencypreference').load(" #dependencypreference", function(){$(this).children().unwrap(); VoteUtil.checkStyle();});
+                    $('#dependencyremain').load(" #dependencyremain", function(){$(this).children().unwrap(); VoteUtil.checkStyle();});
                 }
             });
         return false;
@@ -216,3 +216,4 @@ cy.on('click','node', function(e){
 });
 </script>
 {% endblock %}
+

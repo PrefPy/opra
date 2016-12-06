@@ -1,4 +1,6 @@
- function submitPref() {
+// This file doesn't seem to be used by anything
+
+function submitPref() {
 	var prefcolumn = $('#left-sortable');
 	var order = prefcolumn.sortable("toArray");
 	$('#pref_order').val(order.join(","));
@@ -12,9 +14,9 @@ function enableSubmission() {
 function moveToPref(obj) {
 	var time = 100
 	var prefcolumn = $('#left-sortable');
-    $('#left-sortable li').each(function(){
-        $(this).removeAttr('onclick')
-    });
+	$('#left-sortable li').each(function(){
+		$(this).removeAttr('onclick')
+	});
 	var currentli = document.getElementById(obj.id);
 	jQuery("#" + obj.id).addClass("greybackground");
 	setTimeout(function() {
@@ -25,7 +27,6 @@ function moveToPref(obj) {
 			enableSubmission();
 		}
 	}, time);
-
 };
 
 function moveAll() {
@@ -45,28 +46,28 @@ function moveAll() {
 			var ul = document.getElementById('left-sortable');
 			var items = ul.getElementsByTagName("li");
 			var len = items.length;
-
+			
 			for (var i = 0; i < len; i++) {
 				jQuery("#" + items[i].id).removeClass("greybackground", time);
 			}
 			prefcolumn.sortable('refresh');
 		}, time)
 	}, time)
-    $('#left-sortable li').each(function(){
-        $(this).removeAttr('onclick')
-    });
+	$('#left-sortable li').each(function(){
+		$(this).removeAttr('onclick')
+	});
 	enableSubmission();
 };
 
 $(function() {
-    $("list-group-item").sortable();
+	$("list-group-item").sortable();
 	$("#left-sortable").sortable({
 		//placeholder : "ui-sortable-placeholder",
 		containment : "document",
-        connectWith : "#right-sortable",
-        
+		connectWith : "#right-sortable",
 	});
-
-
+	
+	
 	$("#left-sortable, #right-sortable").disableSelection();
 });
+

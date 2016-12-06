@@ -108,9 +108,9 @@
             var target = $(this.hash);
             target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
             if (target.length) {
-              $('html,body').animate({
+              /*$('html,body').animate({
                 scrollTop: target.offset().top
-              }, 1000);
+              }, 1000);*/
 							return true;
             }
 						return false;
@@ -270,19 +270,19 @@
     <!-- subnav bar when you login-->
     {% if user.is_authenticated %}
 		<div>
-      <ul class="nav nav-tabs" style="margin-top:60px; position: fixed;">
+      <ul class="nav nav-tabs">
         <!-- Poll Icon-->
-        <li><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span>Regular Polls</a></li>
-        <li><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span>Multi-Polls</a></li>
+        <li><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span><span class="nav-text"> Regular Polls</span></a></li>
+        <li><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span><span class="nav-text"> Multi-Polls</span></a></li>
 
         <!--Group Icon-->
-        <li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span> Groups</a></li>
+        <li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span><span class="nav-text"> Groups</span></a></li>
       </ul>
     {% else %}
-    <br>
+		<br>
     <div name="MainPage">
     {% endif %}
-      <div style="padding:110px 20px;">
+      <div id="content-block">
       {% block content %}
       {% endblock %}
       </div>

@@ -11,6 +11,19 @@
         <textarea type="text" class="form-control" style="width:70%;" name="desc" maxlength="500" size="50" value="" {% if question.status != 1 %} disabled {% endif %}>{% if question.question_desc %}{{ question.question_desc }}{% else %}No description{% endif %}</textarea>
     </fieldset>
 
+		<!-- Use proper form name/variables/values when available -->
+		<fieldset class="form-group">
+				<label for="allowties">Ties</label> <br />
+				<div class="btn-group" data-toggle="buttons">
+						<label class="btn btn-default active">
+						<input type="radio" name="allowties" value="1" {% if question.allowties %} checked {% endif %} {% if question.status != 1 %} disabled {% endif %}>Enabled</option>
+						</label>
+						<label class="btn btn-default">
+						<input type="radio" name="allowties" value="2" {% if not question.allowties %} checked {% endif %} {% if question.status != 1 %} disabled {% endif %}>Disabled</option>
+						</label>
+				</div>
+		</fieldset>
+
     <br />
     <input type="submit" class="btn btn-primary" value="Save Changes"/>
 </form>

@@ -1,9 +1,7 @@
 {% extends 'polls/base.html' %}
 
 {% block extra_head %}
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src='/static/js/shared.js'></script>
+<script src='/static/js/voting.js'></script>
 {% if request.flavour == "mobile" %}
 <script src='/static/js/mobile.js'></script>
 {% else %}
@@ -18,21 +16,21 @@
 <div class="row">
 	<form action="{% url 'polls:setAllocationOrder' question.id %}" method="post">
 		{% csrf_token %}
-		
+
 		{% if request.flavour == "mobile" %}
 		<div class="col-md-6 margin-panel-top">
 		{% else %}
 		<div class="col-md-6 margin-panel-top">
 		{% endif %}
-		
-		
+
+
 			<div class="panel panel-default panel-border">
 				<div class="panel-heading" >
 					<b>Your preferences:</b>
 					{% if request.flavour == "mobile" %}
 						<button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="submit-button-mobile" >
 							<span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-						</button>
+            </button>
 						
 						<button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="btn btn-success" style ="float: right; display: none;">
 							Submit
@@ -61,11 +59,11 @@
 						{% endif %}
 					</ul>
 				</div>
-				
+
 				{% if request.flavour == "mobile" %}
 					<button onclick="javascript:window.location.href='{% url 'polls:viewAllocationOrder' question.id %}?order=null'; return false;" class="reset-button-mobile">
 				        <a href="{% url 'polls:viewAllocationOrder' question.id %}?order=null" class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
-				    </button>		
+				    </button>
 				{% endif %}
 			</div>
 		</div>
@@ -76,11 +74,11 @@
 		{% else %}
 		<div class="col-md-6 margin-panel-top">
 		{% endif %}
-		
+
 			<div class="panel panel-default panel-border">
 				<div class="panel-heading">
 					<b>Remaining Options:</b>
-					
+
 					{% if request.flavour == "mobile" %}
 						<button onclick="VoteUtil.moveAll(); return false;" class="move-all-button-mobile">
 					<span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">All</span>

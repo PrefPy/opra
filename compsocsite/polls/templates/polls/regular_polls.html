@@ -11,10 +11,9 @@
         <table style = "width:100%;" class="table" name="created">
             <thead>
                 <tr>
-                    <th>
-		                  Regular polls created by you ({{ polls_created|length }})	
+                    <th colspan=2>
+		                  Regular polls created by you ({{ polls_created|length }})
                     </th>
-                    <th></th>
                     <th>
                             <a href="{% url 'polls:AddStep1' %}" style='font-size:60%; float:right;' class="btn btn-yellow">
                                     <span class="glyphicon glyphicon-plus"></span>
@@ -25,7 +24,7 @@
 
             {% for question in polls_created %}
                 <tr>
-                    <td>    
+                    <td>
                         <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if question.question_desc %} {{question.question_desc}} {%else%} None. {%endif%}">{{ question.question_text }}</a>
                     </td>
                     <td style="vertical-align:middle">
@@ -93,20 +92,20 @@
                                 {% if question.question_type == 1 %}
                                     <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
                                         {{question.winner}} wins
-                                    </a> 
+                                    </a>
                                 {% elif question.question_type == 2 %}
                                     Allocation Complete: <br />
-                                    
+
                                     {% for order_item in question.allocationvoter_set.all %}
                                         {% if order_item.response.allocation %}
-                                            {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
+                                            {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }}
                                             <br />
                                         {% endif %}
                                     {% endfor %}
-                                
+
                                     <a href="{% url 'polls:allocate_results' question.id %}" >
                                         <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
-                                    </a> 
+                                    </a>
                                 {% endif %}
                             </td>
 
@@ -114,16 +113,16 @@
                 </tr>
             {% endfor %}
         </table>
-        </div>    
+        </div>
     </div><!-- end for created by you section-->
-        
+
     <div name="participated" class="panel panel-default">
         <div class="panel-body">
         <table class="table" >
             <thead>
                 <tr>
                     <th>
-                        Participated in	({{ polls_participated|length }})	
+                        Participated in	({{ polls_participated|length }})
                     </th>
                     <th></th>
                     <th></th>
@@ -133,7 +132,7 @@
             {% for question in polls_participated %}
             <tr>
                 <td>
-                    <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if question.question_desc %} {{question.question_desc}} {%else%} None. {%endif%}"> 
+                    <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if question.question_desc %} {{question.question_desc}} {%else%} None. {%endif%}">
                     {{ question.question_text }}
                     </a>
                 </td>
@@ -154,12 +153,12 @@
                         {% if question.question_type == 1 %}
                             <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
                             {{question.winner}} wins
-                        </a> 
+                        </a>
                         {% elif question.question_type == 2 %}
                             Allocation Complete: <br />
                             {% for order_item in question.allocationvoter_set.all %}
                                 {% if order_item.response.allocation %}
-                                    {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }} 
+                                    {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }}
                                     <br />
                                 {% endif %}
                             {% endfor %}
@@ -167,7 +166,7 @@
                     </td>
                 {% endif %}
                 </tr>
-            {% endfor %} 
+            {% endfor %}
         </table>
         </div><!-- end for participated in section-->
     </div>

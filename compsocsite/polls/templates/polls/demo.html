@@ -2,27 +2,13 @@
 {% load mathfilters %}
 {% load staticfiles %}
 {% block extra_head %}
-  
-   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 {% if request.flavour == "mobile" %}
 <script src='/static/js/mobile.js'></script>
 {% else %}
 <script src='/static/js/desktop.js'></script>
 {% endif %}
-<script src='/static/js/shared.js'></script>
 <script src='/static/js/voting.js'></script>
-
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-
-<style>
-    .tier {
-        float: left;
-       
-    }
-</style>
 
 {% endblock %}
 
@@ -35,7 +21,7 @@
     {% endif %}
 
     {% if request.flavour == "mobile"%}
-   
+
     <br />
     {% endif %}
 
@@ -80,13 +66,13 @@
         	<div class="row">
 
             {% csrf_token %}
-     
+
             {% if request.flavour == "mobile" %}
                 <div class="col-md-6 margin-panel-top">
             {% else %}
                 <div class="col-md-6 margin-panel-top">
             {% endif %}
-                     
+
             <div class="panel panel-default" data-step="2" data-intro="After you click, options will jump to this box. And then you can drag them to change the original ranking or have ties.">
                 <div class="panel-heading" >
                     <b>Your preferences:</b>
@@ -107,12 +93,12 @@
                     {% endif %}
                     <input type="hidden" id="pref_order" name="pref_order" value=""/>
                 </div>
-          
-                        
+
+
                 <div class="panel-body" >
                     <ul id="left-sortable" >
                         {% if currentSelection %}
-                        
+
                             {% for selection in currentSelection %}
                                 {% for item in question.item_set.all %}
 
@@ -198,17 +184,17 @@
         				</div>
         			</div>
         		</div>
-        	
+
         	</div>
         	<div data-step="3" data-intro="You can enter your coments about this poll here.">
         		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">{{lastcomment}}</textarea>
         	</div>
         </form>
-        
+
         <p>
             <br />
             <br />
-            
+
             {% if messages %}
                 <ul class="messages">
                     {% for message in messages %}

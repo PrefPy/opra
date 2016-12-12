@@ -1,19 +1,19 @@
     <div class="steps"  align="center">
 
-        <p class="sameline" style="color:grey;"> 
-            1. General  
+        <p class="sameline" style="color:grey;">
+            1. General
             <span class="glyphicon glyphicon-chevron-right"> </span>
         </p>
         <p class="sameline">
-            2. Choices 
+            2. Choices
             <span class="glyphicon glyphicon-chevron-right"> </span>
-            3. Invite 
+            3. Invite
             <span class="glyphicon glyphicon-chevron-right"> </span>
             4. Settings
         </p>
     </div>
-    
-    
+
+
     <div class="progress">
         <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 25%">
             <span class="sr-only">25% Complete</span>
@@ -26,10 +26,10 @@
         <label for="questionTitle">Title:</label> <small class="text-muted"> * </small> <br />
         <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="20" size="50" autofocus/>
         <small class="text-muted">Required (at most 20 characters) </small> <br/><br/>
-        
+
         <label for="desc">Question description:</label> <br />
         <textarea type="text" class="form-control" id="desc" name="desc" value="" maxlength="500"></textarea> <br />
-        
+
         <label for="questiontype">Question Type: </label> <small class="text-muted"> * </small>  <i class="fa fa-question-circle" aria-hidden="true" data-toggle="modal" data-target=".bs-example-modal-lg" style="color:GoldenRod;"></i> <br />
         <!--Explaination Model-->
         <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -48,10 +48,9 @@
             </div> <!--modal content-->
           </div>
         </div>
-        
+
         <div class="btn-group" data-toggle="buttons">
             <label class="btn btn-default active">
-
             <input type="radio" name="questiontype" value="1" checked>Poll</option>
             </label>
             <label class="btn btn-default">
@@ -59,10 +58,22 @@
             </label>
         </div>
         <br /><br />
+
+				<!-- Use proper form name/values when available -->
+			  <label for="allowties">Allow Ties: </label> <br />
+				<div class="btn-group" data-toggle="buttons">
+						<label class="btn btn-default active">
+						<input type="radio" name="allowties" value="1" checked>Yes</option>
+						</label>
+						<label class="btn btn-default">
+						<input type="radio" name="allowties" value="2">No</option>
+						</label>
+				</div>
+				<br /><br />
+
         <label for="imageURL">Image:</label> <br />
         <input type="text" class="form-control input-sm" id="imageURL" name="imageURL" value="" />
 
         <label for="image" class="btn btn-default"><span class="glyphicon glyphicon-camera"></span></label>
         <input style="display:none" id="image" type="file" name="docfile" accept="image/*">
         <br /><br />
-      

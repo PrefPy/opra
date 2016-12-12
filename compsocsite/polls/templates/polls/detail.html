@@ -13,7 +13,7 @@
 {% else %}
 <script src='/static/js/desktop.js'></script>
 {% endif %}
-<script src='/static/js/voteWithTies.js'></script>
+<script src='/static/js/voting.js'></script>
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
@@ -108,15 +108,15 @@ submissionURL="{% url 'polls:record' question.id%}";
                     <div class="panel-heading" >
                         <h4>Your preferences:
                             {% if request.flavour == "mobile" %}
-                            <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" style="position:absolute;">
+                            <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="submit-button-mobile" style="position:absolute;">
                                 <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-                            </button>
-							<button id="submitting" type="submit" onclick="submitPref();" class="submit-button-mobile" style="position:absolute;visibility:hidden;">
+                            </button> 
+							<button id="submitting" type="submit" onclick="VoteUtil.submitPref();" class="submit-button-mobile" style="position:absolute;visibility:hidden;">
                                 <span class="glyphicon glyphicon-upload" style="font-size:80%;color:blue;">Submitting</span>
-                            </button>
-                            {% else %}
-                            <button onclick="clearAll(); return false;" class="btn btn-danger reset-button" style="background"> Clear </button>
-                            <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style="position:absolute;" disabled>
+                            </button> 
+                            {% else %} 
+                            <button onclick="VoteUtil.clearAll(); return false;" class="btn btn-danger reset-button" style="background"> Clear </button>
+                            <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="btn btn-success" style="position:absolute;" disabled>
                                 Submit
                             </button>
 							<button id="submitting" type="button" class="btn btn-default" style="visibility:hidden;position:relative;position:absolute;z-index:1;">
@@ -181,7 +181,7 @@ submissionURL="{% url 'polls:record' question.id%}";
 
                         {% if request.flavour == "mobile" %}
                         <!-- Clear button (mobile version) -->
-                        <button onclick="clearAll()" class="reset-button-mobile">
+                        <button onclick="VoteUtil.clearAll()" class="reset-button-mobile">
                             <a class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
                         </button>
                         {% endif %}
@@ -197,11 +197,11 @@ submissionURL="{% url 'polls:record' question.id%}";
                     <div class="panel-heading">
                         <h4>Remaining Options:
                         {% if request.flavour == "mobile" %}
-                        <button onclick="moveAll(); return false;" class="move-all-button-mobile">
+                        <button onclick="VoteUtil.moveAll(); return false;" class="move-all-button-mobile">
                             <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;"> All </span>
                         </button>
                         {% else %}
-                        <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button" >
+                        <button onclick="VoteUtil.moveAll(); return false;" class="btn btn-primary move-all-button" >
                             Move All
                         </button>
                             {% endif %}
@@ -222,7 +222,7 @@ submissionURL="{% url 'polls:record' question.id%}";
 
                             <!-- Display each option. Each option gets its own tier -->
                             {% with prev=forloop.counter|mul:2 %}
-                            <ul class="choice2" id="{{ prev|add:1 }}" onclick = "moveToPref(this)">
+                            <ul class="choice2" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
                             {% endwith %}
                                 <li class="li_item" id="item{{ item.item_text }}">
                                     <!-- Display image (uploaded) -->
@@ -295,7 +295,7 @@ submissionURL="{% url 'polls:record' question.id%}";
 	{% else %}
 		flavor = "PC";
 	{% endif %}
-	checkStyle();
+	VoteUtil.checkStyle();
 	startTime = Date.now();
 });
 

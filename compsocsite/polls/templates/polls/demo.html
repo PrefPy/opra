@@ -2,27 +2,13 @@
 {% load mathfilters %}
 {% load staticfiles %}
 {% block extra_head %}
-  
-   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 {% if request.flavour == "mobile" %}
 <script src='/static/js/mobile.js'></script>
 {% else %}
 <script src='/static/js/desktop.js'></script>
 {% endif %}
-<script src='/static/js/shared.js'></script>
-<script src='/static/js/voteWithTies.js'></script>
-
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-
-<style>
-    .tier {
-        float: left;
-       
-    }
-</style>
+<script src='/static/js/voting.js'></script>
 
 {% endblock %}
 
@@ -35,7 +21,7 @@
     {% endif %}
 
     {% if request.flavour == "mobile"%}
-   
+
     <br />
     {% endif %}
 
@@ -80,39 +66,39 @@
         	<div class="row">
 
             {% csrf_token %}
-     
+
             {% if request.flavour == "mobile" %}
                 <div class="col-md-6 margin-panel-top">
             {% else %}
                 <div class="col-md-6 margin-panel-top">
             {% endif %}
-                     
+
             <div class="panel panel-default" data-step="2" data-intro="After you click, options will jump to this box. And then you can drag them to change the original ranking or have ties.">
                 <div class="panel-heading" >
                     <b>Your preferences:</b>
                     {% if request.flavour == "mobile" %}
-                        <button id="submitbutton" type="submit" onclick="submitPref();" class="submit-button-mobile" >
+                        <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="submit-button-mobile" >
                             <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
                         </button>
-                        <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success" style ="float: right; display: none;">
+                        <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="btn btn-success" style ="float: right; display: none;">
                             Submit
                         </button>
                     {% else %}
-                        <button onclick="clearAll(); return false;" class="btn btn-danger reset-button" style="background">
+                        <button onclick="VoteUtil.clearAll(); return false;" class="btn btn-danger reset-button" style="background">
                             Clear
                         </button>
-                        <button id="submitbutton" type="submit" onclick="submitPref();" class="btn btn-success submit-button">
+                        <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="btn btn-success submit-button">
                             Submit
                         </button>
                     {% endif %}
                     <input type="hidden" id="pref_order" name="pref_order" value=""/>
                 </div>
-          
-                        
+
+
                 <div class="panel-body" >
                     <ul id="left-sortable" >
                         {% if currentSelection %}
-                        
+
                             {% for selection in currentSelection %}
                                 {% for item in question.item_set.all %}
 
@@ -148,7 +134,7 @@
                     </ul> <!-- left-sortable-->
                 </div>
                 {% if request.flavour == "mobile" %}
-                    <button onclick="clearAll(); return false;" class="reset-button-mobile">
+                    <button onclick="VoteUtil.clearAll(); return false;" class="reset-button-mobile">
                         <a class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</a>
                     </button>
                 {% endif %}
@@ -163,13 +149,13 @@
                         <div class="panel-heading">
                             <b>Remaining Options:</b>
                             {% if request.flavour == "mobile" %}
-                                <button onclick="moveAll(); return false;" class="move-all-button-mobile">
+                                <button onclick="VoteUtil.moveAll(); return false;" class="move-all-button-mobile">
                                     <span class="glyphicon glyphicon-arrow-up bluecolor" style="font-size:80%;float: center; color:white;">
                                         All
                                     </span>
                                 </button>
                             {% else %}
-                                <button onclick="moveAll(); return false;" class="btn btn-primary move-all-button">
+                                <button onclick="VoteUtil.moveAll(); return false;" class="btn btn-primary move-all-button">
                                     Move All
                                 </button>
                             {% endif %}
@@ -180,7 +166,7 @@
                                     {% for item in items %}
                                         <ul class="choice1 empty"></ul>
                                         <div class="tier">{{ forloop.counter }}</div>
-                                        <ul class="choice1" onclick = "moveToPref(this)">
+                                        <ul class="choice1" onclick = "VoteUtil.moveToPref(this)">
                                             <li class="" id="item{{ item.item_text }}">
                                                 {% if item.image %}
                                                     <img class="item" src='/{{ item.image.url }}'/>
@@ -198,17 +184,17 @@
         				</div>
         			</div>
         		</div>
-        	
+
         	</div>
         	<div data-step="3" data-intro="You can enter your coments about this poll here.">
         		<textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here...">{{lastcomment}}</textarea>
         	</div>
         </form>
-        
+
         <p>
             <br />
             <br />
-            
+
             {% if messages %}
                 <ul class="messages">
                     {% for message in messages %}

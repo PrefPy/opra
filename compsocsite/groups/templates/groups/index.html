@@ -5,13 +5,13 @@
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Groups created</b> 
-                <a href="{% url 'groups:addgroup' %}"><span class="btn btn-yellow"><span class="glyphicon glyphicon-plus" ></span></span></a>
+                <b>Groups created</b>
+                <a href="{% url 'groups:addgroup' %}" style="font-size:60%; float:right;" class="btn btn-yellow"><span class="glyphicon glyphicon-plus" ></span></a>
             </div>
             <div class="panel-body">
                 <table class="table">
                 {% if groups %}
-                    <tbody> 
+                    <tbody>
                     {% for group in groups %}
                         {% if request.user == group.owner %}
                             <tr>

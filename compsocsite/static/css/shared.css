@@ -129,9 +129,22 @@ button:hover .greencolor {
         padding-right:0px;
     }
 
-    .margin-panel-top {
-        padding: 0;
-    }
+		.nav-tabs {
+				display: flex;
+		}
+		.nav-tabs > li {
+				flex: 1;
+				height: 50px;
+				line-height: 50px;
+		}
+		.nav-tabs > li > a {
+				padding: 18px 0px 10px 0px;
+				text-align: center;
+		}
+		.nav-text {
+				display: none;
+		}
+
 }
 
 
@@ -145,16 +158,16 @@ button:hover .greencolor {
 }
 
 .btn-success.submit-button {
-    display: none; 
+    display: none;
     background: rgb(68, 157, 68,0.9);
 }
 
 .submit-button-mobile {
-    border: none; 
-    float: right; 
-    width: 30%; 
-    height: 1.25em; 
-    margin: 0; 
+    border: none;
+    float: right;
+    width: 30%;
+    height: 1.25em;
+    margin: 0;
     display: none;
     background: darkgreen;
 }
@@ -164,10 +177,10 @@ button:hover .greencolor {
 }
 
 .move-all-button-mobile {
-    border: none; 
-    float: right; 
-    width: 30%; 
-    height: 1.25em; 
+    border: none;
+    float: right;
+    width: 30%;
+    height: 1.25em;
     margin: 0;
     background: darkblue;
 }
@@ -197,7 +210,7 @@ img.item {
 	height: 40px;
 	width:auto;
 	max-width:100%;
-	
+
 }
 
 img.item:hover {
@@ -210,21 +223,20 @@ div{
 	font-size:100% !important;
 }
 
-.sortable1 { 
-    background: transparent; 
+.sortable1 {
+    background: transparent;
 }
-.aftersort { 
+.aftersort {
     background-color: #eee;
-    width: 100%; 
+    width: 100%;
 }
-.hide1 { 
-    background-color: transparent; 
+.hide1 {
+    background-color: transparent;
     min-height: 5px;
-    min-width: 15px; 
+    min-width: 15px;
 }
-.tier { 
+.tier {
     float:left;
-    font-size: 100px;
     font-weight: bold;
     -moz-user-select: none;
     -webkit-user-select:none;
@@ -249,4 +261,46 @@ li.li_item{
 ul.empty {
     background-color:grey;
     height: 15px;
+}
+
+.nav-tabs {
+		position: fixed;
+		top: 50px;
+		left: 0px;
+		right: 0px;
+		z-index: 1;
+		background-color: white;
+}
+
+#top {
+		padding: 110px 20px;
+}
+
+#content-block {
+		padding: 20px;
+		position: absolute;
+		top: 100px;
+		bottom: 0px;
+		right: 0px;
+		left: 0px;
+}
+
+/* handle overflowing text */
+th {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.li_item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tooltip {
+    overflow-wrap: break-word;
+}
+
+#collapse_des span {
+    overflow-wrap: break-word;
 }

@@ -19,12 +19,13 @@ from django.core import mail
 from prefpy.mechanism import *
 from prefpy.allocation_mechanism import *
 from prefpy.gmm_mixpl import *
-from .email import sendEmail, setupEmail
+from .email import EmailThread, setupEmail
 from groups.models import *
 from django.conf import settings
 from multipolls.models import *
 
 import json
+import threading
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
@@ -261,7 +262,8 @@ def quitPoll(request, question_id):
     
     # notify the user if this option is checked
     if request.user.userprofile.emailDelete:
-        sendEmail(request, question_id, 'remove')
+        email_class = EmailThread(request, question_id, 'remove')
+        email_class.start()
         
     # remove from the voter list
     question.question_voters.remove(request.user)
@@ -284,7 +286,8 @@ def startPoll(request, question_id):
     
     # send notification email
     if question.emailStart:
-        sendEmail(request, question_id, 'start')
+        email_class = EmailThread(request, question_id, 'start')
+        email_class.start()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
 
@@ -911,7 +914,8 @@ def addVoter(request, question_id):
     question.emailInvite = email
     question.save()
     if email:
-        sendEmail(request, question_id, 'invite')
+        email_class = EmailThread(request, question_id, 'invite')
+        email_class.start()
     # add each voter to the question by username
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
@@ -930,7 +934,8 @@ def removeVoter(request, question_id):
     question.emailDelete = email
     question.save()
     if email:
-        sendEmail(request, question_id, 'remove')   
+        email_class = EmailThread(request, question_id, 'remove')
+        email_class.start()   
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.remove(voterObj.id)

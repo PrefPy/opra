@@ -5,10 +5,19 @@ var order1 = "";
 var flavor = "";
 var startTime = 0;
 var allowTies = true;
+var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
 
+function changeMethod (value){
+	if(method == 1){ $("#twoCol").hide(); }
+	else if(method == 2){ $("#oneCol").hide(); }
+	method = parseInt(value.value);
+	if(method == 1){ $("#twoCol").show(); }
+	else if(method == 2){ $("#oneCol").show(); }
+
+	VoteUtil.checkStyle();
+};
 // the VoteUtil object contains all the utility functions for the voting UI
 var VoteUtil = (function () {
-	
 	// returns true if the user is on a mobile device, else returns false
 	function isMobileAgent () {
 		return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -16,34 +25,35 @@ var VoteUtil = (function () {
 	
 	// clears all items from the left side and returns the right side to its default state
 	function clearAll () {
-		
-		// move the left items over to the right side
-		$("#left-sortable").children().each(function(index){
-			if($(this).children().size() > 0){
-				var tier = 1;
-				$(this).children().each(function(index){
-					var temp = $("#right-sortable" ).html();
-					$("#right-sortable" ).html( temp + "<ul class=\"choice2 empty\"></ul>"
-						+ "<div class=\"tier\">" + tier + "</div>"
-						+ "<ul class=\"choice2\" onclick =\"VoteUtil.moveToPref(this)\">" + $(this)[0].outerHTML + "</ul>" );
-				});
-			}
-		});
-		
-		// clear the items from the left side
-		$( '#left-sortable' ).html("");
-		
-		checkStyle();
-		
-		// add the clear action to the record
-		var d = Date.now() - startTime;
-		record += d + "||";
-		$( "#right-sortable" ).children().each(function( index ) {
-			if($(this).children().size()>0){
-				record += $(this).children().first().attr("id") + "||"
-			}
-		});
-		record += ";;;";
+		if(method == 1){
+			// move the left items over to the right side
+			$("#left-sortable").children().each(function(index){
+				if($(this).children().size() > 0){
+					var tier = 1;
+					$(this).children().each(function(index){
+						var temp = $("#right-sortable" ).html();
+						$("#right-sortable" ).html( temp + "<ul class=\"choice2 empty\"></ul>"
+							+ "<div class=\"tier\">" + tier + "</div>"
+							+ "<ul class=\"choice2\" onclick =\"VoteUtil.moveToPref(this)\">" + $(this)[0].outerHTML + "</ul>" );
+					});
+				}
+			});
+			
+			// clear the items from the left side
+			$( '#left-sortable' ).html("");
+			
+			checkStyle();
+			
+			// add the clear action to the record
+			var d = Date.now() - startTime;
+			record += d + "||";
+			$( "#right-sortable" ).children().each(function( index ) {
+				if($(this).children().size()>0){
+					record += $(this).children().first().attr("id") + "||"
+				}
+			});
+			record += ";;;";
+		}
 	}
 	
 	function insideEach(t, id, tier){
@@ -68,31 +78,37 @@ var VoteUtil = (function () {
 	}
 	
 	function checkStyle () {
-		newItem = "<ul class=\"choice1 empty\"></ul>";
-		var tier = 1;
-		var id = 0;
-		$( ".tier" ).each(function( index ) {
-			$( this ).remove();
-		});
-		$( "#left-sortable" ).children().each(function( index ) {
-			arr = insideEach(this, id, tier);
-			id = arr[0];
-			tier = arr[1];
-			if($(this).children().size() >=1 ){
-				$(this).attr("class","choice1");
+		if(method < 3){
+			newItem = "<ul class=\"choice1 empty\"></ul>";
+			var tier = 1;
+			var id = 0;
+			if(method == 1){ submission = $("#left-sortable"); }
+			else{ submission = $("#one-sortable"); }
+			$( ".tier" ).each(function( index ) {
+				$( this ).remove();
+			});
+			submission.children().each(function( index ) {
+				arr = insideEach(this, id, tier);
+				id = arr[0];
+				tier = arr[1];
+				if($(this).children().size() >=1 ){
+					$(this).attr("class","choice1");
+				}
+			});
+			submission.children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+			if(method == 1){
+				tier = 1;
+				$( "#right-sortable" ).children().each(function( index ) {
+					arr = insideEach(this, id, tier);
+					id = arr[0];
+					tier = arr[1];
+				});
+				if($( "#right-sortable" ).children().size() > 0){
+					$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+				}
+				if( $( "#right-sortable" ).children().size() == 0 ){ enableSubmission(); }
 			}
-		});
-		$( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-		tier = 1;
-		$( "#right-sortable" ).children().each(function( index ) {
-			arr = insideEach(this, id, tier);
-			id = arr[0];
-			tier = arr[1];
-		});
-		if($( "#right-sortable" ).children().size() > 0){
-			$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
 		}
-		if( $( "#right-sortable" ).children().size() == 0 ){ enableSubmission(); }
 	}
 	
 	// submits the current left side preferences	
@@ -338,7 +354,14 @@ $( document ).ready(function() {
 		
 		//$("ul.choice1").sortable({
 		
-		var sortableSelector = 'ul#left-sortable'
+		if(method == 1){
+			var sortableSelector = 'ul#left-sortable';
+			var submission = $("#left-sortable");
+		}else if(method == 2){
+			var sortableSelector = 'ul#one-sortable';
+			var submission = $("#one-sortable");
+		}
+		
 		if (allowTies)
 			sortableSelector = 'ul.choice1'
 		else
@@ -384,7 +407,7 @@ $( document ).ready(function() {
 				$( ".tier" ).each(function( index ) {
 					$( this ).remove();
 				});
-				$( "#left-sortable" ).children().each(function( index ) {
+				submission.children().each(function( index ) {
 					if( $( this ).children().size() < 1 ){
 						$( this ).remove();
 					}else{
@@ -408,33 +431,35 @@ $( document ).ready(function() {
 					}
 				});
 				if (allowTies)
-					$( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-				$( "#right-sortable" ).children().each(function( index ) {
-					if( $( this ).children().size() < 1 ){
-						$( this ).remove();
-					}else{
-						$( this ).attr("id", id.toString());
-						id += 1;
-						$( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-						if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
-						if( $( this ).children().size() < 2 || VoteUtil.isMobileAgent() ){
-							$( this ).children().css( "width", "93%" );
-						}else{
-							$( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
+					submission.children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+					if(method == 1){
+						$( "#right-sortable" ).children().each(function( index ) {
+							if( $( this ).children().size() < 1 ){
+								$( this ).remove();
+							}else{
+								$( this ).attr("id", id.toString());
+								id += 1;
+								$( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+								if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
+								if( $( this ).children().size() < 2 || VoteUtil.isMobileAgent() ){
+									$( this ).children().css( "width", "93%" );
+								}else{
+									$( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
+								}
+								$( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
+								tier += 1;
+								id += 1;
+							}
+						});
+						if($( "#right-sortable" ).children().size() > 0){
+							$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
 						}
-						$( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
-						tier += 1;
-						id += 1;
+						if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
 					}
-				});
-				if($( "#right-sortable" ).children().size() > 0){
-					$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-				}
-				if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
 				var t = parseInt(item.attr("alt"));
 				var count = 0;
 				var itemsSameTier = "";
-				$( "#left-sortable" ).children().each(function(index){
+				submission.children().each(function(index){
 					if($(this).children().size()>=1){
 						count++;
 					}
@@ -579,4 +604,3 @@ $( document ).ready(function() {
 	VoteUtil.checkStyle();
 	
 });
-

@@ -71,12 +71,12 @@ input[type="submit"] {
 }
 
 /* Ranking UI */
-#left-sortable, #right-sortable {
+#left-sortable, #right-sortable, #one-sortable {
     list-style-type: none;
     margin: 0;
     padding: 0px;
 }
-#left-sortable li, #right-sortable li {
+#left-sortable li, #right-sortable li, #one-sortable li {
     display: block;
     margin: 5px 5px 5px 5px;
     padding: 5px;

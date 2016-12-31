@@ -605,6 +605,11 @@ $( document ).ready(function() {
 	}
 	VoteUtil.checkStyle();
 	$(".slide").each(function(){
-		$(this).slider();
+		$(this).slider({
+			step: 1,
+			slide: function( event, ui ) {
+				$("#score" + this.id).text(ui.value);
+			}
+		});
 	});
 });

@@ -258,6 +258,10 @@ li.li_item{
     display: inline-block;
     padding: 10px;
 }
+li.slider_item{
+    display:block;
+    padding: 10px;
+}
 ul.empty {
     background-color:grey;
     height: 15px;

@@ -57,7 +57,7 @@
                 <div class="panel-body" >
                     <ul id="sliders" >
                     {% for item in items %}
-                        <li class="li_item" id="item{{ item.item_text }}">
+                        <li class="slider_item" id="item{{ item.item_text }}">
                             <!-- Display image (uploaded) -->
                             {% if item.image %}
                                 <img class="item" src='/{{ item.image.url }}'/>
@@ -67,13 +67,13 @@
                                 <img class="item" src='{{ item.imageURL }}'/>
                             {% endif %}
                             <!-- Display option text -->
-                            {{ item.item_text }}
+                            {{ item.item_text }} : <div id="scoreI{{forloop.counter}}">0</div>
                             <!-- Display tooltip for option description -->
                             {% if item.item_description %}
                                 <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}" data-title="Meddelanden">
                                 </span>
                             {% endif %}
-                            <div class="slide"></div>
+                            <div class="slide" id="I{{ forloop.counter }}"></div>
                         </li>
                     {% endfor %}
                     </ul> <!-- end of main panel (left-sortable) -->

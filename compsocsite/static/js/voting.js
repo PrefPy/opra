@@ -10,9 +10,11 @@ var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
 function changeMethod (value){
 	if(method == 1){ $("#twoCol").hide(); }
 	else if(method == 2){ $("#oneCol").hide(); }
+	else if(method == 3){ $("#slider").hide(); }
 	method = parseInt(value.value);
 	if(method == 1){ $("#twoCol").show(); }
 	else if(method == 2){ $("#oneCol").show(); }
+	else if(method == 3){ $("#slider").show(); }
 
 	VoteUtil.checkStyle();
 };
@@ -602,5 +604,7 @@ $( document ).ready(function() {
 		enableSubmission();
 	}
 	VoteUtil.checkStyle();
-	
+	$(".slide").each(function(){
+		$(this).slider();
+	});
 });

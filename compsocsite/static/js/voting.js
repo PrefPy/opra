@@ -7,8 +7,25 @@ var startTime = 0;
 var allowTies = true;
 var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
 
+function orderTwoCol(){
+	var prefcolumn = $('#left-sortable');
+	var order = "";
+	prefcolumn.children().each(function( index ){
+		if( $( this ).children().size() > 0 ){
+			$( this ).children().each(function( index ){
+				order += $( this ).attr('alt') + ",";
+			});
+			order += "|,";
+		}
+	});
+	alert(order);
+}
+
 function changeMethod (value){
-	if(method == 1){ $("#twoCol").hide(); }
+	if(method == 1){ 
+		$("#twoCol").hide();
+		orderTwoCol();
+	}
 	else if(method == 2){ $("#oneCol").hide(); }
 	else if(method == 3){ $("#slider").hide(); }
 	else if(method == 4){ $("#star").hide(); }

@@ -57,7 +57,7 @@
                 <div class="panel-body" >
                     <ul id="sliders" >
                     {% for item in items %}
-                        <li class="slider_item" id="item{{ item.item_text }}">
+                        <li class="slider_item" id="item{{ item.item_text }}" alt="{{forloop.counter}}">
                             <!-- Display image (uploaded) -->
                             {% if item.image %}
                                 <img class="item" src='/{{ item.image.url }}'/>

@@ -1,6 +1,6 @@
 {% load mathfilters %}
 
-<div class="row" id="slider" hidden>
+<div class="row" id="star" hidden>
     {% csrf_token %}
     <!-- If this user isn't logged in and hasn't voted before -->
     {% if request.user.username == "" and 'anonymousid' not in request.session %}
@@ -55,9 +55,9 @@
 
                 <!-- Your preferences main panel -->
                 <div class="panel-body" >
-                    <ul id="sliders" >
+                    <ul id="stars" >
                     {% for item in items %}
-                        <li class="slider_item" id="item{{ item.item_text }}">
+                        <li class="star_item" id="item{{ item.item_text }}">
                             <!-- Display image (uploaded) -->
                             {% if item.image %}
                                 <img class="item" src='/{{ item.image.url }}'/>
@@ -67,13 +67,13 @@
                                 <img class="item" src='{{ item.imageURL }}'/>
                             {% endif %}
                             <!-- Display option text -->
-                            {{ item.item_text }} : <div id="scoreI{{forloop.counter}}">0</div>
+                            {{ item.item_text }} : <div id="scoreStarI{{forloop.counter}}">0</div>
                             <!-- Display tooltip for option description -->
                             {% if item.item_description %}
                                 <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}" data-title="Meddelanden">
                                 </span>
                             {% endif %}
-                            <div class="slide" id="I{{ forloop.counter }}"></div>
+                            <div class="star" id="starI{{ forloop.counter }}"></div>
                         </li>
                     {% endfor %}
                     </ul> <!-- end of main panel (left-sortable) -->

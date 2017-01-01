@@ -11,10 +11,12 @@ function changeMethod (value){
 	if(method == 1){ $("#twoCol").hide(); }
 	else if(method == 2){ $("#oneCol").hide(); }
 	else if(method == 3){ $("#slider").hide(); }
+	else if(method == 4){ $("#star").hide(); }
 	method = parseInt(value.value);
 	if(method == 1){ $("#twoCol").show(); }
 	else if(method == 2){ $("#oneCol").show(); }
 	else if(method == 3){ $("#slider").show(); }
+	else if(method == 4){ $("#star").show(); }
 
 	VoteUtil.checkStyle();
 };
@@ -610,6 +612,11 @@ $( document ).ready(function() {
 			slide: function( event, ui ) {
 				$("#score" + this.id).text(ui.value);
 			}
+		});
+	});
+	$(".star").each(function(){
+		$(this).rateYo({
+			halfStar: true
 		});
 	});
 });

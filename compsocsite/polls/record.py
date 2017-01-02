@@ -1,5 +1,6 @@
 import datetime
 import os
+import csv
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
@@ -88,6 +89,16 @@ def interpretRecord(record):
                         str2 += clear_arr[i][4:] + "; "
                     record_arr.append(str2)
     return record_arr
+    
+def downloadRecord(request, question_id):
+    response = HttpResponse(content_type='text/csv')
+    question = get_object_or_404(Question,pk=question_id)
+    records = question.uservoterecord_set.all()
+    response['Content-Disposition'] = 'attachment; filename="record.csv"'
+    writer = csv.writer(response)
+    for r in records:
+        writer.writerow(interpretRecord(r))
+    return response
     
 class RecordView(generic.DetailView):
     model = Question

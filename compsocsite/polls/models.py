@@ -81,6 +81,7 @@ class Response(models.Model):
     anonymous_voter = models.CharField(max_length=50,blank=True,null=True)
     anonymous_id = models.IntegerField(default = 0)
     comment = models.CharField(max_length=1000, blank=True, null=True)
+    active = models.IntegerField(default=1)
     def __str__(self):
         return "Response of user " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:

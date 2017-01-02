@@ -312,7 +312,7 @@ def stopPoll(request, question_id):
 # Question question
 # return String winnerStr
 def getPollWinner(question):
-    all_responses = question.response_set.reverse()
+    all_responses = question.response_set.filter(active=1).order_by('-timestamp')
     if len(all_responses) == 0:
         return ""
 
@@ -444,15 +444,21 @@ class PollInfoView(generic.DetailView):
         ctx['alloc_methods'] = getAllocMethods()
         
         # display this user's history
-        currentUserResponses = (self.object.response_set.filter(user=self.request.user).reverse())
+        currentUserResponses = self.object.response_set.filter(user=self.request.user,active=1).order_by('-timestamp')
         ctx['user_latest_responses'] = getSelectionList([currentUserResponses[0]]) if (len(currentUserResponses) > 0) else None
         ctx['user_previous_responses'] = getSelectionList(currentUserResponses[1:])
         
         # get history of all users
-        all_responses = self.object.response_set.reverse()
+        all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
         ctx['latest_responses'] = getSelectionList(latest_responses)
         ctx['previous_responses'] = getSelectionList(previous_responses)    
+        
+        # get deleted votes
+        deleted_responses = self.object.response_set.reverse().filter(active=0).order_by('-timestamp')
+        (latest_deleted_responses, previous_deleted_responses) = categorizeResponses(deleted_responses)
+        ctx['latest_deleted_responses'] = getSelectionList(latest_deleted_responses)
+        ctx[''] = getSelectionList(previous_deleted_responses)
         
         if self.object.question_voters.all().count() > 0:
             progressPercentage = len(latest_responses) / self.object.question_voters.all().count() * 100
@@ -735,7 +741,7 @@ def calculatePreviousResults(request, question_id):
         result.save()
         resultstr = ""
         movstr = ""
-        responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp])
+        responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp],active=1)
         (lr, pr) = categorizeResponses(responses)
         scorelist, mixtures = getVoteResults(lr,candMap)
         mov = getMarginOfVictory(lr,candMap)
@@ -1040,6 +1046,24 @@ def duplicatePoll(request,question_id):
     new_question.item_set.add(*new_items)
     setupEmail(new_question)
     return HttpResponseRedirect(reverse('polls:regular_polls'))
+    
+def deleteUserVotes(request,response_id):
+    response = get_object_or_404(Response,pk=response_id)
+    user = response.user
+    question = response.question
+    question.response_set.filter(user=user).update(active=0)
+    request.session['setting'] = 6
+    messages.success(request, 'Your changes have been saved.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+def restoreUserVotes(request,response_id):
+    response = get_object_or_404(Response,pk=response_id)
+    user = response.user
+    question = response.question
+    question.response_set.filter(user=user,active=0).update(active=1)
+    request.session['setting'] = 7
+    messages.success(request, 'Your changes have been saved.')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # view for ordering voters for allocation
 class AllocationOrder(generic.DetailView):
@@ -1195,7 +1219,7 @@ def assignAllocation(question, allocationResults):
 # Question question
 def getFinalAllocation(question):
     # the latest and previous responses are from latest to earliest
-    (latest_responses, previous_responses) = categorizeResponses(question.response_set.reverse())
+    (latest_responses, previous_responses) = categorizeResponses(question.response_set.filter(active=1).order_by('-timestamp'))
 
     # no responses, so stop here
     if len(latest_responses) == 0:

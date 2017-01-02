@@ -1,0 +1,43 @@
+<h3 class="page-header">Deleted votes of {{ question.question_text }} </h3>
+
+{% if latest_deleted_responses|length > 0 %}
+	{% for response, currentSelection in latest_deleted_responses %}
+		<!-- display name -->
+		<a class="btn btn-primary" href="{% url 'polls:resuservotes' response.id %}">Restore</a>
+		{% if response.user %}
+			{% if response.user.first_name == "" %}
+				<b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
+			{% else %}
+				{{ response.user.first_name }} {{ response.user.last_name }} (<a href="mailto:{{ response.user.email }}">{{ response.user.email }}</a>)
+				(last voted on {{ response.timestamp }}) <br />
+			{% endif %}
+		{% else %}
+			<b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br />
+		{% endif %}
+		
+		{% include 'polls/_display_vote.html' %}
+	{% endfor %} <!-- for response-->
+	<br />
+	<br />
+	{% if previous_deleted_responses %}
+		<button data-toggle="collapse" data-target="#history2" class="btn btn-info" >Show/Hide More History</button>
+		<div id="history2" class="collapse">
+			<div class="well">
+			{% for response, currentSelection in previous_deleted_responses %}
+				<div class="btn-group">
+					<!-- display name -->
+					{% if response.user %}
+						<b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
+					{% else %}
+						<b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br />
+					{% endif %} 
+
+					{% include 'polls/_display_vote.html' %}
+				</div>
+			{% endfor %}
+			</div>
+		</div>
+	{% endif %} <!--previous responses-->
+{% else %} 
+	<p>No one has voted on this poll yet.</p>
+{% endif %} <!-- no response-->

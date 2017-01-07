@@ -102,7 +102,7 @@
                     {% with prev=forloop.counter|mul:2 %}
                     <ul class="choice2" id="{{ prev|add:1 }}">
                     {% endwith %}
-                        <li class="li_item" id="item{{ item.item_text }}" alt="{{ forloop.counter }}">
+                        <li class="one_li_item" id="item{{ item.item_text }}" type="{{ forloop.counter }}">
                             <!-- Display image (uploaded) -->
                             {% if item.image %}
                                 <img class="item" src='/{{ item.image.url }}'/>

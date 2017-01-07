@@ -17,7 +17,7 @@ function orderCol(num){
 			if( $( this ).children().size() > 0 ){
 				var inner = [];
 				$( this ).children().each(function( index ){
-					inner.push($( this ).attr('alt'));
+					inner.push($( this ).attr('type'));
 				});
 				order.push(inner);
 			}
@@ -33,22 +33,62 @@ function orderSlideStar(str){
 		if(str == 'slide'){ var score = $( this ).slider("option", "value"); }
 		else if(str == 'star'){ var score = parseInt($( this ).rateYo("option", "rating")); }
 		else{ return false; }
-		var alt = $( this ).attr('alt')
+		var type = $( this ).attr('type')
 		var bool = 0;
 		$.each(values, function( index, value ){
 			if(value < score){
 				values.splice(index, 0, score);
-				arr.splice(index, 0, [alt]);
+				arr.splice(index, 0, [type]);
 				bool = 1;
 				return false;
 			}else if(value == score){
-				arr[index].push(alt);
+				arr[index].push(type);
+				bool = 1;
 				return false;
 			}
 		});
-		if(bool == 0){ values.push(score); arr.push([alt]); }
+		if(bool == 0){ values.push(score); arr.push([type]); }
 	});
 	return arr;
+}
+
+function twoColSort( order ){
+	var html = "<ul class=\"choice1 empty\"></ul>";
+	$.each(order, function(index, value){
+		html += "<ul class=\"choice1\"><div class=\"tier\">" + index.toString() + "</div>";
+		$.each(value, function(i, v){
+			html += "<li class=\"li_item\" id=\"" + $(".li_item[type='" + v.toString() + "']").attr('id') + "\" type=" + v.toString() + ">";
+			html += $(".li_item[type='" + v.toString() + "']").html();
+			html += "</li>";
+		});
+		html += "</ul><ul class=\"choice1 empty\"></ul>";
+	});
+	$('#left-sortable').html(html);
+	$('#right-sortable').html("");
+}
+
+function oneColSort( order ){
+	var html = "<ul class=\"choice2 empty\"></ul>";
+	$.each(order, function(index, value){
+		html += "<ul class=\"choice2\"><div class=\"tier\">" + index.toString() + "</div>";
+		$.each(value, function(i, v){
+			html += "<li class=\"one_li_item\" id=\"" + $(".one_li_item[type='" + v.toString() + "']").attr('id') + "\" type=" + v.toString() + ">";
+			html += $(".one_li_item[type='" + v.toString() + "']").html();
+			html += "</li>";
+		});
+		html += "</ul><ul class=\"choice2 empty\"></ul>";
+	});
+	$('#one-sortable').html(html);
+}
+
+function sliderSort( order ){
+	$.each(order, function(index, value){
+		$.each(value, function(i, v){
+			$(".slide[type='" + v.toString() + "']").slider("value", Math.round(100 - (100 * index / order.length)));
+			$("#score" + $(".slide[type='" + v.toString() + "']").attr("id")).text(Math.round(100 - (100 * index / order.length)));
+			console.log("#score" + $(".slide[type='" + v.toString() + "']").attr("id"));
+		});
+	});
 }
 
 function changeMethod (value){
@@ -68,11 +108,11 @@ function changeMethod (value){
 		$("#star").hide();
 		order = orderSlideStar('star');
 	}
-	alert(order);
+	console.log(order.length);
 	method = parseInt(value.value);
-	if(method == 1){ $("#twoCol").show(); }
-	else if(method == 2){ $("#oneCol").show(); }
-	else if(method == 3){ $("#slider").show(); }
+	if(method == 1){ $("#twoCol").show(); twoColSort(order); }
+	else if(method == 2){ $("#oneCol").show(); oneColSort(order); }
+	else if(method == 3){ $("#slider").show(); sliderSort(order); }
 	else if(method == 4){ $("#star").show(); }
 
 	VoteUtil.checkStyle();
@@ -676,4 +716,7 @@ $( document ).ready(function() {
 			halfStar: true
 		});
 	});
+	// $(".li_item").each(function(index, obj){
+	// 	$(this).attr('alt', toString(index));
+	// });
 });

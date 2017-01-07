@@ -68,7 +68,7 @@
 
                             <!-- Display all the options selected for this tier -->
                             {% for selection in s %}
-                            <li class="li_item" id="item{{ selection.item_text }}" alt="{{forloop.parentloop.counter}}">
+                            <li class="li_item" id="item{{ selection.item_text }}" type="{{forloop.parentloop.counter}}">
                                 <!-- Display image (uploaded) -->
                                 {% if selection.image %}
                                     <img class="item" src='/{{ selection.image.url }}'/>
@@ -138,7 +138,7 @@
                     {% with prev=forloop.counter|mul:2 %}
                     <ul class="choice2" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
                     {% endwith %}
-                        <li class="li_item" id="item{{ item.item_text }}" alt="{{ forloop.counter }}">
+                        <li class="li_item" id="item{{ item.item_text }}" type="{{ forloop.counter }}">
                             <!-- Display image (uploaded) -->
                             {% if item.image %}
                                 <img class="item" src='/{{ item.image.url }}'/>

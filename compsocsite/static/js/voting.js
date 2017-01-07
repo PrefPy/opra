@@ -86,7 +86,14 @@ function sliderSort( order ){
 		$.each(value, function(i, v){
 			$(".slide[type='" + v.toString() + "']").slider("value", Math.round(100 - (100 * index / order.length)));
 			$("#score" + $(".slide[type='" + v.toString() + "']").attr("id")).text(Math.round(100 - (100 * index / order.length)));
-			console.log("#score" + $(".slide[type='" + v.toString() + "']").attr("id"));
+		});
+	});
+}
+
+function starSort( order ){
+	$.each(order, function(index, value){
+		$.each(value, function(i, v){
+			$(".star[type='" + v.toString() + "']").rateYo("option", "rating", Math.round(10 - (10 * index / order.length)) / 2);
 		});
 	});
 }
@@ -113,7 +120,7 @@ function changeMethod (value){
 	if(method == 1){ $("#twoCol").show(); twoColSort(order); }
 	else if(method == 2){ $("#oneCol").show(); oneColSort(order); }
 	else if(method == 3){ $("#slider").show(); sliderSort(order); }
-	else if(method == 4){ $("#star").show(); }
+	else if(method == 4){ $("#star").show(); starSort(order); }
 
 	VoteUtil.checkStyle();
 };

@@ -7,28 +7,68 @@ var startTime = 0;
 var allowTies = true;
 var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
 
-function orderTwoCol(){
-	var prefcolumn = $('#left-sortable');
-	var order = "";
-	prefcolumn.children().each(function( index ){
-		if( $( this ).children().size() > 0 ){
-			$( this ).children().each(function( index ){
-				order += $( this ).attr('alt') + ",";
-			});
-			order += "|,";
-		}
+function orderCol(num){
+	var arr;
+	if(num == 1){ arr = [$('#left-sortable'), $('#right-sortable')]; }
+	else if(num == 2){ arr = [$('#one-sortable')]; }
+	var order = [];
+	$.each(arr, function( index, value ){
+		value.children().each(function( index ){
+			if( $( this ).children().size() > 0 ){
+				var inner = [];
+				$( this ).children().each(function( index ){
+					inner.push($( this ).attr('alt'));
+				});
+				order.push(inner);
+			}
+		});
 	});
-	alert(order);
+	return order;
+}
+
+function orderSlideStar(str){
+	var arr = [];
+	var values = [];
+	$('.' + str).each(function(i, obj){
+		if(str == 'slide'){ var score = $( this ).slider("option", "value"); }
+		else if(str == 'star'){ var score = parseInt($( this ).rateYo("option", "rating")); }
+		else{ return false; }
+		var alt = $( this ).attr('alt')
+		var bool = 0;
+		$.each(values, function( index, value ){
+			if(value < score){
+				values.splice(index, 0, score);
+				arr.splice(index, 0, [alt]);
+				bool = 1;
+				return false;
+			}else if(value == score){
+				arr[index].push(alt);
+				return false;
+			}
+		});
+		if(bool == 0){ values.push(score); arr.push([alt]); }
+	});
+	return arr;
 }
 
 function changeMethod (value){
+	var order;
 	if(method == 1){ 
 		$("#twoCol").hide();
-		orderTwoCol();
+		order = orderCol(method);
+	}else if(method == 2){
+		$("#oneCol").hide();
+		order = orderCol(method);
 	}
-	else if(method == 2){ $("#oneCol").hide(); }
-	else if(method == 3){ $("#slider").hide(); }
-	else if(method == 4){ $("#star").hide(); }
+	else if(method == 3){
+		$("#slider").hide();
+		order = orderSlideStar('slide');
+	}
+	else if(method == 4){
+		$("#star").hide();
+		order = orderSlideStar('star');
+	}
+	alert(order);
 	method = parseInt(value.value);
 	if(method == 1){ $("#twoCol").show(); }
 	else if(method == 2){ $("#oneCol").show(); }

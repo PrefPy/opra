@@ -221,7 +221,7 @@ var VoteUtil = (function () {
 	
 	// submits the current left side preferences	
 	function submitPref() {
-		if(method != 1)
+		if(method != 1){
 			var order_list;
 			if(method == 2){ order_list = orderCol(method); }
 			else if(method == 3){ order_list = orderSlideStar('slide'); }

@@ -68,4 +68,5 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/record/$', record.writeUserAction, name='record'),
     url(r'^(?P<pk>[0-9]+)/recordView/$', record.RecordView.as_view(), name='recordView'),
     url(r'^(?P<question_id>[0-9]+)/downloadrecord/$', record.downloadRecord, name='downloadrecord'),
+    url(r'^(?P<user_id>[0-9]+)/downloadallrecord/$', record.downloadAllRecord, name='downloadallrecord'),
 ]

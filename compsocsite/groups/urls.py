@@ -13,4 +13,7 @@ urlpatterns = [
     url(r'^(?P<group_id>[0-9]+)/members/remove/$', views.removemember, name='removemember'),
     url(r'^(?P<question_id>[0-9]+)/addgroupvoters/$', views.addgroupvoters, name='addgroupvoters'),    
     url(r'^(?P<question_id>[0-9]+)/removegroupvoters/$', views.removegroupvoters, name='removegroupvoters'),  
+    url(r'^(?P<group_id>[0-9]+)/join/$', views.joingroup, name='join'),
+    url(r'^(?P<group_id>[0-9]+)/open/$', views.opengroup, name='open'),
+    url(r'^(?P<group_id>[0-9]+)/close/$', views.closegroup, name='close'),
 ]

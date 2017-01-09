@@ -15,6 +15,15 @@ def PublishAllocationsRandomly(modeladmin, request, queryset):
     allocation_random_assignment(queryset)
 PublishAllocationsRandomly.short_description = "Run random allocation algorithm for these responses"
 
+def changeAllSeparators(modeladmin, request, queryset):
+    for resp in queryset:
+        if resp.resp_str != None:
+            s = resp.resp_str
+            s2 = str.replace(s,",",";;")
+            resp.resp_str = s2
+            #print(s2)
+            resp.save()
+
 
 #limits admin change permissions
 # https://gist.github.com/aaugustin/1388243
@@ -67,12 +76,12 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 # response editing / viewing
-class ResponseAdmin(ReadOnlyModelAdmin):
+class ResponseAdmin(admin.ModelAdmin):
     list_display = ('user', 'question', 'timestamp')
     list_filter = ['user', 'question', 'timestamp']
 
     # DEFINE ALL ADDITIONAL ALLOCATION ACTIONS HERE
-    actions = [PublishAllocations_SerialDictatorship, PublishAllocationsRandomly]
+    actions = [PublishAllocations_SerialDictatorship, PublishAllocationsRandomly, changeAllSeparators]
 
 # register models
 admin.site.register(Question, QuestionAdmin)

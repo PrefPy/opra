@@ -102,9 +102,9 @@ var VoteUtil = (function () {
 		prefcolumn.children().each(function( index ){
 			if( $( this ).children().size() > 0 ){
 				$( this ).children().each(function( index ){
-					order += $( this ).attr('id') + ",";
+					order += $( this ).attr('id') + ";;";
 				});
-				order += "|,";
+				order += "|;;";
 			}
 		});
 		$('#pref_order').val(order);

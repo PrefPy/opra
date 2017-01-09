@@ -2,6 +2,19 @@
 
 {% block content %}
 {% if user.is_authenticated %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+	<p>
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+				{{ message }}
+			</div>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</p>
+</div>
     <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -17,6 +30,13 @@
                             <tr>
                                 <td>{{ group.name }}</td>
                                 <td><a href="{% url 'groups:members' group.id %}">View/Change members</a></td>
+								<td>
+								{% if group.open == 0 %}
+									<a href="{% url 'groups:open' group.id%}" class="btn btn-primary">Open</a>
+								{% else %}
+									<a href="{% url 'groups:close' group.id%}" class="btn btn-primary">Close</a>
+								{% endif %}
+								</td>
                             </tr>
                         {% endif %}
                     {% endfor %}
@@ -27,7 +47,27 @@
                 </table>
             </div>
         </div>
-    </div>
+		<div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Groups you can join</b>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                {% if opengroups %}
+                    <tbody>
+                    {% for group in opengroups %}
+                        {% if request.user != group.owner and request.user not in group.members.all %}
+                            <tr>
+                                <td>{{ group.name }}</td>
+                                <td><a href="{% url 'groups:join' group.id %}" class="btn btn-primary">Join</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                {% endif %}
+                </table>
+            </div>
+        </div>
     </div>
 {% endif %}
 {% endblock %}

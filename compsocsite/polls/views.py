@@ -1257,12 +1257,12 @@ def getPrefOrder(orderStr, question):
     if orderStr == "":
         return None
     
-    current_array = orderStr.split(",|,")
+    current_array = orderStr.split(";;|;;")
     prefOrder = []
     length = 0
     for item in current_array:
         if item != "":
-            curr = item.split(",")
+            curr = item.split(";;")
             prefOrder.append(curr)
             length += len(curr)
     # the user hasn't ranked all the preferences yet

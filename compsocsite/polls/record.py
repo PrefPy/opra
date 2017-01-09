@@ -42,6 +42,75 @@ def writeUserAction(request, question_id):
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
+    
+# download all data from database, only initial and final rankings
+# allow self-sign-up to groups
+
+
+def interpretRecordForDownload(record):
+    order = record.initial_order
+    order_arr = order.split(";;")
+    order = ""
+    for i in order_arr:
+        order += i[4:] + "; "
+    r = record.record
+    action_arr = r.split(";;;")
+    title_arr = []
+    record_arr = []
+    title_arr.append(record.user)
+    title_arr.append(str(record.question.id))
+    title_arr.append(str(record.timestamp))
+    if record.initial_order == "":
+        title_arr.append("Last user's vote order")
+    else:
+        title_arr.append(order)
+    title_arr.append(record.device)
+    for str1 in action_arr:
+        each_record = []
+        if str1.find(";;") != -1:
+            pair = str1.split(";;")
+            if len(pair) == 2:
+                t1 = pair[0].split("::")
+                t2 = pair[1].split("::")
+                t1[2] = t1[2][4:]
+                t2[2] = t2[2][4:]
+                if t1[1] == "start":
+                    each_record.append("Drag")
+                    str2 = ""
+                    item_arr = t2[3].split("||")
+                    each_record.append(t1[0])
+                    each_record.append(t1[3])
+                    each_record.append(t2[0])
+                    each_record.append(item_arr[0])
+                    for index in range(1,len(item_arr)):
+                        if(item_arr[index] != ""):
+                            str2 += item_arr[index][4:] + ", "
+                    each_record.append(str2)
+                else:
+                    each_record.append("Click")
+                    each_record.append(t1[0])
+                    each_record.append(t1[3])
+                    each_record.append(t2[0])
+                    each_record.append(t2[3])
+        else:
+            if len(str1) != 0:
+                if str1.find("||") == -1:
+                    each_record.append("Move All")
+                    each_record.append(str1)
+                else:
+                    str2 = ""
+                    clear_arr = str1.split("||")
+                    each_record.append("Clear All")
+                    each_record.append(clear_arr[0])
+                    each_record.append("")
+                    each_record.append("")
+                    each_record.append("")
+                    for i in range(1,len(clear_arr)):
+                        str2 += clear_arr[i][4:] + "; "
+                    each_record.append(str2)
+        record_arr.append(each_record)
+    return (title_arr,record_arr)
+    
 def interpretRecord(record):
     order = record.initial_order
     order_arr = order.split(";;")
@@ -99,6 +168,25 @@ def downloadRecord(request, question_id):
     for r in records:
         writer.writerow(interpretRecord(r))
     return response
+    
+def downloadAllRecord(request, user_id):
+    user = get_object_or_404(User,pk=user_id)
+    response = HttpResponse(content_type='text/csv')
+    records = []
+    response['Content-Disposition'] = 'attachment; filename="record.csv"'
+    writer = csv.writer(response)
+    writer.writerow(["Username","Question id","Timestamp","Initial order"])
+    for question in user.question_set.order_by('id'):
+        for record in question.uservoterecord_set.all():
+            (title_arr,record_arr) = interpretRecordForDownload(record)
+            writer.writerow(title_arr)
+            writer.writerow(["Action type","Start time","Start tier","Stop time","Stop tier","Final order"])
+            for r in record_arr:
+                writer.writerow(r)
+            writer.writerow([])
+    return response
+            
+    
     
 class RecordView(generic.DetailView):
     model = Question

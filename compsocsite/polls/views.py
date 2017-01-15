@@ -416,6 +416,11 @@ class DetailView(generic.DetailView):
         # check if the user submitted a vote earlier and display that for modification
         if len(currentUserResponses) > 0: 
             ctx['currentSelection'] = getCurrentSelection(currentUserResponses[0])
+            items = []
+            for item in ctx['currentSelection']:
+                for i in item:
+                    items.append(i)
+            ctx['items'] = items
         else:
             # no history so display the list of choices
             ctx['items'] = self.get_order(ctx)
@@ -1259,6 +1264,7 @@ def vote(request, question_id):
     prevResponseCount = question.response_set.filter(user=request.user).count()
     # get the preference order
     orderStr = request.POST["pref_order"]
+    print(request.POST)
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:
         # the user must rank all preferences

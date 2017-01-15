@@ -80,21 +80,10 @@
         <option value="4">Stars</option>
     </select>
 
-    <!-- This is the voting form. Submit results through a voting function -->
-    <form {% if request.user.username == "" %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
-
         {% include "polls/voteOptions/twoCol.html" %}
         {% include "polls/voteOptions/oneCol.html" %}
         {% include "polls/voteOptions/slider.html" %}
         {% include "polls/voteOptions/stars.html" %}
-
-        <!-- Comments section -->
-        <div>
-            <!-- Hints button -->
-            <a tabindex="0" style="float:right; {%if request.user.userprofile.showHint == True%} visibility:visible;{% else %}visibility:hidden; {%endif%}"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="You can leave your comments here. <br/><form action='{% url 'appauth:disableHint' %}' method='POST'>{% csrf_token %}<input id='toggle-button' class='btn btn-primary btn-sm' type='submit' value='Disable All Hints'/></form>"></a>
-            <!-- Textbox to enter comments -->
-            <textarea class="form-control" name="comment" rows="4" cols="50" maxlength="1000" placeholder="Enter your comments here" >{{lastcomment}}</textarea>
-        </div>
     </form>
     {% endif %}
     {% elif question.status == 1 %}

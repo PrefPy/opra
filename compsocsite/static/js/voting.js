@@ -234,12 +234,16 @@ var VoteUtil = (function () {
 		prefcolumn.children().each(function( index ){
 			if( $( this ).children().size() > 0 ){
 				$( this ).children().each(function( index ){
-					order += $( this ).attr('id') + ",";
+					if($( this ).attr('id')){
+						order += $( this ).attr('id') + ",";
+					}
 				});
 				order += "|,";
 			}
 		});
-		$('#pref_order').val(order);
+		$('.pref_order').each(function(){
+			$(this).val(order);
+		});
 		
 		$.ajax({
 			url: submissionURL,

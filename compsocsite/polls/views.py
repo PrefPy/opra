@@ -26,6 +26,7 @@ from multipolls.models import *
 
 import json
 import threading
+import itertools
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
@@ -421,6 +422,7 @@ class DetailView(generic.DetailView):
                 for i in item:
                     items.append(i)
             ctx['items'] = items
+            ctx['itr'] = itertools.count(1, 1)
         else:
             # no history so display the list of choices
             ctx['items'] = self.get_order(ctx)
@@ -1264,7 +1266,6 @@ def vote(request, question_id):
     prevResponseCount = question.response_set.filter(user=request.user).count()
     # get the preference order
     orderStr = request.POST["pref_order"]
-    print(request.POST)
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:
         # the user must rank all preferences

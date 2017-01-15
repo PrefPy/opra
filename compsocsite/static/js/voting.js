@@ -735,4 +735,9 @@ $( document ).ready(function() {
 			halfStar: true
 		});
 	});
+	var t = 1
+	$(".li_item").each(function(){
+		$(this).attr({type:t.toString()});
+		t += 1;
+	});
 });

@@ -66,7 +66,7 @@
 
                                         <!-- Display all the options selected for this tier -->
                                         {% for selection in s %}
-                                            <li class="li_item" id="item{{ selection.item_text }}" type="{{forloop.parentloop.counter}}">
+                                            <li class="li_item" id="item{{ selection.item_text }}">
                                                 <!-- Display image (uploaded) -->
                                                 {% if selection.image %}
                                                     <img class="item" src='/{{ selection.image.url }}'/>

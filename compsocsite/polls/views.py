@@ -1287,7 +1287,6 @@ def getPrefOrder(orderStr, question):
     # empty string
     if orderStr == "":
         return None
-    
     current_array = orderStr.split(";;|;;")
     prefOrder = []
     length = 0

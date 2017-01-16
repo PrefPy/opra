@@ -27,18 +27,26 @@ def writeUserAction(request, question_id):
         #session_key = request.COOKIES.get(settings.SESSION_COOKIE_NAME, None)
         #str = "/log/" + request.user.username + "_" + session_key + ".txt"
         #f = open(str, 'w+')
+        type = 0
         data = request.POST['data']
         order1 = request.POST['order1']
         order2 = request.POST['order2']
         device = request.POST['device']
+        final = request.POST['final']
+        init = ""
+        if order1 != "":
+            init = order1
+        else:
+            init = order2
+            type = 1
         #print(data)
         if request.user.username == "":
             anonymous_name = ""
             new_name = "(Anonymous)" + anonymous_name
-            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=order1,final_order=order2,device=device)
+            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type)
             r.save()
         else:
-            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=order2,final_order=order2,device=device)
+            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type)
             r.save()
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -50,10 +58,6 @@ def writeUserAction(request, question_id):
 
 def interpretRecordForDownload(record):
     order = record.initial_order
-    order_arr = order.split(";;")
-    order = ""
-    for i in order_arr:
-        order += i[4:] + "; "
     r = record.record
     action_arr = r.split(";;;")
     title_arr = []
@@ -117,10 +121,6 @@ def interpretRecordForDownload(record):
     
 def interpretRecord(record):
     order = record.initial_order
-    order_arr = order.split(";;")
-    order = ""
-    for i in order_arr:
-        order += i[4:] + "; "
     r = record.record
     action_arr = r.split(";;;")
     record_arr = []
@@ -128,6 +128,10 @@ def interpretRecord(record):
     temp += record.user + " voted at " + str(record.timestamp) + "\n"
     if order != "":
         temp += "\nInitial order: " + order
+    if record.initial_type == 0:
+        temp += "  (recommended order)"
+    else:
+        temp += "  (User's last vote order)"
     record_arr.append(temp)
     record_arr.append(record.device)
     for str1 in action_arr:
@@ -173,11 +177,13 @@ def interpretRecord1(record):
     final = record.final_order
     action_arr = record.record.split(";;;")
     t = action_arr[len(action_arr)-1][1:]
+    type = str(record.initial_type)
     result = []
     result.append(str(record.question.id))
     result.append(record.user)
     result.append(t)
     result.append(init)
+    result.append(type)
     result.append(final)
     return result
     

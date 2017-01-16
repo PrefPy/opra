@@ -104,14 +104,9 @@ var VoteUtil = (function () {
 		record += "S" + d;
 		prefcolumn.children().each(function( index ){
 			if( $( this ).children().size() > 0 ){
-				var temp = 1;
-				var s = $( this ).children().size();
 				$( this ).children().each(function( index ){
 					order += $( this ).attr('id');
-					if(temp < s){
-						order += ";;";
-					}
-					temp += 1;
+					order += ";;";
 				});
 				order += "|;;";
 			}
@@ -121,7 +116,7 @@ var VoteUtil = (function () {
 		$.ajax({
 			url: submissionURL,
 			type: "POST",
-			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'device':flavor},
+			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'final':order,'device':flavor},
 			success: function(){}
 		});
 		$('#pref_order').submit();

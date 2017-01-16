@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.views import generic
 
 from .models import *
-
+from django.contrib import messages
 from django.utils import timezone
 from django.template import RequestContext
 from django.shortcuts import render_to_response

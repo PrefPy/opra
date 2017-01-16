@@ -28,16 +28,17 @@ def writeUserAction(request, question_id):
         #str = "/log/" + request.user.username + "_" + session_key + ".txt"
         #f = open(str, 'w+')
         data = request.POST['data']
-        order = request.POST['order']
+        order1 = request.POST['order1']
+        order2 = request.POST['order2']
         device = request.POST['device']
         #print(data)
         if request.user.username == "":
             anonymous_name = ""
             new_name = "(Anonymous)" + anonymous_name
-            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=order,device=device)
+            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=order1,final_order=order2,device=device)
             r.save()
         else:
-            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=order,device=device)
+            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=order2,final_order=order2,device=device)
             r.save()
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -94,7 +95,10 @@ def interpretRecordForDownload(record):
                     each_record.append(t2[3])
         else:
             if len(str1) != 0:
-                if str1.find("||") == -1:
+                if str1[0] == "S":
+                    each_record.append("Submit")
+                    each_record.append(str1[1:])
+                elif str1.find("||") == -1:
                     each_record.append("Move All")
                     each_record.append(str1)
                 else:
@@ -148,7 +152,10 @@ def interpretRecord(record):
                     record_arr.append(str2)
         else:
             if len(str1) != 0:
-                if str1.find("||") == -1:
+                if str1[0] == "S":
+                    str2 = "Clicked submit at time " + str1[1:] + "."
+                    record_arr.append(str2)
+                elif str1.find("||") == -1:
                     str2 = "Clicked move all at time " + str1 + "."
                     record_arr.append(str2)
                 else:
@@ -159,6 +166,21 @@ def interpretRecord(record):
                     record_arr.append(str2)
     return record_arr
     
+def interpretRecord1(record):
+    init = record.initial_order
+    if len(init) > 0 and init[len(init)-1] == "":
+        init = init[0:len(init)-1]
+    final = record.final_order
+    action_arr = record.record.split(";;;")
+    t = action_arr[len(action_arr)-1][1:]
+    result = []
+    result.append(str(record.question.id))
+    result.append(record.user)
+    result.append(t)
+    result.append(init)
+    result.append(final)
+    return result
+    
 def downloadRecord(request, question_id):
     response = HttpResponse(content_type='text/csv')
     question = get_object_or_404(Question,pk=question_id)
@@ -166,10 +188,22 @@ def downloadRecord(request, question_id):
     response['Content-Disposition'] = 'attachment; filename="record.csv"'
     writer = csv.writer(response)
     for r in records:
-        writer.writerow(interpretRecord(r))
+        writer.writerow(interpretRecord1(r))
+    return response
+
+def downloadAllRecord(request, user_id):
+    user = get_object_or_404(User,pk=user_id)
+    response = HttpResponse(content_type='text/csv')
+    records = []
+    response['Content-Disposition'] = 'attachment; filename="all_record.csv"'
+    writer = csv.writer(response)
+    for question in user.question_set.order_by('id'):
+        for record in question.uservoterecord_set.all():
+            writer.writerow(interpretRecord1(record))
+        writer.writerow([])
     return response
     
-def downloadAllRecord(request, user_id):
+def downloadAllRecord1(request, user_id):
     user = get_object_or_404(User,pk=user_id)
     response = HttpResponse(content_type='text/csv')
     records = []

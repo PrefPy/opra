@@ -25,6 +25,7 @@ from django.conf import settings
 from multipolls.models import *
 
 import json
+import django_rq
 
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
@@ -487,7 +488,7 @@ class VoteResultsView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(VoteResultsView, self).get_context_data(**kwargs)
         
-        all_responses = self.object.response_set.reverse()    
+        all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')  
         candMap = getCandidateMapFromList(list(self.object.item_set.all()))
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
         ctx['latest_responses'] = latest_responses
@@ -1247,6 +1248,36 @@ def getFinalAllocation(question):
         
     allocationResults = allocation(question.poll_algorithm, itemList, responseList)
     assignAllocation(question, allocationResults)    
+    
+def calculateCurrentResult(question):
+
+    candMap = getCandidateMapFromList(list(question.item_set.all()))
+    indexVoteResults = question.poll_algorithm - 1
+    current_result = vote_results[indexVoteResults]
+    
+    if question.currentresult != None:
+        question.currentresult.clear()
+    
+    result = CurrentResult(question=question,timestamp=pw.response.timestamp,result_string="",mov_string="",cand_num=question.item_set.all().count())
+    resultstr = ""
+    movstr = ""
+    responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp],active=1)
+    (lr, pr) = categorizeResponses(responses)
+    scorelist, mixtures = getVoteResults(lr,candMap)
+    mov = getMarginOfVictory(lr,candMap)
+    for x in range(0,len(scorelist)):
+        for key,value in scorelist[x].items():
+            resultstr += str(value)
+            resultstr += ","
+    for x in range(0,len(mov)):
+        movstr += str(mov[x])
+        movstr += ","
+    resultstr = resultstr[:-1]
+    movstr = movstr[:-1]
+    result.result_string = resultstr
+    result.mov_string = movstr
+    result.save()
+
             
 # function to get preference order from a string 
 # String orderStr
@@ -1290,6 +1321,8 @@ def vote(request, question_id):
         response.comment = comment
     response.save()
     
+    #enqueue
+    #enqueue(getCurrentResult(question))
     
     #get current winner
     old_winner = OldWinner(question=question, response=response)

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'multipolls',
     'django_mobile',
     'mathfilters',
+    'django_rq',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -95,6 +96,25 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': 'opra.cs.rpi.edu:8000',
+    }
+}
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 8000,
+        'DB': 0,
+        'PASSWORD': 'some-password',
+        'DEFAULT_TIMEOUT': 360,
+    },
+    'high': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:8000/0'), # If you're on Heroku
+        'DEFAULT_TIMEOUT': 500,
+    },
+    'low': {
+        'HOST': 'localhost',
+        'PORT': 8000,
+        'DB': 0,
     }
 }
 

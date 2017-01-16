@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^auth/', include('appauth.urls')),
     url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, 'show_indexes':True}),
     url(r'^multipolls/', include('multipolls.urls')),
+    url(r'^django-rq/', include('django_rq.urls')),
 ]

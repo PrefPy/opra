@@ -81,6 +81,7 @@ class Response(models.Model):
     anonymous_voter = models.CharField(max_length=50,blank=True,null=True)
     anonymous_id = models.IntegerField(default = 0)
     comment = models.CharField(max_length=1000, blank=True, null=True)
+    active = models.IntegerField(default=1)
     def __str__(self):
         return "Response of user " + self.user.username + "\nfor question " + self.question.question_text
     class Meta:
@@ -246,6 +247,13 @@ class KeyValuePair(models.Model):
     container = models.ForeignKey(Dictionary, db_index=True)
     key = models.ForeignKey(Item, default=None, on_delete=models.CASCADE, db_index=True) # changed from original model
     value = models.IntegerField(default=0, db_index=True) # changed from original model
+    
+class CurrentResult(models.Model):
+    question = models.OneToOneField(Question)
+    result_string = models.CharField(max_length=500,default="")
+    mov_string = models.CharField(max_length=200,default="")
+    cand_num = models.IntegerField(default = 1)
+    timestamp = models.DateTimeField('result timestamp')
 
 class VoteResult(models.Model):
     question = models.ForeignKey(Question, null=True)
@@ -288,7 +296,10 @@ class UserVoteRecord(models.Model):
     question = models.ForeignKey(Question,default=None)
     record = models.CharField(max_length=1000)
     initial_order = models.CharField(max_length=400,default="")
+    initial_type = models.IntegerField(default=0)
+    final_order = models.CharField(max_length=400,default="")
     device = models.CharField(default="",max_length=20)
     class Meta:
         ordering = ['timestamp']
-    
+
+#if there is new data and the last computation was > 5 seconds ago

@@ -10,6 +10,11 @@
             {% if latest_responses|length > 0 %}
                 {% for response, currentSelection in latest_responses %}
                     <!-- display name -->
+					<a href="{% url 'polls:deluservotes' response.id %}">
+                        <div>
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </div>
+                    </a>
                     {% if response.user %}
                         {% if response.user.first_name == "" %}
                             <b>{{ response.user.username }}</b> (last voted on {{ response.timestamp }}) <br />
@@ -20,7 +25,7 @@
                     {% else %}
                         <b>(Anonymous) {{ response.anonymous_voter }}</b> (last voted on {{ response.timestamp }}) <br />
                     {% endif %}
-
+					
                     {% include 'polls/_display_vote.html' %}
                 {% endfor %} <!-- for response-->
                 <br />

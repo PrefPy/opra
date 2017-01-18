@@ -2,6 +2,7 @@
 var record = "";
 var submissionURL = "";
 var order1 = "";
+var order2 = "";
 var flavor = "";
 var startTime = 0;
 var allowTies = true;
@@ -231,14 +232,17 @@ var VoteUtil = (function () {
 		}
 		var prefcolumn = $('#left-sortable');
 		var order = "";
+		var d = Date.now() - startTime;
+		record += "S" + d;
 		prefcolumn.children().each(function( index ){
 			if( $( this ).children().size() > 0 ){
 				$( this ).children().each(function( index ){
 					if($( this ).attr('id')){
-						order += $( this ).attr('id') + ",";
-					}
+						order += $( this ).attr('id');
+					order += ";;";
+          }
 				});
-				order += "|,";
+				order += "|;;";
 			}
 		});
 		$('.pref_order').each(function(){
@@ -248,7 +252,7 @@ var VoteUtil = (function () {
 		$.ajax({
 			url: submissionURL,
 			type: "POST",
-			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order':order1,'device':flavor},
+			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'final':order,'device':flavor},
 			success: function(){}
 		});
 		$('#pref_order').submit();

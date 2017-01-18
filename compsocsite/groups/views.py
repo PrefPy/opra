@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.views import generic
 
 from .models import *
-
+from django.contrib import messages
 from django.utils import timezone
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -21,6 +21,7 @@ class IndexView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
         ctx['groups'] = Group.objects.all()
+        ctx['opengroups'] = Group.objects.filter(open=1)
         return ctx
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
@@ -131,4 +132,22 @@ def removegroupvoters(request, question_id):
                     if voter in question.question_voters.all():
                         voterObj = User.objects.get(username=voter)
                         question.question_voters.remove(voterObj.id)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+def joingroup(request, group_id):
+    group = get_object_or_404(Group, pk=group_id)
+    group.members.add(request.user.id)
+    messages.success(request, 'You have successfully joined the group!')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def opengroup(request, group_id):
+    group = get_object_or_404(Group, pk=group_id)
+    group.open = 1
+    group.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+def closegroup(request, group_id):
+    group = get_object_or_404(Group, pk=group_id)
+    group.open = 0
+    group.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

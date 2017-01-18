@@ -118,12 +118,9 @@
         title : '<span class="text-info"><strong>Hint</strong></span>',
         html: 'true',
     });
-	$( "#right-sortable" ).children().each(function( index ) {
-	if($(this).children().size()>0){
-		order1 += $(this).children().first().attr("id") + ";;"
-	}
+	
 
-});
+
 	{% if request.flavour == "mobile" %}
 		flavor = "Mobile";
 	{% else %}
@@ -131,7 +128,27 @@
 	{% endif %}
 	VoteUtil.checkStyle();
 	startTime = Date.now();
+	
+	$( "#right-sortable" ).children().each(function() {
+	if($(this).children().size()>0){
+		order1 += $(this).children().first().attr("id") + ";;|;;";
+	}
+
 });
+	$( "#left-sortable" ).children().each(function() {
+	if($(this).children().size()>0){
+		$( this ).children().each(function(){
+			order2 += $( this ).attr('id');
+			order2 += ";;";
+		});
+		order2 += "|;;";
+	}
+	
+});
+});
+
+
+
 
 
     // tooltip toggle (Popover function for hints)

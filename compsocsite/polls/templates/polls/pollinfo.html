@@ -139,7 +139,8 @@
             <li><a data-toggle="tab" href="#title">Basic Info</a></li>
             <li {% if request.session.setting == 0 %} class="active" {% endif %}><a data-toggle="tab" href="#choices" >Choices</a></li>
             <li {% if request.session.setting == 2 %} class="active" {% endif %}><a data-toggle="tab" href="#algorithm">Algorithms and Visibility</a></li>
-            <li><a data-toggle="tab" href="#historyinfo">History</a></li>
+            <li {% if request.session.setting == 6 %} class="active" {% endif %}><a data-toggle="tab" href="#historyinfo">History</a></li>
+			<li {% if request.session.setting == 7 %} class="active" {% endif %}><a data-toggle="tab" href="#recycle">Manage Deleted Votes</a></li>
            
             {% if question.m_poll == False %}
                 <li {% if request.session.setting == 1 %} class="active" {% endif %}><a data-toggle="tab" href="#voters">Voters</a></li>
@@ -352,6 +353,10 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="duplicate">
 	<a class="btn btn-ok" href="{% url 'polls:duppoll' question.id %}">Duplicate Poll</a>
 </div>
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 7 %}active{% endif %}" id="recycle">
+	{% include 'polls/_view_deleted_votes.html' %}
+</div>
     
 {% else %}
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="quit">
@@ -389,7 +394,7 @@
 </div>
 {% endif %}  
                                     
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="historyinfo">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 6 %}active{% endif %}" id="historyinfo">
     {% include 'polls/_view_history.html' %}
 </div>
 

@@ -6,10 +6,127 @@ var order2 = "";
 var flavor = "";
 var startTime = 0;
 var allowTies = true;
+var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
 
+function orderCol(num){
+	var arr;
+	if(num == 1){ arr = [$('#left-sortable'), $('#right-sortable')]; }
+	else if(num == 2){ arr = [$('#one-sortable')]; }
+	var order = [];
+	$.each(arr, function( index, value ){
+		value.children().each(function( index ){
+			if( $( this ).children().size() > 0 ){
+				var inner = [];
+				$( this ).children().each(function( index ){
+					inner.push($( this ).attr('type'));
+				});
+				order.push(inner);
+			}
+		});
+	});
+	return order;
+}
+
+function orderSlideStar(str){
+	var arr = [];
+	var values = [];
+	$('.' + str).each(function(i, obj){
+		if(str == 'slide'){ var score = $( this ).slider("option", "value"); }
+		else if(str == 'star'){ var score = parseInt($( this ).rateYo("option", "rating")); }
+		else{ return false; }
+		var type = $( this ).attr('type')
+		var bool = 0;
+		$.each(values, function( index, value ){
+			if(value < score){
+				values.splice(index, 0, score);
+				arr.splice(index, 0, [type]);
+				bool = 1;
+				return false;
+			}else if(value == score){
+				arr[index].push(type);
+				bool = 1;
+				return false;
+			}
+		});
+		if(bool == 0){ values.push(score); arr.push([type]); }
+	});
+	return arr;
+}
+
+function twoColSort( order ){
+	var html = "<ul class=\"choice1 empty\"></ul>";
+	$.each(order, function(index, value){
+		html += "<ul class=\"choice1\"><div class=\"tier\">" + index.toString() + "</div>";
+		$.each(value, function(i, v){
+			html += "<li class=\"li_item\" id=\"" + $(".li_item[type='" + v.toString() + "']").attr('id') + "\" type=" + v.toString() + ">";
+			html += $(".li_item[type='" + v.toString() + "']").html();
+			html += "</li>";
+		});
+		html += "</ul><ul class=\"choice1 empty\"></ul>";
+	});
+	$('#left-sortable').html(html);
+	$('#right-sortable').html("");
+}
+
+function oneColSort( order ){
+	var html = "<ul class=\"choice2 empty\"></ul>";
+	$.each(order, function(index, value){
+		html += "<ul class=\"choice2\"><div class=\"tier\">" + index.toString() + "</div>";
+		$.each(value, function(i, v){
+			html += "<li class=\"one_li_item\" id=\"" + $(".one_li_item[type='" + v.toString() + "']").attr('id') + "\" type=" + v.toString() + ">";
+			html += $(".one_li_item[type='" + v.toString() + "']").html();
+			html += "</li>";
+		});
+		html += "</ul><ul class=\"choice2 empty\"></ul>";
+	});
+	$('#one-sortable').html(html);
+}
+
+function sliderSort( order ){
+	$.each(order, function(index, value){
+		$.each(value, function(i, v){
+			$(".slide[type='" + v.toString() + "']").slider("value", Math.round(100 - (100 * index / order.length)));
+			$("#score" + $(".slide[type='" + v.toString() + "']").attr("id")).text(Math.round(100 - (100 * index / order.length)));
+		});
+	});
+}
+
+function starSort( order ){
+	$.each(order, function(index, value){
+		$.each(value, function(i, v){
+			$(".star[type='" + v.toString() + "']").rateYo("option", "rating", Math.round(10 - (10 * index / order.length)) / 2);
+		});
+	});
+}
+
+function changeMethod (value){
+	var order;
+	if(method == 1){ 
+		$("#twoCol").hide();
+		order = orderCol(method);
+	}else if(method == 2){
+		$("#oneCol").hide();
+		order = orderCol(method);
+	}
+	else if(method == 3){
+		$("#slider").hide();
+		order = orderSlideStar('slide');
+	}
+	else if(method == 4){
+		$("#star").hide();
+		order = orderSlideStar('star');
+	}
+	console.log(order.length);
+	method = parseInt(value.value);
+	if(method == 1){ $("#twoCol").show(); twoColSort(order); }
+	else if(method == 2){ $("#oneCol").show(); oneColSort(order); }
+	else if(method == 3){ $("#slider").show(); sliderSort(order); }
+	else if(method == 4){ $("#star").show(); starSort(order); }
+
+	VoteUtil.checkStyle();
+};
 // the VoteUtil object contains all the utility functions for the voting UI
 var VoteUtil = (function () {
-	
 	// returns true if the user is on a mobile device, else returns false
 	function isMobileAgent () {
 		return /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -17,34 +134,35 @@ var VoteUtil = (function () {
 	
 	// clears all items from the left side and returns the right side to its default state
 	function clearAll () {
-		
-		// move the left items over to the right side
-		$("#left-sortable").children().each(function(index){
-			if($(this).children().size() > 0){
-				var tier = 1;
-				$(this).children().each(function(index){
-					var temp = $("#right-sortable" ).html();
-					$("#right-sortable" ).html( temp + "<ul class=\"choice2 empty\"></ul>"
-						+ "<div class=\"tier\">" + tier + "</div>"
-						+ "<ul class=\"choice2\" onclick =\"VoteUtil.moveToPref(this)\">" + $(this)[0].outerHTML + "</ul>" );
-				});
-			}
-		});
-		
-		// clear the items from the left side
-		$( '#left-sortable' ).html("");
-		
-		checkStyle();
-		
-		// add the clear action to the record
-		var d = Date.now() - startTime;
-		record += d + "||";
-		$( "#right-sortable" ).children().each(function( index ) {
-			if($(this).children().size()>0){
-				record += $(this).children().first().attr("id") + "||"
-			}
-		});
-		record += ";;;";
+		if(method == 1){
+			// move the left items over to the right side
+			$("#left-sortable").children().each(function(index){
+				if($(this).children().size() > 0){
+					var tier = 1;
+					$(this).children().each(function(index){
+						var temp = $("#right-sortable" ).html();
+						$("#right-sortable" ).html( temp + "<ul class=\"choice2 empty\"></ul>"
+							+ "<div class=\"tier\">" + tier + "</div>"
+							+ "<ul class=\"choice2\" onclick =\"VoteUtil.moveToPref(this)\">" + $(this)[0].outerHTML + "</ul>" );
+					});
+				}
+			});
+			
+			// clear the items from the left side
+			$( '#left-sortable' ).html("");
+			
+			checkStyle();
+			
+			// add the clear action to the record
+			var d = Date.now() - startTime;
+			record += d + "||";
+			$( "#right-sortable" ).children().each(function( index ) {
+				if($(this).children().size()>0){
+					record += $(this).children().first().attr("id") + "||"
+				}
+			});
+			record += ";;;";
+		}
 	}
 	
 	function insideEach(t, id, tier){
@@ -69,35 +187,49 @@ var VoteUtil = (function () {
 	}
 	
 	function checkStyle () {
-		newItem = "<ul class=\"choice1 empty\"></ul>";
-		var tier = 1;
-		var id = 0;
-		$( ".tier" ).each(function( index ) {
-			$( this ).remove();
-		});
-		$( "#left-sortable" ).children().each(function( index ) {
-			arr = insideEach(this, id, tier);
-			id = arr[0];
-			tier = arr[1];
-			if($(this).children().size() >=1 ){
-				$(this).attr("class","choice1");
+		if(method < 3){
+			newItem = "<ul class=\"choice1 empty\"></ul>";
+			var tier = 1;
+			var id = 0;
+			if(method == 1){ submission = $("#left-sortable"); }
+			else{ submission = $("#one-sortable"); }
+			$( ".tier" ).each(function( index ) {
+				$( this ).remove();
+			});
+			submission.children().each(function( index ) {
+				arr = insideEach(this, id, tier);
+				id = arr[0];
+				tier = arr[1];
+				if($(this).children().size() >=1 ){
+					$(this).attr("class","choice1");
+				}
+			});
+			submission.children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+			if(method == 1){
+				tier = 1;
+				$( "#right-sortable" ).children().each(function( index ) {
+					arr = insideEach(this, id, tier);
+					id = arr[0];
+					tier = arr[1];
+				});
+				if($( "#right-sortable" ).children().size() > 0){
+					$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+				}
+				if( $( "#right-sortable" ).children().size() == 0 ){ enableSubmission(); }
 			}
-		});
-		$( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-		tier = 1;
-		$( "#right-sortable" ).children().each(function( index ) {
-			arr = insideEach(this, id, tier);
-			id = arr[0];
-			tier = arr[1];
-		});
-		if($( "#right-sortable" ).children().size() > 0){
-			$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
 		}
-		if( $( "#right-sortable" ).children().size() == 0 ){ enableSubmission(); }
 	}
 	
 	// submits the current left side preferences	
 	function submitPref() {
+		if(method != 1){
+			var order_list;
+			if(method == 2){ order_list = orderCol(method); }
+			else if(method == 3){ order_list = orderSlideStar('slide'); }
+			else if(method == 4){ order_list = orderSlideStar('star'); }
+			else{ location.reload(); }
+			twoColSort(order_list);
+		}
 		var prefcolumn = $('#left-sortable');
 		var order = "";
 		var d = Date.now() - startTime;
@@ -105,13 +237,17 @@ var VoteUtil = (function () {
 		prefcolumn.children().each(function( index ){
 			if( $( this ).children().size() > 0 ){
 				$( this ).children().each(function( index ){
-					order += $( this ).attr('id');
+					if($( this ).attr('id')){
+						order += $( this ).attr('id');
 					order += ";;";
+          }
 				});
 				order += "|;;";
 			}
 		});
-		$('#pref_order').val(order);
+		$('.pref_order').each(function(){
+			$(this).val(order);
+		});
 		
 		$.ajax({
 			url: submissionURL,
@@ -342,7 +478,14 @@ $( document ).ready(function() {
 		
 		//$("ul.choice1").sortable({
 		
-		var sortableSelector = 'ul#left-sortable'
+		if(method == 1){
+			var sortableSelector = 'ul#left-sortable';
+			var submission = $("#left-sortable");
+		}else if(method == 2){
+			var sortableSelector = 'ul#one-sortable';
+			var submission = $("#one-sortable");
+		}
+		
 		if (allowTies)
 			sortableSelector = 'ul.choice1'
 		else
@@ -388,7 +531,7 @@ $( document ).ready(function() {
 				$( ".tier" ).each(function( index ) {
 					$( this ).remove();
 				});
-				$( "#left-sortable" ).children().each(function( index ) {
+				submission.children().each(function( index ) {
 					if( $( this ).children().size() < 1 ){
 						$( this ).remove();
 					}else{
@@ -412,33 +555,35 @@ $( document ).ready(function() {
 					}
 				});
 				if (allowTies)
-					$( "#left-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-				$( "#right-sortable" ).children().each(function( index ) {
-					if( $( this ).children().size() < 1 ){
-						$( this ).remove();
-					}else{
-						$( this ).attr("id", id.toString());
-						id += 1;
-						$( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-						if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
-						if( $( this ).children().size() < 2 || VoteUtil.isMobileAgent() ){
-							$( this ).children().css( "width", "93%" );
-						}else{
-							$( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
+					submission.children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+					if(method == 1){
+						$( "#right-sortable" ).children().each(function( index ) {
+							if( $( this ).children().size() < 1 ){
+								$( this ).remove();
+							}else{
+								$( this ).attr("id", id.toString());
+								id += 1;
+								$( this ).before("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
+								if( $( this ).attr('class').indexOf('empty')>-1 ){ $( this ).removeClass('empty').addClass('choice1'); }
+								if( $( this ).children().size() < 2 || VoteUtil.isMobileAgent() ){
+									$( this ).children().css( "width", "93%" );
+								}else{
+									$( this ).children().css( "width", "45%" ).css("display","inline-block").css("vertical-align","top");
+								}
+								$( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
+								tier += 1;
+								id += 1;
+							}
+						});
+						if($( "#right-sortable" ).children().size() > 0){
+							$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
 						}
-						$( this ).before("<div class=\"tier\" style=\"padding-top:" + ($( this )[0].scrollHeight / 3).toString() + "px;\">" + tier + "</div>");
-						tier += 1;
-						id += 1;
+						if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
 					}
-				});
-				if($( "#right-sortable" ).children().size() > 0){
-					$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
-				}
-				if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
 				var t = parseInt(item.attr("alt"));
 				var count = 0;
 				var itemsSameTier = "";
-				$( "#left-sortable" ).children().each(function(index){
+				submission.children().each(function(index){
 					if($(this).children().size()>=1){
 						count++;
 					}
@@ -581,6 +726,22 @@ $( document ).ready(function() {
 		enableSubmission();
 	}
 	VoteUtil.checkStyle();
-	
+	$(".slide").each(function(){
+		$(this).slider({
+			step: 1,
+			slide: function( event, ui ) {
+				$("#score" + this.id).text(ui.value);
+			}
+		});
+	});
+	$(".star").each(function(){
+		$(this).rateYo({
+			halfStar: true
+		});
+	});
+	var t = 1
+	$(".li_item").each(function(){
+		$(this).attr({type:t.toString()});
+		t += 1;
+	});
 });
-

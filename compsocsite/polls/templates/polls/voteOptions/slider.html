@@ -1,0 +1,90 @@
+{% load mathfilters %}
+<!-- This is the voting form. Submit results through a voting function -->
+<form id="slider" {% if request.user.username == "" %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post" hidden>
+
+    <div class="row">
+        {% csrf_token %}
+        <!-- If this user isn't logged in and hasn't voted before -->
+        {% if request.user.username == "" and 'anonymousid' not in request.session %}
+        <div class="col-md-12" style="clear:right; ">
+            <h4>Please enter your name: </h4>
+            <input type="text" size="50" class="form-control" style="width=50%; clear:right;" name="anonymousname"/>
+        </div>
+        {% endif %}
+
+        <div class="col-md-12 margin-panel-top">
+
+            <!-- Panel for your preferences -->
+            <div class="panel panel-default" >
+                <!-- Your preferences header -->
+                <div class="panel-heading" >
+                    <h4>Your preferences:
+                        {% if request.flavour == "mobile" %}
+                        <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="submit-button-mobile" style="position:absolute;">
+                            <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
+                        </button> 
+                        <button id="submitting" type="submit" onclick="VoteUtil.submitPref();" class="submit-button-mobile" style="position:absolute;visibility:hidden;">
+                            <span class="glyphicon glyphicon-upload" style="font-size:80%;color:blue;">Submitting</span>
+                        </button> 
+                        {% else %}
+                        <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="btn btn-success" style="position:absolute;">
+                            Submit
+                        </button>
+                        <button id="submitting" type="button" class="btn btn-default" style="visibility:hidden;position:relative;position:absolute;z-index:1;">
+                            Submitting...
+                        </button>
+                        {% endif %}
+                        <input type="hidden" id="pref_order" class="pref_order" name="pref_order" value=""/>
+
+                        <div class="pull-right">
+                        {% if messages %}
+                            {% for message in messages %}
+                            <span id="successMessage" {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                                {{ message }}
+                            </span>
+                            {% endfor %}
+                        {% endif %}
+                            <!-- Hints button -->
+                            <a tabindex="0" style="float:right; {%if request.user.userprofile.showHint == True%} visibility:visible;{% else %}visibility:hidden; {%endif%}"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="These are your final preferences. <br/><form action='{% url 'appauth:disableHint' %}' method='POST'>{% csrf_token %}<input id='toggle-button' class='btn btn-primary btn-sm' type='submit' value='Disable All Hints'/></form> <br/>"></a>
+                        </div>
+
+                    </h4>
+                </div> <!-- end of header -->
+
+                <!-- Your preferences main panel -->
+                <div class="panel-body" >
+                    <ul id="sliders" >
+                        {% for item in items %}
+                            <li class="slider_item" id="item{{ item.item_text }}" alt="{{forloop.counter}}">
+                                <!-- Display image (uploaded) -->
+                                {% if item.image %}
+                                    <img class="item" src='/{{ item.image.url }}'/>
+                                {% endif %}
+                                <!-- Display image (external URL) -->
+                                {% if item.imageURL != Null %}
+                                    <img class="item" src='{{ item.imageURL }}'/>
+                                {% endif %}
+                                <!-- Display option text -->
+                                {{ item.item_text }} : <div id="scoreSlideI{{forloop.counter}}">0</div>
+                                <!-- Display tooltip for option description -->
+                                {% if item.item_description %}
+                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}" data-title="Meddelanden">
+                                    </span>
+                                {% endif %}
+                                <div class="slide" id="SlideI{{ forloop.counter }}" type="{{ forloop.counter }}"></div>
+                            </li>
+                        {% endfor %}
+                    </ul> <!-- end of main panel (left-sortable) -->
+                </div>
+            </div>
+        </div>
+        {% if request.flavour == "mobile" %}
+        <div class="col-md-6 margin-panel-top">
+        {% else %}
+        <div class="col-md-6 margin-panel-top">
+        {% endif %}
+        </div>
+    </div>
+
+    {% include "polls/voteOptions/_comment_section.html" %}
+</form>

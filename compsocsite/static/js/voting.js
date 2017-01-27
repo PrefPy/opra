@@ -255,6 +255,8 @@ var VoteUtil = (function () {
 			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'final':order,'device':flavor},
 			success: function(){}
 		});
+		document.getElementById('submitbutton').style.visibility = "hidden";
+		document.getElementById('submitting').style.visibility = "visible";
 		$('#pref_order').submit();
 	};
 	

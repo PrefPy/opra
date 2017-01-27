@@ -248,10 +248,13 @@ class KeyValuePair(models.Model):
     key = models.ForeignKey(Item, default=None, on_delete=models.CASCADE, db_index=True) # changed from original model
     value = models.IntegerField(default=0, db_index=True) # changed from original model
     
-class CurrentResult(models.Model):
+class FinalResult(models.Model):
     question = models.OneToOneField(Question)
     result_string = models.CharField(max_length=500,default="")
     mov_string = models.CharField(max_length=200,default="")
+    node_string = models.CharField(max_length=400,default="")
+    edge_string = models.CharField(max_length=400,default="")
+    shade_string = models.CharField(max_length=600,default="")
     cand_num = models.IntegerField(default = 1)
     timestamp = models.DateTimeField('result timestamp')
 

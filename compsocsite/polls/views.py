@@ -339,7 +339,92 @@ def getPollWinner(question):
                 winnerStr += ", "
             #add the winner
             winnerStr += candMap[index].item_text
+            
+            
+    result = FinalResult(question=question,timestamp=timezone.now(),result_string="",mov_string="",cand_num=question.item_set.all().count(),node_string="",edge_string="",shade_string="")
+    resultstr = ""
+    movstr = ""
+    nodestr = ""
+    edgestr = ""
+    shadestr = ""
+    mov = getMarginOfVictory(latest_responses,candMap)
+    for x in range(0,len(vote_results)):
+        for key,value in vote_results[x].items():
+            resultstr += str(value)
+            resultstr += ","
+    for x in range(0,len(mov)):
+        movstr += str(mov[x])
+        movstr += ","
+    resultstr = resultstr[:-1]
+    movstr = movstr[:-1]
+    (nodes, edges) = parseWmg(latest_responses,candMap)
+    for node in nodes:
+        for k,v in node.items():
+            nodestr += k + "," + str(v) + ";"
+        nodestr += "|"
+    nodestr = nodestr[:-2]
+    for edge in edges:
+        for k,v in edge.items():
+            edgestr += k + "," + str(v) + ";"
+        edgestr += "|"
+    edgestr = edgestr[:-2]
+    shadevalues = getShadeValues(vote_results)
+    for x in shadevalues:
+        for y in x:
+            shadestr += y + ";"
+        shadestr += "|"
+    shadestr = shadestr[:-2]
+    result.result_string = resultstr
+    result.mov_string = movstr
+    result.node_string = nodestr
+    result.edge_string = edgestr
+    result.shade_string = shadestr
+    result.save()
     return winnerStr
+    
+def interpretResult(finalresult):
+    candnum = finalresult.cand_num
+    resultstr = finalresult.result_string
+    movstr = finalresult.mov_string
+    shadestr = finalresult.shade_string
+    nodestr = finalresult.node_string
+    edgestr = finalresult.edge_string
+    resultlist = resultstr.split(",")
+    movlist = movstr.split(",")
+    tempResults = []
+    algonum = len(getListPollAlgorithms())
+    if len(resultlist) > 0:
+        for x in range(0,algonum):
+            tempList = []
+            for y in range(x*candnum, (x+1)*candnum):
+                tempList.append(resultlist[y])
+            tempResults.append(tempList)
+    tempMargin = []
+    for margin in movstr:
+        tempMargin.append(margin)
+    tempShades = []
+    shadelist = shadestr.split(";|")
+    for item in shadelist:
+        tempShades.append(item.split(";"))
+    tempNodes = []
+    nodelist = nodestr.split(";|")
+    for node in nodelist:
+        data = {}
+        l = node.split(";")
+        for item in l:
+            tup = item.split(",")
+            data[tup[0]] = tup[1]
+        tempNodes.append(data)
+    tempEdges = []
+    edgelist = edgestr.split(";|")
+    for edge in edgelist:
+        data = {}
+        l = edge.split(";")
+        for item in l:
+            tup = item.split(",")
+            data[tup[0]] = tup[1]
+        tempEdges.append(data)
+    return [tempResults, tempMargin, tempShades, tempNodes, tempEdges]
 
 # check whether the user clicked 'reset' when ordering preferences
 def isPrefReset(request):
@@ -498,21 +583,30 @@ class VoteResultsView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(VoteResultsView, self).get_context_data(**kwargs)
         
-        all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')  
         candMap = getCandidateMapFromList(list(self.object.item_set.all()))
-        (latest_responses, previous_responses) = categorizeResponses(all_responses)
-        ctx['latest_responses'] = latest_responses
-        ctx['previous_responses'] = previous_responses
         ctx['cand_map'] = candMap# if (len(latest_responses) > 0) else None
-        voteResults, mixtures = getVoteResults(latest_responses,candMap) 
-        ctx['vote_results'] = voteResults
-        ctx['shade_values'] = getShadeValues(voteResults)
-        (nodes, edges) = parseWmg(latest_responses,candMap)
-        ctx['wmg_nodes'] = nodes
-        ctx['wmg_edges'] = edges
         ctx['poll_algorithms'] = getListPollAlgorithms()
-        ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
-        ctx['mixtures_pl'] = mixtures[0]
+        if hasattr(self.object, 'finalresult'):
+            final_result = self.object.finalresult
+            l = interpretResult(final_result)
+            ctx['vote_results'] = l[0]
+            ctx['margin_victory'] = l[1]
+            ctx['shade_values'] = l[2]
+            ctx['wmg_nodes'] = l[3]
+            ctx['wmg_edges'] = l[4]
+        else:
+            all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')
+            (latest_responses, previous_responses) = categorizeResponses(all_responses)
+            voteResults, mixtures = getVoteResults(latest_responses,candMap) 
+            ctx['vote_results'] = voteResults
+            ctx['shade_values'] = getShadeValues(voteResults)
+            (nodes, edges) = parseWmg(latest_responses,candMap)
+            ctx['wmg_nodes'] = nodes
+            ctx['wmg_edges'] = edges
+            
+            ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
+            #ctx['mixtures_pl'] = mixtures[0]
+            
         previous_results = self.object.voteresult_set.all()
         ctx['previous_winners'] = []
         for pw in previous_results:

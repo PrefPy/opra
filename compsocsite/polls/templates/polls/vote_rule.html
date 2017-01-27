@@ -57,7 +57,7 @@
                                 {% endif %}
                             {% endfor %}
 
-                            {% for score in item.values %}
+                            {% for score in item %}
                                     {% for row in shade_values %}
                                     {% for color in row %}
                             {% if forloop.counter == forloop.parentloop.parentloop.counter and forloop.parentloop.counter == forloop.parentloop.parentloop.parentloop.counter %}

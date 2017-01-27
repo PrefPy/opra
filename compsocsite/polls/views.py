@@ -400,7 +400,7 @@ def interpretResult(finalresult):
                 tempList.append(resultlist[y])
             tempResults.append(tempList)
     tempMargin = []
-    for margin in movstr:
+    for margin in movlist:
         tempMargin.append(margin)
     tempShades = []
     shadelist = shadestr.split(";|")
@@ -632,7 +632,7 @@ class VoteResultsView(generic.DetailView):
                     tempResults.append(tempList)
             obj['vote_results'] = tempResults
             tempMargin = []
-            for margin in movstr:
+            for margin in movlist:
                 tempMargin.append(margin)
             obj['margin_victory'] = tempMargin
             ctx['previous_winners'].append(obj)

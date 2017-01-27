@@ -598,7 +598,10 @@ class VoteResultsView(generic.DetailView):
             all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')
             (latest_responses, previous_responses) = categorizeResponses(all_responses)
             voteResults, mixtures = getVoteResults(latest_responses,candMap) 
-            ctx['vote_results'] = voteResults
+            resultlist = []
+            for r in voteResults:
+                resultlist.append(r.values())
+            ctx['vote_results'] = resultlist
             ctx['shade_values'] = getShadeValues(voteResults)
             (nodes, edges) = parseWmg(latest_responses,candMap)
             ctx['wmg_nodes'] = nodes

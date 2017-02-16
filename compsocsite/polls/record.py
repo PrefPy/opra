@@ -33,6 +33,7 @@ def writeUserAction(request, question_id):
         order2 = request.POST['order2']
         device = request.POST['device']
         final = request.POST['final']
+        commentTime = request.POST['commentTime']
         init = ""
         if order1 != "":
             init = order1
@@ -43,10 +44,10 @@ def writeUserAction(request, question_id):
         if request.user.username == "":
             anonymous_name = ""
             new_name = "(Anonymous)" + anonymous_name
-            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type)
+            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime)
             r.save()
         else:
-            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type)
+            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime)
             r.save()
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -185,6 +186,7 @@ def interpretRecord1(record):
     result.append(init)
     result.append(type)
     result.append(final)
+    result.append(record.comment_time)
     return result
     
 def downloadRecord(request, question_id):

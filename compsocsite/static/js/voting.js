@@ -6,6 +6,7 @@ var order2 = "";
 var flavor = "";
 var startTime = 0;
 var allowTies = true;
+var commentTime = "";
 var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
 
 function orderCol(num){
@@ -125,6 +126,14 @@ function changeMethod (value){
 
 	VoteUtil.checkStyle();
 };
+
+function recordCommentTime(){
+	if(commentTime == ""){
+		var d = Date.now() - startTime  ;
+		commentTime += d;
+	}
+	
+}
 // the VoteUtil object contains all the utility functions for the voting UI
 var VoteUtil = (function () {
 	// returns true if the user is on a mobile device, else returns false
@@ -252,7 +261,7 @@ var VoteUtil = (function () {
 		$.ajax({
 			url: submissionURL,
 			type: "POST",
-			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'final':order,'device':flavor},
+			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'final':order,'device':flavor,'commentTime':commentTime},
 			success: function(){}
 		});
 		document.getElementById('submitbutton').style.visibility = "hidden";

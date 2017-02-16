@@ -340,7 +340,8 @@ def getPollWinner(question):
             #add the winner
             winnerStr += candMap[index].item_text
             
-            
+    if hasattr(question, 'finalresult'):
+        question.finalresult.delete()
     result = FinalResult(question=question,timestamp=timezone.now(),result_string="",mov_string="",cand_num=question.item_set.all().count(),node_string="",edge_string="",shade_string="")
     resultstr = ""
     movstr = ""
@@ -382,6 +383,10 @@ def getPollWinner(question):
     result.save()
     return winnerStr
     
+    
+#Interpret result into strings that can be shown on the result page
+#FinalResult finalresult
+#List<List<String>>
 def interpretResult(finalresult):
     candnum = finalresult.cand_num
     resultstr = finalresult.result_string
@@ -425,6 +430,12 @@ def interpretResult(finalresult):
             data[tup[0]] = tup[1]
         tempEdges.append(data)
     return [tempResults, tempMargin, tempShades, tempNodes, tempEdges]
+    
+def recalculateResult(request,question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    getPollWinner(question)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
 
 # check whether the user clicked 'reset' when ordering preferences
 def isPrefReset(request):

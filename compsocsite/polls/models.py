@@ -302,6 +302,7 @@ class UserVoteRecord(models.Model):
     initial_type = models.IntegerField(default=0)
     final_order = models.CharField(max_length=400,default="")
     device = models.CharField(default="",max_length=20)
+    comment_time = models.CharField(max_length=100,default="")
     class Meta:
         ordering = ['timestamp']
 

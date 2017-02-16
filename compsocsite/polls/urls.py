@@ -63,6 +63,7 @@ urlpatterns = [
     
     # vote result
     url(r'^(?P<question_id>[0-9]+)/calculateprev/$', views.calculatePreviousResults, name='calculateprev'),
+    url(r'^(?P<question_id>[0-9]+)/recalculateResult/$', views.recalculateResult, name='recalcResult'),
     
     # user records
     url(r'^(?P<question_id>[0-9]+)/record/$', record.writeUserAction, name='record'),

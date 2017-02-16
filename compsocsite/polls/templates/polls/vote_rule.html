@@ -25,6 +25,7 @@
             <!-- Default panel contents -->
             <div class="panel-heading">
                 Poll Results
+                
                 <div class="pull-right">
                     <span>Less Preferred</span>
                     <div class="btn-group" role="group">
@@ -36,6 +37,7 @@
                     </div>
                     <span>More Preferred</span>
                 </div>
+				<a  class="pull-right" href="{% url 'polls:recalcResult' question.id %}" style="position:relative; bottom:4px;right:5%;"><button type="button" class="btn btn-primary" >Recalculate Result</button></a>
             </div>
             <div class="panel-body">
                 <div class="table-responsive">

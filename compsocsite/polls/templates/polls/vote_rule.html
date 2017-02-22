@@ -60,13 +60,7 @@
                             {% endfor %}
 
                             {% for score in item %}
-                                    {% for row in shade_values %}
-                                    {% for color in row %}
-                            {% if forloop.counter == forloop.parentloop.parentloop.counter and forloop.parentloop.counter == forloop.parentloop.parentloop.parentloop.counter %}
-                                    <td style='background-color: {{color}}'>{{ score }}</td>
-                            {% endif %}
-                                    {% endfor %}
-                                    {% endfor %}
+                                    <td style='background-color: {{shade_values|index:forloop.parentloop.counter0|index:forloop.counter0}}'>{{ score }}</td>
                             {% endfor %}
 
                             <!-- margin of victory column -->

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_mobile',
     'mathfilters',
     'django_rq',
+    'cas',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -58,6 +59,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_mobile.middleware.MobileDetectionMiddleware',
     'django_mobile.middleware.SetFlavourMiddleware',
+    'cas.middleware.CASMiddleware',
 ]
 
 ROOT_URLCONF = 'compsocsite.urls'
@@ -137,6 +139,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#CAS
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'cas.backends.CASBackend',
+]
+CAS_GATEWAY = True
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -150,6 +159,11 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+#CAS
+CAS_SERVER_URL = "https://cas-auth.rpi.edu/cas/"
+CAS_LOGOUT_COMPLETELY = True
+CAS_PROVIDE_URL_TO_LOGOUT = True
 
 
 #################################################

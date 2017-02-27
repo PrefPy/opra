@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.views import generic
 
 from .models import *
+from appauth.models import *
 
 from django.utils import timezone
 from django.template import RequestContext
@@ -74,6 +75,16 @@ class MainView(generic.ListView):
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
     def get_context_data(self, **kwargs):
+        if self.request.user.username != '':
+            u = get_object_or_404(User, username=self.request.user)
+            try:
+                var = self.request.user.userprofile
+            except:
+                profile = UserProfile(user = u, displayPref = 1)
+                profile.email = self.request.user.username.lower() + "@rpi.edu"
+                profile.save()
+                u.is_active = True
+                u.save()
         ctx = super(MainView, self).get_context_data(**kwargs)
         # sort the list by date
         ctx['question']=Question.objects.first()

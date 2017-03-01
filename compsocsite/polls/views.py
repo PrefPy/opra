@@ -509,6 +509,17 @@ class DetailView(generic.DetailView):
                 # load choices in the default order
                 ctx['items'] = self.object.item_set.all()
             return ctx
+            
+        if self.request.user.username != '':
+            u = get_object_or_404(User, username=self.request.user)
+            try:
+                var = self.request.user.userprofile
+            except:
+                profile = UserProfile(user = u, displayPref = 1)
+                profile.email = self.request.user.username.lower() + "@rpi.edu"
+                profile.save()
+                u.is_active = True
+                u.save()
 
         # Get the responses for the current logged-in user from latest to earliest
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()

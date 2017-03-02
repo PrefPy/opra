@@ -146,6 +146,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 CAS_GATEWAY = True
 
+CAS_RESPONSE_CALLBACKS = (
+    'module.callbackfunction',
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/

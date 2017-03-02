@@ -164,7 +164,7 @@ USE_TZ = True
 CAS_SERVER_URL = "https://cas-auth.rpi.edu/cas/"
 CAS_LOGOUT_COMPLETELY = True
 CAS_PROVIDE_URL_TO_LOGOUT = True
-CAS_FORCE_SSL_SERVICE_URL = True
+#CAS_FORCE_SSL_SERVICE_URL = True
 
 
 #################################################

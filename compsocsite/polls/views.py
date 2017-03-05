@@ -76,8 +76,8 @@ class MainView(generic.ListView):
         return Question.objects.all().order_by('-pub_date')
     def get_context_data(self, **kwargs):
         print("a:", self.request.user.username)
-        # if self.request.user.username != '':
-        #     print("b:", self.request.user.username, self.request.user.is_authenticated)
+        if self.request.user.username != '':
+            print("b:", self.request.user.username, self.request.user.is_authenticated)
         #     u = get_object_or_404(User, username=self.request.user)
         #     print(u.is_authenticated)
         #     try:

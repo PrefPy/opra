@@ -92,6 +92,13 @@
                 {% endfor %}
             </select>
             <br />
+			
+			<label for="creatorpreferences">Information visible to the creator</label>
+            <select name="creatorpreferences" class="form-control">
+                <option value="1" selected>Creator can see everyone's vote</option>
+				<option value="2">Creator has the same visibility setting as all voters</option>
+            </select>
+            <br />
 
             <label for="openpoll">Voting? (QR Code can be accessed under poll settings)</label> <br />
             <div class="btn-group" data-toggle="buttons">

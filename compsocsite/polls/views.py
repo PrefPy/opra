@@ -686,7 +686,7 @@ def getAllocMethods():
 # get a list of visibility settings
 # return List<String>
 def getViewPreferences():
-    return ["Everyone can see all votes at all times", "Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote"]
+    return ["Everyone can see all votes at all times", "Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote", "All votes will be shown, but usernames will be hidden"]
 
 # build a graph of nodes and edges from a 2d dictionary
 # List<Response> latest_responses
@@ -1093,6 +1093,7 @@ def setInitialSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.poll_algorithm = request.POST['pollpreferences']
     question.display_pref = request.POST['viewpreferences']
+    question.creator_pref = request.POST['creatorpreferences']
     openstring = request.POST['openpoll']
     if openstring == "anon":
         question.open = 1

@@ -47,7 +47,7 @@
     <br />
 
 	<label for="creatorpreferences">Visibility setting for creator for this specific poll</label>
-    <select name="creatorpreferences" class="form-control">
+    <select name="creatorpreferences" class="form-control" {% if question.status != 1 %} disabled {% endif %}>
         <option value="1" {% if question.creator_pref == 1 %} selected {% endif %}>Creator can see everyone's vote</option>
         <option value="2" {% if question.creator_pref == 2 %} selected {% endif %}>Creator has the same visibility setting as all voters</option>
     </select>

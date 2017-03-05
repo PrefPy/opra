@@ -75,19 +75,6 @@ class MainView(generic.ListView):
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
     def get_context_data(self, **kwargs):
-        print("a:", self.request.user.username)
-        # if self.request.user.username != '':
-        #     print("b:", self.request.user.username, self.request.user.is_authenticated)
-        #     u = get_object_or_404(User, username=self.request.user)
-        #     print(u.is_authenticated)
-        #     try:
-        #         var = self.request.user.userprofile
-        #     except:
-        #         profile = UserProfile(user = u, displayPref = 1)
-        #         profile.email = self.request.user.username.lower() + "@rpi.edu"
-        #         profile.save()
-        #         u.is_active = True
-        #         u.save()
         ctx = super(MainView, self).get_context_data(**kwargs)
         # sort the list by date
         ctx['question']=Question.objects.first()
@@ -512,17 +499,6 @@ class DetailView(generic.DetailView):
                 # load choices in the default order
                 ctx['items'] = self.object.item_set.all()
             return ctx
-            
-        if self.request.user.username != '':
-            u = get_object_or_404(User, username=self.request.user)
-            try:
-                var = self.request.user.userprofile
-            except:
-                profile = UserProfile(user = u, displayPref = 1)
-                profile.email = self.request.user.username.lower() + "@rpi.edu"
-                profile.save()
-                u.is_active = True
-                u.save()
 
         # Get the responses for the current logged-in user from latest to earliest
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()

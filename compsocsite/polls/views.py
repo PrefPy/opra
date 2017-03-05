@@ -75,7 +75,9 @@ class MainView(generic.ListView):
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
     def get_context_data(self, **kwargs):
+        print("a")
         if self.request.user.username != '':
+            print("b:", self.request.user.username)
             u = get_object_or_404(User, username=self.request.user)
             try:
                 var = self.request.user.userprofile

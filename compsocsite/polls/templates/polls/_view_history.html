@@ -86,14 +86,9 @@
             {% endif %}
         {% endif %}
             
-        {% if question.question_owner != request.user %}
+        {% if question.question_owner != request.user or question.creator_pref == 2%}
             <!-- Display other user votes -->
             {% if question.display_pref == 1 %}
-				<div class="progress">
-				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
-					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
-				    </div>
-				</div>
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
                 <p>The owner allows everyone to see all votes cast.</p>
                 {% for response, currentSelection in latest_responses %}
@@ -114,11 +109,6 @@
                 {% endif %}
                 {% endfor %}
             {% elif question.display_pref == 2 %}
-				<div class="progress">
-				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
-					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
-				    </div>
-				</div>
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
                 <p>The following voters have voted on this poll:</p>
                 <ul>
@@ -127,24 +117,21 @@
                     {% endfor %}
                 </ul>
             {% elif question.display_pref == 3 %}
-				<div class="progress">
-				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
-					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
-				    </div>
 				</div>
                 <p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
 				
 			{% elif question.display_pref == 5 %}
-				<div class="progress">
-				    <div class="progress-bar" role="progressbar" aria-valuenow="{{progressPercentage}}"aria-valuemin="0" aria-valuemax="100" style="width:{{progressPercentage}}%">
-					    <span style="color:white;">{{latest_responses|length}} / {{question.question_voters.count}}</span>
-				    </div>
-				</div>
 				<p>{{latest_responses|length}} / {{question.question_voters.count}} have voted.</p>
-                <p>The following votes have been cast on this poll:</p>
+                <p>The following votes have been cast on this poll (excluding yours):</p>
                 <ul>
                     {% for response, currentSelection in latest_responses %}
-                        <li>Hidden Username (last voted on {{ response.timestamp }})</li>
+						{% if response.user != request.user %}
+                        <div class="btn-group">
+                            <b>{%if response.user.username == "" %}Anonymous {%else%} Hidden Username {%endif%}</b> (last voted on {{ response.timestamp }}) <br /> 
+                            
+                            {% include 'polls/_display_vote.html' %}
+                        </div>
+						{% endif %}
                     {% endfor %}
                 </ul>
             {% endif %}

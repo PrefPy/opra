@@ -7,6 +7,8 @@
                     <p> Only names of voters will be shown. </p>
               {% elif question.display_pref == 3 %}
                     <p> Only numbers of voters will be shown. </p>
+			  {% elif question.display_pref == 5 %}
+				    <p> All votes will be shown, but usernames will be hidden. </p>
               {% else %}
                     <p> You can only see your own vote.</p>
               {% endif %}

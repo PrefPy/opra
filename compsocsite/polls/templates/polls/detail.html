@@ -90,6 +90,10 @@
     <p>
         This poll has not started yet.
     </p>
+	{% elif question.status == 4 %}
+    <p>
+        This poll is paused.
+    </p>
     {% else %}
     <p>
         This poll has ended.

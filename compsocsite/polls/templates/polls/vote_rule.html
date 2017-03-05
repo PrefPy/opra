@@ -19,8 +19,7 @@
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>
 
-        {% if cand_map and question.status == 3 or question.display_pref == 0 %}
-        {% if question.question_owner == request.user or question.display_pref <= 1 %}
+        {% if question.status == 3 or question.status == 4 %}
         <div class="panel panel-default">
             <!-- Default panel contents -->
             <div class="panel-heading">
@@ -171,7 +170,6 @@
             </div>
         </div> -->
 
-        {% endif %}
         {% endif %}
     </div>
 <script src='/static/js/colorPicker.js'></script>

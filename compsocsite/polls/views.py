@@ -293,7 +293,35 @@ def startPoll(request, question_id):
         email_class.start()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
+    
+def pausePoll(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
 
+    # check to make sure the owner stopped the poll
+    if request.user != question.question_owner:
+        return HttpResponseRedirect(reverse('polls:index'))    
+    
+    # set the status to pause
+    question.status = 4
+    # get winner or allocation, and save it
+    if question.question_type == 1: #poll
+        question.winner = getPollWinner(question)
+    question.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def resumePoll(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    # check to make sure the owner started the poll
+    if request.user != question.question_owner:
+        return HttpResponseRedirect(reverse('polls:index'))
+    
+    # set the poll to start
+    question.status = 2
+    question.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
 # when a poll stops, users can no longer cast votes
 # the final results will be calculated and displayed
 def stopPoll(request, question_id):

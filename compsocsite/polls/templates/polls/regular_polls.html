@@ -32,11 +32,10 @@
 							{% if request.user in question.question_voters.all %}
 								<a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button" >Vote</a>
 							{% endif %}
-							<!--
-                            {% if question.display_pref == 0 and question.question_type == 1 %}
-                                <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" >Current Winners</a>
-                            {% endif %}
-							-->
+                            
+                        {% endif %}
+						{% if question.question_type == 1 and question.status == 4 %}
+                            <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" >Current Winners</a>
                         {% endif %}
                     </td>
                     {% if question.status == 1 %}
@@ -65,10 +64,14 @@
                             </div>
                         </div>
                     {% elif question.status == 2 %}
-                        <td style="vertical-align:middle">
-                            <div class="stop-icon">
+						<td style="vertical-align:middle">
+							<div class="stop-icon pull-right">
                             <i class="fa fa-stop" aria-hidden="true" data-toggle="modal" data-target="#confirm-stop{{ question.id }}"></i>
                             </div>
+                            <div class="pause-icon pull-right" style="position:relative; right:10%;">
+                            <a href="{% url 'polls:pause' question.id %}"><i class="fa fa-pause" aria-hidden="true"></i></a>
+                            </div>
+                            
                         </td>
 
                         <div class="modal fade" id="confirm-stop{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -110,7 +113,12 @@
                                     </a>
                                 {% endif %}
                             </td>
-
+					{% else %}
+					<td style="vertical-align:middle">
+                        <div class="start-icon">
+                            <a href="{% url 'polls:resume' question.id %}"><i class="fa fa-play" aria-hidden="true"></i></a>
+                        </div>
+                    </td>
                     {% endif %}
                 </tr>
             {% endfor %}

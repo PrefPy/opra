@@ -11,10 +11,10 @@ class UserProfile(models.Model):
     # This line is required. Links UserProfile to a User model instance.
     user = models.OneToOneField(User,on_delete=models.CASCADE,)
     displayPref = models.IntegerField(default=1)
-    emailInvite = models.BooleanField(default=True)
-    emailDelete = models.BooleanField(default=True)
-    emailStart = models.BooleanField(default=True)
-    emailStop = models.BooleanField(default=True)
+    emailInvite = models.BooleanField(default=False)
+    emailDelete = models.BooleanField(default=False)
+    emailStart = models.BooleanField(default=False)
+    emailStop = models.BooleanField(default=False)
     showHint = models.BooleanField(default=True)
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):

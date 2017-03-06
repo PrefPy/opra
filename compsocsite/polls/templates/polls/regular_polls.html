@@ -149,9 +149,9 @@
                 <td>
                     {% if question.status == 2 %}
                         <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button">Vote</a>
-                        {% if question.display_pref == 0 and request.user == question.question_owner %}
+                    {% endif %}
+					{% if question.question_type == 1 and question.status == 4 %}
                             <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" >Current Winners</a>
-                        {% endif %}
                     {% endif %}
                 </td>
                 {% if question.status == 1 %}

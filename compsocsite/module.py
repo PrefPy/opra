@@ -5,9 +5,6 @@ import requests
 
 
 def callbackfunction(tree):
-	url = "http://rpidirectory.appspot.com/api?q=" + tree[0][0].text.lower() + "&token=rcsid"
-	r = requests.get(url)
-
 	print(ET.tostring(tree))
 	username = tree[0][0].text.lower() + "@rpi.edu"
 	tree[0][0].text = username
@@ -18,6 +15,8 @@ def callbackfunction(tree):
 	# 	user.last_name = r.json()['data'][0]['last_name']
 	# 	user.save()
 	if(user_created):
+		url = "http://rpidirectory.appspot.com/api?q=" + tree[0][0].text.lower() + "&token=rcsid"
+		r = requests.get(url)
 		profile = UserProfile(user = user, displayPref = 1)
 		profile.save()
 		user.first_name = r.json()['data'][0]['first_name'].title()

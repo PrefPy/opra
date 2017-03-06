@@ -14,7 +14,7 @@ from django.conf import settings
 # question that will receive responses
 @python_2_unicode_compatible
 class Question(models.Model):
-    question_text = models.CharField(max_length=20)
+    question_text = models.CharField(max_length=200)
     question_desc = models.CharField(max_length=500, null=True, blank=True)
     image = models.ImageField(upload_to='static/img/items/', blank=True, null=True)
     imageURL = models.CharField(max_length=500, blank=True, null=True)
@@ -74,7 +74,7 @@ class Item(models.Model):
 @python_2_unicode_compatible
 class Response(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
-    resp_str = models.CharField(max_length=200, null=True, blank=True)
+    resp_str = models.CharField(max_length=1000, null=True, blank=True)
     user = models.ForeignKey(User, null = True, blank = True)
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
@@ -250,11 +250,11 @@ class KeyValuePair(models.Model):
     
 class FinalResult(models.Model):
     question = models.OneToOneField(Question)
-    result_string = models.CharField(max_length=500,default="")
-    mov_string = models.CharField(max_length=200,default="")
-    node_string = models.CharField(max_length=400,default="")
-    edge_string = models.CharField(max_length=400,default="")
-    shade_string = models.CharField(max_length=600,default="")
+    result_string = models.CharField(max_length=10000,default="")
+    mov_string = models.CharField(max_length=10000,default="")
+    node_string = models.CharField(max_length=10000,default="")
+    edge_string = models.CharField(max_length=10000,default="")
+    shade_string = models.CharField(max_length=10000,default="")
     cand_num = models.IntegerField(default = 1)
     timestamp = models.DateTimeField('result timestamp')
 
@@ -297,7 +297,7 @@ class UserVoteRecord(models.Model):
     timestamp = models.DateTimeField('record timestamp')
     user =models.CharField(max_length=100,default="(Anonymous)")
     question = models.ForeignKey(Question,default=None)
-    record = models.CharField(max_length=1000)
+    record = models.CharField(max_length=10000)
     initial_order = models.CharField(max_length=400,default="")
     initial_type = models.IntegerField(default=0)
     final_order = models.CharField(max_length=400,default="")

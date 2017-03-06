@@ -20,6 +20,10 @@ from django.core import mail
 from prefpy.mechanism import *
 from prefpy.allocation_mechanism import *
 from prefpy.gmm_mixpl import *
+from prefpy.mov import MoVPlurality
+from prefpy.mov import MoVBorda
+from prefpy.mov import MoVVeto
+from prefpy.mov import MoVkApproval
 from .email import EmailThread, setupEmail
 from groups.models import *
 from django.conf import settings
@@ -427,6 +431,8 @@ def interpretResult(finalresult):
     movlist = movstr.split(",")
     tempResults = []
     algonum = len(getListPollAlgorithms())
+    if len(resultlist) < candnum*algonum:
+        algonum = 7
     if len(resultlist) > 0:
         for x in range(0,algonum):
             tempList = []
@@ -664,6 +670,8 @@ class VoteResultsView(generic.DetailView):
             movlist = movstr.split(",")
             tempResults = []
             algonum = len(getListPollAlgorithms())
+            if len(resultlist) < candnum*algonum:
+                algonum = 7
             if len(resultlist) > 0:
                 for x in range(0,algonum):
                     tempList = []
@@ -681,7 +689,7 @@ class VoteResultsView(generic.DetailView):
 # get a list of algorithms supported by the system
 # return List<String>
 def getListPollAlgorithms():
-    return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin"]
+    return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin", "STV", "Baldwin", "Coombs"]
 
 # get a list of allocation methods
 # return List<String>
@@ -853,10 +861,19 @@ def getPollProfile(latest_responses,candMap):
         userPref = Preference(prefGraph)
         prefList.append(userPref)
     return Profile(candMap, prefList)
+    
+def translateWinnerList(winners, candMap):
+    result = {}
+    for cand in candMap.keys():
+        if cand in winners:
+            result[cand] = 1
+        else:
+            result[cand] = 0
+    return result
 
 #calculate the results of the vote using different algorithms
 # List<Response> latest_responses
-# return a List<List<Double>>
+# return a List<Dictionary<Double>>
 def getVoteResults(latest_responses,candMap):
     pollProfile = getPollProfile(latest_responses,candMap)
     if pollProfile == None:
@@ -874,6 +891,14 @@ def getVoteResults(latest_responses,candMap):
     scoreVectorList.append(MechanismSimplifiedBucklin().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismCopeland(1).getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismMaximin().getCandScoresMap(pollProfile))
+    
+    #STV, Baldwin, Coombs give list of integers as output
+    stv = MechanismSTV().STVwinners(pollProfile)
+    baldwin = MechanismBaldwin().baldwin_winners(pollProfile)
+    coombs = MechanismCoombs().coombs_winners(pollProfile)
+    scoreVectorList.append(translateWinnerList(stv,candMap))
+    scoreVectorList.append(translateWinnerList(baldwin,candMap))
+    scoreVectorList.append(translateWinnerList(coombs,candMap))
     #gmm = GMMMixPLAggregator(list(pollProfile.candMap.values()), use_matlab=False)
     
     return scoreVectorList, [[.1] * 10]#gmm.aggregate(pollProfile.getOrderVectors(), algorithm="top3_full", epsilon=.1, max_iters=10, approx_step=.1)
@@ -976,10 +1001,10 @@ def getMarginOfVictory(latest_responses,candMap):
     if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
         return []
     marginList = []
-    marginList.append(MechanismPlurality().getMov(pollProfile))  
-    marginList.append(MechanismBorda().getMov(pollProfile))
-    marginList.append(MechanismVeto().getMov(pollProfile))
-    marginList.append(MechanismKApproval(3).getMov(pollProfile))
+    marginList.append(MoVPlurality(pollProfile))  
+    marginList.append(MoVBorda(pollProfile))
+    marginList.append(MoVVeto(pollProfile))
+    marginList.append(MoVkApproval(pollProfile,3))
     #if len(latest_responses) > 1:
      #   marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
     #marginList.append("-")
@@ -1398,35 +1423,6 @@ def getFinalAllocation(question):
         
     allocationResults = allocation(question.poll_algorithm, itemList, responseList)
     assignAllocation(question, allocationResults)    
-    
-def calculateCurrentResult(question):
-
-    candMap = getCandidateMapFromList(list(question.item_set.all()))
-    indexVoteResults = question.poll_algorithm - 1
-    current_result = vote_results[indexVoteResults]
-    
-    if question.currentresult != None:
-        question.currentresult.clear()
-    
-    result = CurrentResult(question=question,timestamp=pw.response.timestamp,result_string="",mov_string="",cand_num=question.item_set.all().count())
-    resultstr = ""
-    movstr = ""
-    responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp],active=1)
-    (lr, pr) = categorizeResponses(responses)
-    scorelist, mixtures = getVoteResults(lr,candMap)
-    mov = getMarginOfVictory(lr,candMap)
-    for x in range(0,len(scorelist)):
-        for key,value in scorelist[x].items():
-            resultstr += str(value)
-            resultstr += ","
-    for x in range(0,len(mov)):
-        movstr += str(mov[x])
-        movstr += ","
-    resultstr = resultstr[:-1]
-    movstr = movstr[:-1]
-    result.result_string = resultstr
-    result.mov_string = movstr
-    result.save()
 
             
 # function to get preference order from a string 

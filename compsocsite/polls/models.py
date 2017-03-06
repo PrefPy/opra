@@ -14,7 +14,11 @@ from django.conf import settings
 # question that will receive responses
 @python_2_unicode_compatible
 class Question(models.Model):
+<<<<<<< HEAD
     question_text = models.CharField(max_length=200)
+=======
+    question_text = models.CharField(max_length=50)
+>>>>>>> a908e1940617dedfbb9c9c039b44ad0869bfc611
     question_desc = models.CharField(max_length=500, null=True, blank=True)
     image = models.ImageField(upload_to='static/img/items/', blank=True, null=True)
     imageURL = models.CharField(max_length=500, blank=True, null=True)

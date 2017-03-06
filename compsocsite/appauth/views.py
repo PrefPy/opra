@@ -32,20 +32,23 @@ def register(request):
  
         # If the two forms are valid...
         if user_form.is_valid():
-            # Save the user's form data to the database.
-            user = user_form.save()
-            
-            # Hash the password with the set_password method
-            user.set_password(user.password)
-            user.save()
-            profile = UserProfile(user=user, displayPref = 1)
-            profile.save()
-            # Update our variable to tell the template registration was successful.
-            registered = True
-            user.is_active = False
-            user.save()
-            htmlstr =  "<p><a href='" + request.build_absolute_uri( "confirm/" +str(user.id )) + "'>Click This Link To Activate Your Account</a></p>"
-            mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
+            if '@' in request.POST['username']:
+                user_form = UserForm()
+            else:
+                # Save the user's form data to the database.
+                user = user_form.save()
+                
+                # Hash the password with the set_password method
+                user.set_password(user.password)
+                user.save()
+                profile = UserProfile(user=user, displayPref = 1)
+                profile.save()
+                # Update our variable to tell the template registration was successful.
+                registered = True
+                user.is_active = False
+                user.save()
+                htmlstr =  "<p><a href='" + request.build_absolute_uri( "confirm/" +str(user.id )) + "'>Click This Link To Activate Your Account</a></p>"
+                mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
         #else    print (user_form.errors)
 
 # Not a HTTP POST, so we render our form using two ModelForm instances.

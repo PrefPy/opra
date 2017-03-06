@@ -2,6 +2,14 @@
 {% extends 'polls/base.html' %}
 
 {% block content %}
+<script>
+    function register(){
+        if($('#email').value() == ''){
+            alert("HI!");
+        }
+        $('#user_form').submit();
+    }
+</script>
 <div class="col-md-6 col-md-offset-3" align="center" style="padding: 60px 20px;">
     <h3>Register with OPRA</h3>
     <br/>
@@ -30,7 +38,7 @@
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
             </fieldset>
 
-            <input type="submit" value="Register" class="btn btn-primary" />
+            <input type="button" value="Register" class="btn btn-primary" onclick="register()"/>
         </form>
     {% endif %}
 </div>

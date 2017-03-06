@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
@@ -71,6 +72,9 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+
+        if '@' in username:
+            return HttpResponseRedirect(reverse('appauth:loginCas'))
         
         # Check if the username/password combination is valid - a User object is returned if it is.
         user = authenticate(username=username, password=password)
@@ -166,8 +170,8 @@ def disableHint(request):
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
-    return HttpResponseRedirect(reverse('appauth:logoutCas'))
 
+    # return HttpResponseRedirect(reverse('appauth:logoutCas'))
     # Take the user back to the homepage.
     return HttpResponseRedirect(reverse('polls:index_guest'))
     

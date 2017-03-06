@@ -90,3 +90,6 @@ else{
 	$('#username').focus();
 }
 
+function loginCas(){
+	location.href = '/auth/loginCas/';
+}

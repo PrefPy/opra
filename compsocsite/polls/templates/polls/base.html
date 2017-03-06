@@ -31,15 +31,6 @@
 		<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
 		{% endif %}
 
-		<!-- Somehow else does not work, had to use two "if"'s
-		{% if request.flavour == "mobile" %}
-		<link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
-		{% endif %}
-		{% if request.flavour == "full" %}
-		<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
-		{% endif %}
-		-->
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -61,88 +52,10 @@
     <script src="https://use.fontawesome.com/5f5c1e4fb0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src='/static/js/intro.js'></script>
-    <script type="text/javascript">
-      $(document).ready(function() {
-      	$('.multiple-select').select2();
-      });
-    </script>
+    <script src='/static/js/base.js'></script>
+
 		<script src='/static/js/shared.js'></script>
 
-    <script>
-      var QueryString = function () {
-	      // This function is anonymous, is executed immediately and
-	      // the return value is assigned to QueryString!
-
-	      var query_string = {};
-	      var query = window.location.search.substring(1);
-	      var vars = query.split("&");
-	      for (var i=0;i<vars.length;i++) {
-	        var pair = vars[i].split("=");
-	            // If first entry with this name
-	        if (typeof query_string[pair[0]] === "undefined") {
-	          query_string[pair[0]] = decodeURIComponent(pair[1]);
-	            // If second entry with this name
-	        } else if (typeof query_string[pair[0]] === "string") {
-	          var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
-	          query_string[pair[0]] = arr;
-	            // If third or later entry with this name
-	        } else {
-	          query_string[pair[0]].push(decodeURIComponent(pair[1]));
-	        }
-	      }
-      	return query_string;
-      }();
-    </script>
-
-    <!-- Custom Theme JavaScript -->
-    <script>
-      //tooltip
-      $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-      });
-
-      // Scrolls to the selected menu item on the page
-      $(function() {
-        $("a[href*='#']:not([href='#'])").click(function() {
-          if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-            if (target.length) {
-              /*$('html,body').animate({
-                scrollTop: target.offset().top
-              }, 1000);*/
-							return true;
-            }
-						return false;
-          }
-        });
-      });
-      //#to-top button appears after scrolling
-      var fixed = false;
-      $(document).scroll(function() {
-        if ($(this).scrollTop() > 250) {
-          if (!fixed) {
-            fixed = true;
-            // $('#to-top').css({position:'fixed', display:'block'});
-            $('#to-top').show("slow", function() {
-              $('#to-top').css({
-                position: 'fixed',
-                display: 'block'
-              });
-            });
-          }
-		    } else {
-	        if (fixed) {
-            fixed = false;
-            $('#to-top').hide("slow", function() {
-              $('#to-top').css({
-                display: 'none'
-              });
-            });
-	        }
-		    }
-      });
-    </script>
     <style>
 	    .btn{
 	    	border-radius:0;
@@ -169,18 +82,9 @@
                 <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" autofocus/>
               </fieldset>
               <fieldset class="form-group">
-                <label for="username">Password</label>
+                <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
               </fieldset>
-              <script>
-	              if (typeof(QueryString["name"]) != "undefined"){
-	                $('#username').val(QueryString["name"]);
-	                $('#password').focus();
-	              }
-	              else{
-	                $('#username').focus();
-	              }
-              </script>
 		        </div>
 		        <div class="modal-footer">
 	            <input type="submit" class="btn btn-primary" value="Login"/>
@@ -260,7 +164,7 @@
 							<a href="{% url 'appauth:register' %}" style="color:black;"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
 						</li>
 						<li>
-							<a data-toggle="modal" data-target="#loginmodal"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
+							<a href="#" data-toggle="modal" data-target="#loginmodal"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
 						</li>
 					</ul>
 					{% endif %}

@@ -165,7 +165,7 @@ class EmailThread(threading.Thread):
         self.creator_obj = User.objects.get(id=self.question.question_owner_id)
         self.creator = self.creator_obj.username
         if self.creator_obj.first_name != "":
-            self.creator = creator_obj.first_name + " " + creator_obj.last_name
+            self.creator = self.creator_obj.first_name + " " + self.creator_obj.last_name
 
         if type == 'invite' or type == 'remove':
             self.voters = request.POST.getlist('voters')

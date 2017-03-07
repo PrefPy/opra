@@ -9,7 +9,7 @@ def callbackfunction(tree):
 	username = tree[0][0].text.lower() + "@rpi.edu"
 	tree[0][0].text = username
 	user, user_created = User.objects.get_or_create(username=username)
-	# if(user.first_name = ''):
+	# if(user.first_name == ''):
 	# 	print("hi!")
 	# 	user.first_name = r.json()['data'][0]['first_name']
 	# 	user.last_name = r.json()['data'][0]['last_name']

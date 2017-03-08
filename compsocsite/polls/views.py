@@ -632,6 +632,7 @@ class VoteResultsView(generic.DetailView):
         candMap = getCandidateMapFromList(list(self.object.item_set.all()))
         ctx['cand_map'] = candMap# if (len(latest_responses) > 0) else None
         ctx['poll_algorithms'] = getListPollAlgorithms()
+        ctx['algorithm_links'] = getListAlgorithmLinks()
         if hasattr(self.object, 'finalresult'):
             final_result = self.object.finalresult
             l = interpretResult(final_result)
@@ -691,6 +692,10 @@ class VoteResultsView(generic.DetailView):
 def getListPollAlgorithms():
     return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin", "STV", "Baldwin", "Coombs"]
 
+def getListAlgorithmLinks():
+    return ["https://en.wikipedia.org/wiki/Plurality_voting_method","https://en.wikipedia.org/wiki/Borda_count","","","https://en.wikipedia.org/wiki/Bucklin_voting","https://en.wikipedia.org/wiki/Copeland%27s_method",
+    "https://en.wikipedia.org/wiki/Minimax_Condorcet","https://en.wikipedia.org/wiki/Single_transferable_vote","https://en.wikipedia.org/wiki/Nanson%27s_method#Baldwin_method","https://en.wikipedia.org/wiki/Coombs%27_method"]
+    
 # get a list of allocation methods
 # return List<String>
 def getAllocMethods():

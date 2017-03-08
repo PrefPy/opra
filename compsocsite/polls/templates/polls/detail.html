@@ -33,7 +33,7 @@
         You have no permission to vote on this poll.
     {% elif question.open == 2 and request.user.username == "" %}
         <!-- Poll is not open for anonymous voting and the current user isn't logged in -->
-        Please log in to vote on this poll.
+        Please <a onclick="loginCas()">log in</a> to vote on this poll.
     {% elif question.open == 0 and request.user not in question.question_voters.all %}
         <!-- Poll is not open for anonymous voting and the current user isn't invited -->
         You are not invited to this poll.
@@ -73,12 +73,12 @@
         </div>
     </div>
 
-    <select class="selectpicker" onchange="changeMethod(this);">
+    <!-- <select class="selectpicker" onchange="changeMethod(this);">
         <option value="1">Two Columns</option>
         <option value="2">One Column</option>
         <option value="3">Sliders</option>
         <option value="4">Stars</option>
-    </select>
+    </select> -->
 
         {% include "polls/voteOptions/twoCol.html" %}
         {% include "polls/voteOptions/oneCol.html" %}

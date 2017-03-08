@@ -161,7 +161,7 @@ var VoteUtil = (function () {
 			$( '#left-sortable' ).html("");
 			
 			checkStyle();
-			
+			disableSubmission();
 			// add the clear action to the record
 			var d = Date.now() - startTime;
 			record += d + "||";
@@ -300,7 +300,8 @@ var VoteUtil = (function () {
 			$(this).removeAttr('onclick');
 		});
 		var d = Date.now() - startTime;
-		record += d + ";;;"
+		record += d + ";;;";
+		
 	};
 	
 	// enables the submit button
@@ -312,6 +313,13 @@ var VoteUtil = (function () {
 		}
 	}
 	
+	function disableSubmission(){
+		if( VoteUtil.isMobileAgent() ){
+			$("#submitbutton").css("display", "none");
+		}else{
+			document.getElementById('submitbutton').disabled = true;
+		}
+	}
 	// returns the public members of the VoteUtil class
 	return {
 		isMobileAgent: isMobileAgent,

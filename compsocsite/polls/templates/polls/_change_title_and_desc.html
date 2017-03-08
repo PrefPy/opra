@@ -3,7 +3,7 @@
 
     <fieldset class="form-group">
         <label for="title">Title</label>
-        <input type="text" class="form-control" style="width:70%;" name="title" maxlength="20" size="50" value="{{ question.question_text }}" {% if question.status != 1 %} disabled {% endif %} />
+        <input type="text" class="form-control" style="width:70%;" name="title" maxlength="40" size="50" value="{{ question.question_text }}" {% if question.status != 1 %} disabled {% endif %} />
     </fieldset>
 
     <fieldset class="form-group">

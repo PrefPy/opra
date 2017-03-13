@@ -4,10 +4,9 @@
 {% block content %}
 <script>
     function register(){
-        alert($('#reg_username').val())
         if($('#reg_email').val() == ''){ $('#error').html("Please enter an email."); $('#reg_email').focus(); }
         else if($('#reg_username').val() == ''){ $('#error').html("Please enter a username."); $('#reg_username').focus(); }
-        else if($('#reg_username').indexOf('@') > -1){ $('#error').html("Username should not include @ character."); $('#reg_username').focus(); }
+        else if($('#reg_username').val().indexOf('@') > -1){ $('#error').html("Username should not include @ character."); $('#reg_username').focus(); }
         else if($('#reg_password').val() == ''){ $('#error').html("Please enter a password."); $('#reg_password').focus(); }
         else{ $('#user_form').submit(); }
     }

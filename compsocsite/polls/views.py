@@ -814,6 +814,7 @@ def getCandidateMap(response):
         candMap[counter] = item[0]
         counter += 1
     return candMap
+
 def getCandidateMapFromList(candlist):
     candMap = {}
     counter = 0
@@ -821,6 +822,7 @@ def getCandidateMapFromList(candlist):
         candMap[counter] = item
         counter += 1
     return candMap
+
 #convert a user's preference into a 2d map
 # Response response
 # return Dict<int, Dict<int, int>> prefGraph
@@ -1447,8 +1449,8 @@ def getPrefOrder(orderStr, question):
             prefOrder.append(curr)
             length += len(curr)
     # the user hasn't ranked all the preferences yet
-    if length != len(question.item_set.all()):
-        return None
+    #if length != len(question.item_set.all()):
+     #   return None
     
     return prefOrder
 
@@ -1499,13 +1501,18 @@ def buildResponseDict(response, question, prefOrder):
     item_num = 1
     for item in question.item_set.all():
         rank = 1
+        #Flag for examining the case when new choices are added to poll after poll starts
+        flag = True
         for l in prefOrder:
             string = "item" + str(item)
             if string in l:
                 d[item] = rank
+                #If the item is found in preforder, the set flag to false
+                flag = False
                 break
             rank += 1
-        
+        if flag:
+            d[item] = rank
         # if arrayIndex == -1:
         #     # set value to lowest possible rank
         #     d[item] = question.item_set.all().count()

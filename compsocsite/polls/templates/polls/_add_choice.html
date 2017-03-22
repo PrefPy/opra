@@ -65,7 +65,7 @@
             </li>
     {% endfor %}
     </form>
-    {% if question.status == 1%}
+    {% if question.status != 3 %}
     <li class="list-group-item">
         <form action="{% url 'polls:addchoice' question.id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}

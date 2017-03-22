@@ -113,6 +113,16 @@ class DemoView(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+
+class GMView(generic.ListView):
+    template_name = 'polls/linkPage.html'
+    context_object_name = 'question_list'
+    def get_queryset(self):
+        return Question.objects.all()
+    def get_context_data(self, **kwargs):
+        ctx = super(GMView, self).get_context_data(**kwargs)
+        return ctx
+
         
 # step 1: the intial question object will be created. 
 def AddStep1View(request):

@@ -1,0 +1,35 @@
+html, body{
+	height:100%;
+	background: #da291c; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#707372, black); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#707372, black); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#707372, black); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#707372, black); /* Standard syntax */
+}
+
+.col-md-3{
+	display: flex;
+	justify-content: center; /* align horizontal */
+	align-items: center; /* align vertical */
+	height: 16.66%;
+}
+
+img {
+	width:100%;
+}
+
+a{
+	color: #da291c;
+}
+
+.btn {
+	background: #da291c;
+}
+
+.btn:hover{
+	background: #e45d50;
+}
+
+.btn:active{
+	background: #da291c;
+}

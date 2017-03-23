@@ -34,7 +34,7 @@
 							{% endif %}
                             
                         {% endif %}
-						{% if question.question_type == 1 %}
+						{% if question.question_type == 1 and question.status != 1 and question.status != 3 and question.response_set.all.count > 0 %}
                             <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" target="_blank" >Current Winners</a>
                         {% endif %}
                     </td>
@@ -150,7 +150,7 @@
                     {% if question.status == 2 %}
                         <a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button">Vote</a>
                     {% endif %}
-					{% if question.question_type == 1 %}
+					{% if question.question_type == 1 and question.status != 1 and question.status != 3 and question.response_set.all.count > 0%}
                             <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" target="_blank" >Current Winners</a>
                     {% endif %}
                 </td>

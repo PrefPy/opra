@@ -494,7 +494,19 @@ def getCurrentSelection(mostRecentResponse):
     for itr in range(mostRecentResponse.question.item_set.all().count()):
         array.append([])
     for itr in rd:
-        array[rd[itr] - 1].append(itr)
+        if rd[itr] != 1000:
+            array[rd[itr] - 1].append(itr)
+    return array
+    
+def getUnrankedCandidates(resp):
+    rd = buildResponseDict(resp,resp.question,getPrefOrder(resp.resp_str,resp.question))
+    array = []
+    for itr in rd:
+        if rd[itr] == 1000:
+            array.append(itr)
+            
+    if len(array) == 0:
+        return None
     return array
 
 # view for question detail
@@ -555,6 +567,7 @@ class DetailView(generic.DetailView):
                     items.append(i)
             ctx['items'] = items
             ctx['itr'] = itertools.count(1, 1)
+            ctx['unrankedCandidates'] = getUnrankedCandidates(currentUserResponses[0])
         else:
             # no history so display the list of choices
             ctx['items'] = self.get_order(ctx)
@@ -807,6 +820,7 @@ def getCandidateMap(response):
         d = Dictionary.objects.get(response=response)
     else:
         d = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
+    d = interpretResponseDict(d)
     candMap = {}
 
     counter = 0
@@ -833,7 +847,7 @@ def getPreferenceGraph(response,candMap):
         dictionary = Dictionary.objects.get(response=response)
     else:
         dictionary = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
-
+    dictionary = interpretResponseDict(dictionary)
     for cand1Index in candMap:
         tempDict = {}
         for cand2Index in candMap:
@@ -1424,6 +1438,7 @@ def getFinalAllocation(question):
             dictionary = Dictionary.objects.get(response=response)
         else:
             dictionary = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
+        dictionary = interpretResponseDict(dictionary)
         for item, rank in dictionary.items():
             tempDict[item.item_text] = rank
         responseList.append((response.user.username, tempDict))
@@ -1512,7 +1527,7 @@ def buildResponseDict(response, question, prefOrder):
                 break
             rank += 1
         if flag:
-            d[item] = rank
+            d[item] = 1000
         # if arrayIndex == -1:
         #     # set value to lowest possible rank
         #     d[item] = question.item_set.all().count()
@@ -1522,6 +1537,19 @@ def buildResponseDict(response, question, prefOrder):
         #     # add pref to response dict
         #     d[item] = rank
     return d
+    
+def interpretResponseDict(dict):
+    d = dict
+    max = -1
+    for k, v in d.items():
+        if v > max and v != 1000:
+            max = v
+    for k, v in d.items():
+        if v == 1000:
+            d[k] = max + 1
+            
+    return d
+    
 
 # join a poll without logging in
 def anonymousJoin(request, question_id):

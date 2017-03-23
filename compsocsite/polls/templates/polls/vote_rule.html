@@ -1,4 +1,4 @@
-{% extends 'polls/base.html' %}
+{% extends 'polls/base_global.html' %}
 {% load staticfiles %}
 
 {% block extra_head %}
@@ -19,7 +19,7 @@
     <div class="col-md-12">
         <h1>{{ question.question_text }}</h1>
 
-        {% if question.status == 3 or question.status == 4 %}
+        {% if question.status != 1%}
         <div class="panel panel-default">
             <!-- Default panel contents -->
             <div class="panel-heading">

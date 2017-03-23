@@ -34,6 +34,7 @@ class Question(models.Model):
     winner = models.CharField(max_length=200)
     m_poll = models.BooleanField(default=False)
     open = models.IntegerField(default=0)
+    new_vote = models.BooleanField(default=False)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):

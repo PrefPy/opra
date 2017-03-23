@@ -424,6 +424,11 @@ def getPollWinner(question):
     result.edge_string = edgestr
     result.shade_string = shadestr
     result.save()
+    
+    if question.new_vote:
+        question.new_vote = False
+        question.save()
+        
     return winnerStr
     
     
@@ -651,33 +656,35 @@ class VoteResultsView(generic.DetailView):
     template_name = 'polls/vote_rule.html'
     def get_context_data(self, **kwargs):
         ctx = super(VoteResultsView, self).get_context_data(**kwargs)
-        
+        #print("page accessed")
         candMap = getCandidateMapFromList(list(self.object.item_set.all()))
         ctx['cand_map'] = candMap# if (len(latest_responses) > 0) else None
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['algorithm_links'] = getListAlgorithmLinks()
-        if hasattr(self.object, 'finalresult'):
-            final_result = self.object.finalresult
-            l = interpretResult(final_result)
-            ctx['vote_results'] = l[0]
-            ctx['margin_victory'] = l[1]
-            ctx['shade_values'] = l[2]
-            ctx['wmg_nodes'] = l[3]
-            ctx['wmg_edges'] = l[4]
-        else:
-            all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')
-            (latest_responses, previous_responses) = categorizeResponses(all_responses)
-            voteResults, mixtures = getVoteResults(latest_responses,candMap) 
-            resultlist = []
-            for r in voteResults:
-                resultlist.append(r.values())
-            ctx['vote_results'] = resultlist
-            ctx['shade_values'] = getShadeValues(voteResults)
-            (nodes, edges) = parseWmg(latest_responses,candMap)
-            ctx['wmg_nodes'] = nodes
-            ctx['wmg_edges'] = edges
+        if self.object.status != 4 and self.object.new_vote == True:
+            getPollWinner(self.object)
+        final_result = self.object.finalresult
+        l = interpretResult(final_result)
+        #print(l[0])
+        ctx['vote_results'] = l[0]
+        ctx['margin_victory'] = l[1]
+        ctx['shade_values'] = l[2]
+        ctx['wmg_nodes'] = l[3]
+        ctx['wmg_edges'] = l[4]
+        #else:
+            #all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')
+            #(latest_responses, previous_responses) = categorizeResponses(all_responses)
+            #voteResults, mixtures = getVoteResults(latest_responses,candMap) 
+            #resultlist = []
+            #for r in voteResults:
+            #    resultlist.append(r.values())
+            #ctx['vote_results'] = resultlist
+            #ctx['shade_values'] = getShadeValues(voteResults)
+            #(nodes, edges) = parseWmg(latest_responses,candMap)
+            #ctx['wmg_nodes'] = nodes
+            #ctx['wmg_edges'] = edges
             
-            ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
+            #ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
             #ctx['mixtures_pl'] = mixtures[0]
             
         previous_results = self.object.voteresult_set.all()
@@ -1512,6 +1519,10 @@ def vote(request, question_id):
 
     if question.open == 2 and request.user not in question.question_voters.all():
         question.question_voters.add(request.user.id)
+        
+    if not question.new_vote:
+        question.new_vote = True
+        question.save()
 
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 
@@ -1604,7 +1615,9 @@ def anonymousVote(request, question_id):
     #get current winner
     old_winner = OldWinner(question=question, response=response)
     old_winner.save()
-
+    if not question.new_vote:
+        question.new_vote = True
+        question.save()
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))

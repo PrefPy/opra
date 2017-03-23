@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.cache import cache_page
 from . import views
 from . import email
 from . import record
@@ -42,7 +42,7 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/stop/$', views.stopPoll, name='stop'),
     url(r'^delete/([0-9]+)/$', views.deletePoll, name='delpoll'),
     url(r'^quit/([0-9]+)/$', views.quitPoll, name='quitpoll'),
-    url(r'^(?P<pk>[0-9]+)/vote/results/$', views.VoteResultsView.as_view(), name='voteresults'),
+    url(r'^(?P<pk>[0-9]+)/vote/results/$', cache_page(30)(views.VoteResultsView.as_view()), name='voteresults'),
     url(r'^(?P<pk>[0-9]+)/allocate/results/$', views.AllocateResultsView.as_view(), name='allocate_results'),
     
     # settings

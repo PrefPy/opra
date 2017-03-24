@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -48,6 +49,8 @@ INSTALLED_APPS = [
     'cas',
 ]
 
+
+
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -55,11 +58,12 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'compsocsite.middlewares.CustomHeaderMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_mobile.middleware.MobileDetectionMiddleware',
     'django_mobile.middleware.SetFlavourMiddleware',
-    'cas.middleware.CASMiddleware',
+    #'cas.middleware.CASMiddleware',
 ]
 
 ROOT_URLCONF = 'compsocsite.urls'
@@ -141,14 +145,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #CAS
 AUTHENTICATION_BACKENDS = [
-     'django.contrib.auth.backends.ModelBackend',
-     'cas.backends.CASBackend',
+     #'django.contrib.auth.backends.ModelBackend',
+     #'cas.backends.CASBackend',
+     'django.contrib.auth.backends.RemoteUserBackend',
 ]
+'''
 CAS_GATEWAY = True
 
 CAS_RESPONSE_CALLBACKS = (
     'module.callbackfunction',
 )
+'''
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
@@ -162,7 +169,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
+'''
 #CAS
 CAS_SERVER_URL = "https://cas-auth.rpi.edu/cas/"
 CAS_LOGOUT_COMPLETELY = True
@@ -171,7 +178,7 @@ CAS_AUTO_CREATE_USERS = True
 CAS_IGNORE_REFERER = False
 CAS_REDIRECT_URL = '/'
 # CAS_FORCE_SSL_SERVICE_URL = True
-
+'''
 
 #################################################
 # Email settings                                #
@@ -194,6 +201,8 @@ STATICFILES_DIRS = (
     '/static/',
     os.path.join(os.path.abspath(BASE_DIR), 'static'),
 )
+
+
 
 
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

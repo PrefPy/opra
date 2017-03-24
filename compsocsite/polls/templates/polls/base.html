@@ -88,7 +88,7 @@
 		        </div>
 		        <div class="modal-footer">
               <input type="submit" class="btn btn-primary" value="Login"/>
-              <input type="button" class="btn btn-primary" value="Login with RPI ID" style="background:#C40000" onclick="loginCas()"/>
+              <input type="button" class="btn btn-primary" value="Login with RPI ID" style="background:#C40000" onclick="login()"/>
 	            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 		        </div>
 		        <!-- end for login model-->
@@ -101,9 +101,11 @@
     {% if user.is_authenticated %}
 		<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#377BB5; border-color: transparent;">
     {% else %}
-    <iframe src="/auth/logoutCas" style="display:none;">
+    <!--
+    <iframe src="/auth/logout" style="display:none;">
       <p>Your browser does not support iframes.</p>
     </iframe>
+    -->
     <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
     {%endif%}
 			{% if request.flavour == "mobile" %}
@@ -167,7 +169,7 @@
 							<a href="{% url 'appauth:register' %}" style="color:black;"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
 						</li>
 						<li>
-							<a href="#" onclick="loginCas()"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
+							<a href="#" onclick="login()"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
 						</li>
 					</ul>
 					{% endif %}

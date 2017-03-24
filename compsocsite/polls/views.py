@@ -34,6 +34,9 @@ import threading
 import itertools
 import django_rq
 
+
+
+
 # view for homepage - index of questions & results
 class IndexView(generic.ListView):
     template_name = 'polls/index2.html'

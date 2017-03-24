@@ -628,7 +628,7 @@ class PollInfoView(generic.DetailView):
         deleted_responses = self.object.response_set.reverse().filter(active=0).order_by('-timestamp')
         (latest_deleted_responses, previous_deleted_responses) = categorizeResponses(deleted_responses)
         ctx['latest_deleted_responses'] = getSelectionList(latest_deleted_responses)
-        ctx[''] = getSelectionList(previous_deleted_responses)
+        ctx['previous_deleted_responses'] = getSelectionList(previous_deleted_responses)
         
         if self.object.question_voters.all().count() > 0:
             progressPercentage = len(latest_responses) / self.object.question_voters.all().count() * 100
@@ -671,6 +671,7 @@ class VoteResultsView(generic.DetailView):
         ctx['shade_values'] = l[2]
         ctx['wmg_nodes'] = l[3]
         ctx['wmg_edges'] = l[4]
+        ctx['time'] = final_result.timestamp
         #else:
             #all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')
             #(latest_responses, previous_responses) = categorizeResponses(all_responses)

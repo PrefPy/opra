@@ -23,7 +23,7 @@
                         <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="submit-button-mobile" style="position:absolute;">
                             <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
                         </button> 
-                        <button id="submitting" type="submit" onclick="VoteUtil.submitPref();" class="submit-button-mobile" style="position:absolute;visibility:hidden;">
+                        <button id="submitting" type="button" class="submit-button-mobile" style="position:absolute;visibility:hidden;">
                             <span class="glyphicon glyphicon-upload" style="font-size:80%;color:blue;">Submitting</span>
                         </button> 
                         {% else %} 
@@ -92,7 +92,7 @@
 
                 {% if request.flavour == "mobile" %}
                     <!-- Clear button (mobile version) -->
-                    <button onclick="VoteUtil.clearAll()" class="reset-button-mobile">
+                    <button onclick="VoteUtil.clearAll();return false;" class="reset-button-mobile">
                         <span class="glyphicon glyphicon-trash redcolor" style="color:white;">Clear</span>
                     </button>
                 {% endif %}

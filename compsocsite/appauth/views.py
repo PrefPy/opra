@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
-#import cas.middleware
+import cas.middleware
 
 def register(request):
     context = RequestContext(request)
@@ -174,11 +174,9 @@ def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
     logout(request)
 
-    #return HttpResponseRedirect(reverse('appauth:logoutCas'))
-    #return HttpResponseRedirect(reverse('appauth:logout'))
+    # return HttpResponseRedirect(reverse('appauth:logoutCas'))
     # Take the user back to the homepage.
     return HttpResponseRedirect(reverse('polls:index_guest'))
-    #return render(request, self.template_name,{},status=401)
     
 def forgetPasswordView(request):
     context = RequestContext(request)

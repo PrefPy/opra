@@ -4,8 +4,6 @@ import xml.etree.ElementTree as ET
 import requests
 
 
-
-
 def callbackfunction(tree):
 	print(ET.tostring(tree))
 	username = tree[0][0].text.lower() + "@rpi.edu"

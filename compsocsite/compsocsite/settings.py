@@ -169,9 +169,8 @@ CAS_LOGOUT_COMPLETELY = True
 CAS_PROVIDE_URL_TO_LOGOUT = True
 CAS_AUTO_CREATE_USERS = True
 CAS_IGNORE_REFERER = False
-CAS_REDIRECT_URL = '/'
+CAS_REDIRECT_URL = 'https://opra.cs.rpi.edu'
 # CAS_FORCE_SSL_SERVICE_URL = True
-
 
 #################################################
 # Email settings                                #

@@ -33,7 +33,7 @@
         You have no permission to vote on this poll.
     {% elif question.open == 2 and request.user.username == "" %}
         <!-- Poll is not open for anonymous voting and the current user isn't logged in -->
-        Please <a onclick="loginCas()">log in</a> to vote on this poll.
+        Please <a href = "http://opra.cs.rpi.edu:8000/auth/loginCas">Login with RPI RCSID and password.</a>
     {% elif question.open == 0 and request.user not in question.question_voters.all %}
         <!-- Poll is not open for anonymous voting and the current user isn't invited -->
         You are not invited to this poll.

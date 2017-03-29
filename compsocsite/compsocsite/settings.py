@@ -168,8 +168,9 @@ CAS_SERVER_URL = "https://cas-auth.rpi.edu/cas/"
 CAS_LOGOUT_COMPLETELY = True
 CAS_PROVIDE_URL_TO_LOGOUT = True
 CAS_AUTO_CREATE_USERS = True
-CAS_IGNORE_REFERER = False
-CAS_REDIRECT_URL = 'https://opra.cs.rpi.edu'
+CAS_IGNORE_REFERER = True
+CAS_REDIRECT_URL = 'https://opra.cs.rpi.edu/GM2017'
+#'https://opra.cs.rpi.edu'
 # CAS_FORCE_SSL_SERVICE_URL = True
 
 #################################################

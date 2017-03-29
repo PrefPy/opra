@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^(?P<question_id>[0-9]+)/stop/$', views.stopPoll, name='stop'),
     url(r'^delete/([0-9]+)/$', views.deletePoll, name='delpoll'),
     url(r'^quit/([0-9]+)/$', views.quitPoll, name='quitpoll'),
-    url(r'^(?P<pk>[0-9]+)/vote/results/$', cache_page(5)(views.VoteResultsView.as_view()), name='voteresults'),
+    url(r'^(?P<pk>[0-9]+)/vote/results/$', cache_page(60)(views.VoteResultsView.as_view()), name='voteresults'),
     url(r'^(?P<pk>[0-9]+)/allocate/results/$', views.AllocateResultsView.as_view(), name='allocate_results'),
     
     # settings

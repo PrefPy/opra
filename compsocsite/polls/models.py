@@ -66,6 +66,7 @@ class Item(models.Model):
     image = models.ImageField(upload_to='static/img/items/', blank=True, null=True)
     imageURL = models.CharField(max_length=500, blank=True, null=True)
     timestamp = models.DateTimeField('item timestamp')
+    recently_added = models.BooleanField(default=False)
     def __str__(self):
         return self.item_text
     class Meta:

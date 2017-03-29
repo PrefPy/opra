@@ -133,7 +133,7 @@
 
 
 
-<div class="col-sm-3 col-md-2 sidebar">
+<div class="col-xs-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         {% if question.question_owner == request.user %}
             <li><a data-toggle="tab" href="#title">Basic Info</a></li>
@@ -160,7 +160,7 @@
     </ul>  
 </div>
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2">
 <p>
 {% if messages %}
 <ul class="messages">
@@ -176,7 +176,7 @@
 
 <div class="tab-content">
 {% if question.question_owner == request.user %}
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 0 %}active{% endif %}" id="choices">
+    <div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 0 %}active{% endif %}" id="choices">
         <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
         
         {% include 'polls/_add_choice.html' %}
@@ -184,26 +184,26 @@
     
     <!-- only for the regular vote-->
     {% if question.m_poll == False %}
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 1 %}active{% endif %}" id="voters">
+    <div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 1 %}active{% endif %}" id="voters">
         <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
 
         {% include 'polls/_invite_voters.html' %}
     </div>
     {% endif %}
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 2 %}active{% endif %}" id="algorithm">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 2 %}active{% endif %}" id="algorithm">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
     
     {% include 'polls/_set_polling_settings.html' %}
 </div>
             
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="title">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="title">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
     
     {% include 'polls/_change_title_and_desc.html' %}
 </div>
     
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 4 %}active{% endif %}" id="qr">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 4 %}active{% endif %}" id="qr">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
 
     <div id="qrcode" style="margin-top:15px;">
@@ -234,7 +234,7 @@
 </div>
 
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 5 %}active{% endif %}" id="emailsetting">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 5 %}active{% endif %}" id="emailsetting">
 <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
 
 <div class="col-md-10">
@@ -319,7 +319,7 @@
 </div>
 </div>
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="delete">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="delete">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
 
 <div class="panel panel-danger">
@@ -350,16 +350,16 @@
 </div>
 </div>
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="duplicate">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="duplicate">
 	<a class="btn btn-ok" href="{% url 'polls:duppoll' question.id %}">Duplicate Poll</a>
 </div>
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 7 %}active{% endif %}" id="recycle">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 7 %}active{% endif %}" id="recycle">
 	{% include 'polls/_view_deleted_votes.html' %}
 </div>
     
 {% else %}
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="quit">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="quit">
     <h3 class="page-header">Quit {{ question.question_text }} </h3>
     <div class="panel panel-danger">
     <div class="panel-heading">Danger Zone</div>
@@ -389,12 +389,12 @@
 </div>
 </div>
     
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="general">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="general">
     {% include 'polls/_voters_generalinfo.html' %}
 </div>
 {% endif %}  
                                     
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 6 %}active{% endif %}" id="historyinfo">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 6 %}active{% endif %}" id="historyinfo">
     {% include 'polls/_view_history.html' %}
 </div>
 

@@ -213,8 +213,11 @@ def addChoice(request, question_id):
         if item_text == choice.item_text:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
+    recentlyAdded = False
+    if question.status == 4:
+        recentlyAdded = True
     # create the choice
-    item = Item(question=question, item_text=item_text, timestamp=timezone.now())
+    item = Item(question=question, item_text=item_text, timestamp=timezone.now(), recently_added=recentlyAdded)
     
     # if the user uploaded an image or set a URL, add it to the item
     if request.FILES.get('docfile') != None:
@@ -331,6 +334,11 @@ def resumePoll(request, question_id):
     if request.user != question.question_owner:
         return HttpResponseRedirect(reverse('polls:index'))
     
+    allItems = question.item_set.all()
+    for item in allItems:
+        if item.recently_added:
+            item.recently_added = False
+            item.save()
     # set the poll to start
     question.status = 2
     question.save()

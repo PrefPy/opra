@@ -1,20 +1,30 @@
 html, body{
-	height:100%;
 	background: #da291c; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#707372, black); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#707372, black); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#707372, black); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#707372, black); /* Standard syntax */
+    background: -webkit-linear-gradient(white, #707372); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(white, #707372); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(white, #707372); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(white, #707372); /* Standard syntax */
 }
 
-.col-md-3{
+.main-link{
 	display: flex;
 	justify-content: center; /* align horizontal */
 	align-items: center; /* align vertical */
-	height: 16.66%;
+	height: 9%;
+	padding-left: 2.5%;
+}
+
+@media (min-width: 480px) {
+    .main-link {
+        height: 20%;
+    }
 }
 
 img {
+	width:100%;
+}
+
+.letters {
 	width:100%;
 }
 
@@ -24,12 +34,18 @@ a{
 
 .btn {
 	background: #da291c;
+	border-color: #da291c;
 }
 
 .btn:hover{
 	background: #e45d50;
+	border-color: #da291c;
 }
 
 .btn:active{
-	background: #da291c;
+	background: #da291c !important;
+}
+
+.dropdown-toggle{
+	width:100%;
 }

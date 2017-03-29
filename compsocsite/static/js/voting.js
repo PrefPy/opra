@@ -224,7 +224,7 @@ var VoteUtil = (function () {
 				if($( "#right-sortable" ).children().size() > 0){
 					$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
 				}
-				if( $( "#right-sortable" ).children().size() == 0 ){ enableSubmission(); }
+				if( $( "#left-sortable" ).children().size() != 0 ){ enableSubmission(); }
 			}
 		}
 	}
@@ -282,7 +282,7 @@ var VoteUtil = (function () {
 		record += d+ "::clickFrom::" + item + "::"+ tier+";;";
 		VoteUtil.checkStyle();
 		tier = currentli.children().first().attr("alt");
-		if ($('#right-sortable').children().size() == 0) { enableSubmission(); }
+		if ($('#left-sortable').children().size() != 0) { enableSubmission(); }
 		$('#left-sortable').children().each(function(){
 			$(this).removeAttr('onclick');
 		});

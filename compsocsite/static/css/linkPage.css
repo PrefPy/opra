@@ -1,9 +1,9 @@
 html, body{
-	background: #da291c; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(white, #707372); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(white, #707372); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(white, #707372); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(white, #707372); /* Standard syntax */
+	background: #ffffff; /* For browsers that do not support gradients */
+    /*background: -webkit-linear-gradient(white, #707372); /* For Safari 5.1 to 6.0 */
+    /*background: -o-linear-gradient(white, #707372); /* For Opera 11.1 to 12.0 */
+    /*background: -moz-linear-gradient(white, #707372); /* For Firefox 3.6 to 15 */
+    /*background: linear-gradient(white, #707372); /* Standard syntax */
 }
 
 .main-link{
@@ -12,6 +12,7 @@ html, body{
 	align-items: center; /* align vertical */
 	height: 9%;
 	padding-left: 2.5%;
+	text-align: center;
 }
 
 @media (min-width: 480px) {
@@ -32,6 +33,17 @@ a{
 	color: #da291c;
 }
 
+.dropdown1{
+	position:relative;
+	left:20%;
+	
+}
+
+.dropdown2{
+	position:relative;
+	right:20%;
+}
+
 .btn {
 	background: #da291c;
 	border-color: #da291c;
@@ -48,4 +60,11 @@ a{
 
 .dropdown-toggle{
 	width:100%;
+}
+
+.first-line{
+	position:relative;
+	width:90%;
+	height:80%;
+	margin:auto;
 }

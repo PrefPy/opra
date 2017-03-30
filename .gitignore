@@ -1,4 +1,5 @@
 __pycache__/
 *.pyc
+*.DS_Store
 compsocsite/db.sqlite3
 compsocsite/polls/.DS_Store

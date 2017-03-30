@@ -32,7 +32,7 @@ urlpatterns = [
     url(r'^multipolls/', include('multipolls.urls')),
     url(r'^django-rq/', include('django_rq.urls')),
     url(r'^GM2017$', GMView.as_view(), name='voting_demo'),
-    url(r'^message$', views.sendMessage, name='message'),
+    url(r'^message$', sendMessage, name='message'),
     url(r'^GM2017$', GMView.as_view(), name='GM_2017'),
     url(r'^CSposter$', CSPosterView.as_view(), name='CS_poster'),
 ]

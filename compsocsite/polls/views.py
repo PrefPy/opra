@@ -1631,3 +1631,9 @@ def anonymousVote(request, question_id):
     messages.success(request, 'Your preferences have been updated.')
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
     
+def sendMessage(request):
+    if request.method == 'POST':
+        message = request.POST["message"]
+        m = Message(text=message,timestamp=timezone.now())
+        m.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

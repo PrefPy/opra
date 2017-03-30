@@ -19,6 +19,7 @@ from django.views.generic.base import RedirectView
 from django.conf import settings
 from django.views.static import serve
 from polls.views import GMView
+from polls.views import sendMessage
 
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/polls/main')),
@@ -30,4 +31,5 @@ urlpatterns = [
     url(r'^multipolls/', include('multipolls.urls')),
     url(r'^django-rq/', include('django_rq.urls')),
     url(r'^GM2017$', GMView.as_view(), name='voting_demo'),
+    url(r'^message$', GMView.as_view(), name='message'),
 ]

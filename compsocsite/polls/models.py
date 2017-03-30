@@ -308,4 +308,6 @@ class UserVoteRecord(models.Model):
     class Meta:
         ordering = ['timestamp']
 
-#if there is new data and the last computation was > 5 seconds ago
+class Message(models.Model):
+    text = models.CharField(max_length=10000, default="")
+    timestamp = models.DateTimeField('message timestamp')

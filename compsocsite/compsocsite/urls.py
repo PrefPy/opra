@@ -20,6 +20,7 @@ from django.conf import settings
 from django.views.static import serve
 from polls.views import GMView
 from polls.views import sendMessage
+from polls.views import CSPosterView
 
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/polls/main')),
@@ -32,4 +33,6 @@ urlpatterns = [
     url(r'^django-rq/', include('django_rq.urls')),
     url(r'^GM2017$', GMView.as_view(), name='voting_demo'),
     url(r'^message$', GMView.as_view(), name='message'),
+    url(r'^GM2017$', GMView.as_view(), name='GM_2017'),
+    url(r'^CSposter$', CSPosterView.as_view(), name='CS_poster'),
 ]

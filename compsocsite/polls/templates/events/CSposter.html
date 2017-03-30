@@ -1,0 +1,40 @@
+{% extends 'polls/base.html' %}
+{% block extra_head %}
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/static/css/linkPage.css">
+
+{% endblock %}
+
+{% block content %}
+
+
+<div class="col-md-12">
+	<h4>RPI Computer Science Poster Award</h4>
+</div>
+
+<div  class="col-md-12">
+<div class="panel panel-default">
+	
+	
+	<div class="panel-body">Current Poster Session: <a href =''>March 31, 2017</a></div>
+        <!-- past poster sessions -->
+        <div class="panel-heading">
+            <a class="panel-title" data-toggle="collapse" href="#collapse_des">
+            Past poster sessions </a>
+        </div>
+
+        <!-- Display the description in the panel body (initially hidden) -->
+        <div id="collapse_des" class="collapse panel-body">
+            <div><a href='/polls/195/vote/results/'> 2017-02-24.</a> Winner: Charles Hathaway. Interactive Complexity – When
+was the last time you implemented a sort?</div>
+            <div><a href='/polls/169/vote/results/'>2016-12-02.</a> Winner: Haidar Khan. The Wavelet Deconvolution Layer for Deep Learning on Time Series. </div>
+            
+        </div>
+    </div>
+ </div> 
+ </div>  
+{% endblock %}

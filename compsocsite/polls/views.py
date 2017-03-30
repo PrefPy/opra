@@ -115,12 +115,21 @@ class DemoView(generic.DetailView):
 
 
 class GMView(generic.ListView):
-    template_name = 'polls/linkPage.html'
+    template_name = 'events/GM2017.html'
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all()
     def get_context_data(self, **kwargs):
         ctx = super(GMView, self).get_context_data(**kwargs)
+        return ctx
+
+class CSPosterView(generic.ListView):
+    template_name = 'events/CSposter.html'
+    context_object_name = 'question_list'
+    def get_queryset(self):
+        return Question.objects.all()
+    def get_context_data(self, **kwargs):
+        ctx = super(CSPosterView, self).get_context_data(**kwargs)
         return ctx
 
         

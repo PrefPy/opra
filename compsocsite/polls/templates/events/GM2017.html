@@ -127,6 +127,7 @@
 	
 	<div>
 		<form method="post" action="">
+			{% csrf_token %}
 			<textarea class="form-control" name="message" rows="4" cols="50" maxlength="1000" placeholder="Enter your message here"></textarea>
 			<input type="submit" value="Submit" class="btn btn-primary">
 		</form>

@@ -12,7 +12,7 @@
 {% block content %}
 	
 	<br/>
-	<div class="container" style="width:50%; position:relative; right:20%;">
+	<div class="container" {%if not request.flavour == "mobile"%}style="width:50%; position:relative; right:20%;" {% endif %}>
 	<div class="col-md-12">
 		<h2 style="margin:auto; text-align:center;">OPRA Grand Marshal Week</h2>
 	</div>
@@ -20,34 +20,40 @@
 		<div class="col-sm-4 col-xs-12 main-link" id="grand-marshall">
 			<a href="#">
 				<div class="btn btn-primary first-line" >
+				{%if not request.flavour == "mobile"%}
 					<div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/GM.png"/></div>
-					<div style="margin:auto;padding-top:25%;">Grand Marshall</div>
+					{% endif %}
+					<div {%if not request.flavour == "mobile"%}style="margin:auto;padding-top:25%;"{% endif %}>Grand Marshall</div>
 				</div>
 			</a>
 		</div>
 		<div class="col-sm-4 col-xs-12 main-link" id="president-union">
 			<a href="#">
 				<div class="btn btn-primary first-line">
+				{%if not request.flavour == "mobile"%}
 					<div class="hidden-sm hidden-xs col-md-4">
 						<img src="/static/img/PU.png"/>
 					</div>
-					<div style="margin:auto;padding-top:25%;">President of the Union</div>
+					{% endif %}
+					<div {%if not request.flavour == "mobile"%}style="margin:auto;padding-top:25%;"{% endif %}>President of the Union</div>
 				</div>
 			</a>
 		</div>
 		<div class="col-sm-4 col-xs-12 main-link" id="ug-president">
 			<a href="#">
 				<div  class="btn btn-primary first-line">
+				{%if not request.flavour == "mobile"%}
 					<div class="hidden-sm hidden-xs col-md-4">
 						<img src="/static/img/PU.png"/>
 					</div>
-					<div style="margin:auto;padding-top:25%;">Undergraduate President</div>
+					{% endif %}
+					<div {%if not request.flavour == "mobile"%}style="margin:auto;padding-top:25%;"{% endif %}>Undergraduate President</div>
 				</div>
 			</a>
 		</div>
 	</div>
 	<hr>
-	<div class="row" style="padding-bottom:0px;">
+	<div class="row">
 		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
 			<div class="dropdown">
 				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2018

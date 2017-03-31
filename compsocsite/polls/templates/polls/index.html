@@ -3,7 +3,6 @@
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/landing-page.css' %}" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
 {% block content %}
@@ -17,9 +16,6 @@
       border-color: transparent;
         border:0px;
     }
-    h1, h2, h3{
-        color: white;
-    }
     .readable{
         background-color:rgba(0, 0, 0, 0.5);
     }
@@ -30,7 +26,8 @@
     .rpi-text-red{
         color:rgb(191,7,17)
     }
-    body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+    body,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+    h1{font-family: "Gotham A","Gotham B",sans-serif }
     body {font-size: 16px;}
     img {margin-bottom: -8px;}
     
@@ -40,11 +37,11 @@
     <!-- Header -->
  
 
-<header class="w3-display-container" style="max-width:1500px; margin-top: 40px;" id="home">
-  <img class="w3-image" src="/static/img/bg.jpg" width="1500" height="700" style="opacity: 0.9">
+<header class="w3-display-container"  id="home">
+  <img class="w3-image" src="/static/img/bg.jpg" style="opacity: 0.4">
   <div class="w3-display-middle w3-margin-top w3-center">
     
-      <h1><span class="w3-padding w3-black w3-opacity-min" style="display: inline-block; width: 400px;"> <b class="w3-hide-small">Online Preference Reporting and Aggregation</b><h3>Supported by Professor  <a href="http://www.cs.rpi.edu/~xial" style="color: rgb(191,7,17); "> Lirong Xia's group </a> at RPI</h3></span></h1>
+      <h1> <p class="w3-hide-small" style="font-weight: bolder; color:#000;">Online Preference Reporting and Aggregation</p><h3 style="color:#000">Supported by Professor  <a href="http://www.cs.rpi.edu/~xial" style="color: rgb(191,7,17); "> Lirong Xia's group </a> at RPI</h3></h1>
             
     <br>
     <!--<a href="#about" class="btn btn-dark btn-lg">Find Out More</a> -->

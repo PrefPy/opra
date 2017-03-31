@@ -23,9 +23,6 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'css/introjs.css' %}"/>
     <!-- Custom Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
-       
-    <!-- W3 -->
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 
     <!-- Select2 -->
@@ -72,7 +69,7 @@
 
 	<body>
     <!-- nav bar login -->
-            <div class="modal fade" role="dialog" id="loginmodal">
+    <div class="modal fade" role="dialog" id="loginmodal">
       <div class="modal-dialog">
         <div class="modal-content">
           <form id="login_form" method="post" action="/auth/login/">
@@ -101,28 +98,21 @@
         </div>
       </div>
 		</div>
-        
-        
 
 		<!--nav bar for main page-->
     {% if user.is_authenticated %}
 		<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#377BB5; border-color: transparent;">
     {% else %}
-            
-            
     <iframe src="/auth/logoutCas" style="display:none;">
       <p>Your browser does not support iframes.</p>
     </iframe>
     <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
     {%endif%}
-        
-        
 			{% if request.flavour == "mobile" %}
 			<div class="container-fluid" style = "margin-left: 10px; margin-right: 10px;">
 	    {% else %}
-	    <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
+	    <div class="container-fluid">
 	    {% endif %}
-            
         <div class="navbar-header" >
           <a type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" style="background-color:white;">
             <span class="sr-only">Toggle navigation</span>
@@ -131,9 +121,7 @@
             <span class="icon-bar"></span>
           </a>
           <!-- Welcome Part-->
-          
-            {% if user.is_authenticated %}
-            <a class="navbar-brand" href="/polls/" style ="font-size: 100%; {% if request.flavour == 'mobile' %}
+          <a class="navbar-brand" href="/polls/" style ="font-size: 100%; {% if request.flavour == 'mobile' %}
           margin-top: 5px;
           {% endif %}
           {% if user.is_authenticated %}
@@ -141,29 +129,24 @@
           {%else%}
           color:black;
           {% endif %}">
-              Welcome
-                {% if request.user.first_name == "" %}
-                {{ request.user.username }}
-                {% endif %}
-                {% if request.user.first_name != "" %}
-                {{ request.user.first_name }}
-                {% endif %}
-            {% else %}
-            
-               <a class="w3-bar-item"><img src="/static/img/oprafulllogowhite.png" style="width:110px" ></a>
+	          Welcome
+            {% if user.is_authenticated %}
+            {% if request.user.first_name == "" %}
+            {{ request.user.username }}
             {% endif %}
-              
+            {% if request.user.first_name != "" %}
+            {{ request.user.first_name }}
+            {% endif %}
+            {% endif %}
 					</a>
         </div>
-            
-            
         <!-- right side of nav bar-->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					{% if user.is_authenticated %}
 					<ul class="nav navbar-nav navbar-right">
-                    <!-- Home Icon-->
-                    <li><a href="{% url 'polls:index' %}" style="color:white;"><span class="glyphicon navbar-right glyphicon-home"></span></a></li>
-                    <!-- Dropdown Setting Icon-->
+            <!-- Home Icon-->
+            <li><a href="{% url 'polls:index' %}" style="color:white;"><span class="glyphicon navbar-right glyphicon-home"></span></a></li>
+            <!-- Dropdown Setting Icon-->
 						<li class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white;"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
 							<ul class="dropdown-menu" style="font-size:100%; ">
@@ -183,10 +166,10 @@
 					{% else %}
 					<ul class="nav navbar-nav navbar-right pull-right">
 						<li>
-							<a href="{% url 'appauth:register' %}" ><span class="glyphicon glyphicon-user"></span> Sign Up </a>
+							<a href="{% url 'appauth:register' %}" style="color:black;"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
 						</li>
 						<li>
-							<a href="http://opra.cs.rpi.edu:8000/auth/loginCas" > <span class="glyphicon glyphicon-user"></span> Login </a>
+							<a href="http://opra.cs.rpi.edu:8000/auth/loginCas"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
 						</li>
 					</ul>
 					{% endif %}
@@ -209,10 +192,10 @@
 		<br>
     <div name="MainPage">
     {% endif %}
-     
+      <div id="content-block">
       {% block content %}
       {% endblock %}
-     
+      </div>
 
     </div>
 

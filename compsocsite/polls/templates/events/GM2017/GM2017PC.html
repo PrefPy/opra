@@ -1,0 +1,116 @@
+
+
+	<div class="container" style="width:720px; position:relative; " >
+	<div class="col-md-12">
+		<h2 style="margin:auto; text-align:center;">OPRA Grand Marshal Week</h2>
+	</div>
+	<hr>
+	<div class="row" style="height:20%;">
+		<div class="col-sm-4 main-link" id="grand-marshall" style="width:30%;">
+			<a href="#">
+				<div class="btn btn-primary first-line" style="width:200px;">
+				
+					Grand Marshall
+				</div>
+			</a>
+		</div>
+		<div class="col-sm-4 col-xs-12 main-link" id="president-union"  style="width:30%;">
+			<a href="#">
+				<div class="btn btn-primary first-line" style="width:200px;">
+				President of the Union
+				</div>
+			</a>
+		</div>
+		<div class="col-sm-4 col-xs-12 main-link" id="ug-president"  style="width:30%;">
+			<a href="#">
+				<div  class="btn btn-primary first-line" style="width:200px;">
+				Undergraduate President
+				</div>
+			</a>
+		</div>
+	</div>
+	<hr>
+	<div class="row" style="height:12%;">
+		<div class="col-sm-3 col-xs-12 main-link"  style="width:45%;">
+			<div class="dropdown">
+				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown" style="width:300px;">Class of 2018
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" style="width:100%; ">
+					<li><a href="#">President</a></li>
+					<li><a href="#">Vice President</a></li>
+					<li><a href="#">Representative</a></li>
+					<li><a href="#">Graduate Representative</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-3 col-xs-12 main-link"  style="width:45%;">
+			<div class="dropdown ">
+				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown" style="width:300px;">Class of 2019
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" style="width:100%;">
+					<li><a href="#">President</a></li>
+					<li><a href="#">Vice President</a></li>
+					<li><a href="#">Representative</a></li>
+					<li><a href="#">Senator</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<br/>
+	<div class="row" style="height:12%;">	
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall" style="width:45%;">
+			<div class="dropdown ">
+				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown"  style="width:300px;">Class of 2020
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" style="width:100%;">
+					<li><a href="#">President</a></li>
+					<li><a href="#">Vice President</a></li>
+					<li><a href="#">Representative</a></li>
+					<li><a href="#">Senator</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall" style="width:45%;">
+			<div class="dropdown ">
+				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown"  style="width:300px;">Alumni
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" style="width:100%;">
+					<li><a href="#">President</a></li>
+					<li><a href="#">Vice President</a></li>
+					<li><a href="#">Secretary</a></li>
+					<li><a href="#">Treasurer</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<div class="row" style="height:12%;">	
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall" style="width:90%;">
+			<div class="dropdown ">
+				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown"  style="width:600px;">Others
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" style="width:100%;">
+					<li><a href="#">Independent Senator</a></li>
+					<li><a href="#">Greek Senator</a></li>
+					<li><a href="#">Graduate Senator</a></li>
+					<li><a href="#">Senator</a></li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+	</div>
+<hr>
+	<div>
+		<form method="post" action="/message">
+			{% csrf_token %}
+			<textarea class="form-control" name="message" rows="4" cols="50" maxlength="1000" placeholder="Enter your message here"></textarea>
+			<input type="submit" value="Submit" class="btn btn-primary">
+		</form>
+	</div>
+</div>

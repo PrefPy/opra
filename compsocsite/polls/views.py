@@ -115,7 +115,7 @@ class DemoView(generic.DetailView):
 
 
 class GMView(generic.ListView):
-    template_name = 'events/GM2017.html'
+    template_name = 'events/GM2017/GM2017.html'
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all()
@@ -124,7 +124,7 @@ class GMView(generic.ListView):
         return ctx
 
 class CSPosterView(generic.ListView):
-    template_name = 'events/CSposter.html'
+    template_name = 'events/CSposter/CSposter.html'
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all()

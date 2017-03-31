@@ -10,14 +10,12 @@ html, body{
 	display: flex;
 	justify-content: center; /* align horizontal */
 	align-items: center; /* align vertical */
-	height: 9%;
 	padding-left: 2.5%;
 	text-align: center;
 }
 
 @media (min-width: 480px) {
     .main-link {
-        height: 20%;
     }
 }
 
@@ -64,7 +62,16 @@ a{
 
 .first-line{
 	position:relative;
-	width:90%;
-	height:80%;
+	height:100%;
+	margin:auto;
+	display: flex;
+	justify-content: center; /* align horizontal */
+	align-items: center; /* align vertical */
+	text-align: center;
+}
+
+.other-polls{
+	position:relative;
+	height:100%;
 	margin:auto;
 }

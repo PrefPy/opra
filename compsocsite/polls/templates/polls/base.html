@@ -127,7 +127,7 @@
             <span class="icon-bar"></span>
           </a>
           <!-- Welcome Part-->
-          
+          <a class="w3-bar-item"><img src="/static/img/oprafulllogowhite.png" style="width:80px;" ></a>
             {% if user.is_authenticated %}
             <a class="navbar-brand" href="/polls/" style ="font-size: 100%; {% if request.flavour == 'mobile' %}
           margin-top: 5px;
@@ -144,8 +144,9 @@
                 {% if request.user.first_name != "" %}
                 {{ request.user.first_name }}
                 {% endif %}
+                
             {% else %}
-               <a class="w3-bar-item"><img src="/static/img/oprafulllogowhite.png" style="width:110px;" ></a>
+               
             {% endif %}
               
 					</a>

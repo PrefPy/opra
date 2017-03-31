@@ -58,8 +58,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src='/static/js/intro.js'></script>
     <script src='/static/js/base.js'></script>
-
-		<script src='/static/js/shared.js'></script>
+    <script src='/static/js/shared.js'></script>
 
     <style>
 	    .btn{
@@ -72,7 +71,7 @@
 
 	<body>
     <!-- nav bar login -->
-            <div class="modal fade" role="dialog" id="loginmodal">
+    <div class="modal fade" role="dialog" id="loginmodal">
       <div class="modal-dialog">
         <div class="modal-content">
           <form id="login_form" method="post" action="/auth/login/">
@@ -100,28 +99,25 @@
           </form>
         </div>
       </div>
-		</div>
+    </div>
         
         
 
 		<!--nav bar for main page-->
     {% if user.is_authenticated %}
-		<nav class="navbar navbar-default navbar-fixed-top" style="background-color:#377BB5; border-color: transparent;">
-    {% else %}
-            
-            
-    <iframe src="/auth/logoutCas" style="display:none;">
-      <p>Your browser does not support iframes.</p>
-    </iframe>
-    <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
+        <nav class="navbar navbar-default navbar-fixed-top" style="background-color:#377BB5; border-color: transparent;">
+    {% else %}      
+        <iframe src="/auth/logoutCas" style="display:none;">
+          <p>Your browser does not support iframes.</p>
+        </iframe>
+        <nav class="navbar navbar-default navbar-fixed-top" style="background-color:transparent; border-color: transparent;">
     {%endif%}
         
-        
-			{% if request.flavour == "mobile" %}
-			<div class="container-fluid" style = "margin-left: 10px; margin-right: 10px;">
-	    {% else %}
+    {% if request.flavour == "mobile" %}
+        <div class="container-fluid" style = "margin-left: 10px; margin-right: 10px;">
+    {% else %}
 	    <div class="container-fluid">
-	    {% endif %}
+    {% endif %}
             
         <div class="navbar-header" >
           <a type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" style="background-color:white;">
@@ -149,8 +145,7 @@
                 {{ request.user.first_name }}
                 {% endif %}
             {% else %}
-            
-               <a class="w3-bar-item"><img src="/static/img/oprafulllogowhite.png" style="width:110px" ></a>
+               <a class="w3-bar-item"><img src="/static/img/oprafulllogowhite.png" style="width:110px;" ></a>
             {% endif %}
               
 					</a>

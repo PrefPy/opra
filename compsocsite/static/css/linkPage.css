@@ -47,6 +47,10 @@ a{
 	border-color: #da291c;
 }
 
+
+
+
+
 .btn:hover{
 	background: #e45d50;
 	border-color: #da291c;
@@ -68,10 +72,12 @@ a{
 	justify-content: center; /* align horizontal */
 	align-items: center; /* align vertical */
 	text-align: center;
+	
 }
 
 .other-polls{
 	position:relative;
 	height:100%;
 	margin:auto;
+	background-color: #c40000;
 }

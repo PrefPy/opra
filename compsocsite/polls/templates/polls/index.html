@@ -2,6 +2,8 @@
 {% load staticfiles %}
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/landing-page.css' %}" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
 {% block content %}
@@ -21,388 +23,232 @@
     .readable{
         background-color:rgba(0, 0, 0, 0.5);
     }
+    .rpi-red{
+        background-color:rgb(191,7,17);
+        color: #fff
+    }
+    .rpi-text-red{
+        color:rgb(191,7,17)
+    }
+    body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+    body {font-size: 16px;}
+    img {margin-bottom: -8px;}
+    
 </style>
 
 
     <!-- Header -->
-    <header id="top" class="header">
-        <div class="text-vertical-center">
-        		
-            <h1><span ><img src="/static/img/oprafulllogowhite.png" style="width:300px" ></span></h1>
-            <h2><span class="readable">Online Preference Reporting and Aggregation</span></h2>
-            <h3><span class="readable">Supported by Professor  <a href="http://www.cs.rpi.edu/~xial"> Lirong Xia's group </a> at RPI</span></h3>
-            <br>
-            <a href="#about" class="btn btn-dark btn-lg">Find Out More</a>
-            <br>
-            <div class = "col-md-12"><a href="/GM2017" class="btn btn-danger btn-lg">GM2017</a> 
-            	<a href="/CSposter" class="btn btn-primary btn-lg">CS Poster</a></div>
-        </div>
-        
-    </header>
+ 
 
-    <!-- About -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>OPRA is the perfect place to host polls!</h2>
-                    <p class="lead">You can also assign tasks to different people in your group.</p>
-                </div>
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container -->
-    </section>
-
-
-
-
-
- <!-- Tutorial Section -->
-    <section id="tutorial" class="content-section-a">
-        <div class="container" >
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Poll Tutorial</h2>
-                    <h4>Show you how to create a new poll.</h4>
-                </div>
-            </div>
-            
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-default">
-    <div class="panel-heading text-center" role="tab" id="headingOne">
-      <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Step 1
-        </a>
-      </h4>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-      <div class="panel-body">
-          <h3 class="text-center"> Step 1 </h3>
-          <hr class="small"/>
-       {% include 'polls/_add_step1.html' %}
-          </form>
-      </div>
-    </div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading text-center" role="tab" id="headingTwo">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Step 2
-        </a>
-      </h4>
-    </div>
-    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-      <div class="panel-body">
-          <h3 class="text-center"> Step 2 </h3>
-          <hr class="small"/>
-          <div class="steps"  align="center">
-                    <p class="sameline" > 
-                        1. General  
-                    </p> 
-                    <p class="sameline" style="color:grey;">
-                        <span class="glyphicon glyphicon-chevron-right"> </span>  
-                        2. Choices
-                    </p>
-                    <p class="sameline">
-                        <span class="glyphicon glyphicon-chevron-right"> </span>
-                        3. Invite <span class="glyphicon glyphicon-chevron-right"> </span>
-                        4. Settings 
-                    </p>
-         </div>
-
-        <div class="progress">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
-                <span class="sr-only">50% Complete</span>
-            </div>
-        </div>
-        <br/>
-        {% include 'polls/_add_choice.html' %}
-      </div>
-    </div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading text-center" role="tab" id="headingThree">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Step 3
-        </a>
-      </h4>
-    </div>
-    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-      <div class="panel-body">
-          <h3 class="text-center"> Step 3 </h3>
-          <hr class="small"/>
-        <div class="steps"  align="center">
-            <p class="sameline" > 
-                1. General   
-                <span class="glyphicon glyphicon-chevron-right"> </span>  
-                2. Choices 
-            </p>
-
-            <p class="sameline" style="color:grey;">
-                <span class="glyphicon glyphicon-chevron-right"> </span>
-                3. Invite 
-            </p>
-
-            <p class="sameline">
-                <span class="glyphicon glyphicon-chevron-right"> </span>
-                4. Settings 
-            </p>
-        </div>
-
-        <div class="progress">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
-                <span class="sr-only">75% Complete</span>
-            </div>
-        </div>
-        <br/>
-
-        <h3>Voters</h3>
-        {% include 'polls/_invite_voters.html' %}
-      </div>
-    </div>
-  </div>
+<header class="w3-display-container" style="max-width:1500px; margin-top: 40px;" id="home">
+  <img class="w3-image" src="/static/img/bg.jpg" width="1500" height="700" style="opacity: 0.9">
+  <div class="w3-display-middle w3-margin-top w3-center">
     
-    <div class="panel panel-default">
-    <div class="panel-heading text-center" role="tab" id="headingThree">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
-          Step 4
-        </a>
-      </h4>
-    </div>
-    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-      <div class="panel-body">
-          <h3 class="text-center"> Step 4 </h3>
-          <hr class="small"/>
-        {% include 'polls/_add_step4.html' %}
-      </div>
-    </div>
-  </div>
-</div>   
-</div>
-</section>
-
-
-
-
-
-
-
-<!--Customize own poll-->
-<div class="content-section-b">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-5 col-sm-6">
-                <hr class="small">
-                <h2 class="section-heading">Customized Singular Polls</h2>
-                <p class="lead"> OPRA allows you to customize your poll by choosing question types (Poll or Allocation), voting algorithms and visibility. Also, OPRA allows anonymous voters to join singular polls.</p>
-                <button type="button" class="btn btn-dark" data-toggle="ba" data-target="#singular">Learn More About Singular Polls </button>
-                <br/><br/>
-            </div>
-            <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                <br/><br/>
-                <img class="img-responsive" src="{% static 'img/sranking.png' %}" alt="My image">
-            </div> 
-
-        </div>
-
-    </div>
-    <!-- /.container -->
-</div>
-<!-- /.content-section-a -->
-
-<!-- Singular -->
-<div class="modal fade" id="singular" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel">More about Singular Polls</h3>
-      </div>
-      <div class="modal-body">
-          <h4>Singular Polls (Default)</h4>
-          <h4>Name and Description</h4>
-          <p>Question Title: You must set a question title (keep it short and concise)<br/>
-          Description: Add a description if you need to add more information. It will be shown when you hover over the title in the index page.</p> 
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<!--Customize own mpoll-->
-<div class="content-section-b">
-
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
-                    <hr class="small">
-                    <div class="clearfix"></div>
-                    <h2 class="section-heading">Customized Multi Polls</h2>
-                    <p class="lead"> It allows you to do polling in several rounds. Sometimes your preferences in one poll depend on the results from another poll.</p>
-                    <a href="#about" class="btn btn-dark">Learn More About Multi Polls</a>
-                </div>
-                <div class="col-lg-5 col-sm-pull-6  col-sm-6">
-                    <img class="img-responsive" src="" alt="">
-                </div>
-                
-            </div>
-
-        </div>
-        <!-- /.container -->
-
-    </div>
-    <!-- /.content-section-b -->
-
-<!--User-friendly voting interface-->
-<div class="content-section-a">
-
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-sm-6">
-                    <hr class="small">
-                    <div class="clearfix"></div>
-                    <h2 class="section-heading">User-friendly voting interface</h2>
-                    <p class="lead"> It is very easy to learn. </p>
-                
-                    {%with question=voting_question%}
-                    <a  class="btn btn-dark" href="{% url 'polls:voting_demo' 95 %}">See Voting Page Demo</a>
-                    {%endwith%}
+      <h1><span class="w3-padding w3-black w3-opacity-min" style="display: inline-block; width: 400px;"> <b class="w3-hide-small">Online Preference Reporting and Aggregation</b><h3>Supported by Professor  <a href="http://www.cs.rpi.edu/~xial" style="color: rgb(191,7,17); "> Lirong Xia's group </a> at RPI</h3></span></h1>
             
-                <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                    <img class="img-responsive" src="" alt="">
-                </div>
-                
-            </div>
-
-        </div>
-        <!-- /.container -->
-
-    </div>
-    <!-- /.content-section-a -->
-</div>
-
-<!--Powerful Algorithm>
-<div class="content-section-b">
-
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-5 col-lg-offset-1 col-sm-push-6  col-sm-6">
-                    <hr class="small">
-                    <div class="clearfix"></div>
-                    <h2 class="section-heading">Powerful Voting Algorithms</h2>
-                    <p class="lead"> OPRA also provides powerful voting algorithms</p>
-                    <a href="#about" class="btn btn-dark">Learn More About Voting Algorithms</a>
-                </div>
-                <div class="col-lg-5 col-sm-pull-6  col-sm-6">
-                    <img class="img-responsive" src="" alt="">
-                </div>
-                
-            </div>
-
-        </div>
-
-    </div>
-    -->
-
-
-<!--Result-->
- <div class="content-section-b">
-
-    <div class="container">
-
-        <div class="row">
-            <div class="col-lg-5 col-sm-6">
-                <hr class="small">
-                <h2 class="section-heading">Organized & Analyzed Results</h2>
-                <p class="lead"> After a poll ends, OPRA will compute and analyze the results for you. It helps you make better decisions.</p>
-                <a  class="btn btn-dark" href="{% url 'polls:voteresults' question.id %}">See Results Demo</a>
-            </div>
-            <div class="col-lg-5 col-lg-offset-2 col-sm-6">
-                <img class="img-responsive" src="{% static 'img/analysis.png' %}" >
-            </div>
-        </div>
-
-    </div>
-    <!-- /.container -->
-</div>
-    <!-- /.content-section-a -->
+    <br>
+    <!--<a href="#about" class="btn btn-dark btn-lg">Find Out More</a> -->
+    <a href="/GM2017" class="btn btn-dark btn-lg"><b>GM2017</b></a> 
+      <a href="/CSposter" class="btn btn-dark btn-lg"><b>CS Poster</b></a>
+    <br>
+  </div>
+</header>
 
 
 
+<!-- Tutorial Section -->
+<div class="w3-padding-64 w3-center w3-white">
+  
+  <p class="w3-large">OPRA is the perfect place to host polls.</p>
+  <div class="w3-row-padding " style="margin-top:60px">
+    
+    <div class="w3-section">
+      <ul class="w3-ul w3-card-2">
+        <li class="rpi-red w3-xlarge w3-padding-32">Poll Tutorial</li>
+        <li class="w3-padding-16">   <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> Step 1 </a> 
+          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+              <div class="panel-body">
+                  <h3 class="text-center"> Step 1 </h3>
+                  <hr class="small"/>
+               {% include 'polls/_add_step1.html' %}
+                  </form>
+              </div>
+          </div>
+        </li>
+        <li class="w3-padding-16">
+          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Step 2 </a>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                  <div class="panel-body">
+                      <h3 class="text-center"> Step 2 </h3>
+                      <hr class="small"/>
+                      <div class="steps"  align="center">
+                                <p class="sameline" > 
+                                    1. General  
+                                </p> 
+                                <p class="sameline" style="color:grey;">
+                                    <span class="glyphicon glyphicon-chevron-right"> </span>  
+                                    2. Choices
+                                </p>
+                                <p class="sameline">
+                                    <span class="glyphicon glyphicon-chevron-right"> </span>
+                                    3. Invite <span class="glyphicon glyphicon-chevron-right"> </span>
+                                    4. Settings 
+                                </p>
+                     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Services -->
-
-    <!-- The circle icons use Font Awesome's stacked icon classes. For more information, visit http://fontawesome.io/examples/ -->
-    <section id="services" class="services bg-primary">
-        <div class="container">
-            <div class="row text-center">
-                <div class="col-lg-10 col-lg-offset-1">
-                    <h2>Other Services</h2>
-                    <hr class="small">
-                    <div class="row">
-                        <div class="col-md-4 col-sm-10">
-                            <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-users fa-stack-1x text-primary"></i>
-                            </span>
-                                <h4>
-                                    <strong>Group</strong>
-                                </h4>
-                                <p>You can create your own groups and invite everyone using just a single click.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-10">
-                            <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-envelope fa-stack-1x text-primary"></i>
-                            </span>
-                                <h4>
-                                    <strong>Email</strong>
-                                </h4>
-                                <p>OPRA makes sending email to all voters easily.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-10">
-                            <div class="service-item">
-                                <span class="fa-stack fa-4x">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-qrcode fa-stack-1x text-primary"></i>
-                            </span>
-                                <h4>
-                                    <strong>QR Code</strong>
-                                </h4>
-                                <p>If the creator makes a poll open, you can vote anonymously (only for single polls)</p>
-                            </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
+                            <span class="sr-only">50% Complete</span>
                         </div>
                     </div>
-                    <!-- /.row (nested) -->
+                    <br/>
+                    {% include 'polls/_add_choice.html' %}
+                  </div>
                 </div>
-                <!-- /.col-lg-10 -->
-            </div>
-            <!-- /.row -->
+        </li>
+      
+       <li class="w3-padding-16">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                      Step 3
+            </a>
+           <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                  <div class="panel-body">
+                      <h3 class="text-center"> Step 3 </h3>
+                      <hr class="small"/>
+                    <div class="steps"  align="center">
+                        <p class="sameline" > 
+                            1. General   
+                            <span class="glyphicon glyphicon-chevron-right"> </span>  
+                            2. Choices 
+                        </p>
+
+                        <p class="sameline" style="color:grey;">
+                            <span class="glyphicon glyphicon-chevron-right"> </span>
+                            3. Invite 
+                        </p>
+
+                        <p class="sameline">
+                            <span class="glyphicon glyphicon-chevron-right"> </span>
+                            4. Settings 
+                        </p>
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
+                            <span class="sr-only">75% Complete</span>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <h3>Voters</h3>
+                    {% include 'polls/_invite_voters.html' %}
+                  </div>
+                </div>
+            
+       </li>
+      <li class="w3-padding-16">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+                      Step 4
+        </a>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+          <div class="panel-body">
+              <h3 class="text-center"> Step 4 </h3>
+              <hr class="small"/>
+            {% include 'polls/_add_step4.html' %}
+          </div>
         </div>
-        <!-- /.container -->
-    </section>
+      </li>  
+      </ul>
+    </div>
+  </div>
+  <br>
+</div>
+
+
+<!-- Single Poll Section -->
+<div class="w3-padding-64 w3-light-grey">
+  <div class="w3-row-padding">
+    <div class="w3-col l4 m6">
+      <img class="w3-image w3-round-large" src="{% static 'img/sranking.png' %}" width="335" height="471">
+    </div>
+    <div class="w3-col l8 m6">
+      <h1 class="w3-xxxlarge rpi-text-red"><b>Customized Singular Polls</b></h1>
+      <p><span class="w3-xlarge">OPRA</span> allows you to customize your poll by choosing question types (Poll or Allocation), voting algorithms and visibility. Also, OPRA allows anonymous voters to join singular polls. You must set a question title (keep it short and concise). You can also add a description if you need to add more information. It will be shown when you hover over the title in the index page.</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- The Result Section -->
+<div class="w3-padding-64 w3-white">
+  <div class="w3-row-padding">
+    <div class="w3-col l8 m6">
+      <h1 class="w3-xxxlarge rpi-text-red"><b>Organized & Analyzed Results</b></h1>
+      <p><span class="w3-xlarge">OPRA </span> helps you make better decisions. After a poll ends, OPRA will compute and analyze, using powerful voting algorithms, the results for you. </p>
+      <button class="w3-button w3-light-grey w3-padding-large w3-section ">
+        <i class="fa fa-eye"></i><a href="{% url 'polls:voteresults' question.id %}">See Results Demo</a>
+      </button>
+    </div>
+      
+    <div class="w3-col l4 m6">
+        <img src="{% static 'img/analysis.png' %}" class="w3-image w3-margin-top" width="335" height="471">
+    
+    </div>
+      
+  </div>
+</div>
+
+
+
+
+<!-- Features Section -->
+<div class="w3-container w3-padding-64 w3-dark-grey w3-center">
+  <h1 class="w3-jumbo"><b>Features</b></h1>
+  <p>More About OPRA</p>
+
+  <div class="w3-row" style="margin-top:64px">
+    <div class="w3-col s3">
+      <i class="fa fa-users w3-text-orange w3-jumbo"></i>
+      <p>Group</p>
+    </div>
+    <div class="w3-col s3">
+      <i class="fa fa-envelope w3-text-red w3-jumbo"></i>
+      <p>Notification</p>
+    </div>
+    <div class="w3-col s3">
+      <i class="fa fa-qrcode w3-text-yellow w3-jumbo"></i>
+      <p>QR Code</p>
+    </div>
+    <div class="w3-col s3">
+      <i class="fa fa-eye-slash w3-text-green w3-jumbo"></i>
+      <p>Anonymity</p>
+    </div>
+  </div>
+
+  <div class="w3-row" style="margin-top:64px">
+    <div class="w3-col s3">
+      <i class="fa fa-user w3-text-sand w3-jumbo"></i>
+      <p>Safe</p>
+    </div>
+    <div class="w3-col s3">
+      <i class="fa fa-shield w3-text-blue w3-jumbo"></i>
+      <p>Stabile</p>
+    </div>
+    <div class="w3-col s3">
+      <i class="fa fa-wifi w3-text-grey w3-jumbo"></i>
+      <p>Connected</p>
+    </div>
+    <div class="w3-col s3">
+      <i class="fa fa-bolt w3-text-pink w3-jumbo"></i>
+      <p>Fast</p>
+    </div>
+  </div>
+</div>
+
+
+    
 
     <!-- Footer -->
     <footer>

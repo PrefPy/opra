@@ -175,7 +175,7 @@
 									<a href="{% url 'appauth:settings' %}" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}"><span >Settings</span></a>
 								</li>
 								<li>
-									<a href="https://opra.cs.rpi.edu:8000/auth/logout/" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}">Logout</a>
+									<a href="/auth/logout/" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}">Logout</a>
 								</li>
 							</ul>
 						</li> <!-- end of Dropdown setting icon-->
@@ -186,7 +186,7 @@
 							<a href="{% url 'appauth:register' %}" ><span class="glyphicon glyphicon-user"></span> Sign Up </a>
 						</li>
 						<li>
-							<a href="/auth/loginCas" > <span class="glyphicon glyphicon-user"></span> Login </a>
+							<a href="https://opra.cs.rpi.edu:8000/auth/loginCas" > <span class="glyphicon glyphicon-user"></span> Login </a>
 						</li>
 					</ul>
 					{% endif %}

@@ -70,10 +70,12 @@
         </div>
 
         <!-- Display the description in the panel body (initially hidden) -->
-        <div id="collapse_des" class="panel-body collapse">
+        <div id="collapse_des" class="panel-collapse collapse">
+        	<div class ="panel-body">
             Description: {% if question.question_desc %}
             <span {% if request.flavour == "mobile" %} style="width:70%" {% endif %}> {{ question.question_desc }} </span>
             {% endif %}
+            </div>
         </div>
     </div>
 

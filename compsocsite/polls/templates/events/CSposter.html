@@ -1,39 +1,49 @@
 {% extends 'polls/base.html' %}
 {% block extra_head %}
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
 
-	<!-- Optional theme -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/static/css/linkPage.css">
-
+{% if request.flavour == "mobile" %}
+<script src='/static/js/mobile.js'></script>
+{% else %}
+<script src='/static/js/desktop.js'></script>
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
-
-<div class="col-md-12"> <h4> <img src="static/img/rpicslogo.png" style="width:100px" > RPI Computer Science Poster Award</h4>
+<div class="container">
+<div class="col-md-10"><h2> <img src="static/img/rpicslogo.png" style="width:100px">  RPI Computer Science Poster Award</h4>
 </div>
 
-<div  class="col-md-12">
+<div  class="col-md-10">
 <div class="panel panel-default">
 	
-	
-	<div class="panel-body">Current Poster Session: <a href =''>March 31, 2017</a></div>
+	<div class="panel-heading">Current Poster Session
+	</div>
+	<div class="panel-body">
+		
+		<div><a href =''>2017-03-31.</a> 4-5 pm, Lally 102. Group: Professors Bringsjord, Fox, Hendler, Ji, McGuinness,
+and Sun. Voting rule: Borda.</div>
+			
+	</div>
         <!-- past poster sessions -->
         <div class="panel-heading">
             <a class="panel-title" data-toggle="collapse" href="#collapse_des">
-            Past poster sessions </a>
+            Past poster sessions <span class="caret"></span> </a>
         </div>
 
         <!-- Display the description in the panel body (initially hidden) -->
-        <div id="collapse_des" class="collapse panel-body">
-            <div><a href='/polls/195/vote/results/'> 2017-02-24.</a> Winner: Charles Hathaway. Interactive Complexity – When
-was the last time you implemented a sort?</div>
-            <div><a href='/polls/169/vote/results/'>2016-12-02.</a> Winner: Haidar Khan. The Wavelet Deconvolution Layer for Deep Learning on Time Series. </div>
-            
+        <div id="collapse_des" class="panel-collapse collapse in">
+        	<div class="panel-body">
+            <div><a href='/polls/195/vote/results/'> 2017-02-24.</a> <b>Winner: Charles Hathaway.</b> Interactive Complexity – When
+was the last time you implemented a sort?  Voting rule: Borda.</div>
+            <div><a href='/polls/169/vote/results/'>2016-12-02.</a> <b>Winner: Haidar Khan.</b> The Wavelet Deconvolution Layer for Deep Learning on Time Series. Voting rule: Borda. </div>
+        </div>
         </div>
     </div>
  </div> 
  </div>  
+</div>
 {% endblock %}

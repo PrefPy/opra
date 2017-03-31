@@ -120,7 +120,7 @@
 			{% if request.flavour == "mobile" %}
 			<div class="container-fluid" style = "margin-left: 10px; margin-right: 10px;">
 	    {% else %}
-	    <div class="w3-bar w3-white w3-wide w3-padding w3-card-2">
+	    <div class="container-fluid">
 	    {% endif %}
             
         <div class="navbar-header" >
@@ -175,7 +175,7 @@
 									<a href="{% url 'appauth:settings' %}" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}"><span >Settings</span></a>
 								</li>
 								<li>
-									<a href="/auth/logout/" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}">Logout</a>
+									<a href="https://opra.cs.rpi.edu:8000/auth/logout/" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}">Logout</a>
 								</li>
 							</ul>
 						</li> <!-- end of Dropdown setting icon-->
@@ -186,7 +186,7 @@
 							<a href="{% url 'appauth:register' %}" ><span class="glyphicon glyphicon-user"></span> Sign Up </a>
 						</li>
 						<li>
-							<a href="http://opra.cs.rpi.edu:8000/auth/loginCas" > <span class="glyphicon glyphicon-user"></span> Login </a>
+							<a href="/auth/loginCas" > <span class="glyphicon glyphicon-user"></span> Login </a>
 						</li>
 					</ul>
 					{% endif %}

@@ -10,17 +10,18 @@
 {% endblock %}
 {% load staticfiles %}
 {% block content %}
-	<div class="col-md-12">
-		<h2>OPRA Grand Marshal Week</h2>
-	</div>
+	
 	<br/>
-	<div class="container">
+	<div class="container" style="width:50%; position:relative; right:20%;">
+	<div class="col-md-12">
+		<h2 style="margin:auto; text-align:center;">OPRA Grand Marshal Week</h2>
+	</div>
 	<div class="row">
 		<div class="col-sm-4 col-xs-12 main-link" id="grand-marshall">
 			<a href="#">
 				<div class="btn btn-primary first-line" >
 					<div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/GM.png"/></div>
-					Grand Marshall
+					<div style="margin:auto;padding-top:25%;">Grand Marshall</div>
 				</div>
 			</a>
 		</div>
@@ -30,7 +31,7 @@
 					<div class="hidden-sm hidden-xs col-md-4">
 						<img src="/static/img/PU.png"/>
 					</div>
-					President of the Union
+					<div style="margin:auto;padding-top:25%;">President of the Union</div>
 				</div>
 			</a>
 		</div>
@@ -40,15 +41,15 @@
 					<div class="hidden-sm hidden-xs col-md-4">
 						<img src="/static/img/PU.png"/>
 					</div>
-					<div style="text-align:center; width:50%">Undergraduate President</div>
+					<div style="margin:auto;padding-top:25%;">Undergraduate President</div>
 				</div>
 			</a>
 		</div>
 	</div>
 	<hr>
-	<div class="row">
-		<div class="col-sm-6 col-xs-12 main-link" id="grand-marshall">
-			<div class="dropdown{% if not request.flavour == mobile %} dropdown1 {% endif %}">
+	<div class="row" style="padding-bottom:0px;">
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+			<div class="dropdown">
 				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2018
 					<span class="caret"></span>
 				</button>
@@ -60,8 +61,8 @@
 				</ul>
 			</div>
 		</div>
-		<div class="col-sm-6 col-xs-12 main-link" id="grand-marshall">
-			<div class="dropdown {% if not request.flavour == mobile %} dropdown2 {%endif%}">
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+			<div class="dropdown ">
 				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2019
 					<span class="caret"></span>
 				</button>
@@ -73,10 +74,8 @@
 				</ul>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6 col-xs-12 main-link" id="grand-marshall">
-			<div class="dropdown {% if not request.flavour == mobile %} dropdown1 {%endif%}">
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+			<div class="dropdown ">
 				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2020
 					<span class="caret"></span>
 				</button>
@@ -88,8 +87,8 @@
 				</ul>
 			</div>
 		</div>
-		<div class="col-sm-6 col-xs-12 main-link" id="grand-marshall">
-			<div class="dropdown {% if not request.flavour == mobile %} dropdown2 {%endif%}">
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+			<div class="dropdown ">
 				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Alumni
 					<span class="caret"></span>
 				</button>
@@ -102,6 +101,7 @@
 			</div>
 		</div>
 	</div>
+	<div class="row">
 	<div class="col-md-3 main-link" id="grand-marshall">
 		<a href="#">
 			<button type="button" class="btn btn-primary">
@@ -134,7 +134,8 @@
 			</button>
 		</a>
 	</div>
-	
+	</div>
+	<hr>
 	<div>
 		<form method="post" action="/message">
 			{% csrf_token %}

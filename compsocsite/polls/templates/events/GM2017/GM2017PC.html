@@ -1,10 +1,54 @@
+<!-- Display the countdown timer in an element -->
+<!-- Display the countdown timer in an element -->
 
+
+<script>
+// Set the date we're counting down to
+var countDownDate = new Date("April 6, 2017 23:59:59").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get todays date and time
+  var now = new Date().getTime();
+
+  // Find the distance between now an the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Display the result in the element with id="countdown"
+  document.getElementById("countdown").innerHTML = days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
+  document.getElementById("days").innerHTML = days;
+  document.getElementById("hours").innerHTML =  hours;
+  document.getElementById("minutes").innerHTML =  minutes;
+  document.getElementById("seconds").innerHTML = seconds;
+
+  // If the count down is finished, write some text 
+  if (distance < 0) {
+    clearInterval(x);
+    //document.getElementById("countdown").innerHTML = "EXPIRED";
+  }
+}, 1000);
+</script>
 	
 	
 	<div class="container" style="width:800px; position:relative;" >
-		<div class="row" style="text-align:center;"><img src="/static/img/gm.png" style="width:150px;" ></div>
-		 <div class="row" style="padding-top: 20px"> <h2 class= "main-link" style="margin:auto; text-align:center;">  RPI Grand Marshal Week 2017</h2>
-		  <h4 style="margin:auto; text-align:center;">Unofficial Polling Site, please also vote at official stations</h3>
+		<div class="row" style="text-align:center;">
+			<img src="/static/img/gm.png" style="width:150px; display: inline-block;">
+			<div style = "display: inline-block;"> 
+				<div class="row" style=";"> <h2 class= "main-link" style="margin:auto; text-align:center;">Grand Marshal Week 2017</h2>
+			
+				</div>
+			</div>
+			
+		
+		 
+		  <h4 style="margin:auto; text-align:center;padding-top:20px;">This is unofficial, please also vote at official stations on April 6</h3>
 		 </div>
 		 <hr>
 	
@@ -114,10 +158,25 @@
 				</ul>
 			</div>
 		</div>
-
 	</div>
 <hr>
-<div class ="container" style="height:15%; width:780px;">
+
+<div class="row" style="height:6%;">	
+		<div class="col-sm-4 main-link" style ="width:30%;">
+			<a href="#">
+				<div class="btn btn-primary first-line" style="width:250px;background-color: #0000c4; border: 0px solid;">
+				
+					<h3>Current Results</h3>
+				</div>
+			</a>
+		</div>
+		<div class="col-sm-3 col-xs-12 main-link"  style="text-align: left;width:50%;">
+			<h3 style ="text-align: left;"> Poll ends in <span id="countdown"></span></h3>
+		</div>
+	</div>
+<hr>
+
+<div class ="container" style="height:15%; width:800px;">
 		<form method="post" action="/message">
 			{% csrf_token %}
 			<textarea class="form-control" name="message" rows="4" cols="50" maxlength="1000" placeholder="Please let us know your suggestions and comments"></textarea>
@@ -125,3 +184,4 @@
 		</form>
 	</div>
 </div>
+

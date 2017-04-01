@@ -64,48 +64,18 @@
 	    .btn{
 	    	border-radius:0;
 	    }
+	    body { padding-top: 0px; }
+	   
     </style>
     {% block extra_head %}
     {% endblock %}
 	</head>
 
 	<body>
-    <!-- nav bar login -->
-    <div class="modal fade" role="dialog" id="loginmodal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <form id="login_form" method="post" action="/auth/login/">
-		        {% csrf_token %}
-		        <div class="modal-header">
-	            Login
-		        </div>
-            <!--login model-->
-		        <div class="modal-body">
-              <fieldset class="form-group">
-                <label for="username">Username </label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" autofocus/>
-              </fieldset>
-              <fieldset class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
-              </fieldset>
-		        </div>
-		        <div class="modal-footer">
-              <input type="submit" class="btn btn-primary" value="Login"/>
-              <input type="button" class="btn btn-primary" value="Login with RPI ID" style="background:#C40000" onclick="loginredirect()"/>
-	            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-		        </div>
-		        <!-- end for login model-->
-          </form>
-        </div>
-      </div>
-    </div>
-        
-        
-
+    
 		<!--nav bar for main page-->
     {% if user.is_authenticated %}
-        <nav class="navbar navbar-default navbar-fixed-top" style="background-color:#377BB5; border-color: transparent;">
+        <nav class="navbar navbar-default navbar-fixed-top" style="border-color: transparent; opacity: 0.9;">
     {% else %}      
         <iframe src="/auth/logoutCas" style="display:none;">
           <p>Your browser does not support iframes.</p>
@@ -119,59 +89,57 @@
 	    <div class="container-fluid">
     {% endif %}
             
-        <div class="navbar-header" >
-          <a type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" style="background-color:white;">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <!-- Welcome Part-->
+            <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"></a>
+    </div>
+    
+   
           
-            {% if user.is_authenticated %}
-            <a class="navbar-brand" href="/polls/" style ="font-size: 100%; {% if request.flavour == 'mobile' %}
-          margin-top: 5px;
-          {% endif %}
-          {% if user.is_authenticated %}
-          color:white;
-          {%else%}
-          color:black;
-          {% endif %}">
-              <a class="w3-bar-item" style="display: flex; justify-content: center; align-items: center;text-align: center;"><img src="/static/img/oprafulllogowhitenolink.png" style="width:80px;" ></a> Welcome
-                {% if request.user.first_name == "" %}
-                {{ request.user.username }}
-                {% endif %}
-                {% if request.user.first_name != "" %}
-                {{ request.user.first_name }}
-                {% endif %}
-                
-            {% else %}
-             <a class="w3-bar-item" style="display: flex; justify-content: center; align-items: center;text-align: center;"><img src="/static/img/oprafulllogowhitenolink.png" style="width:80px;" ></a>  
-            {% endif %}
-              
-					</a>
-        </div>
+          <!-- Welcome Part-->
+         
             
             
-        <!-- right side of nav bar-->
+        <!-- nav bar-->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 					{% if user.is_authenticated %}
+					<ul class="nav navbar-nav">
+						<li><a class="navbar-brand" href="/">
+						       	 <img alt ="O" src="/static/img/oprafulllogowhitenolink.png" style = "width:60px;" >
+						      </a>
+						      	</li>
+						 <li><p class="navbar-text navbar-link"><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span><span class="nav-text">Polls</span></a></p></li>
+						<li><p class="navbar-text navbar-link"><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span><span class="nav-text"> Multi-Polls</span></a></p></li>
+						<li><p class="navbar-text navbar-link"><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span><span class="nav-text"> Groups</span></a></p></li>
+						<li>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><p class ="nav-text" style = "padding-top:2px;"> Events <span class="caret"></span></p></a>
+          					<ul class="dropdown-menu">
+          						<li><a href="{% url 'GM_2017' %}"></span><span class="nav-text"> GM 2017</span></a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="{% url 'CS_poster' %}"><span class="nav-text"> CS Poster</span></a></li>
+          					</ul>
+						</li>
+					</ul>
 					<ul class="nav navbar-nav navbar-right">
-                    <!-- Home Icon-->
-                    <li><a href="{% url 'polls:index' %}" style="color:white;"><span class="glyphicon navbar-right glyphicon-home"></span></a></li>
                     <!-- Dropdown Setting Icon-->
 						<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white;"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:black;"> <span class="glyphicon glyphicon-cog"> </span> <span class="caret"></span> </a>
 							<ul class="dropdown-menu" style="font-size:100%; ">
 								<li class="disabled">
 									<a href="#" >Signed in as {{ request.user.username }}</a>
 								</li>
 								<li role="separator" class="divider"></li>
 								<li >
-									<a href="{% url 'appauth:settings' %}" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}"><span >Settings</span></a>
+									<a href="{% url 'appauth:settings' %}" align="center" style="{% if request.flavour == 'mobile' %} color:black; {% endif %}"><span >Settings</span></a>
 								</li>
 								<li>
-									<a href="/auth/logout/" align="center" style="{% if request.flavour == 'mobile' %} color:white; {% endif %}">Logout</a>
+									<a href="/auth/logout/" align="center" style="{% if request.flavour == 'mobile' %} color:black; {% endif %}">Logout</a>
 								</li>
 							</ul>
 						</li> <!-- end of Dropdown setting icon-->
@@ -186,28 +154,18 @@
 						</li>
 					</ul>
 					{% endif %}
-        </div> <!-- end of right side of nav bar-->
+        </div> <!-- end of nav bar-->
 			</div><!--/.container-fluid -->
 		</nav>
 
-    <!-- subnav bar when you login-->
-    {% if user.is_authenticated %}
-		<div>
-      <ul class="nav nav-tabs">
-        <!-- Poll Icon-->
-        <li><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span><span class="nav-text"> Regular Polls</span></a></li>
-        <li><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span><span class="nav-text"> Multi-Polls</span></a></li>
+    <!-- old subnav bar when you login-->
+   
+   </div>
 
-        <!--Group Icon-->
-        <li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span><span class="nav-text"> Groups</span></a></li>
-		
-		<li><a href="{% url 'GM_2017' %}"></span><span class="nav-text"> GM 2017</span></a></li>
-		<li><a href="{% url 'CS_poster' %}"><span class="nav-text"> CS Poster</span></a></li>
-      </ul>
-    {% else %}
-		<br>
+
+	
     <div name="MainPage">
-    {% endif %}
+
      <div id="content-block">
       {% block content %}
       {% endblock %}

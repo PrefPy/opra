@@ -64,7 +64,7 @@
 	    .btn{
 	    	border-radius:0;
 	    }
-	    body { padding-top: 0px; }
+	    body { padding-top: 50px; }
 	   
     </style>
     {% block extra_head %}
@@ -114,11 +114,12 @@
 						       	 <img alt ="O" src="/static/img/oprafulllogowhitenolink.png" style = "width:60px;" >
 						      </a>
 						      	</li>
-						 <li><p class="navbar-text navbar-link"><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span><span class="nav-text">Polls</span></a></p></li>
-						<li><p class="navbar-text navbar-link"><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span><span class="nav-text"> Multi-Polls</span></a></p></li>
-						<li><p class="navbar-text navbar-link"><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span><span class="nav-text"> Groups</span></a></p></li>
+						 <li><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span>Polls</a></li>
+						<li><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span> Multi-Polls</a></li>
+						<li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span>Groups</a></li>
 						<li>
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><p class ="nav-text" style = "padding-top:2px;"> Events <span class="caret"></span></p></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								<span class="fa fa-calendar">  Events  <span class="caret"></span></a>
           					<ul class="dropdown-menu">
           						<li><a href="{% url 'GM_2017' %}"></span><span class="nav-text"> GM 2017</span></a></li>
 								<li role="separator" class="divider"></li>
@@ -145,7 +146,15 @@
 						</li> <!-- end of Dropdown setting icon-->
 					</ul>
 					{% else %}
+					<ul class="nav navbar-nav">
+					<li><a class="navbar-brand" href="/">
+						       	 <img alt ="O" src="/static/img/oprafulllogowhitenolink.png" style = "width:60px;" >
+						      </a>
+						</li>
+						
+					</ul>
 					<ul class="nav navbar-nav navbar-right pull-right">
+						
 						<li>
 							<a href="{% url 'appauth:register' %}" ><span class="glyphicon glyphicon-user"></span> Sign Up </a>
 						</li>
@@ -153,26 +162,14 @@
 							<a href="http://opra.cs.rpi.edu:8000/auth/loginCas" > <span class="glyphicon glyphicon-user"></span> Login </a>
 						</li>
 					</ul>
+					
 					{% endif %}
         </div> <!-- end of nav bar-->
 			</div><!--/.container-fluid -->
-		</nav>
-
-    <!-- old subnav bar when you login-->
-   
-   </div>
-
-
-	
-    <div name="MainPage">
-
-     <div id="content-block">
-      {% block content %}
+</nav>
+          {% block content %}
       {% endblock %}
-     </div>
-
-    </div>
-
+    
 	</body>
 
 </html>

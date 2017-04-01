@@ -10,7 +10,20 @@
 {% endblock %}
 {% load staticfiles %}
 {% block content %}
-
+<style>
+    html { 
+        background: url("/static/img/additlater") no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+    
+    body{
+    		background-color: transparent;
+    }
+	
+</style>
 {%if not request.flavour == "mobile"%}
 {% include "events/GM2017/GM2017PC.html" %}
 {% else %}

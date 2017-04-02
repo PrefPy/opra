@@ -1,140 +1,203 @@
+<!-- Display the countdown timer in an element -->
+<!-- Display the countdown timer in an element -->
 
 
-	<div class="container" {%if not request.flavour == "mobile"%}style="width:50%; position:relative; right:20%;" {% endif %}>
-	<div class="col-md-12">
-		<h2 style="margin:auto; text-align:center;">OPRA Grand Marshal Week</h2>
+<script>
+// Set the date we're counting down to
+var countDownDate = new Date("April 6, 2017 23:59:59").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get todays date and time
+  var now = new Date().getTime();
+
+  // Find the distance between now an the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Display the result in the element with id="countdown"
+  document.getElementById("countdown").innerHTML ="<h3 style ='color:white;'>"+days + "d " + hours + "h <br/>"+ minutes + "m " + seconds + "s</h3>";
+  document.getElementById("days").innerHTML = days;
+  document.getElementById("hours").innerHTML =  hours;
+  document.getElementById("minutes").innerHTML =  minutes;
+  document.getElementById("seconds").innerHTML = seconds;
+
+  // If the count down is finished, write some text 
+  if (distance < 0) {
+    clearInterval(x);
+    //document.getElementById("countdown").innerHTML = "EXPIRED";
+  }
+}, 1000);
+</script>
+
+
+	<div class="container" style="width:800px; position:relative;" >
+		<div class="row" style="text-align:center;">
+			<img src="/static/img/ballotbox.png" style="width:150px; display: inline-block;">
+			<div style = "display: inline-block;width:550px;"> 
+				
+					<h2 class= "main-link" style="margin:auto; text-align:center;">
+						<b>Grand Marshal Week 2017<br/> Current results  </b>
+						<div class="col-sm-4 main-link" style = "width:150px;">
+		
+			<div class ="btn btn-cr" style="width:150px;background-color:0000c4; border: 0px solid;">
+				<span id="countdown"></span>
+					</div>
+			
 	</div>
-	<div class="row">
-		<div class="col-sm-4 col-xs-12 main-link" id="grand-marshall">
-			<a href="#">
-				<div class="btn btn-primary first-line" >
-				{%if not request.flavour == "mobile"%}
-					<div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/gm.png"/></div>
-					{% endif %}
-					<div {%if not request.flavour == "mobile"%}style="margin:auto;padding-top:25%;"{% endif %}>Grand Marshall</div>
+					</h2>
+			</div>
+			
+		  <h3 style="margin:auto; text-align:center;padding-top:20px;">This is unofficial polling, please vote at official stations on April 6</h3>
+		 </div>
+		 <hr>
+		 <div class="row" style="height:8%;">	
+	<div class="col-sm-4 main-link" style = "width:50%; border: 0px solid;">
+		<a href="/polls/95/demo"> 
+			<div class ="btn btn-tutorial" style="width:390px; border: 0px solid;">
+				<h3>Voting tutorial </h3>
+					</div>
+			</a>
+	</div>
+		 
+		<div class="col-sm-4 main-link" style ="width:50%;">
+			<a href="/GM2017">
+				<div class="btn btn-primary" style="width:390px;border: 0px solid;">			
+					<h3>Back to vote</h3>
 				</div>
 			</a>
 		</div>
-		<div class="col-sm-4 col-xs-12 main-link" id="president-union">
-			<a href="#">
-				<div class="btn btn-primary first-line">
-				{%if not request.flavour == "mobile"%}
-					<div class="hidden-sm hidden-xs col-md-4">
-						<img src="/static/img/pu.png"/>
-					</div>
-					{% endif %}
-					<div {%if not request.flavour == "mobile"%}style="margin:auto;padding-top:25%;"{% endif %}>President of the Union</div>
+		
+	</div>
+	
+	<hr>
+	
+	<div class="row" style="height:20%;">
+		<div class="col-sm-4 main-link" id="grand-marshall">
+			<a href="/polls/239/vote/results/">
+				<div class="btn btn-cr first-line" style="width:250px;border: 0px solid;">
+				
+					<h2><b>Grand <br>Marshall</b></h2>
+				</div>
+			</a>
+		</div>
+		<div class="col-sm-4 col-xs-12 main-link" id="president-union" >
+			<a href="/polls/219/vote/results/">
+				<div class="btn btn-cr first-line" style="width:250px;border: 0px solid;">
+				<h2><b>President<br>of the Union</b></h2>
+				 
 				</div>
 			</a>
 		</div>
 		<div class="col-sm-4 col-xs-12 main-link" id="ug-president">
-			<a href="#">
-				<div  class="btn btn-primary first-line">
-				{%if not request.flavour == "mobile"%}
-					<div class="hidden-sm hidden-xs col-md-4">
-						<img src="/static/img/pu.png"/>
-					</div>
-					{% endif %}
-					<div {%if not request.flavour == "mobile"%}style="margin:auto;padding-top:25%;"{% endif %}>Undergraduate President</div>
+			<a href="/polls/220/vote/results/">
+				<div  class="btn btn-cr first-line" style="width:250px;border: 0px solid;">
+				<h2><b>Undergraduate<br>President</b></h2>  
 				</div>
 			</a>
 		</div>
 	</div>
 	<hr>
-	<div class="row">
-		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+	<div class="row" style="height:10%;">
+		<div class="col-sm-3 col-xs-12 main-link"  style="width:50%;">
 			<div class="dropdown">
-				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2018
-					<span class="caret"></span>
+				<button class="btn btn-cr dropdown-toggle other-polls" type="button" data-toggle="dropdown" style="width:390px;border: 0px solid;">
+					<h3>Class of 2018 <span class="caret"></span></h3>
+					
 				</button>
-				<ul class="dropdown-menu">
-					<li><a href="#">President</a></li>
-					<li><a href="#">Vice President</a></li>
-					<li><a href="#">Representative</a></li>
-					<li><a href="#">Senator</a></li>
+				<ul class="dropdown-menu" style="width:100%; ">
+					<li><a href="/polls/223/vote/results/"><h4>President</h4></a></li>
+					<li><a href="/polls/227/vote/results/"><h4>Vice President</h4></a></li>
+					<li><a href="/polls/229/vote/results/"><h4>Senator</h4></a></li>
+					<li><a href="#"><h4>Representative</h4></a></li>
+					
 				</ul>
 			</div>
 		</div>
-		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+		<div class="col-sm-3 col-xs-12 main-link"  style="width:50%;">
 			<div class="dropdown ">
-				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2019
-					<span class="caret"></span>
+				<button class="btn btn-cr dropdown-toggle other-polls" type="button" data-toggle="dropdown" style="width:390px;border: 0px solid;">
+					<h3>Class of 2019
+					<span class="caret"></span></h3>
 				</button>
-				<ul class="dropdown-menu">
-					<li><a href="#">President</a></li>
-					<li><a href="#">Vice President</a></li>
-					<li><a href="#">Representative</a></li>
-					<li><a href="#">Senator</a></li>
+				<ul class="dropdown-menu" style="width:100%;">
+					<li><a href="#"><h4>President</h4></a></li>
+					<li><a href="#"><h4>Vice President</h4></a></li>
+					<li><a href="/polls/230/vote/results/"><h4>Senator</h4></a></li>
+					<li><a href="#"><h4>Representative</h4></a></li>
+					
 				</ul>
 			</div>
 		</div>
-		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+	</div>
+	<br/>
+	<div class="row" style="height:10%;">	
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall" style="width:50%;">
 			<div class="dropdown ">
-				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2020
+				<button class="btn btn-cr dropdown-toggle other-polls" type="button" data-toggle="dropdown"  style="width:390px;border: 0px solid;">
+					<h3>Class of 2020
 					<span class="caret"></span>
+					</h3>
 				</button>
-				<ul class="dropdown-menu">
-					<li><a href="#">President</a></li>
-					<li><a href="#">Vice President</a></li>
-					<li><a href="#">Representative</a></li>
-					<li><a href="#">Senator</a></li>
+				<ul class="dropdown-menu" style="width:100%;">
+					<li><a href="/polls/224/vote/results/"><h4>President</h4></a></li>
+					<li><a href="/polls/228/vote/results/"><h4>Vice President</h4></a></li>
+					<li><a href="/polls/238/vote/results/"><h4>Senator</h4></a></li>
+					<li><a href="/polls/232/vote/results/"><h4>Representative</h4></a></li>
+					
 				</ul>
 			</div>
 		</div>
-		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall" style="width:50%;">
 			<div class="dropdown ">
-				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Alumni
+				<button class="btn btn-cr dropdown-toggle other-polls" type="button" data-toggle="dropdown"  style="width:390px;border: 0px solid;">
+					<h3>Alumni
 					<span class="caret"></span>
+					</h3>
 				</button>
-				<ul class="dropdown-menu">
-					<li><a href="#">President</a></li>
-					<li><a href="#">Vice President</a></li>
-					<li><a href="#">Secretary</a></li>
-					<li><a href="#">Treasurer</a></li>
+				<ul class="dropdown-menu" style="width:100%;">
+					<li><a href="/polls/233/vote/results/"><h4>President</h4></a></li>
+					<li><a href="/polls/234/vote/results/"><h4>Vice President</h4></a></li>
+					<li><a href="/polls/235/vote/results/"><h4>Secretary</h4></a></li>
+					<li><a href="/polls/236/vote/results/"><h4>Treasurer</h4></a></li>
 				</ul>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-	<div class="col-md-3 main-link" id="grand-marshall">
-		<a href="#">
-			<button type="button" class="btn btn-primary">
-				<!-- <div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/linkImg.png"/></div> -->
-				Independent Senator
-			</button>
-		</a>
-	</div>
-	<div class="col-md-3 main-link" id="grand-marshall">
-		<a href="#">
-			<button type="button" class="btn btn-primary">
-				<!-- <div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/linkImg.png"/></div> -->
-				Greek Senator
-			</button>
-		</a>
-	</div>
-	<div class="col-md-3 main-link" id="grand-marshall">
-		<a href="#">
-			<button type="button" class="btn btn-primary">
-				<!-- <div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/linkImg.png"/></div> -->
-				Graduate Senator
-			</button>
-		</a>
-	</div>
-	<div class="col-md-3 main-link" id="grand-marshall">
-		<a href="#">
-			<button type="button" class="btn btn-primary">
-				<!-- <div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/linkImg.png"/></div> -->
-				Graduate Representative
-			</button>
-		</a>
-	</div>
 	</div>
 	<hr>
-	<div>
+	<div class="row" style="height:10%;">	
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall" style="width:100%;">
+			<div class="dropdown ">
+				<button class="btn btn-cr dropdown-toggle other-polls" type="button" data-toggle="dropdown"  style="width:800px;border: 0px solid;">
+					<h3>Others
+					<span class="caret"></span>
+					</h3>
+				</button>
+				<ul class="dropdown-menu" style="width:100%;">
+					<li><a href="/polls/222/vote/results/"><h4>Independent Senator</h4></a></li>
+					<li><a href="/polls/226/vote/results/"><h4>Greek Senator</h4></a></li>
+					<li><a href="#"><h4>Graduate Senator</h4></a></li>
+					<li><a href="#"><h4>Graduate Representative</h4></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+<hr>
+
+<div class ="container" style="height:10%; width:800px;">
 		<form method="post" action="/message">
 			{% csrf_token %}
-			<textarea class="form-control" name="message" rows="4" cols="50" maxlength="1000" placeholder="Enter your message here"></textarea>
-			<input type="submit" value="Submit" class="btn btn-primary">
+			<textarea class="form-control" name="message" rows="3" cols="30" maxlength="1000" placeholder="Please let us know your suggestions and comments"></textarea>
+			<input type="submit" value="Submit your message" class="btn btn-cr" style = "border: 0px solid;">
 		</form>
 	</div>
 </div>
+

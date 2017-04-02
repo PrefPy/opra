@@ -1,0 +1,140 @@
+
+
+	<div class="container" {%if not request.flavour == "mobile"%}style="width:50%; position:relative; right:20%;" {% endif %}>
+	<div class="col-md-12">
+		<h2 style="margin:auto; text-align:center;">OPRA Grand Marshal Week</h2>
+	</div>
+	<div class="row">
+		<div class="col-sm-4 col-xs-12 main-link" id="grand-marshall">
+			<a href="#">
+				<div class="btn btn-primary first-line" >
+				{%if not request.flavour == "mobile"%}
+					<div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/gm.png"/></div>
+					{% endif %}
+					<div {%if not request.flavour == "mobile"%}style="margin:auto;padding-top:25%;"{% endif %}>Grand Marshall</div>
+				</div>
+			</a>
+		</div>
+		<div class="col-sm-4 col-xs-12 main-link" id="president-union">
+			<a href="#">
+				<div class="btn btn-primary first-line">
+				{%if not request.flavour == "mobile"%}
+					<div class="hidden-sm hidden-xs col-md-4">
+						<img src="/static/img/pu.png"/>
+					</div>
+					{% endif %}
+					<div {%if not request.flavour == "mobile"%}style="margin:auto;padding-top:25%;"{% endif %}>President of the Union</div>
+				</div>
+			</a>
+		</div>
+		<div class="col-sm-4 col-xs-12 main-link" id="ug-president">
+			<a href="#">
+				<div  class="btn btn-primary first-line">
+				{%if not request.flavour == "mobile"%}
+					<div class="hidden-sm hidden-xs col-md-4">
+						<img src="/static/img/pu.png"/>
+					</div>
+					{% endif %}
+					<div {%if not request.flavour == "mobile"%}style="margin:auto;padding-top:25%;"{% endif %}>Undergraduate President</div>
+				</div>
+			</a>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+			<div class="dropdown">
+				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2018
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">President</a></li>
+					<li><a href="#">Vice President</a></li>
+					<li><a href="#">Representative</a></li>
+					<li><a href="#">Senator</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+			<div class="dropdown ">
+				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2019
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">President</a></li>
+					<li><a href="#">Vice President</a></li>
+					<li><a href="#">Representative</a></li>
+					<li><a href="#">Senator</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+			<div class="dropdown ">
+				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Class of 2020
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">President</a></li>
+					<li><a href="#">Vice President</a></li>
+					<li><a href="#">Representative</a></li>
+					<li><a href="#">Senator</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall">
+			<div class="dropdown ">
+				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Alumni
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="#">President</a></li>
+					<li><a href="#">Vice President</a></li>
+					<li><a href="#">Secretary</a></li>
+					<li><a href="#">Treasurer</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+	<div class="col-md-3 main-link" id="grand-marshall">
+		<a href="#">
+			<button type="button" class="btn btn-primary">
+				<!-- <div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/linkImg.png"/></div> -->
+				Independent Senator
+			</button>
+		</a>
+	</div>
+	<div class="col-md-3 main-link" id="grand-marshall">
+		<a href="#">
+			<button type="button" class="btn btn-primary">
+				<!-- <div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/linkImg.png"/></div> -->
+				Greek Senator
+			</button>
+		</a>
+	</div>
+	<div class="col-md-3 main-link" id="grand-marshall">
+		<a href="#">
+			<button type="button" class="btn btn-primary">
+				<!-- <div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/linkImg.png"/></div> -->
+				Graduate Senator
+			</button>
+		</a>
+	</div>
+	<div class="col-md-3 main-link" id="grand-marshall">
+		<a href="#">
+			<button type="button" class="btn btn-primary">
+				<!-- <div class="hidden-sm hidden-xs col-md-4"><img src="/static/img/linkImg.png"/></div> -->
+				Graduate Representative
+			</button>
+		</a>
+	</div>
+	</div>
+	<hr>
+	<div>
+		<form method="post" action="/message">
+			{% csrf_token %}
+			<textarea class="form-control" name="message" rows="4" cols="50" maxlength="1000" placeholder="Enter your message here"></textarea>
+			<input type="submit" value="Submit" class="btn btn-primary">
+		</form>
+	</div>
+</div>

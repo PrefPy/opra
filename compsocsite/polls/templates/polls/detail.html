@@ -33,7 +33,10 @@
         You have no permission to vote on this poll.
     {% elif question.open == 2 and request.user.username == "" %}
         <!-- Poll is not open for anonymous voting and the current user isn't logged in -->
-        Please <a href = "http://opra.cs.rpi.edu:8000/auth/loginCas">Login with RPI RCSID and password.</a>
+        
+<h3>Please <a href = "http://opra.cs.rpi.edu:8000/auth/loginCas" style = "color: blue"> click here to login with RPI RCSID and password.</h3> </div>
+	<h3 style ="color:red;">Important: In order to login you must use RPI network or connect with VPN. </h3>
+
     {% elif question.open == 0 and request.user not in question.question_voters.all %}
         <!-- Poll is not open for anonymous voting and the current user isn't invited -->
         You are not invited to this poll.

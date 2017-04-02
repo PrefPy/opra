@@ -123,6 +123,16 @@ class GMView(generic.ListView):
         ctx = super(GMView, self).get_context_data(**kwargs)
         return ctx
 
+class GMResultsView(generic.ListView):
+    template_name = 'events/GM2017/GM2017results.html'
+    context_object_name = 'question_list'
+    def get_queryset(self):
+        return Question.objects.all()
+    def get_context_data(self, **kwargs):
+        ctx = super(GMResultsView, self).get_context_data(**kwargs)
+        return ctx
+
+
 class CSPosterView(generic.ListView):
     template_name = 'events/CSposter/CSposter.html'
     context_object_name = 'question_list'

@@ -22,7 +22,7 @@ var x = setInterval(function() {
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   // Display the result in the element with id="countdown"
-  document.getElementById("countdown").innerHTML = days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
+  document.getElementById("countdown").innerHTML ="<h3 style ='color:white;'>"+days + "d " + hours + "h <br/>"+ minutes + "m " + seconds + "s</h3>";
   document.getElementById("days").innerHTML = days;
   document.getElementById("hours").innerHTML =  hours;
   document.getElementById("minutes").innerHTML =  minutes;
@@ -35,36 +35,62 @@ var x = setInterval(function() {
   }
 }, 1000);
 </script>
-	
-	
+
+
 	<div class="container" style="width:800px; position:relative;" >
 		<div class="row" style="text-align:center;">
 			<img src="/static/img/gm.png" style="width:150px; display: inline-block;">
-			<div style = "display: inline-block;"> 
-				<div class="row" style=";"> <h2 class= "main-link" style="margin:auto; text-align:center;">Grand Marshal Week 2017</h2>
+			<div style = "display: inline-block;width:550px;"> 
+				
+					<h2 class= "main-link" style="margin:auto; text-align:center;">
+						<b>Grand Marshal Week 2017<br/> Rank your candidates  </b>
+						<div class="col-sm-4 main-link" style = "width:150px;">
+		
+			<div class ="btn btn-primary" style="width:150px;background-color:c40000; border: 0px solid;">
+				<span id="countdown"></span>
+					</div>
 			
-				</div>
+	</div>
+					</h2>
 			</div>
 			
-		
-		 
-		  <h4 style="margin:auto; text-align:center;padding-top:20px;">This is unofficial, please also vote at official stations on April 6</h3>
+		  <h3 style="margin:auto; text-align:center;padding-top:20px;">This is unofficial polling, please vote at official stations on April 6</h3>
 		 </div>
 		 <hr>
+		 <div class="row" style="height:8%;">	
+	<div class="col-sm-4 main-link" style = "width:50%;">
+		<a href="/polls/95/demo"> 
+			<div class ="btn btn-primary" style="width:390px;background-color:darkgreen; border: 0px solid;">
+				<h3>Voting tutorial </h3>
+					</div>
+			</a>
+	</div>
+		 
+		<div class="col-sm-4 main-link" style ="width:50%;">
+			<a href="/GM2017results">
+				<div class="btn btn-primary" style="width:390px;background-color: #0000c4; border: 0px solid;">			
+					<h3>Current Results</h3>
+				</div>
+			</a>
+		</div>
+		
+	</div>
+	
+	<hr>
 	
 	<div class="row" style="height:20%;">
 		<div class="col-sm-4 main-link" id="grand-marshall">
 			<a href="/polls/218">
 				<div class="btn btn-primary first-line" style="width:250px;background-color: #c40000;">
 				
-					<h3>Grand <br>Marshall</h3>
+					<h2><b>Grand <br>Marshall</b></h2>
 				</div>
 			</a>
 		</div>
 		<div class="col-sm-4 col-xs-12 main-link" id="president-union" >
 			<a href="/polls/219">
 				<div class="btn btn-primary first-line" style="width:250px;background-color: #c40000;">
-				<h3>President<br>of the Union</h3>
+				<h2><b>President<br>of the Union</b></h2>
 				 
 				</div>
 			</a>
@@ -72,7 +98,7 @@ var x = setInterval(function() {
 		<div class="col-sm-4 col-xs-12 main-link" id="ug-president">
 			<a href="/polls/220">
 				<div  class="btn btn-primary first-line" style="width:250px;background-color: #c40000;">
-				<h3>Undergraduate<br>President</h3>  
+				<h2><b>Undergraduate<br>President</b></h2>  
 				</div>
 			</a>
 		</div>
@@ -118,7 +144,7 @@ var x = setInterval(function() {
 					</h3>
 				</button>
 				<ul class="dropdown-menu" style="width:100%;">
-					<li><a href="/polls/224base.html"><h4>President</h4></a></li>
+					<li><a href="/polls/224"><h4>President</h4></a></li>
 					<li><a href="#"><h4>Vice President</h4></a></li>
 					<li><a href="#"><h4>Representative</h4></a></li>
 					<li><a href="#"><h4>Senator</h4></a></li>
@@ -159,27 +185,14 @@ var x = setInterval(function() {
 			</div>
 		</div>
 	</div>
+
+
 <hr>
 
-<div class="row" style="height:6%;">	
-		<div class="col-sm-4 main-link" style ="width:30%;">
-			<a href="#">
-				<div class="btn btn-primary first-line" style="width:250px;background-color: #0000c4; border: 0px solid;">
-				
-					<h3>Current Results</h3>
-				</div>
-			</a>
-		</div>
-		<div class="col-sm-3 col-xs-12 main-link"  style="text-align: left;width:50%;">
-			<h3 style ="text-align: left;"> Poll ends in <span id="countdown"></span></h3>
-		</div>
-	</div>
-<hr>
-
-<div class ="container" style="height:15%; width:800px;">
+<div class ="container" style="height:10%; width:800px;">
 		<form method="post" action="/message">
 			{% csrf_token %}
-			<textarea class="form-control" name="message" rows="4" cols="50" maxlength="1000" placeholder="Please let us know your suggestions and comments"></textarea>
+			<textarea class="form-control" name="message" rows="3" cols="30" maxlength="1000" placeholder="Please let us know your suggestions and comments"></textarea>
 			<input type="submit" value="Submit your message" class="btn btn-primary">
 		</form>
 	</div>

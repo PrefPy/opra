@@ -19,6 +19,7 @@ from django.views.generic.base import RedirectView
 from django.conf import settings
 from django.views.static import serve
 from polls.views import GMView
+from polls.views import GMResultsView
 from polls.views import sendMessage
 from polls.views import CSPosterView
 
@@ -34,6 +35,8 @@ urlpatterns = [
     url(r'^GM2017$', GMView.as_view(), name='voting_demo'),
     url(r'^message$', sendMessage, name='message'),
     url(r'^GM2017$', GMView.as_view(), name='GM_2017'),
+    url(r'^GM2017results$', GMResultsView.as_view(), name='GM_2017results'),
+    
     url(r'^gm2017$', GMView.as_view(), name='gm_2017'),
     url(r'^CSposter$', CSPosterView.as_view(), name='CS_poster'),
     url(r'^csposter$', CSPosterView.as_view(), name='cs_poster'),

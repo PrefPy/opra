@@ -2,7 +2,8 @@
 {% load staticfiles %}
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/landing-page.css' %}" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+
 {% endblock %}
 
 {% block content %}
@@ -26,9 +27,12 @@
     .rpi-text-red{
         color:rgb(191,7,17)
     }
-    body,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
-    h1{font-family: "Gotham A","Gotham B",sans-serif }
-    body {font-size: 16px;}
+    body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    body, html {
+    height: 100%;
+    line-height: 1.8;
+}
+
     img {margin-bottom: -8px;}
     
 </style>
@@ -37,7 +41,7 @@
     <!-- Header -->
 
 <header class="w3-display-container"  id="home">
-  <img class="w3-image" src="/static/img/bg.jpg" style="opacity: 0.4">
+  <img class="w3-image" src="/static/img/bg.jpg" style="opacity: 0.45">
   <div class="w3-display-middle w3-margin-top w3-center">
     
      <div><img src="/static/img/oprafullname.png" style="width:50%"></div>
@@ -46,8 +50,8 @@
             
     <br>
     <!--<a href="#about" class="btn btn-dark btn-lg">Find Out More</a> -->
-    <a href="/GM2017" class="btn btn-dark btn-lg"><b>GM2017</b></a> 
-      <a href="/CSposter" class="btn btn-dark btn-lg"><b>CS Poster</b></a>
+    <a href="/GM2017" class="w3-button w3-black"><b>GM 2017</b></a> 
+    <a href="/CSposter" class="w3-button w3-black"><b>CS Poster</b></a>
     <br>
   </div>
 </header>
@@ -164,7 +168,7 @@
 
 
 <!-- Single Poll Section -->
-<div class="w3-padding-64 w3-light-grey">
+<div class="w3-padding-64 w3-light-grey"  style="padding:128px 16px">
   <div class="w3-row-padding">
     <div class="w3-col l4 m6">
       <img class="w3-image w3-round-large" src="{% static 'img/sranking.png' %}" width="335" height="471">
@@ -180,13 +184,13 @@
 
 
 <!-- The Result Section -->
-<div class="w3-padding-64 w3-white">
+<div class="w3-padding-64 w3-white"  style="padding:128px 16px">
   <div class="w3-row-padding">
     <div class="w3-col l8 m6">
       <h1 class="w3-xxxlarge rpi-text-red"><b>Organized & Analyzed Results</b></h1>
       <p><span class="w3-xlarge">OPRA </span> helps you make better decisions. After a poll ends, OPRA will compute and analyze, using powerful voting algorithms, the results for you. </p>
-      <button class="w3-button w3-light-grey w3-padding-large w3-section ">
-        <i class="fa fa-eye"></i><a href="{% url 'polls:voteresults' question.id %}">See Results Demo</a>
+      <button class="w3-button w3-black w3-padding-large w3-section ">
+        <i class="fa fa-eye"></i><a href="{% url 'polls:voteresults' question.id %}"> See Results Demo</a>
       </button>
     </div>
       
@@ -202,9 +206,9 @@
 
 
 <!-- Features Section -->
-<div class="w3-container w3-padding-64 w3-dark-grey w3-center">
-  <h1 class="w3-jumbo"><b>Features</b></h1>
-  <p>More About OPRA</p>
+<div class="w3-container w3-dark-grey w3-center"  style="padding:128px 16px">
+  <h1><b>Features</b></h1>
+  <p class="w3-center w3-large">More About OPRA</p>
 
   <div class="w3-row" style="margin-top:64px">
     <div class="w3-col s3">
@@ -248,12 +252,39 @@
 
     
 
+<!-- Contact Section -->
+<div class="w3-container w3-light-grey" style="padding:128px 16px" id="contact">
+  <h1 class="w3-center"><b>Contact Us</b></h1>
+  <p class="w3-center w3-large">Lets get in touch. Send us a message:</p>
+  <div class="w3-row-padding" style="margin-top:64px">
+    <div class="w3-half">
+      <p><i class="fa fa-map-marker fa-fw w3-xxlarge w3-margin-right rpi-text-red"></i> Troy, US</p>
+      <p><i class="fa fa-phone fa-fw w3-xxlarge w3-margin-right rpi-text-red"></i> Phone: +00 151515</p>
+      <p><i class="fa fa-envelope fa-fw w3-xxlarge w3-margin-right rpi-text-red"> </i> Email: opra@gmail.com</p>
+      <br>
+      <form action="/action_page.php" target="_blank">
+        <p><input class="w3-input w3-border" type="text" placeholder="Name" required name="Name"></p>
+        <p><input class="w3-input w3-border" type="text" placeholder="Email" required name="Email"></p>
+        <p><input class="w3-input w3-border" type="text" placeholder="Message" required name="Message"></p>
+        <p>
+          <button class="w3-button w3-black" type="submit">
+            <i class="fa fa-paper-plane"></i> SEND MESSAGE
+          </button>
+        </p>
+      </form>
+    </div>
+    <div class="w3-half">
+      <!-- Add Google Maps -->
+      <div id="googleMap" class="w3-greyscale-max" style="width:100%;height:510px;"></div>
+    </div>
+  </div>
+</div>
+
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-10 col-lg-offset-1 text-center">
-                    <hr class="small">
                     <p class="text-muted">Copyright &copy; 2016</p>
                 </div>
             </div>
@@ -261,4 +292,27 @@
         <a id="to-top" href="#top" class="btn btn-dark btn-lg"><i class="fa fa-chevron-up fa-fw fa-1x"></i></a>
     </footer>
 
+
+<!-- Add Google Maps -->
+<script>
+function myMap()
+{
+  myCenter=new google.maps.LatLng(42.7302, -73.6788);
+  var mapOptions= {
+    center:myCenter,
+    zoom:12, scrollwheel: false, draggable: false,
+    mapTypeId:google.maps.MapTypeId.ROADMAP
+  };
+  var map=new google.maps.Map(document.getElementById("googleMap"),mapOptions);
+
+  var marker = new google.maps.Marker({
+    position: myCenter,
+  });
+  marker.setMap(map);
+}
+
+
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLFl_jwXM6BXWI3Ne5SlI2BXOtHhUGjR0&callback=myMap"></script>
 {% endblock %}

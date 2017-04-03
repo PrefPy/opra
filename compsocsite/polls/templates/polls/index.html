@@ -2,7 +2,6 @@
 {% load staticfiles %}
 {% block extra_head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/landing-page.css' %}" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 
 {% endblock %}
 
@@ -20,18 +19,10 @@
     .readable{
         background-color:rgba(0, 0, 0, 0.5);
     }
-    .rpi-red{
-        background-color:rgb(191,7,17);
-        color: #fff
-    }
-    .rpi-text-red{
-        color:rgb(191,7,17)
-    }
-    body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     body, html {
     height: 100%;
     line-height: 1.8;
-}
+    }
 
     img {margin-bottom: -8px;}
     
@@ -41,12 +32,12 @@
     <!-- Header -->
 
 <header class="w3-display-container"  id="home">
-  <img class="w3-image" src="/static/img/bg.jpg" style="opacity: 0.45">
+  <img class="w3-image" src="/static/img/bg.jpg" style="opacity: 0.45;">
   <div class="w3-display-middle w3-margin-top w3-center">
     
      <div><img src="/static/img/oprafullname.png" style="width:50%"></div>
-      	<br>
-      <div><h3>	Supported by <a href="http://www.cs.rpi.edu/~xial" style="color: rgb(191,7,17); "> Lirong Xia's group </a> at RPI</h3></div>
+     <br>
+     <div><h3 style="color:black">	Supported by <a href="http://www.cs.rpi.edu/~xial" style="color: rgb(191,7,17); "> Lirong Xia's group </a> at RPI</h3></div>
             
     <br>
     <!--<a href="#about" class="btn btn-dark btn-lg">Find Out More</a> -->
@@ -174,8 +165,8 @@
       <img class="w3-image w3-round-large" src="{% static 'img/sranking.png' %}" width="335" height="471">
     </div>
     <div class="w3-col l8 m6">
-      <h1 class="w3-xxxlarge rpi-text-red"><b>Customized Singular Polls</b></h1>
-      <p><span class="w3-xlarge">OPRA</span> allows you to customize your poll by choosing question types (Poll or Allocation), voting algorithms and visibility. Also, OPRA allows anonymous voters to join singular polls. You must set a question title (keep it short and concise). You can also add a description if you need to add more information. It will be shown when you hover over the title in the index page.</p>
+      <h1 class="w3-xxlarge rpi-text-red"><b>Customized Singular Polls</b></h1>
+      <p class="w3-large"><span class="w3-xlarge">OPRA</span> allows you to customize your poll by choosing question types (Poll or Allocation), voting algorithms and visibility. Also, OPRA allows anonymous voters to join singular polls. You must set a question title (keep it short and concise). You can also add a description if you need to add more information. It will be shown when you hover over the title in the index page.</p>
     </div>
   </div>
 </div>
@@ -187,8 +178,8 @@
 <div class="w3-padding-64 w3-white"  style="padding:128px 16px">
   <div class="w3-row-padding">
     <div class="w3-col l8 m6">
-      <h1 class="w3-xxxlarge rpi-text-red"><b>Organized & Analyzed Results</b></h1>
-      <p><span class="w3-xlarge">OPRA </span> helps you make better decisions. After a poll ends, OPRA will compute and analyze, using powerful voting algorithms, the results for you. </p>
+      <h1 class="w3-xxlarge rpi-text-red"><b>Organized & Analyzed Results</b></h1>
+      <p w3-large><span class="w3-xlarge">OPRA </span> helps you make better decisions. After a poll ends, OPRA will compute and analyze, using powerful voting algorithms, the results for you. </p>
       <button class="w3-button w3-black w3-padding-large w3-section ">
         <i class="fa fa-eye"></i><a href="{% url 'polls:voteresults' question.id %}"> See Results Demo</a>
       </button>

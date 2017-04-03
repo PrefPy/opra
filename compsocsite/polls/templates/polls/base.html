@@ -14,16 +14,17 @@
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous" />
 
-		<!-- jQuery UI CSS (base theme) -->
-		<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- jQuery UI CSS (base theme) -->
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/stylish-portfolio.css' %}" />
 		<link rel="stylesheet" type="text/css" href="{% static 'css/shared.css' %}"/>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/introjs.css' %}"/>
     <!-- Custom Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
-       
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />     
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    
     <!-- W3 -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
@@ -64,7 +65,15 @@
 	    	border-radius:0;
 	    }
 	    body { padding-top: 60px; }
-	   
+        body,h1,h2,h3,h4,h5 {font-family:"Lato", sans-serif}
+
+       .rpi-red{
+            background-color:rgb(191,7,17);
+            color: #fff
+        }
+       .rpi-text-red{
+            color:rgb(191,7,17)
+        }
     </style>
     {% block extra_head %}
     {% endblock %}
@@ -158,10 +167,10 @@
 					<ul class="nav navbar-nav navbar-right pull-right">
 						
 						<li>
-							<a href="{% url 'appauth:register' %}" ><span class="glyphicon glyphicon-user"></span> Sign Up </a>
+							<a href="{% url 'appauth:register' %}" ><span class="fa fa-user-plus"></span> Sign Up </a>
 						</li>
 						<li>
-							<a href="/auth/login" > <span class="glyphicon glyphicon-user"></span> Login </a>
+							<a href="/auth/login" > <span class="fa fa-sign-in"></span> Login </a>
 						</li>
 					</ul>
 					

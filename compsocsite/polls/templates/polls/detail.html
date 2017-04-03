@@ -33,10 +33,17 @@
         You have no permission to vote on this poll.
     {% elif question.open == 2 and request.user.username == "" %}
         <!-- Poll is not open for anonymous voting and the current user isn't logged in -->
-        
-<h3>Please <a href = "http://opra.cs.rpi.edu:8000/auth/loginCas" style = "color: blue"> click here to login with RPI RCSID and password.</h3> </div>
-	<h3 style ="color:red;">Important: In order to login you must use RPI network or connect with VPN. </h3>
-
+        <div class="w3-panel w3-center" style="padding:150px 16px;">
+          <h1 class="w3-xlarge">
+              Please
+              <a href="http://opra.cs.rpi.edu:8000/auth/loginCas" class="w3-border w3-button rpi-red"><span class="fa fa-sign-in"></span> Login</a>
+              with RPI RCSID and password.
+            <br/>
+               Important: In order to login you must use RPI network or connect with VPN. 
+          </h1>
+        </div>
+</div> <!-- end of class ="container"-->
+	
     {% elif question.open == 0 and request.user not in question.question_voters.all %}
         <!-- Poll is not open for anonymous voting and the current user isn't invited -->
         You are not invited to this poll.

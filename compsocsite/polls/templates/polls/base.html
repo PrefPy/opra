@@ -88,18 +88,18 @@
     {% else %}
 	    <div class="container-fluid">
     {% endif %}
-            
+    {% if request.flavour == "mobile" %}
             <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
+        <div class="pull-right">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
+		</div>
       </button>
-      <a class="navbar-brand" href="#"></a>
     </div>
-    
+    {% endif %}
    
           
           <!-- Welcome Part-->
@@ -107,13 +107,16 @@
             
             
         <!-- nav bar-->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse row" id="bs-example-navbar-collapse-1">
+		
 					{% if user.is_authenticated %}
 					<ul class="nav navbar-nav">
+						{% if not request.flavour == "mobile" %}
 						<li><a class="navbar-brand" href="/">
 						       	 <img alt ="O" src="/static/img/oprafulllogowhitenolink.png" style = "width:60px;" >
 						      </a>
-						      	</li>
+						</li>
+						{% endif %}
 						 <li><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span>Polls</a></li>
 						<li><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span> Multi-Polls</a></li>
 						<li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span>Groups</a></li>
@@ -146,6 +149,7 @@
 						</li> <!-- end of Dropdown setting icon-->
 					</ul>
 					{% else %}
+					{% if not request.flavour == "mobile" %}
 					<ul class="nav navbar-nav">
 					<li><a class="navbar-brand" href="/">
 						       	 <img alt ="O" src="/static/img/oprafulllogowhitenolink.png" style = "width:60px;" >
@@ -153,6 +157,7 @@
 						</li>
 						
 					</ul>
+					{% endif %}
 					<ul class="nav navbar-nav navbar-right pull-right">
 						
 						<li>
@@ -167,6 +172,9 @@
         </div> <!-- end of nav bar-->
 			</div><!--/.container-fluid -->
 </nav>
+{% if request.flavour == "mobile" %}
+	<br>
+{% endif %}
           {% block content %}
       {% endblock %}
     

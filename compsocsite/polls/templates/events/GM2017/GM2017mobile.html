@@ -1,203 +1,317 @@
 <!-- Display the countdown timer in an element -->
-<!-- Display the countdown timer in an element -->
 
+<style>
+	.btn:hover {
+		background: transparent;
+		
+	}
+	.btn:activeu {
+		background: transparent;
+		
+	}
+
+	.btn:active {
+		background: transparent;
+	}
+	.btn-tutorial {
+		background: darkgreen;
+		color: white;
+		opacity:0.6;
+		border: 3px solid;
+		border-color: darkgreen;
+	}
+
+	.btn-tutorial:hover {
+		background: #00c400;
+		color: white;
+		border: 3px solid;
+		border-color: #00c400;
+	}
+
+	.btn-cr {
+		background: darkblue;
+		color: white;
+		opacity:0.6;
+		border: 3px solid;
+		border-color: darkblue;
+	}
+
+	.btn-cr:hover {
+		background: darkblue;
+		color: white;
+		border-color: #da291c;
+	}
+
+	.btn-primary {
+		background: darkred;
+		color: white;
+		border: 3px solid;
+		opacity:0.7;
+		border-color: darkred;
+	}
+
+	.btn-primary:hover {
+		background: #c40000;
+		color: white;
+		border-color: #da291c;
+	}
+
+	.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+
+		color: #c40000;
+	}
+	
+	.nopadding {
+	padding: 0%;
+	margin: 0%;
+	}
+	
+	.tinypadding {
+	padding: 1%;
+	margin: 0%;
+	}
+	
+	a{
+		width:100%;
+	}
+	
+	.main-link{
+	display: flex;
+	justify-content: center; /* align horizontal */
+	align-items: center; /* align vertical */
+	text-align: center;
+	padding: 1%;
+	}
+	
+	
+	.infodiv{
+		height:6%;
+		width:100%;
+	}
+	
+	.maindiv{
+		height:12%;
+		width:100%;
+	}
+	.classdiv{
+	height:7.5%;
+	width:100%;
+	}
+
+</style>
 
 <script>
-// Set the date we're counting down to
-var countDownDate = new Date("April 6, 2017 23:59:59").getTime();
+	// Set the date we're counting down to
+	var countDownDate = new Date("April 6, 2017 23:59:59").getTime();
 
-// Update the count down every 1 second
-var x = setInterval(function() {
+	// Update the count down every 1 second
+	var x = setInterval(function() {
 
-  // Get todays date and time
-  var now = new Date().getTime();
+		// Get todays date and time
+		var now = new Date().getTime();
 
-  // Find the distance between now an the count down date
-  var distance = countDownDate - now;
+		// Find the distance between now an the count down date
+		var distance = countDownDate - now;
 
-  // Time calculations for days, hours, minutes and seconds
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+		// Time calculations for days, hours, minutes and seconds
+		var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+		var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+		var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+		var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  // Display the result in the element with id="countdown"
-  document.getElementById("countdown").innerHTML ="<h3 style ='color:white;'>"+days + "d " + hours + "h <br/>"+ minutes + "m " + seconds + "s</h3>";
-  document.getElementById("days").innerHTML = days;
-  document.getElementById("hours").innerHTML =  hours;
-  document.getElementById("minutes").innerHTML =  minutes;
-  document.getElementById("seconds").innerHTML = seconds;
+		// Display the result in the element with id="countdown"
+		document.getElementById("countdown").innerHTML = "<h4 style ='color:white;'>" + days + "d " + hours + "h <br/>" + minutes + "m " + seconds + "s</h4>";
+		document.getElementById("days").innerHTML = days;
+		document.getElementById("hours").innerHTML = hours;
+		document.getElementById("minutes").innerHTML = minutes;
+		document.getElementById("seconds").innerHTML = seconds;
 
-  // If the count down is finished, write some text 
-  if (distance < 0) {
-    clearInterval(x);
-    //document.getElementById("countdown").innerHTML = "EXPIRED";
-  }
-}, 1000);
+		// If the count down is finished, write some text
+		if (distance < 0) {
+			clearInterval(x);
+			//document.getElementById("countdown").innerHTML = "EXPIRED";
+		}
+	}, 1000); 
 </script>
 
+<div class="container-fluid">
 
-	<div class="container" style="width:800px; position:relative;" >
-		<div class="row" style="text-align:center;">
-			<img src="/static/img/gm.png" style="width:150px; display: inline-block;">
-			<div style = "display: inline-block;width:550px;"> 
-				
-					<h2 class= "main-link" style="margin:auto; text-align:center;">
-						<b>Grand Marshal Week 2017<br/> Rank your candidates  </b>
-						<div class="col-sm-4 main-link" style = "width:150px;">
-		
-			<div class ="btn btn-primary" style="width:150px;background-color:c40000; border: 0px solid;">
-				<span id="countdown"></span>
-					</div>
-			
+	<div class="row maindiv" style="text-align:center;height:9%;">
+		<img class = "col-xs-3 tinypadding" src="/static/img/gm.png" style = "height:100%;">
+		<div class ="col-xs-6 nopadding">
+
+			<h2 class= "first-line" style="margin:auto; text-align:center;"><b>GM Week 2017 </b></h2>
+		</div>
+		<div class ="col-xs-3 btn btn-primary first-line" style="background-color:c40000; border: 0px solid;">
+			<span id="countdown" style = "width:100%;"></span>
+		</div>
+	<div class ="row col-xs-12">
+		<h3 style="text-align:center;">Unofficial polling. Please vote on 4/6</h3>
 	</div>
-					</h2>
-			</div>
-			
-		  <h3 style="margin:auto; text-align:center;padding-top:20px;">This is unofficial polling, please vote at official stations on April 6</h3>
-		 </div>
-		 <hr>
-		 <div class="row" style="height:8%;">	
-	<div class="col-sm-4 main-link" style = "width:50%; border: 0px solid;">
-		<a href="/polls/95/demo"> 
-			<div class ="btn btn-tutorial" style="width:390px; border: 0px solid;">
+	</div>
+	
+	
+	
+	<div class="row infodiv">
+		<div class="col-xs-6 tinypadding">
+			<a href="/polls/95/demo" style = "width:100%;">
+			<div class ="btn btn-tutorial" style = "width:100%;">
 				<h3>Voting tutorial </h3>
-					</div>
-			</a>
-	</div>
-		 
-		<div class="col-sm-4 main-link" style ="width:50%;">
-			<a href="/GM2017results">
-				<div class="btn btn-cr" style="width:390px;border: 0px solid;">			
-					<h3>Current Results</h3>
-				</div>
-			</a>
+			</div> </a>
 		</div>
-		
+
+		<div class="col-xs-6 tinypadding">
+			<a href="/GM2017results" style = "width:100%;">
+			<div class="btn btn-cr" style = "width:100%;">
+				<h3>Current Results</h3>
+			</div> </a>
+		</div>
+
 	</div>
-	
 	<hr>
-	
-	<div class="row" style="height:20%;">
-		<div class="col-sm-4 main-link" id="grand-marshall">
+
+	<div class="row  maindiv">
+		<div class="col-xs-4 main-link tinypadding" id="grand-marshall">
 			<a href="/polls/239">
-				<div class="btn btn-primary first-line" style="width:250px;border: 0px solid;">
-				
-					<h2><b>Grand <br>Marshall</b></h2>
-				</div>
-			</a>
+			<div class="btn btn-primary first-line"  style = "width:100%;">
+
+				<h2><b>GM</b></h2>
+			</div> </a>
 		</div>
-		<div class="col-sm-4 col-xs-12 main-link" id="president-union" >
-			<a href="/polls/219">
-				<div class="btn btn-primary first-line" style="width:250px;border: 0px solid;">
-				<h2><b>President<br>of the Union</b></h2>
-				 
-				</div>
-			</a>
+		<div class="col-xs-4 main-link tinypadding" id="president-union">
+			<a href="/polls/219" style = "width:100%;">
+			<div class="btn btn-primary first-line" style = "width:100%;">
+				<h2><b>PU</b></h2>
+
+			</div> </a>
 		</div>
-		<div class="col-sm-4 col-xs-12 main-link" id="ug-president">
+		<div class="col-xs-4 main-link tinypadding" id="ug-president" style = "border:0px solid #bbb;">
 			<a href="/polls/220">
-				<div  class="btn btn-primary first-line" style="width:250px;border: 0px solid;">
-				<h2><b>Undergraduate<br>President</b></h2>  
-				</div>
-			</a>
+			<div  class="btn btn-primary first-line">
+				<h2><b>UP</b></h2>
+			</div> </a>
 		</div>
 	</div>
 	<hr>
-	<div class="row" style="height:10%;">
-		<div class="col-sm-3 col-xs-12 main-link"  style="width:50%;">
-			<div class="dropdown">
-				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown" style="width:390px;border: 0px solid;">
+	<div class="row classdiv" >
+		<div class="col-sm-6 col-xs-6  tinypadding">
+			<div class="dropdown" style = "width:100%;">
+				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown">
 					<h3>Class of 2018 <span class="caret"></span></h3>
-					
+
 				</button>
 				<ul class="dropdown-menu" style="width:100%; ">
-					<li><a href="/polls/223"><h4>President</h4></a></li>
-					<li><a href="/polls/227"><h4>Vice President</h4></a></li>
-					<li><a href="/polls/229"><h4>Senator</h4></a></li>
-					<li><a href="/polls/241"><h4>Representative</h4></a></li>
-					
+					<li>
+						<a href="/polls/223"><h4>President</h4></a>
+					</li>
+					<li>
+						<a href="/polls/227"><h4>Vice President</h4></a>
+					</li>
+					<li>
+						<a href="/polls/229"><h4>Senator</h4></a>
+					</li>
+					<li>
+						<a href="/polls/241"><h4>Representative</h4></a>
+					</li>
+
 				</ul>
 			</div>
 		</div>
-		<div class="col-sm-3 col-xs-12 main-link"  style="width:50%;">
-			<div class="dropdown ">
-				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown" style="width:390px;border: 0px solid;">
-					<h3>Class of 2019
-					<span class="caret"></span></h3>
-				</button>
-				<ul class="dropdown-menu" style="width:100%;">
-					<li><a href="/polls/242"><h4>President</h4></a></li>
-					<li><a href="/polls/243"><h4>Vice President</h4></a></li>
-					<li><a href="/polls/230"><h4>Senator</h4></a></li>
-					<li><a href="/polls/240"><h4>Representative</h4></a></li>
-					
-				</ul>
-			</div>
+	
+	<div class="col-sm-6 col-xs-6 tinypadding">
+		<div class="dropdown">
+			<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown">
+				<h3>Class of 2019 <span class="caret"></span></h3>
+			</button>
+			<ul class="dropdown-menu" style="width:100%;">
+				<li>
+					<a href="/polls/242"><h4>President</h4></a>
+				</li>
+				<li>
+					<a href="/polls/243"><h4>Vice President</h4></a>
+				</li>
+				<li>
+					<a href="/polls/230"><h4>Senator</h4></a>
+				</li>
+				<li>
+					<a href="/polls/240"><h4>Representative</h4></a>
+				</li>
+
+			</ul>
 		</div>
 	</div>
-	<br/>
-	<div class="row" style="height:10%;">	
-		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall" style="width:50%;">
+
+	
+		<div class="col-sm-6 col-xs-6  tinypadding">
 			<div class="dropdown ">
-				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown"  style="width:390px;border: 0px solid;">
-					<h3>Class of 2020
-					<span class="caret"></span>
-					</h3>
+				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown">
+					<h3>Class of 2020 <span class="caret"></span></h3>
 				</button>
 				<ul class="dropdown-menu" style="width:100%;">
-					<li><a href="/polls/224"><h4>President</h4></a></li>
-					<li><a href="/polls/228"><h4>Vice President</h4></a></li>
-					<li><a href="/polls/238"><h4>Senator</h4></a></li>
-					<li><a href="/polls/232"><h4>Representative</h4></a></li>
-					
+					<li>
+						<a href="/polls/224"><h4>President</h4></a>
+					</li>
+					<li>
+						<a href="/polls/228"><h4>Vice President</h4></a>
+					</li>
+					<li>
+						<a href="/polls/238"><h4>Senator</h4></a>
+					</li>
+					<li>
+						<a href="/polls/232"><h4>Representative</h4></a>
+					</li>
+
 				</ul>
 			</div>
 		</div>
-		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall" style="width:50%;">
+		<div class="col-sm-6 col-xs-6  tinypadding" >
 			<div class="dropdown ">
-				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown"  style="width:390px;border: 0px solid;">
-					<h3>Alumni
-					<span class="caret"></span>
-					</h3>
+				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown">
+					<h3>Alumni <span class="caret"></span></h3>
 				</button>
 				<ul class="dropdown-menu" style="width:100%;">
-					<li><a href="/polls/233"><h4>President</h4></a></li>
-					<li><a href="/polls/234"><h4>Vice President</h4></a></li>
-					<li><a href="/polls/235"><h4>Secretary</h4></a></li>
-					<li><a href="/polls/236"><h4>Treasurer</h4></a></li>
+					<li>
+						<a href="/polls/233"><h4>President</h4></a>
+					</li>
+					<li>
+						<a href="/polls/234"><h4>Vice President</h4></a>
+					</li>
+					<li>
+						<a href="/polls/235"><h4>Secretary</h4></a>
+					</li>
+					<li>
+						<a href="/polls/236"><h4>Treasurer</h4></a>
+					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<hr>
-	<div class="row" style="height:10%;">	
-		<div class="col-sm-3 col-xs-12 main-link" id="grand-marshall" style="width:100%;">
+	<div class="row classdiv">
+		<div class="col-xs-12 tinypadding">
 			<div class="dropdown ">
-				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown"  style="width:800px;border: 0px solid;">
-					<h3>Others
-					<span class="caret"></span>
-					</h3>
+				<button class="btn btn-primary dropdown-toggle other-polls" type="button" data-toggle="dropdown">
+				<h3>Others
+				<span class="caret"></span>
+				</h3>
 				</button>
 				<ul class="dropdown-menu" style="width:100%;">
-					<li><a href="/polls/222"><h4>Independent Senator</h4></a></li>
-					<li><a href="/polls/226"><h4>Greek Senator</h4></a></li>
-					<li><a href="/polls/244"><h4>Graduate Senator</h4></a></li>
-					<li><a href="/polls/245"><h4>Graduate Representative</h4></a></li>
+				<li><a href="/polls/222"><h4>Independent Senator</h4></a></li>
+				<li><a href="/polls/226"><h4>Greek Senator</h4></a></li>
+				<li><a href="/polls/244"><h4>Graduate Senator</h4></a></li>
+				<li><a href="/polls/245"><h4>Graduate Representative</h4></a></li>
 				</ul>
+				</div>
+				</div>
+	</div>
+
+				<hr>
+
+				<div class ="row classdiv" >
+				<form method="post" action="/message">
+				{% csrf_token %}
+				<textarea class="form-control" name="message" rows="3" cols="30" maxlength="1000" placeholder="Please let us know your suggestions and comments"></textarea>
+				<input type="submit" value="Submit your message" class="btn btn-primary" style = "border: 0px solid;">
+				</form>
 			</div>
 		</div>
-	</div>
-
-
-<hr>
-
-<div class ="container" style="height:10%; width:800px;">
-		<form method="post" action="/message">
-			{% csrf_token %}
-			<textarea class="form-control" name="message" rows="3" cols="30" maxlength="1000" placeholder="Please let us know your suggestions and comments"></textarea>
-			<input type="submit" value="Submit your message" class="btn btn-primary" style = "border: 0px solid;">
-		</form>
-	</div>
-</div>
-

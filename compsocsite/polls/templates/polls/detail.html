@@ -16,10 +16,12 @@
 <script src='/static/js/voting.js'></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
+
+
+
 {% endblock %}
 
 {% block content %}
-<br/>
 <div class="container">
     {% if error_message %}
     <p>
@@ -33,15 +35,19 @@
         You have no permission to vote on this poll.
     {% elif question.open == 2 and request.user.username == "" %}
         <!-- Poll is not open for anonymous voting and the current user isn't logged in -->
-        <div class="w3-panel w3-center" style="padding:150px 16px;">
+
+        <div class="w3-panel w3-center" style="padding:170px 16px;">
           <h1 class="w3-xlarge">
               Please
               <a href="http://opra.cs.rpi.edu:8000/auth/loginCas" class="w3-border w3-button rpi-red"><span class="fa fa-sign-in"></span> Login</a>
               with RPI RCSID and password.
-            <br/>
+              <br/>
+              <br/>
+   
                Important: In order to login you must use RPI network or connect with VPN. 
           </h1>
         </div>
+
 </div> <!-- end of class ="container"-->
 	
     {% elif question.open == 0 and request.user not in question.question_voters.all %}

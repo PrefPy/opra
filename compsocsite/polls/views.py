@@ -130,6 +130,8 @@ class GMResultsView(generic.ListView):
         return Question.objects.all()
     def get_context_data(self, **kwargs):
         ctx = super(GMResultsView, self).get_context_data(**kwargs)
+        ctx['winners'] = getWinnersFromIDList(getGMPollIDLIst())
+        print(ctx['winners'])
         return ctx
 
 
@@ -454,7 +456,8 @@ def getPollWinner(question):
     
     if question.new_vote:
         question.new_vote = False
-        question.save()
+    question.winner = winnerStr
+    question.save()
         
     return winnerStr
     
@@ -765,6 +768,20 @@ def getAllocMethods():
 def getViewPreferences():
     return ["Everyone can see all votes at all times", "Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote", "All votes will be shown, but usernames will be hidden"]
 
+    
+def getWinnersFromIDList(idList):
+    winners = {}
+    for i in idList:
+        try:
+            q = Question.objects.get(pk=i)
+            winners[i] = q.winner
+        except Question.DoesNotExist:
+            pass
+    return winners
+    
+def getGMPollIDLIst():
+    return [239,219,220,223,227,229,241,242,243,230,240,224,228,238,232,233,234,235,236,222,226,244,245]
+    
 # build a graph of nodes and edges from a 2d dictionary
 # List<Response> latest_responses
 # return (List<Dict> nodes, List<Dict> edges)

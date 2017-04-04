@@ -31,7 +31,7 @@ class Question(models.Model):
     emailStop = models.BooleanField(default=True)
     poll_algorithm = models.IntegerField(default=1)
     question_type = models.IntegerField(default=1)
-    winner = models.CharField(max_length=200)
+    winner = models.CharField(max_length=200,default="")
     m_poll = models.BooleanField(default=False)
     open = models.IntegerField(default=0)
     new_vote = models.BooleanField(default=False)

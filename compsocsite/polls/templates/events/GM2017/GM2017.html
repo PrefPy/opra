@@ -11,10 +11,11 @@
 </style>
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar rpi-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:270px;font-weight:bold;" id="mySidebar"><br>
-  <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px;margin-top:75px">Close Menu</a>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px;margin-top:75px">Close Menu<hr/></a>
   <div class="w3-container">
-    <h2 class="w3-padding-64" style="{%if request.flavour == 'mobile'%} margin-top:40px; {%endif%}"><b>Rank Your Candidates</b></h2>
+    <h2 class="w3-padding" style="{%if request.flavour == 'mobile'%} margin-top:40px; color: transparent;{%endif%}"><b>Rank Your Candidates</b></h2>
   </div>
+    <br/>
   <div class="w3-bar-block">
     <a href="/polls/95/demo" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Voting Tutorial</a> 
     <a href="/GM2017results" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Live Results</a> 
@@ -44,7 +45,8 @@
     
     <!--Tutorial -->
   <div class="w3-container" style="margin-top: 30px" id="tutorial">
-       <h1 class="w3-xxxlarge"><b>Grand Marshal Week 2017</b></h1>
+      <h1 class="w3-xxxlarge"><b>Grand Marshal Week 2017</b> <h1 class= "w3-large"> This is unofficial polling. Please vote at voting station.</h1></h1>
+      <br/>
       <h1 class="w3-xxlarge rpi-text-red"><b>Tutorial and Results</b></h1>
       <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
       <br/><br/>
@@ -437,7 +439,7 @@
             <a href="/polls/245">
           <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
-            <div class="w3-container w3-center ">
+            <div class="w3-container w3-center">
                 
                   <br/>
               <h3>Graduate <br> Representative</h3>

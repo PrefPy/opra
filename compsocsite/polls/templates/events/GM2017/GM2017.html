@@ -457,18 +457,19 @@
     <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
     <br/>
      <p>We need your comments.</p>
-    <form action="/action_page.php" target="_blank">
+    <form action="/message" method="post">
+	  {% csrf_token %}
       <div class="w3-section">
         <label>Name</label>
-        <input class="w3-input w3-border" type="text" name="Name" required>
+        <input class="w3-input w3-border" type="text" name="name" required>
       </div>
       <div class="w3-section">
         <label>Email</label>
-        <input class="w3-input w3-border" type="text" name="Email" required>
+        <input class="w3-input w3-border" type="text" name="email" required>
       </div>
       <div class="w3-section">
         <label>Message</label>
-        <input class="w3-input w3-border" type="text" name="Message" required>
+        <input class="w3-input w3-border" type="text" name="message" required>
       </div>
       <button type="submit" class="w3-button w3-block w3-padding-large rpi-red w3-margin-bottom">Send Message</button>
     </form>  

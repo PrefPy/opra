@@ -40,7 +40,7 @@
                         </div>
                         <div class="form-group col-xs-9">
                     <p>Additional Description:</p>
-						{% if question.status == 1 or item.recently_added %}
+						{% if question.status == 1 or question.status == 2 or question.status == 4 or item.recently_added %}
                         <textarea class="form-control auto_submit" name="itemdescription{{item.id}}">{% if item.item_description %}{{item.item_description}}{% endif %}</textarea>
 						{% else%}
 						<p>{% if item.item_description %}{{item.item_description}}{% else %}None{% endif %}</p>

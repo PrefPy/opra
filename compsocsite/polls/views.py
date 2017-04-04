@@ -1667,6 +1667,12 @@ def anonymousVote(request, question_id):
 def sendMessage(request):
     if request.method == 'POST':
         message = request.POST["message"]
-        m = Message(text=message,timestamp=timezone.now(),user=request.user)
-        m.save()
+        name = request.POST["name"]
+        email = request.POST["email"]
+        if request.user.username != "":
+            m1 = Message(text=message,timestamp=timezone.now(),user=request.user,name=name,email=email)
+            m1.save()
+        else:
+            m2 = Message(text=message,timestamp=timezone.now(),name=name,email=email)
+            m2.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -4,8 +4,11 @@
 <br />
 {% if request.user.username in allowed_users %}
 {% for m in message_list%}
-	<p>{{m.user.username}} email: {{m.user.email}} Date: {{m.timestamp}} Message: {{m.text}}</p>
-
+	{% if m.user %}
+	<p>Username:{{m.user.username}}  Name: {{m.name}}  Email: {{m.user.email}}   Entered Email: {{m.email}}  Date: {{m.timestamp}}    Message: {{m.text}}</p>
+	{% else %}
+	<p>(Not logged in user)  Name: {{m.name}}    Email: {{m.email}}  Date: {{m.timestamp}}    Message: {{m.text}}</p>
+	{% endif %}
 {% endfor%}
 {% endif %}
 {% endblock %}

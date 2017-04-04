@@ -311,3 +311,4 @@ class UserVoteRecord(models.Model):
 class Message(models.Model):
     text = models.CharField(max_length=10000, default="")
     timestamp = models.DateTimeField('message timestamp')
+    user = models.ForeignKey(User, null=True, blank=True)

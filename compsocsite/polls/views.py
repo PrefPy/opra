@@ -1610,13 +1610,10 @@ def anonymousJoin(request, question_id):
 # submit a vote without logging in
 def anonymousVote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    voter = ""
+    voter = "Anonymous"
     id = 0
     # check if the anonymous voter has voted before
-    if 'anonymousvoter' not in request.session or 'anonymousid' not in request.session:
-        voter = request.POST['anonymousname']
-        if voter == "":
-            voter = "Anonymous"
+    if 'anonymousid' not in request.session:
         request.session['anonymousvoter'] = voter
         id = question.response_set.all().count()
         request.session['anonymousid'] = id
@@ -1653,6 +1650,6 @@ def anonymousVote(request, question_id):
 def sendMessage(request):
     if request.method == 'POST':
         message = request.POST["message"]
-        m = Message(text=message,timestamp=timezone.now())
+        m = Message(text=message,timestamp=timezone.now(),user=request.user)
         m.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

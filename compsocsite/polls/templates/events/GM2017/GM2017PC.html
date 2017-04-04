@@ -291,7 +291,7 @@
 	</div>
 
 	<hr>
-
+	{% if request.user.is_authenticated %}
 	<div class ="container" style="height:10%; width:800px;">
 		<form method="post" action="/message">
 			{% csrf_token %}
@@ -299,5 +299,6 @@
 			<input type="submit" value="Submit your message" class="btn btn-primary" style = "border: 0px solid;">
 		</form>
 	</div>
+	{% endif %}
 </div>
 

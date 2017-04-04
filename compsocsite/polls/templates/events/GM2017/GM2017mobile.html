@@ -318,14 +318,15 @@ html {
 				</div>
 				</div>
 	</div>
-
+				{% if request.user.is_authenticated %}
 				<hr>
 
 				<div class ="row classdiv" >
-				<form method="post" action="/message">
-				{% csrf_token %}
-				<textarea class="form-control" name="message" rows="3" cols="30" maxlength="1000" placeholder="Please let us know your suggestions and comments"></textarea>
-				<input type="submit" value="Submit your message" class="btn btn-primary" style = "border: 0px solid;">
-				</form>
-			</div>
+					<form method="post" action="/message">
+					{% csrf_token %}
+					<textarea class="form-control" name="message" rows="3" cols="30" maxlength="1000" placeholder="Please let us know your suggestions and comments"></textarea>
+					<input type="submit" value="Submit your message" class="btn btn-primary" style = "border: 0px solid;">
+					</form>
+				</div>
+				{% endif %}
 		</div>

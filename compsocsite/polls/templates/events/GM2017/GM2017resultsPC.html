@@ -191,7 +191,7 @@ var x = setInterval(function() {
 
 
 <hr>
-
+{% if request.user.is_authenticated %}
 <div class ="container" style="height:10%; width:800px;">
 		<form method="post" action="/message">
 			{% csrf_token %}
@@ -199,5 +199,6 @@ var x = setInterval(function() {
 			<input type="submit" value="Submit your message" class="btn btn-cr" style = "border: 0px solid;">
 		</form>
 	</div>
+	{% endif %}
 </div>
 

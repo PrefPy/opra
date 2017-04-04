@@ -1,0 +1,22 @@
+{% extends 'polls/base.html' %}
+{% block extra_head %}
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Optional theme -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/static/css/linkPage.css">
+
+{% endblock %}
+{% load staticfiles %}
+
+{% block content %}
+
+{%if not request.flavour == "mobile"%}
+{% include "events/GM2017/GM2017PC.html" %}
+{% else %}
+{% include "events/GM2017/GM2017mobile.html" %}
+{% endif %}
+
+
+
+{% endblock %}

@@ -1,22 +1,410 @@
 {% extends 'polls/base.html' %}
-{% block extra_head %}
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<!-- Optional theme -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/static/css/linkPage.css">
-
-{% endblock %}
 {% load staticfiles %}
 
 {% block content %}
 
-{%if not request.flavour == "mobile"%}
-{% include "events/GM2017/GM2017PC.html" %}
-{% else %}
-{% include "events/GM2017/GM2017mobile.html" %}
-{% endif %}
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar rpi-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:270px;font-weight:bold;" id="mySidebar"><br>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px;margin-top:75px">Close Menu</a>
+  <div class="w3-container">
+    <h3 class="w3-padding-64 w3-hide-small"><b>Ranking Your Candidates</b></h3>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">GM, PU & UP</a> 
+    <a href="#2018" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Class of 2018</a> 
+    <a href="#2019" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Class of 2019</a> 
+    <a href="#2020" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Class of 2020</a> 
+    <a href="#alumni" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Alumni</a> 
+    <a href="#others" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Others</a>
+    <a href="#comments" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Comments</a>
+  </div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-container w3-top w3-hide-large rpi-red w3-xlarge w3-padding" style="margin-top:75px">
+  <a href="javascript:void(0)" class="w3-button rpi-red w3-margin-right" onclick="w3_open()">☰</a>
+  <span>Ranking Your Candidates</span>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 
 
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:320px;margin-right:40px">
+
+  <!--GM,PU,UP -->
+  <div class="w3-container" style="margin-top: 30px" id="3Main">
+      <h1 class="w3-xxxlarge"><b>Grand Marshal Week 2017</b></h1>
+      <h1 class="w3-xxlarge rpi-text-red"><b>GM, PU & UP.</b></h1>
+      <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+      <br/><br/>
+      
+      <!-- The Cadidates -->
+      <div class="w3-row-padding w3-grayscale">
+          
+         <div class="w3-col m4 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/239">
+                  <hr/>
+              <h3>Grand
+				<br>
+                  Marshall</h3></a>
+            </div>
+          </div>
+        </div>
+             
+
+        <div class="w3-col m4 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/219">
+                  <hr/>
+              <h3>President
+				<br>
+                  of the Union</h3></a>
+            </div>
+          </div>
+        </div>
+          
+        <div class="w3-col m4 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/220">
+                  <hr/>
+              <h3>Undergraduate
+				
+				President
+                  </h3></a>
+            </div>
+          </div>
+        </div>
+          
+      </div>
+  </div>
+  
+   
+
+  <!-- Class of 2018 -->
+  <div class="w3-container" id="2018" style="margin-top:50px">
+    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Class of 2018.</b></h1>
+    <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+    <br/>
+      <!-- The Cadidates -->
+      <!-- one row -->
+      <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/223">
+                  <hr/><hr/>
+              <h3>President</h3></a>
+            </div>
+          </div>
+        </div>  
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/227">
+                  <hr/>
+              <h3>Vice 
+                  <br>President</h3></a>
+            </div>
+          </div>
+       </div>
+      </div>
+      
+      <!-- one row -->
+       <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/229">
+                  <hr/><hr/>
+              <h3>Senator</h3></a>
+            </div>
+          </div>
+        </div>    
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/241">
+                  <hr/><hr/>
+              <h3>Representative</h3></a>
+            </div>
+          </div>
+       </div>
+      </div> 
+  </div>
+  
+  
+    
+    
+    
+ <!-- Class of 2019 -->
+  <div class="w3-container" id="2019" style="margin-top:50px">
+    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Class of 2019.</b></h1>
+    <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+    <br/>
+      <!-- The Cadidates -->
+      <!-- one row -->
+      <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/242">
+                  <hr/><hr/>
+              <h3>President</h3></a>
+            </div>
+          </div>
+        </div>  
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/243">
+                  <hr/>
+              <h3>Vice <br> President</h3></a>
+            </div>
+          </div>
+       </div>
+      </div>
+      
+      <!-- one row -->
+       <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/230">
+                  <hr/><hr/>
+              <h3>Senator</h3></a>
+            </div>
+          </div>
+        </div>    
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/240">
+                  <hr/><hr/>
+              <h3>Representative</h3></a>
+            </div>
+          </div>
+       </div>
+      </div> 
+  </div>
+  
+
+    
+    
+<!-- Class of 2020 -->
+  <div class="w3-container" id="2020" style="margin-top:50px">
+    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Class of 2020.</b></h1>
+    <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+    <br/>
+      <!-- The Cadidates -->
+      <!-- one row -->
+      <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/224">
+                  <hr/><hr/>
+              <h3>President</h3></a>
+            </div>
+          </div>
+        </div>  
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/228">
+                  <hr/>
+              <h3>Vice <br> President</h3></a>
+            </div>
+          </div>
+       </div>
+      </div>
+      
+      <!-- one row -->
+       <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/238">
+                  <hr/><hr/>
+              <h3>Senator</h3></a>
+            </div>
+          </div>
+        </div>    
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/232">
+                  <hr/><hr/>
+              <h3>Representative</h3></a>
+            </div>
+          </div>
+       </div>
+      </div> 
+  </div>
+    
+    
+    <!-- Alumni -->
+  <div class="w3-container" id="alumni" style="margin-top:50px">
+    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Alumni.</b></h1>
+    <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+    <br/>
+      <!-- The Cadidates -->
+      <!-- one row -->
+      <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/233">
+                  <hr/><hr/>
+              <h3>President</h3></a>
+            </div>
+          </div>
+        </div>  
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/234">
+                  <hr/>
+              <h3>Vice <br> President</h3></a>
+            </div>
+          </div>
+       </div>
+      </div>
+      
+      <!-- one row -->
+       <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/235">
+                  <hr/><hr/>
+              <h3>Secretary</h3></a>
+            </div>
+          </div>
+        </div>    
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/236">
+                  <hr/><hr/>
+              <h3>Treasurer</h3></a>
+            </div>
+          </div>
+       </div>
+      </div> 
+  </div>
+    
+    
+    
+      <!-- Otherss -->
+  <div class="w3-container" id="others" style="margin-top:50px">
+    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Others.</b></h1>
+    <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+    <br/>
+      <!-- The Cadidates -->
+      <!-- one row -->
+      <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/222">
+                  <hr/>
+              <h3>Independent <br> Senators</h3></a>
+            </div>
+          </div>
+        </div>  
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/226">
+                  <hr/>
+              <h3>Greek <br> Senator</h3></a>
+            </div>
+          </div>
+       </div>
+      </div>
+      
+      <!-- one row -->
+       <div class="w3-row-padding w3-grayscale">
+         <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+              <a href="/polls/244">
+                  <hr/>
+              <h3>Graduate <br> Senator</h3></a>
+            </div>
+          </div>
+        </div>    
+        <div class="w3-col m6 w3-margin-bottom" >
+          <div class="w3-light-grey" style="height:150px">
+            <div class="w3-container w3-center">
+                <a href="/polls/245">
+                  <hr/>
+              <h3>Graduate <br> Representative</h3></a>
+            </div>
+          </div>
+       </div>
+      </div> 
+  </div>  
+    
+    
+        
+      <!-- Comments -->
+  <div class="w3-container" id="comments" style="margin-top:50px">
+    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Comments.</b></h1>
+    <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+    <br/>
+     <p>We need your comments.</p>
+    <form action="/action_page.php" target="_blank">
+      <div class="w3-section">
+        <label>Name</label>
+        <input class="w3-input w3-border" type="text" name="Name" required>
+      </div>
+      <div class="w3-section">
+        <label>Email</label>
+        <input class="w3-input w3-border" type="text" name="Email" required>
+      </div>
+      <div class="w3-section">
+        <label>Message</label>
+        <input class="w3-input w3-border" type="text" name="Message" required>
+      </div>
+      <button type="submit" class="w3-button w3-block w3-padding-large rpi-red w3-margin-bottom">Send Message</button>
+    </form>  
+      <br/><br/>
+  </div> 
+    
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+
+<!-- End page content -->
+</div>
+
+<script>
+// Script to open and close sidebar
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("myOverlay").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("myOverlay").style.display = "none";
+}
+
+// Modal Image Gallery
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  var captionText = document.getElementById("caption");
+  captionText.innerHTML = element.alt;
+}
+</script>
 {% endblock %}

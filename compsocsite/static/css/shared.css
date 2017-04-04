@@ -177,10 +177,6 @@ button:hover .greencolor {
 }
 
 .move-all-button-mobile {
-    border: none;
-    float: right;
-    width: 30%;
-    height: 1.25em;
     margin: 0;
     background: darkblue;
 }

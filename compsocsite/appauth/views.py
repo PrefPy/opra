@@ -17,6 +17,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
+from polls.models import Message
+
 import cas.middleware
 
 def register(request):
@@ -220,3 +222,19 @@ def changepassword(request):
         return HttpResponseRedirect(reverse('polls:index'))
     else:
         return HttpResponse("The password you entered is wrong.")
+        
+class MessageView(generic.ListView):
+    template_name = 'messages.html'
+    context_object_name = 'message_list'
+    def get_queryset(self):
+        return Message.objects.all()
+    def get_context_data(self, **kwargs):
+        ctx = super(MessageView, self).get_context_data(**kwargs)
+        permit = []
+        permit.append("lirong")
+        permit.append("WANGJ33@RPI.EDU")
+        permit.append("wangj33@rpi.edu")
+        permit.append("xial@rpi.edu")
+        permit.append("XIAL@RPI.EDU")
+        ctx['allowed_users'] = permit
+        return ctx

@@ -1,0 +1,11 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<br />
+{% if request.user.username in allowed_users %}
+{% for m in message_list%}
+	<p>{{m.user.username}} email: {{m.user.email}} Date: {{m.timestamp}} Message: {{m.text}}</p>
+
+{% endfor%}
+{% endif %}
+{% endblock %}

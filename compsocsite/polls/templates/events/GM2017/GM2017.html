@@ -3,12 +3,17 @@
 {% load staticfiles %}
 
 {% block content %}
+<style>
+    h3{
+        font-size: 30px;
+    }
 
+</style>
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar rpi-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:270px;font-weight:bold;" id="mySidebar"><br>
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px;margin-top:75px">Close Menu</a>
   <div class="w3-container">
-    <h3 class="w3-padding-64" style="{%if request.flavour == 'mobile'%} margin-top:40px; {%endif%}"><b>Rank Your Candidates</b></h3>
+    <h2 class="w3-padding-64" style="{%if request.flavour == 'mobile'%} margin-top:40px; {%endif%}"><b>Rank Your Candidates</b></h2>
   </div>
   <div class="w3-bar-block">
     <a href="/polls/95/demo" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Voting Tutorial</a> 
@@ -51,7 +56,7 @@
              <a href="/polls/95/demo">
           <div class="w3-light-grey" >
             
-            <div class="w3-container w3-center" style="height:130px">
+            <div class="w3-container w3-center w3-hover-grey" style="height:130px">
                 <br>
               <h3>Voting<br>
                   Tutorial</h3>
@@ -66,7 +71,7 @@
 
           <div class="w3-light-grey" >
 
-            <div class="w3-container w3-center" style="height:130px">
+            <div class="w3-container w3-center w3-hover-grey" style="height:130px">
                 
              <br>
               <h3>Live<br>
@@ -90,11 +95,11 @@
           
          <div class="w3-col m4 w3-margin-bottom" >
              <a href="/polls/239">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
               
-                  <hr/>
+                  <br/>
               <h3>Grand
 				<br>
                   Marshall</h3>
@@ -105,11 +110,11 @@
 
         <div class="w3-col m4 w3-margin-bottom" >
              <a href="/polls/219">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey w3-hover-grey" style="height:150px">
              
             <div class="w3-container w3-center">
                 
-                  <hr/>
+                  <br/>
               <h3>President
 				<br>
                   of the Union</h3>
@@ -119,10 +124,10 @@
           
         <div class="w3-col m4 w3-margin-bottom" >
              <a href="/polls/220">
-          <div class="w3-light-grey" style="height:150px">
-            <div class="w3-container w3-center">
+          <div class="w3-light-grey w3-hover-grey" style="height:150px">
+            <div class="w3-container w3-center ">
               
-                  <hr/>
+                  <br/>
               <h3>Undergraduate
 				<br>
 				President
@@ -146,21 +151,21 @@
       <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/223">
-           <div class="w3-light-grey" style="height:150px">
+           <div class="w3-light-grey w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>President</h3>
             </div>
             </div></a>
         </div>  
         <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/227">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey w3-hover-grey" style="height:150px">
              
-            <div class="w3-container w3-center">
+            <div class="w3-container w3-center ">
                 
-                  <hr/>
+                  <br/>
               <h3>Vice 
                   <br>President</h3>
                   </div>
@@ -172,22 +177,22 @@
        <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/229">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
               
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>Senator</h3>
                   </div>
                  </div></a>
         </div>    
         <div class="w3-col m6 w3-margin-bottom" >
             <a href="/polls/241">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
                 
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>Representative</h3>
                   </div>
                 </div></a>
@@ -209,22 +214,22 @@
       <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/242">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
                
             <div class="w3-container w3-center">
              
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>President</h3>
                    </div>
           </div></a>
         </div>  
         <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/243">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
              
             <div class="w3-container w3-center">
                 
-                  <hr/>
+                  <br/>
               <h3>Vice <br> President</h3>
                   </div>
             </div></a>
@@ -235,22 +240,22 @@
        <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/230">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
               
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>Senator</h3>
                   </div>
           </div></a>
         </div>    
         <div class="w3-col m6 w3-margin-bottom" >
             <a href="/polls/240">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
                 
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>Representative</h3>
             </div>
             </div></a>
@@ -271,22 +276,22 @@
       <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
               <a href="/polls/224">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
              
             <div class="w3-container w3-center">
               
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>President</h3>
                   </div>
                   </div></a>
         </div>  
         <div class="w3-col m6 w3-margin-bottom" >
             <a href="/polls/228">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
                 
-                  <hr/>
+                  <br/>
               <h3>Vice <br> President</h3>
                   </div>
                 </div></a>
@@ -297,22 +302,22 @@
        <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
               <a href="/polls/238">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
              
             <div class="w3-container w3-center">
               
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>Senator</h3>
                   </div>
                   </div></a>
         </div>    
         <div class="w3-col m6 w3-margin-bottom" >
             <a href="/polls/232">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
                 
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>Representative</h3>
                   </div>
                 </div></a>
@@ -331,11 +336,11 @@
       <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/233">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
               
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>President</h3>
                   </div>
                  </div></a>
@@ -343,11 +348,11 @@
           
         <div class="w3-col m6 w3-margin-bottom" >
             <a href="/polls/234">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
                 
-                  <hr/>
+                  <br/>
               <h3>Vice <br> President</h3>
                   </div>
                 </div></a>
@@ -358,22 +363,22 @@
        <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/235">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
               
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>Secretary</h3>
                   </div>
                  </div></a>
         </div>    
         <div class="w3-col m6 w3-margin-bottom" >
             <a href="/polls/236">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
                 
-                  <hr/><hr/>
+                  <br/><br/>
               <h3>Treasurer</h3>
                   </div>
                 </div></a>
@@ -393,22 +398,22 @@
       <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/222">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
               
-                  <hr/>
+                  <br/>
               <h3>Independent <br> Senators</h3>
                   </div>
                  </div></a>
         </div>  
         <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/226">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
              
             <div class="w3-container w3-center">
                 
-                  <hr/>
+                  <br/>
               <h3>Greek <br> Senator</h3>
                   </div>
                  </div></a>
@@ -419,22 +424,22 @@
        <div class="w3-row-padding w3-grayscale">
          <div class="w3-col m6 w3-margin-bottom" >
              <a href="/polls/244">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
             <div class="w3-container w3-center">
               
-                  <hr/>
+                  <br/>
               <h3>Graduate <br> Senator</h3>
                   </div>
                  </div></a>
         </div>    
         <div class="w3-col m6 w3-margin-bottom" >
             <a href="/polls/245">
-          <div class="w3-light-grey" style="height:150px">
+          <div class="w3-light-grey  w3-hover-grey" style="height:150px">
               
-            <div class="w3-container w3-center">
+            <div class="w3-container w3-center ">
                 
-                  <hr/>
+                  <br/>
               <h3>Graduate <br> Representative</h3>
                   </div>
                 </div></a>
@@ -495,6 +500,6 @@ function onClick(element) {
   captionText.innerHTML = element.alt;
 }
  
-
+h3{font-size: 200px;}
 </script>
 {% endblock %}

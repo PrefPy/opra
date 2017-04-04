@@ -121,6 +121,7 @@ class GMView(generic.ListView):
         return Question.objects.all()
     def get_context_data(self, **kwargs):
         ctx = super(GMView, self).get_context_data(**kwargs)
+        ctx['winners'] = getWinnersFromIDList(getGMPollIDLIst())
         return ctx
 
 class GMResultsView(generic.ListView):

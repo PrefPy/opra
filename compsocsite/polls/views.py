@@ -499,13 +499,14 @@ def interpretResult(finalresult):
         tempNodes.append(data)
     tempEdges = []
     edgelist = edgestr.split(";|")
-    for edge in edgelist:
-        data = {}
-        l = edge.split(";")
-        for item in l:
-            tup = item.split(",")
-            data[tup[0]] = tup[1]
-        tempEdges.append(data)
+    if edgestr != "":
+        for edge in edgelist:
+            data = {}
+            l = edge.split(";")
+            for item in l:
+                tup = item.split(",")
+                data[tup[0]] = tup[1]
+            tempEdges.append(data)
     return [tempResults, tempMargin, tempShades, tempNodes, tempEdges]
     
 def recalculateResult(request,question_id):

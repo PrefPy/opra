@@ -10,8 +10,10 @@
 
 {% if request.flavour == "mobile" %}
 <script src='/static/js/mobile.js'></script>
+<script>var deviceFlavor = "mobile";</script>
 {% else %}
 <script src='/static/js/desktop.js'></script>
+<script>var deviceFlavor = "desktop";</script>
 {% endif %}
 <script src='/static/js/voting.js'></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">

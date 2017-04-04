@@ -46,4 +46,4 @@
 				}), d.call(b)
 			}
 		}
-	}(jQuery); 
+	}(jQuery);

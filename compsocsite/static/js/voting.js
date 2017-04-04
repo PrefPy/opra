@@ -763,4 +763,8 @@ $( document ).ready(function() {
 		$(this).attr({type:t.toString()});
 		t += 1;
 	});
+
+	if(deviceFlavor == "mobile"){
+		VoteUtil.moveAll();
+	}
 });

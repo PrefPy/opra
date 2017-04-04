@@ -764,7 +764,7 @@ $( document ).ready(function() {
 		t += 1;
 	});
 
-	if(deviceFlavor == "mobile"){
+	if(deviceFlavor == "mobile" && firstTime){
 		VoteUtil.moveAll();
 	}
 });

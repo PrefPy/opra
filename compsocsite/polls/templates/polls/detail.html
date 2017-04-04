@@ -15,6 +15,11 @@
 <script src='/static/js/desktop.js'></script>
 <script>var deviceFlavor = "desktop";</script>
 {% endif %}
+{% if currentSelection %}
+<script>var firstTime = false;</script>
+{% else %}
+<script>var firstTime = true;</script>
+{% endif %}
 <script src='/static/js/voting.js'></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>

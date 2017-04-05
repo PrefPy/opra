@@ -17,11 +17,47 @@
 {% block content %}
 
 
+<div class="container" style="position:relative;">
+<div class="col-md-10"><h2> <img src="static/img/rpicslogo.png" style="width:100px">  RPI CS Poster Award</h4>
+</div>
+<br/>
+
+<div  class="col-md-10">
+<div class="panel panel-default">
+	
+	<div class="panel-heading"><h3>Current Poster Session <a href='/polls/249' class="btn btn-primary"> Vote </a></h3>
+	</div>
+	<div class="panel-body">
+		
+		<div>2017-04-07. 4-5pm Friday,
+April 7th in <b>MRC 334 Conference Room</b>. Groups of Professors Adali, Carothers, Cutler, Franklin,
+Gittens, Radke, Slota, Trinkle, Stewart, Szymanski and Zaki.</div>
+			
+	</div>
+        <!-- past poster sessions -->
+        <div class="panel-heading">
+            <a class="panel-title" data-toggle="collapse" href="#collapse_des">
+            <h3> Past poster sessions <span class="caret"></span></h3> </a>
+        </div>
+
+        <!-- Display the description in the panel body (initially hidden) -->
+        <div id="collapse_des" class="panel-collapse collapse in">
+        	<div class="panel-body">
+        		<div><a href ='/polls/225/vote/results/'>2017-03-31. <b>Winner: Vipula Rawte.</b></a> Identifying Health Threats from the Ingredients in our Food. Voting rule: Borda.</div>
+            <div><a href='/polls/195/vote/results/'> 2017-02-24.  <b>Winner: Charles Hathaway.</b></a> Interactive Complexity – When
+was the last time you implemented a sort?  Voting rule: Borda.</div>
+            <div><a href='/polls/169/vote/results/'>2016-12-02. <b>Winner: Haidar Khan.</b></a>  The Wavelet Deconvolution Layer for Deep Learning on Time Series. Voting rule: Borda. </div>
+        </div>
+        </div>
+    </div>
+ </div> 
+ </div>  
+</div>
+
 
 {%if not request.flavour == "mobile"%}
-{% include "events/CSposter/CSposterPC.html" %}
+
 {% else %}
-{% include "events/CSposter/CSpostermobile.html" %}
 {% endif %}
 
 {% endblock %}

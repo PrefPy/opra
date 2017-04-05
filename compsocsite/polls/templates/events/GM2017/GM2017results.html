@@ -78,7 +78,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.239|length > 0 %} {{ winners.239 }} {%else%} No one {%endif%}<p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                {%if winners.239|length > 0 %}
                     <p> <a href="/polls/239/vote/results/"><button class="w3-button w3-light-grey w3-block" style="{%if winners.239|length == 0 %}  disabled='disabled' {%endif%}"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                {%else%}
+                    <p> <a href="/polls/239/vote/results/"><button disabled class="w3-button w3-light-grey w3-block" style="{%if winners.239|length == 0 %}  disabled='disabled' {%endif%}"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                {%endif%}
                 </div>
             </div>
          </div>
@@ -97,7 +101,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.219|length > 0 %} {{ winners.219 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                {%if winners.219|length > 0 %}
                     <p> <a href="/polls/219/vote/results/"><button class="w3-button w3-light-grey w3-block" > <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                {%else%}
+                    <p> <a href="/polls/219/vote/results/"><button class="w3-button w3-light-grey w3-block" disabled > <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                {%endif%}
                 </div>
             </div>
          </div>
@@ -117,7 +125,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.220|length > 0 %} {{ winners.220 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                {%if winners.220|length > 0 %}
                     <p> <a href="/polls/220/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                {%else%}
+                    <p> <a href="/polls/220/vote/results/"><button class="w3-button w3-light-grey w3-block" disabled> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                {%endif%}
                 </div>
             </div>
          </div>
@@ -153,7 +165,12 @@
                         {%if request.flavour == 'mobile'%} 
                         w3-xlarge  
                         {%endif%}">is leading</p> </p>
+                  {%if winners.223|length > 0 %}
                     <p> <a href="/polls/223/vote/results/"><button class="w3-button w3-light-grey w3-block" > <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/223/vote/results/"><button class="w3-button w3-light-grey w3-block" disabled > <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
+                    
                 </div>
             </div>
         </div>  
@@ -172,8 +189,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.227|length > 0 %} {{ winners.227 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
-
-                    <p> <a href="/polls/227/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                    {%if winners.227|length > 0 %}
+                        <p> <a href="/polls/227/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                    {%else%}
+                        <p> <a href="/polls/227/vote/results/"><button class="w3-button w3-light-grey w3-block" disabled> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                    {%endif%}
           
                 </div>
             </div>
@@ -196,7 +216,12 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.229|length > 0 %} {{ winners.229 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.229|length > 0 %}
                     <p> <a href="/polls/229/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                  {%else%}
+                    <p> <a href="/polls/229/vote/results/"><button class="w3-button w3-light-grey w3-block" disabled> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                  {%endif%}
+                 
                 </div>
             </div>
         </div>  
@@ -214,7 +239,12 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.241|length > 0 %} {{ winners.241 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.241|length > 0 %}
                     <p> <a href="/polls/241/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/241/vote/results/"><button class="w3-button w3-light-grey w3-block" disabled> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
+                 
                 </div>
             </div>
         </div>  
@@ -246,7 +276,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.242|length > 0 %} {{ winners.242 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
-                    <p> <a href="/polls/242/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                     {%if winners.242|length > 0 %}
+                        <p> <a href="/polls/242/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                     {%else%}
+                        <p> <a href="/polls/242/vote/results/"><button diabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                     {%endif%}
                 </div>
             </div>
         </div> 
@@ -264,7 +298,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.243|length > 0 %} {{ winners.243 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.243|length > 0 %}
                     <p> <a href="/polls/243/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/243/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>  
@@ -285,7 +323,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.230|length > 0 %} {{ winners.230 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.230|length > 0 %}
                     <p> <a href="/polls/230/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/230/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>    
@@ -302,7 +344,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.240|length > 0 %} {{ winners.240 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.240|length > 0 %}
                     <p> <a href="/polls/240/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/240/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>  
@@ -333,7 +379,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.224|length > 0 %} {{ winners.224 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.224|length > 0 %}
                     <p> <a href="/polls/224/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/224/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div> 
@@ -350,7 +400,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.228|length > 0 %} {{ winners.228 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.228|length > 0 %}
                     <p> <a href="/polls/228/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/228/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>  
@@ -371,7 +425,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.238|length > 0 %} {{ winners.238 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.238|length > 0 %} 
                     <p> <a href="/polls/238/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/238/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>    
@@ -388,7 +446,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.232|length > 0 %} {{ winners.232 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.232|length > 0 %} 
                     <p> <a href="/polls/232/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/232/vote/results/"><button diabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>  
@@ -417,7 +479,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.223|length > 0 %} {{ winners.223 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.223|length > 0 %}
                     <p> <a href="/polls/223/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/223/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div> 
@@ -435,7 +501,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.234|length > 0 %} {{ winners.234 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.234|length > 0 %}
                     <p> <a href="/polls/234/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/234/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>  
@@ -456,7 +526,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.235|length > 0 %} {{ winners.235 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.235|length > 0 %}
                     <p> <a href="/polls/235/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/235/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>  
@@ -473,7 +547,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.236|length > 0 %} {{ winners.236 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.236|length > 0 %}
                     <p> <a href="/polls/236/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                {%else%}
+                    <p> <a href="/polls/236/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div> 
@@ -502,7 +580,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.222|length > 0 %} {{ winners.222 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.222|length > 0 %}
                     <p> <a href="/polls/222/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                     <p> <a href="/polls/222/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>  
@@ -518,7 +600,12 @@
                           w3-large
                          {%endif%}
                         {%endif%}"> {%if winners.226|length > 0 %} {{ winners.226 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                  {%if winners.226|length > 0 %}
                     <p> <a href="/polls/226/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                     <p> <a href="/polls/226/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
+                 
                 </div>
             </div>
         </div> 
@@ -538,7 +625,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.244|length > 0 %} {{ winners.244 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.244|length > 0 %}
                     <p> <a href="/polls/244/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/244/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div>     
@@ -554,7 +645,11 @@
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.245|length > 0 %} {{ winners.245 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+                 {%if winners.245|length > 0 %}
                     <p> <a href="/polls/245/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%else%}
+                    <p> <a href="/polls/245/vote/results/"><button disabled class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                 {%endif%}
                 </div>
             </div>
         </div> 

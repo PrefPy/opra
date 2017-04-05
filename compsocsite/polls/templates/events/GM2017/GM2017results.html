@@ -5,7 +5,7 @@
 {% block content %}
 <style>
     h3{
-        font-size: 35px;
+        font-size: 30px;
     }
     .rpi-text-red{
         color:darkslateblue;
@@ -52,9 +52,7 @@
       <br class="w3-hide-small"/>
       <h1 class="w3-xxlarge rpi-text-red w3-hide-small"><b>Tutorial</b></h1>
       <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red w3-hide-small">
-      
-      
-      <!-- Tutorial -->
+
       <div class="w3-row-padding w3-grayscale w3-hide-small">
         <br/>
          <div class="w3-col m12 w3-margin-bottom"  >
@@ -76,42 +74,43 @@
       <br/>
       
       <!-- The Candidates -->
-      <div class="w3-row-padding w3-grayscale">
+      <div class="w3-row-padding">
           
-         <div class="w3-col m4 w3-margin-bottom" >
-             <a href="/polls/239/vote/results/">
-          <div class="w3-light-grey w3-hover-grey" style="height:130px; padding-top:15px;"> 
-            <div class="w3-container w3-center">
-              <h3 class= "w3-xxlarge">Grand
-				<br>
-                  Marshall</h3>
-                  </div>
-                 </div></a>
-          </div>
+         <div class="w3-col m4 w3-margin-bottom">
+            <div class=" w3-card" style="height:420px; padding-top:25px;"> 
+             <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Grand Marshall </b></h3>
+                    <p>{%if winners.239|length > 0 %} {{ winners.239 }} {%else%} No one {%endif%}<p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/239/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+         </div>
              
-
-        <div class="w3-col m4 w3-margin-bottom" >
-             <a href="/polls/219/vote/results/">
-          <div class="w3-light-grey w3-hover-grey" style="height:130px;padding-top:15px;">      
-            <div class="w3-container w3-center">    
-              <h3 class= "w3-xxlarge">President
-				<br>of the Union</h3>
+       
+         <div class="w3-col m4 w3-margin-bottom">
+            <div class=" w3-card" style="height:420px;padding-top:25px;" > 
+             <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 style="font-size:22px;"> <b>President of the Union </b></h3>
+                    <p>{%if winners.219|length > 0 %} {{ winners.219 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/219/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
             </div>
-           </div></a>
-        </div>
-          
-        <div class="w3-col m4 w3-margin-bottom" >
-             <a href="/polls/220/vote/results/">
-          <div class="w3-light-grey w3-hover-grey" style="height:130px;padding-top:15px;">
-            <div class="w3-container w3-center">
+         </div>
+      
 
-              <h3 class= "w3-xxlarge">Undergraduate
-				<br>
-				President
-                  </h3>
+    
+        <div class="w3-col m4 w3-margin-bottom">
+            <div class=" w3-card" style="height:420px;padding-top:25px;" > 
+             <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 style="font-size:20px;"> <b>Undergraduate President </b></h3>
+                    <p>{%if winners.222|length > 0 %} {{ winners.222 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/222/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
             </div>
-           </div></a>
-        </div>
+         </div>
           
       </div>
   </div>
@@ -125,49 +124,56 @@
     <br/>
       <!-- The Cadidates -->
       <!-- one row -->
-      <div class="w3-row-padding w3-grayscale">
+      <div class="w3-row-padding">
          <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/223/vote/results/">
-           <div class="w3-light-grey w3-hover-grey" style="height:150px;padding-top:40px;">
-            <div class="w3-container w3-center">
-              <h3>President</h3>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 > <b>President </b></h3>
+                    <p>{%if winners.223|length > 0 %} {{ winners.223 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/223/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
             </div>
-            </div></a>
         </div>  
-        <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/227/vote/results/">
-          <div class="w3-light-grey w3-hover-grey" style="height:150px;padding-top:30px;">
-             
-            <div class="w3-container w3-center ">
-              <h3>Vice 
-                  <br>President</h3>
-                  </div>
-                 </div></a>
-       </div>
+      
+      
+      
+       <div class="w3-col m6 w3-margin-bottom" >
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Vice President </b></h3>
+                    <p>{%if winners.227|length > 0 %} {{ winners.227 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/227/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div>  
+      
       </div>
       
       <!-- one row -->
-       <div class="w3-row-padding w3-grayscale">
+       <div class="w3-row-padding ">
          <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/229/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-              
-            <div class="w3-container w3-center">
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Senator </b></h3>
+                    <p>{%if winners.229|length > 0 %} {{ winners.229 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/229/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div>  
 
-              <h3>Senator</h3>
-                  </div>
-                 </div></a>
-        </div>    
         <div class="w3-col m6 w3-margin-bottom" >
-            <a href="/polls/241/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-              
-            <div class="w3-container w3-center">
-
-              <h3>Representative</h3>
-                  </div>
-                </div></a>
-       </div>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Representative</b></h3>
+                    <p>{%if winners.241|length > 0 %} {{ winners.241 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/241/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div>  
       </div> 
   </div>
   
@@ -182,48 +188,53 @@
     <br/>
       <!-- The Cadidates -->
       <!-- one row -->
-      <div class="w3-row-padding w3-grayscale">
+      <div class="w3-row-padding">
          <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/242/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-               
-            <div class="w3-container w3-center">
-              <h3>President</h3>
-                   </div>
-          </div></a>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 > <b>President </b></h3>
+                    <p>{%if winners.242|length > 0 %} {{ winners.242 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/242/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div> 
+      
+        
+       <div class="w3-col m6 w3-margin-bottom" >
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Vice President </b></h3>
+                    <p>{%if winners.243|length > 0 %} {{ winners.243 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/243/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
         </div>  
-        <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/243/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:30px;">
-             
-            <div class="w3-container w3-center">
-
-              <h3>Vice <br> President</h3>
-                  </div>
-            </div></a>
-       </div>
       </div>
       
       <!-- one row -->
-       <div class="w3-row-padding w3-grayscale">
+       <div class="w3-row-padding">
          <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/230/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-              
-            <div class="w3-container w3-center">
-              <h3>Senator</h3>
-                  </div>
-          </div></a>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3> <b>Senator </b></h3>
+                    <p>{%if winners.230|length > 0 %} {{ winners.230 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/230/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
         </div>    
         <div class="w3-col m6 w3-margin-bottom" >
-            <a href="/polls/240/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-              
-            <div class="w3-container w3-center">
-              <h3>Representative</h3>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3> <b>Representative</b></h3>
+                    <p>{%if winners.240|length > 0 %} {{ winners.240 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/240/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
             </div>
-            </div></a>
-       </div>
+        </div>  
       </div> 
   </div>
   
@@ -237,50 +248,52 @@
     <br/>
       <!-- The Cadidates -->
       <!-- one row -->
-      <div class="w3-row-padding w3-grayscale">
+      <div class="w3-row-padding">
          <div class="w3-col m6 w3-margin-bottom" >
-              <a href="/polls/224/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-             
-            <div class="w3-container w3-center">
-              <h3>President</h3>
-                  </div>
-                  </div></a>
-        </div>  
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 > <b>President </b></h3>
+                    <p>{%if winners.224|length > 0 %} {{ winners.224 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/224/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div> 
+      
         <div class="w3-col m6 w3-margin-bottom" >
-            <a href="/polls/228/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:30px;">
-              
-            <div class="w3-container w3-center">
-
-              <h3>Vice <br> President</h3>
-                  </div>
-                </div></a>
-       </div>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Vice President </b></h3>
+                    <p>{%if winners.228|length > 0 %} {{ winners.228 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/228/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div>  
       </div>
       
       <!-- one row -->
-       <div class="w3-row-padding w3-grayscale">
+       <div class="w3-row-padding">
          <div class="w3-col m6 w3-margin-bottom" >
-              <a href="/polls/238/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-             
-            <div class="w3-container w3-center">
-
-              <h3>Senator</h3>
-                  </div>
-                  </div></a>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3> <b>Senator </b></h3>
+                    <p>{%if winners.238|length > 0 %} {{ winners.238 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/238/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
         </div>    
         <div class="w3-col m6 w3-margin-bottom" >
-            <a href="/polls/232/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-              
-            <div class="w3-container w3-center">
-
-              <h3>Representative</h3>
-                  </div>
-                </div></a>
-       </div>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3> <b>Representative</b></h3>
+                    <p>{%if winners.232|length > 0 %} {{ winners.232 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/232/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div>  
       </div> 
   </div>
     
@@ -292,52 +305,52 @@
     <br/>
       <!-- The Cadidates -->
       <!-- one row -->
-      <div class="w3-row-padding w3-grayscale">
-         <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/233/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-              
-            <div class="w3-container w3-center">
-
-              <h3>President</h3>
-                  </div>
-                 </div></a>
-        </div>  
+      <div class="w3-row-padding">
+         <div class="w3-col m6 w3-margin-bottom">
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 > <b>President </b></h3>
+                    <p>{%if winners.223|length > 0 %} {{ winners.223 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/223/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div> 
           
         <div class="w3-col m6 w3-margin-bottom" >
-            <a href="/polls/234/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:30px;">
-              
-            <div class="w3-container w3-center">
-
-              <h3>Vice <br> President</h3>
-                  </div>
-                </div></a>
-       </div>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Vice President </b></h3>
+                    <p>{%if winners.234|length > 0 %} {{ winners.234 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/234/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div>  
       </div>
       
       <!-- one row -->
-       <div class="w3-row-padding w3-grayscale">
+       <div class="w3-row-padding">
          <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/235/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-              
-            <div class="w3-container w3-center">
-
-              <h3>Secretary</h3>
-                  </div>
-                 </div></a>
-        </div>    
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 > <b>Secretary </b></h3>
+                    <p>{%if winners.235|length > 0 %} {{ winners.235 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/235/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div>  
         <div class="w3-col m6 w3-margin-bottom" >
-            <a href="/polls/236/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:40px;">
-              
-            <div class="w3-container w3-center">
-
-              <h3>Treasurer</h3>
-                  </div>
-                </div></a>
-       </div>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 > <b>Treasurer </b></h3>
+                    <p>{%if winners.236|length > 0 %} {{ winners.236 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/236/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div> 
       </div> 
   </div>
     
@@ -350,45 +363,54 @@
     <br/>
       <!-- The Cadidates -->
       <!-- one row -->
-      <div class="w3-row-padding w3-grayscale">
+      <div class="w3-row-padding">
          <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/222/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:30px;">             
-            <div class="w3-container w3-center">
-              <h3>Independent <br> Senators</h3>
-                  </div>
-          </div></a>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Independent Senators </b></h3>
+                    <p>{%if winners.222|length > 0 %} {{ winners.222 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/222/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
         </div>  
         <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/226/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:30px;">           
-            <div class="w3-container w3-center">
-              <h3>Greek <br> Senator</h3>
-                  </div>
-                 </div></a>
-       </div>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Greek Senators </b></h3>
+                    <p>{%if winners.226|length > 0 %} {{ winners.226 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/226/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div> 
       </div>
       
       <!-- one row -->
-       <div class="w3-row-padding w3-grayscale">
+       <div class="w3-row-padding ">
          <div class="w3-col m6 w3-margin-bottom" >
-             <a href="/polls/244/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:30px;">   
-            <div class="w3-container w3-center">
-              <h3>Graduate <br> Senator</h3>
-                  </div>
-                 </div></a>
-        </div>    
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Graduate Senators </b></h3>
+                    <p>{%if winners.244|length > 0 %} {{ winners.244 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/244/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div>     
         <div class="w3-col m6 w3-margin-bottom" >
-            <a href="/polls/245/vote/results/">
-          <div class="w3-light-grey  w3-hover-grey" style="height:150px;padding-top:20px;">
-            <div class="w3-container w3-center">
-                <h3>Graduate <br> Representative</h3>
-                  </div>
-                </div></a>
-       </div>
+             <div class=" w3-card" style="height:450px;" > 
+                <img src="{% static 'img/analysis.png' %}" style="width:100%">
+                <div class="w3-container w3-center">
+                    <h3 class= "w3-xlarge"> <b>Graduate Representative</b></h3>
+                    <p>{%if winners.245|length > 0 %} {{ winners.245 }} {%else%} No one {%endif%} <p class="w3-opacity">is leading</p> </p>
+                    <p> <a href="/polls/245/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                </div>
+            </div>
+        </div> 
       </div> 
-  </div>  
+  </div> 
+    
     
 
     <br/><br/>

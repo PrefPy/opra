@@ -69,16 +69,16 @@
          <div class="w3-col m4 w3-margin-bottom">
             <div class=" w3-card"> 
                 <div class="w3-container w3-center">
-                    <h3 style="font-size:30px"> <b>Grand<br> Marshall </b></h3>
+                    <h3 style="font-size:30px"> <b>Grand <br> Marshall </b></h3>
                      <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.239|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.239|length > 0 %} {{ winners.239 }} {%else%} No one {%endif%}<p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
-                    <p > <a href="/polls/239/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                    <p> <a href="/polls/239/vote/results/"><button class="w3-button w3-light-grey w3-block" style="{%if winners.239|length == 0 %}  disabled='disabled' {%endif%}"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
                 </div>
             </div>
          </div>
@@ -91,13 +91,13 @@
                     <h3 style="font-size:30px"> <b>President <br> of the Union </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.219|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.219|length > 0 %} {{ winners.219 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
-                    <p> <a href="/polls/219/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                    <p> <a href="/polls/219/vote/results/"><button class="w3-button w3-light-grey w3-block" > <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
                 </div>
             </div>
          </div>
@@ -111,7 +111,7 @@
                     <h3 style="font-size:30px"> <b>Undergraduate <br> President </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.220|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -153,7 +153,7 @@
                         {%if request.flavour == 'mobile'%} 
                         w3-xlarge  
                         {%endif%}">is leading</p> </p>
-                    <p> <a href="/polls/223/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+                    <p> <a href="/polls/223/vote/results/"><button class="w3-button w3-light-grey w3-block" > <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
                 </div>
             </div>
         </div>  
@@ -166,13 +166,15 @@
                     <h3 class= "w3-xxlarge"> <b>Vice <br class="w3-hide-large"> President </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.227|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
                          {%endif%}
                         {%endif%}">{%if winners.227|length > 0 %} {{ winners.227 }} {%else%} No one {%endif%} <p class="w3-opacity {%if request.flavour == 'mobile'%} w3-xlarge {%endif%}">is leading</p> </p>
+
                     <p> <a href="/polls/227/vote/results/"><button class="w3-button w3-light-grey w3-block"> <h5><i class="fa fa-info-circle w3-hide-small"></i> More</h5></button></a></p>
+          
                 </div>
             </div>
         </div>  
@@ -188,7 +190,7 @@
                     <h3 class= "w3-xxlarge"> <b>Senator </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.229|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -206,7 +208,7 @@
                     <h3 class= "w3-xxlarge"> <b>Representative</b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.241|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -238,7 +240,7 @@
                     <h3 class= "w3-xxlarge" > <b>President </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.242|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -256,7 +258,7 @@
                     <h3 class= "w3-xxlarge"> <b>Vice <br class="w3-hide-large">President </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.243|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -277,7 +279,7 @@
                     <h3 class= "w3-xxlarge"> <b>Senator </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.230|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -294,7 +296,7 @@
                     <h3 class= "w3-xxlarge"> <b>Representative</b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.240|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -325,7 +327,7 @@
                     <h3 class= "w3-xxlarge"> <b>President </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.224|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -342,7 +344,7 @@
                     <h3 class= "w3-xxlarge"> <b>Vice <br class="w3-hide-large"> President </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.228|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -363,7 +365,7 @@
                     <h3 class= "w3-xxlarge"> <b>Senator </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.238|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -380,7 +382,7 @@
                     <h3 class= "w3-xxlarge"> <b>Representative</b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.232|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -427,7 +429,7 @@
                     <h3 class= "w3-xxlarge"> <b>Vice <br class="w3-hide-large"> President </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.234|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -448,7 +450,7 @@
                     <h3 class= "w3-xxlarge"> <b>Secretary </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.235|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -465,7 +467,7 @@
                     <h3 class= "w3-xxlarge" > <b>Treasurer </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.236|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -494,7 +496,7 @@
                     <h3 class= "w3-xxlarge"> <b>Independent <br class="w3-hide-large w3-hide-medium"> Senators </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.222|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -510,7 +512,7 @@
                     <h3 class= "w3-xxlarge"> <b>Greek <br class="w3-hide-large w3-hide-medium"> Senators </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.226|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -530,7 +532,7 @@
                     <h3 class= "w3-xxlarge"> <b>Graduate <br class="w3-hide-large w3-hide-medium">  Senators </b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.244|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large
@@ -546,7 +548,7 @@
                     <h3 style="font-size:32px"> <b>Graduate <br class="w3-hide-large w3-hide-medium"> Representative</b></h3>
                     <hr style="border:1px solid" class="w3-round rpi-text-red">
                     <p class="{%if request.flavour == 'mobile'%} 
-                         {%if winners.223|length > 1 %}      
+                         {%if winners.245|length > 1 %}      
                            w3-large 
                          {% else%}
                           w3-large

@@ -1,0 +1,85 @@
+{% extends 'polls/base.html' %}
+{% block extra_head %}
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/static/css/linkPage.css">
+
+{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<style>
+    html { 
+        background: url("/static/img/rpibg.jpg") no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+    
+    body{
+    		background-color: transparent;
+    }
+    
+    .btn:hover{
+	background: #e45d50;
+	border-color: #da291c;
+}
+
+.btn:active{
+	background: #da291c !important;
+}
+.btn-tutorial{
+	background: #004000;
+	color:white;
+	
+}
+
+ .btn-tutorial:hover{
+	background: darkgreen;
+	color:white;
+	border-color: #da291c;
+}
+
+.btn-cr{
+	background: #000040;
+	color:white;
+	
+}
+
+ .btn-cr:hover{
+	background: darkblue;
+	color:white;
+	border-color: #da291c;
+}
+
+.btn-primary{
+	background: #500000;
+	color:white;
+	
+}
+
+ .btn-primary:hover{
+	background: #c40000;
+	color:white;
+	border-color: #da291c;
+}
+
+ 
+ .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+ 			
+            color:#0000c4;
+ }
+	
+</style>
+{%if not request.flavour == "mobile"%}
+{% include "events/GM2017/GM2017resultsPC.html" %}
+{% else %}
+{% include "events/GM2017/GM2017resultsmobile.html" %}
+{% endif %}
+
+
+
+{% endblock %}

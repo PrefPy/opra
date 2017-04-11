@@ -223,6 +223,10 @@ def changepassword(request):
     else:
         return HttpResponse("The password you entered is wrong.")
         
+def getRPIUsers():
+    users = User.objects.filter(username__contains='@rpi.edu')
+    return users
+        
 class MessageView(generic.ListView):
     template_name = 'messages.html'
     context_object_name = 'message_list'
@@ -236,5 +240,6 @@ class MessageView(generic.ListView):
         permit.append("wangj33@rpi.edu")
         permit.append("xial@rpi.edu")
         permit.append("XIAL@RPI.EDU")
+        ctx['rpi_users'] = getRPIUsers()
         ctx['allowed_users'] = permit
         return ctx

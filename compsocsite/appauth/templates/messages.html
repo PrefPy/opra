@@ -10,5 +10,11 @@
 	<p>(Not logged in user)  Name: {{m.name}}    Email: {{m.email}}  Date: {{m.timestamp}}    Message: {{m.text}}</p>
 	{% endif %}
 {% endfor%}
+<br>
+<p>Registered RPI users:</p>
+{% for u in rpi_users %}
+	<p>{{u.username}}</p>
+{% endfor %}
+
 {% endif %}
 {% endblock %}

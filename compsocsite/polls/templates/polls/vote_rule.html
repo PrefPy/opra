@@ -257,14 +257,19 @@
         ]
       },
     });
+    var canvas;
+    var ctx;
+    var nums;
+    var names;
+    var colors;
     function createMixtures(){
         //uncomment for mixtures
         alert(1);
-        var canvas = document.getElementById("mixtures");
-        var ctx = canvas.getContext("2d");
-        var nums = [];
-        var names = [];
-        var colors = [];
+        canvas = document.getElementById("mixtures");
+        ctx = canvas.getContext("2d");
+        nums = [];
+        names = [];
+        colors = [];
         {% for num in mixtures_pl %}
             nums.push({{num}});
         {% endfor %}

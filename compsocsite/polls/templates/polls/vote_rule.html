@@ -155,7 +155,7 @@
         -->
         
         <!-- Panel for plackett luce mixtures (closed by default) -->
-        <div class="panel panel-default">
+        <div class="panel panel-default" onload="createMixtures()">
             <div class="panel-heading" data-toggle="collapse" href="#collapse_wmg">
                 <h4 class="panel-title">
                     <a >
@@ -256,7 +256,7 @@
         ]
       },
     });
-    $( function() {
+    function createMixtures(){
         //uncomment for mixtures
         alert(1);
         var canvas = document.getElementById("mixtures");
@@ -288,9 +288,8 @@
         ctx.fillStyle="#FFFFFF";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         createGraph(height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size);
-    });
+    }
     function enlarge () {
-        alert("{{mixtures_pl}}");
         height += 5; //total height of the bars
         //breadth += 5; //distance between bars
         length += 5;

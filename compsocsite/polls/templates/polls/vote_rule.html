@@ -263,7 +263,6 @@
     var nums = [];
     var names = [];
     var colors = [];
-    alert(0);
     {% for num in mixtures_pl %}
         nums.push({{num}});
     {% endfor %}
@@ -289,6 +288,7 @@
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     createGraph(height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size);
     function enlarge () {
+        alert(0);
         height += 5; //total height of the bars
         //breadth += 5; //distance between bars
         length += 5;

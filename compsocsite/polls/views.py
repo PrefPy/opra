@@ -987,7 +987,7 @@ def getVoteResults(latest_responses,candMap):
     scoreVectorList.append(translateWinnerList(coombs,candMap))
     gmm = GMMMixPLAggregator(list(pollProfile.candMap.values()), use_matlab=False)
     
-    return scoreVectorList, gmm.aggregate(pollProfile.getOrderVectors(), algorithm="top3_full", epsilon=.1, max_iters=10, approx_step=.1)
+    return scoreVectorList, [[.1] * 10]#gmm.aggregate(pollProfile.getOrderVectors(), algorithm="top3_full", epsilon=.1, max_iters=10, approx_step=.1)
     
 def calculatePreviousResults(request, question_id):
     question = get_object_or_404(Question, pk=question_id)

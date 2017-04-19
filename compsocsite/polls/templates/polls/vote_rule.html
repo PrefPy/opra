@@ -264,6 +264,7 @@
     var names = [];
     var colors = [];
     {% for num in mixtures_pl %}
+        alert({{num}});
         nums.push({{num}});
     {% endfor %}
     {% for option in cand_map.values %}

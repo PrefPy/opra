@@ -692,6 +692,7 @@ class VoteResultsView(generic.DetailView):
         ctx['cand_map'] = candMap# if (len(latest_responses) > 0) else None
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['algorithm_links'] = getListAlgorithmLinks()
+        mixtures = [[.1]*10]
         if self.object.status != 4 and self.object.new_vote == True:
             string, mixtures = getPollWinner(self.object)
         final_result = self.object.finalresult

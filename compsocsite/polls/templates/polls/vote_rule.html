@@ -256,39 +256,39 @@
         ]
       },
     });
-
-    //uncomment for mixtures
-    var canvas = document.getElementById("mixtures");
-    var ctx = canvas.getContext("2d");
-    var nums = [];
-    var names = [];
-    var colors = [];
-    {% for num in mixtures_pl %}
-        nums.push({{num}});
-    {% endfor %}
-    {% for option in cand_map.values %}
-        names.push("{{ option }}");
-    {% endfor %}
-    // draw bar chart
-    var len = (nums.length - 1) / 2;
-    for (var i = 0; i < len; i++) {
-        colors.push(randomColor());
-    };
-    alert(nums[0]);
-    height = 125; //total height of the bars
-    breadth = 10; //distance between bars
-    length = 215;
-    safeDist = 350;
-    left1 = 20;
-    down1 = 20;
-    left2 = 20;
-    down2 = 30 + (height * nums[0]);
-    font_size = 10;
-    ctx.fillStyle="#FFFFFF";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    createGraph(height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size);
+    $( document ).ready(function() {
+        //uncomment for mixtures
+        var canvas = document.getElementById("mixtures");
+        var ctx = canvas.getContext("2d");
+        var nums = [];
+        var names = [];
+        var colors = [];
+        {% for num in mixtures_pl %}
+            nums.push({{num}});
+        {% endfor %}
+        {% for option in cand_map.values %}
+            names.push("{{ option }}");
+        {% endfor %}
+        // draw bar chart
+        var len = (nums.length - 1) / 2;
+        for (var i = 0; i < len; i++) {
+            colors.push(randomColor());
+        };
+        alert(nums[0]);
+        height = 125; //total height of the bars
+        breadth = 10; //distance between bars
+        length = 215;
+        safeDist = 350;
+        left1 = 20;
+        down1 = 20;
+        left2 = 20;
+        down2 = 30 + (height * nums[0]);
+        font_size = 10;
+        ctx.fillStyle="#FFFFFF";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        createGraph(height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size);
+    });
     function enlarge () {
-        alert(0);
         height += 5; //total height of the bars
         //breadth += 5; //distance between bars
         length += 5;

@@ -718,9 +718,7 @@ class VoteResultsView(generic.DetailView):
             
             #ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
             #ctx['mixtures_pl'] = mixtures[0]
-        
-        voteResults, mixtures = getVoteResults(latest_responses,candMap)
-        ctx['mixtures_pl'] = mixtures[0]
+            
         previous_results = self.object.voteresult_set.all()
         ctx['previous_winners'] = []
         for pw in previous_results:

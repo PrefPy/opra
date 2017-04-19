@@ -459,7 +459,7 @@ def getPollWinner(question):
     question.winner = winnerStr
     question.save()
         
-    return winnerStr
+    return winnerStr, mixtures
     
     
 #Interpret result into strings that can be shown on the result page
@@ -693,7 +693,7 @@ class VoteResultsView(generic.DetailView):
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['algorithm_links'] = getListAlgorithmLinks()
         if self.object.status != 4 and self.object.new_vote == True:
-            getPollWinner(self.object)
+            string, mixtures = getPollWinner(self.object)
         final_result = self.object.finalresult
         l = interpretResult(final_result)
         #print(l[0])
@@ -717,9 +717,9 @@ class VoteResultsView(generic.DetailView):
             #ctx['wmg_edges'] = edges
             
             #ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
-        
-        voteResults, mixtures = getVoteResults(latest_responses,candMap)
-        ctx['mixtures_pl'] = mixtures[0]
+            #ctx['mixtures_pl'] = mixtures[0]
+            
+        ctx['mixtures_pl'] = mixtures
         previous_results = self.object.voteresult_set.all()
         ctx['previous_winners'] = []
         for pw in previous_results:

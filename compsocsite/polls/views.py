@@ -20,6 +20,7 @@ from django.core import mail
 from prefpy.mechanism import *
 from prefpy.allocation_mechanism import *
 from prefpy.gmm_mixpl import *
+from prefpy.egmm_mixpl import *
 from prefpy.mov import MoVPlurality
 from prefpy.mov import MoVBorda
 from prefpy.mov import MoVVeto
@@ -343,7 +344,7 @@ def pausePoll(request, question_id):
     question.status = 4
     # get winner or allocation, and save it
     if question.question_type == 1: #poll
-        question.winner = getPollWinner(question)
+        question.winner, question.mixtures_pl1, question.mixtures_pl2, question.mixtures_pl3 = getPollWinner(question)
     question.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -378,7 +379,7 @@ def stopPoll(request, question_id):
     question.status = 3
     # get winner or allocation, and save it
     if question.question_type == 1: #poll
-        question.winner = getPollWinner(question)
+        question.winner, question.mixtures_pl1, question.mixtures_pl2, question.mixtures_pl3 = getPollWinner(question)
     elif question.question_type == 2: #allocation
         getFinalAllocation(question)
     question.save()
@@ -391,11 +392,11 @@ def stopPoll(request, question_id):
 def getPollWinner(question):
     all_responses = question.response_set.filter(active=1).order_by('-timestamp')
     if len(all_responses) == 0:
-        return ""
+        return "", ""
 
     (latest_responses, previous_responses) = categorizeResponses(all_responses)
     candMap = getCandidateMapFromList(list(question.item_set.all()))
-    vote_results, mixtures = getVoteResults(latest_responses,candMap)
+    vote_results, mixtures_pl1, mixtures_pl2, mixtures_pl3 = getVoteResults(latest_responses,candMap)
     indexVoteResults = question.poll_algorithm - 1
     current_result = vote_results[indexVoteResults]
 
@@ -457,9 +458,12 @@ def getPollWinner(question):
     if question.new_vote:
         question.new_vote = False
     question.winner = winnerStr
+    question.mixtures_pl1 = json.dumps(mixtures_pl1)
+    question.mixtures_pl2 = json.dumps(mixtures_pl2)
+    question.mixtures_pl3 = json.dumps(mixtures_pl3)
     question.save()
         
-    return winnerStr, mixtures
+    return winnerStr, json.dumps(mixtures_pl1), json.dumps(mixtures_pl2), json.dumps(mixtures_pl3)
     
     
 #Interpret result into strings that can be shown on the result page
@@ -692,10 +696,13 @@ class VoteResultsView(generic.DetailView):
         ctx['cand_map'] = candMap# if (len(latest_responses) > 0) else None
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['algorithm_links'] = getListAlgorithmLinks()
-        mixtures = [[.1]*10]
         if self.object.status != 4 and self.object.new_vote == True:
-            string, mixtures = getPollWinner(self.object)
+            getPollWinner(self.object)
         final_result = self.object.finalresult
+        mixtures_pl1 = json.loads(self.object.mixtures_pl1)
+        mixtures_pl2 = json.loads(self.object.mixtures_pl2)
+        mixtures_pl3 = json.loads(self.object.mixtures_pl3)
+
         l = interpretResult(final_result)
         #print(l[0])
         ctx['vote_results'] = l[0]
@@ -719,8 +726,11 @@ class VoteResultsView(generic.DetailView):
             
             #ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
             #ctx['mixtures_pl'] = mixtures[0]
-            
-        ctx['mixtures_pl'] = mixtures[0]
+        
+        ctx['mixtures_pl1'] = mixtures_pl1[0]
+        print(mixtures_pl1[0])
+        ctx['mixtures_pl2'] = mixtures_pl2
+        ctx['mixtures_pl3'] = mixtures_pl3
         previous_results = self.object.voteresult_set.all()
         ctx['previous_winners'] = []
         for pw in previous_results:
@@ -985,9 +995,17 @@ def getVoteResults(latest_responses,candMap):
     scoreVectorList.append(translateWinnerList(stv,candMap))
     scoreVectorList.append(translateWinnerList(baldwin,candMap))
     scoreVectorList.append(translateWinnerList(coombs,candMap))
-    gmm = GMMMixPLAggregator(list(pollProfile.candMap.values()), use_matlab=False)
+
+    #for Mixtures
+    rankings = pollProfile.getOrderVectorsEGMM()
+    print("LOOK AT ME", rankings)
+    m = len(rankings[0])
+    mixtures_pl1 = egmm_mixpl(rankings, m, k = 1, itr = 10).tolist()
+    mixtures_pl2 = egmm_mixpl(rankings, m, k = 2, itr = 10).tolist()
+    mixtures_pl3 = egmm_mixpl(rankings, m, k = 3, itr = 10).tolist()
+    #gmm = GMMMixPLAggregator(list(pollProfile.candMap.values()), use_matlab=False)
     
-    return scoreVectorList, [[.1] * 10]#gmm.aggregate(pollProfile.getOrderVectors(), algorithm="top3_full", epsilon=.1, max_iters=10, approx_step=.1)
+    return scoreVectorList, mixtures_pl1, mixtures_pl2, mixtures_pl3
     
 def calculatePreviousResults(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -1002,7 +1020,7 @@ def calculatePreviousResults(request, question_id):
         movstr = ""
         responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp],active=1)
         (lr, pr) = categorizeResponses(responses)
-        scorelist, mixtures = getVoteResults(lr,candMap)
+        scorelist, mixtures_pl1, mixtures_pl2, mixtures_pl3 = getVoteResults(lr,candMap)
         mov = getMarginOfVictory(lr,candMap)
         for x in range(0,len(scorelist)):
             for key,value in scorelist[x].items():

@@ -166,10 +166,12 @@
             <div id="collapse_wmg" class="panel-body">
                 <div class="table-responsive">
                     <canvas id="mixtures" width="700" height="400"></canvas>
-                    <button id="bigger" onclick="enlarge()">Make Larger</button>
-                    <button id="smaller" onclick="smaller()">Make Smaller</button>
+                    <!-- <button id="bigger" onclick="enlarge()">Make Larger</button>
+                    <button id="smaller" onclick="smaller()">Make Smaller</button> -->
                     <button id="download" onclick="download()">Download</button>
-                    <button id="load" onclick="createMixtures()">Load</button>
+                    <button id="load" onclick="createMixturesK1()">Load K = 1</button>
+                    <button id="load" onclick="createMixturesK2()">Load K = 2</button>
+                    <button id="load" onclick="createMixturesK3()">Load K = 3</button>
                 </div>
             </div>
         </div>
@@ -177,18 +179,41 @@
         {% endif %}
     </div>
 <script src='/static/js/colorPicker.js'></script>
-<script src="https://parall.ax/parallax/js/jspdf.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
 <script>
-    function createGraph (height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size) {
+    function createGraphK1 (height, breadth, length, safeDist, left1, down1, nums, names, colors, font_size) {
         var l1 = left1;
         ctx.font=font_size.toString().concat("px Arial");
-        for (var i = 0; i < len; i++) {
+        for (var i = 0; i < colors.length; i++) {
+            console.log("what?");
+            ctx.fillStyle=colors[i];
+            ctx.fillRect(left1,down1,(nums[i + 1] * length),height * (nums[0]));
+            left1 += (nums[i + 1] * length) + (15 / (colors.length - 1));
+            console.log("len " + length);
+
+            ctx.fillRect(safeDist + 2,down1 * (i + 1) + breadth,breadth,breadth);
+            ctx.fillStyle="#000000";
+            ctx.fillText(names[i],safeDist + breadth + 5,down1 * (i + 1) + 2 *breadth);
+        };
+        ctx.fillStyle="#000000";
+        // ctx.rect(l1 - 1,down1 - 1,length + 15,(height * nums[0]) + 2);
+        // ctx.rect(l1 - 1,(height * nums[0]) + down1 + breadth - 1,length + 15,(height * (1 - nums[0])) + 2);
+        ctx.stroke();
+        ctx.fillText("Mixture 1: ".concat((Math.round(100 * nums[0])).toString()).concat("%"),length + 45,((height * nums[0])/ 2) + 15);
+    }
+
+    function createGraphK2 (height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size) {
+        var l1 = left1;
+        var len = (nums.length - 2) / 2;
+        ctx.font=font_size.toString().concat("px Arial");
+        console.log("nums " + nums)
+        for (var i = 0; i < colors.length; i++) {
             ctx.fillStyle=colors[i];
             ctx.fillRect(left1,down1,(nums[i + 1] * length),height * (nums[0]));
             left1 += (nums[i + 1] * length) + (15 / (len - 1));
 
-            ctx.fillRect(left2,down2,(nums[i + len + 1] * length),height * (1 - nums[0]));
-            left2 += (nums[i + len + 1] * length) + (15 / (len - 1));
+            ctx.fillRect(left2,down2,(nums[i + len + 2] * length),height * (1 - nums[0]));
+            left2 += (nums[i + len + 2] * length) + (15 / (len - 1));
 
             ctx.fillRect(safeDist + 2,down1 * (i + 1) + breadth,breadth,breadth);
             ctx.fillStyle="#000000";
@@ -202,7 +227,41 @@
         ctx.fillText("Mixture 2: ".concat((Math.round(100 * (1 - nums[0]))).toString()).concat("%"),length + 45,(height * nums[0]) + 40 + ((height * (1 - nums[0])) / 2));
     }
 
-    var cy = cytoscape({
+    function createGraphK3 (height, breadth, length, safeDist, left1, down1, left2, down2, left3, down3, nums, names, colors, font_size) {
+        var l1 = left1;
+        var len = (nums.length - 3) / 3;
+        var alpha1 = nums[0];
+        var alpha2 = nums[len + 1];
+        var alpha3 = nums[2*(len + 1)];
+        ctx.font=font_size.toString().concat("px Arial");
+        console.log("nums " + nums)
+        for (var i = 0; i < colors.length; i++) {
+            ctx.fillStyle=colors[i];
+            ctx.fillRect(left1,down1,(nums[i + 1] * length),height * alpha1);
+            left1 += (nums[i + 1] * length) + (15 / (len - 1));
+
+            ctx.fillRect(left2,down2,(nums[i + len + 2] * length),height * alpha2);
+            left2 += (nums[i + len + 2] * length) + (15 / (len - 1));
+            console.log("this " + nums[i + len + 2])
+
+            ctx.fillRect(left3,down3,(nums[i + (2 * len) + 3] * length),height * alpha3);
+            left3 += (nums[i + (2*len) + 3] * length) + (15 / (len - 1));
+
+            ctx.fillRect(safeDist + 2,down1 * (i + 1) + breadth,breadth,breadth);
+            ctx.fillStyle="#000000";
+            ctx.fillText(names[i],safeDist + breadth + 5,down1 * (i + 1) + 2 *breadth);
+        };
+        ctx.fillStyle="#000000";
+        // ctx.rect(l1 - 1,down1 - 1,length + 15,(height * nums[0]) + 2);
+        // ctx.rect(l1 - 1,(height * nums[0]) + down1 + breadth - 1,length + 15,(height * (1 - nums[0])) + 2);
+        ctx.stroke();
+        ctx.fillText("Mixture 1: ".concat((Math.round(100 * alpha1)).toString()).concat("%"),length + 45,((height * alpha1)/ 2) + 15);
+        ctx.fillText("Mixture 2: ".concat((Math.round(100 * alpha2)).toString()).concat("%"),length + 45,(height * alpha1) + 40 + ((height * (alpha2)) / 2));
+        ctx.fillText("Mixture 3: ".concat((Math.round(100 * alpha3)).toString()).concat("%"),length + 45,(height * (alpha1 + alpha2) + 40 + ((height * alpha3) / 2)));
+    }
+
+    //Uncomment for WMG
+    /*var cy = cytoscape({
         container: document.getElementById('cy'),
         layout: {
             name: 'circle',
@@ -256,7 +315,7 @@
             {% endfor %}
         ]
       },
-    });
+    });*/
     var canvas;
     var ctx;
     var nums;
@@ -272,21 +331,22 @@
     var left2 = 20;
     var down2;
     var font_size = 10;
-    function createMixtures(){
+    function createMixturesK1(){
         //uncomment for mixtures
         canvas = document.getElementById("mixtures");
         ctx = canvas.getContext("2d");
         nums = [];
         names = [];
         colors = [];
-        {% for num in mixtures_pl %}
+        console.log("{{mixtures_pl1}}");
+        {% for num in mixtures_pl1 %}
             nums.push({{num}});
         {% endfor %}
         {% for option in cand_map.values %}
             names.push("{{ option }}");
         {% endfor %}
         // draw bar chart
-        var len = (nums.length - 1) / 2;
+        var len = nums.length - 1;
         for (var i = 0; i < len; i++) {
             colors.push(randomColor());
         };
@@ -301,9 +361,83 @@
         font_size = 10;
         ctx.fillStyle="#FFFFFF";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        alert(nums[0]);
-        createGraph(height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size);
+        createGraphK1(height, breadth, length, safeDist, left1, down1, nums, names, colors, font_size);
     }
+
+
+    function createMixturesK2(){
+        //uncomment for mixtures
+        canvas = document.getElementById("mixtures");
+        ctx = canvas.getContext("2d");
+        nums = [];
+        names = [];
+        colors = [];
+        alert("{{mixtures_pl2}}");
+        {% for arr in mixtures_pl2 %}
+            {% for num in arr %}
+                nums.push({{num}});
+            {% endfor %}
+        {% endfor %}
+        {% for option in cand_map.values %}
+            names.push("{{ option }}");
+        {% endfor %}
+        // draw bar chart
+        var len = (nums.length - 2) / 2;
+        for (var i = 0; i < len; i++) {
+            colors.push(randomColor());
+        };
+        height = 125; //total height of the bars
+        breadth = 10; //distance between bars
+        length = 215;
+        safeDist = 350;
+        left1 = 20;
+        down1 = 20;
+        left2 = 20;
+        down2 = 30 + (height * nums[0]);
+        font_size = 10;
+        ctx.fillStyle="#FFFFFF";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        createGraphK2(height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size);
+    }
+
+
+    function createMixturesK3(){
+        //uncomment for mixtures
+        canvas = document.getElementById("mixtures");
+        ctx = canvas.getContext("2d");
+        nums = [];
+        names = [];
+        colors = [];
+        alert("{{mixtures_pl3}}");
+        {% for arr in mixtures_pl3 %}
+            {% for num in arr %}
+                nums.push({{num}});
+            {% endfor %}
+        {% endfor %}
+        {% for option in cand_map.values %}
+            names.push("{{ option }}");
+        {% endfor %}
+        // draw bar chart
+        var len = (nums.length - 3) / 3;
+        for (var i = 0; i < len; i++) {
+            colors.push(randomColor());
+        };
+        height = 125; //total height of the bars
+        breadth = 10; //distance between bars
+        length = 215;
+        safeDist = 350;
+        left1 = 20;
+        down1 = 20;
+        left2 = 20;
+        down2 = 30 + (height * nums[0]);
+        left3 = 20;
+        down3 = 60 + (height * (nums[0] + nums[1 + colors.length]));
+        font_size = 10;
+        ctx.fillStyle="#FFFFFF";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        createGraphK3(height, breadth, length, safeDist, left1, down1, left2, down2, left3, down3, nums, names, colors, font_size);
+    }
+    
     function enlarge () {
         height += 5; //total height of the bars
         //breadth += 5; //distance between bars

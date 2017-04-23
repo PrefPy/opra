@@ -200,6 +200,9 @@
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
     
     {% include 'polls/_change_title_and_desc.html' %}
+	{% if request.user == question.question_owner and question.status != 1 %}
+				<a  class="pull-right" href="{% url 'polls:recalcResult' question.id %}" style="position:relative; bottom:4px;right:5%;"><button type="button" class="btn btn-primary" >Recalculate Result</button></a>
+		{% endif %}
 </div>
     
 <div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 4 %}active{% endif %}" id="qr">

@@ -699,9 +699,14 @@ class VoteResultsView(generic.DetailView):
         if self.object.status != 4 and self.object.new_vote == True:
             getPollWinner(self.object)
         final_result = self.object.finalresult
-        mixtures_pl1 = json.loads(self.object.mixtures_pl1)
-        mixtures_pl2 = json.loads(self.object.mixtures_pl2)
-        mixtures_pl3 = json.loads(self.object.mixtures_pl3)
+        if self.object.mixtures_pl1 != "":
+            mixtures_pl1 = json.loads(self.object.mixtures_pl1)
+            mixtures_pl2 = json.loads(self.object.mixtures_pl2)
+            mixtures_pl3 = json.loads(self.object.mixtures_pl3)
+        else:
+            mixtures_pl1 = []
+            mixtures_pl2 = []
+            mixtures_pl3 = []
 
         l = interpretResult(final_result)
         #print(l[0])

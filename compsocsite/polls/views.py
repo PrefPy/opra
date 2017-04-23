@@ -704,7 +704,7 @@ class VoteResultsView(generic.DetailView):
             mixtures_pl2 = json.loads(self.object.mixtures_pl2)
             mixtures_pl3 = json.loads(self.object.mixtures_pl3)
         else:
-            mixtures_pl1 = []
+            mixtures_pl1 = [[]]
             mixtures_pl2 = []
             mixtures_pl3 = []
 

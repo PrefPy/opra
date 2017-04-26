@@ -735,7 +735,6 @@ class VoteResultsView(generic.DetailView):
             #ctx['mixtures_pl'] = mixtures[0]
         
         ctx['mixtures_pl1'] = mixtures_pl1[0]
-        print(mixtures_pl1[0])
         ctx['mixtures_pl2'] = mixtures_pl2
         ctx['mixtures_pl3'] = mixtures_pl3
         previous_results = self.object.voteresult_set.all()
@@ -1005,7 +1004,6 @@ def getVoteResults(latest_responses,candMap):
 
     #for Mixtures
     rankings = pollProfile.getOrderVectorsEGMM()
-    print("LOOK AT ME", rankings)
     m = len(rankings[0])
     mixtures_pl1 = egmm_mixpl(rankings, m, k = 1, itr = 10).tolist()
     mixtures_pl2 = egmm_mixpl(rankings, m, k = 2, itr = 10).tolist()
@@ -1288,7 +1286,6 @@ def changeType(request,question_id):
     else:
         question.open = 2
     question.save()
-    print(question.open)
     request.session['setting'] = 4
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

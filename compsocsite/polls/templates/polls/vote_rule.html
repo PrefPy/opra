@@ -171,6 +171,11 @@
     var font_size = 10;
     function createMixturesK1(){
         //uncomment for mixtures
+        alert(0);
+        var width_str = $('#collapse_mix').css('width');
+        width_int = parseInt(width_str.substring(0,width_str.length - 2)) - 100;
+        width_str = width_int.toString() + "px";
+        $('#mixtures').css('width', width_str);
         k = 1;
         canvas = document.getElementById("mixtures");
         ctx = canvas.getContext("2d");
@@ -479,9 +484,9 @@
                     </a>
                 </h4>
             </div>
-            <div id="collapse_wmg" class="panel-body">
+            <div id="collapse_mix" class="panel-body">
                 <div class="table-responsive" onload="alert(0)">
-                    <canvas id="mixtures" width="700" height="400"></canvas>
+                    <canvas id="mixtures" width="700" height="200" style="display: block"></canvas>
                     <button id="bigger" onclick="enlarge()">Make Larger</button>
                     <button id="smaller" onclick="smaller()">Make Smaller</button>
                     <button id="download" onclick="download()">Download</button>

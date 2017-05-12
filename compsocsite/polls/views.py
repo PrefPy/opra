@@ -1,3 +1,6 @@
+from .models import *
+from appauth.models import *
+from groups.models import *
 import datetime
 import os
 import time
@@ -7,14 +10,11 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.core.urlresolvers import reverse
 from django.views import generic
 
-from .models import *
-from appauth.models import *
-
 from django.utils import timezone
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib import messages
-from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
 from prefpy.mechanism import *
@@ -26,7 +26,6 @@ from prefpy.mov import MoVBorda
 from prefpy.mov import MoVVeto
 from prefpy.mov import MoVkApproval
 from .email import EmailThread, setupEmail
-from groups.models import *
 from django.conf import settings
 from multipolls.models import *
 
@@ -50,16 +49,19 @@ class RegularPollsView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(RegularPollsView, self).get_context_data(**kwargs)
         # sort the lists by date (most recent should be at the top)
-        ctx['polls_created'] = Question.objects.filter(question_owner = self.request.user, m_poll = False).order_by('-pub_date')
-        ctx['polls_participated'] = self.request.user.poll_participated.filter(m_poll = False).exclude(question_owner = self.request.user).order_by('-pub_date')
+        ctx['polls_created'] = Question.objects.filter(question_owner=self.request.user,
+                                                       m_poll=False).order_by('-pub_date')
+        polls = self.request.user.poll_participated.filter(m_poll=False)
+        polls = polls.exclude(question_owner=self.request.user).order_by('-pub_date')
+        ctx['polls_participated'] = polls
         return ctx
 
 # the original query will return data from earliest to latest
 # reverse the list so that the data is from latest to earliest
 def reverseListOrder(query):
-    listQuery = list(query)
-    listQuery.reverse()
-    return listQuery
+    list_query = list(query)
+    list_query.reverse()
+    return list_query
 
 class MultiPollsView(generic.ListView):
     template_name = 'polls/m_polls.html'
@@ -69,8 +71,10 @@ class MultiPollsView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(MultiPollsView, self).get_context_data(**kwargs)
         # sort the list by date
-        ctx['multipolls_created'] = reverseListOrder(MultiPoll.objects.filter(owner = self.request.user))
-        ctx['multipolls_participated'] = reverseListOrder(self.request.user.multipoll_participated.exclude(owner = self.request.user))
+        m_polls = MultiPoll.objects.filter(owner=self.request.user)
+        m_polls_part = self.request.user.multipoll_participated.exclude(owner=self.request.user)
+        ctx['multipolls_created'] = reverseListOrder(m_polls)
+        ctx['multipolls_participated'] = reverseListOrder(m_polls_part)
         return ctx
 
 # guest homepage view
@@ -82,13 +86,13 @@ class MainView(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(MainView, self).get_context_data(**kwargs)
         # sort the list by date
-        ctx['question']=Question.objects.first()
+        ctx['question'] = Question.objects.first()
         ctx['voting_question'] = Question.objects.filter(question_text="Demo").first()
         ctx['preference'] = 1
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()
         ctx['view_preferences'] = getViewPreferences()
-        
+
         return ctx
 
 # demo for voting page in main page
@@ -98,11 +102,11 @@ class DemoView(generic.DetailView):
     template_name = 'polls/demo.html'
 
     def get_order(self, ctx):
-        otherUserResponses = self.object.response_set.reverse()
-        defaultOrder = ctx['object'].item_set.all()
-        #random.shuffle(defaultOrder)
-        return defaultOrder
-        #return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)
+        other_user_responses = self.object.response_set.reverse()
+        default_order = ctx['object'].item_set.all()
+        #random.shuffle(default_order)
+        return default_order
+        #return getRecommendedOrder(other_user_responses, self.request, default_order)
 
     def get_context_data(self, **kwargs):
         ctx = super(DemoView, self).get_context_data(**kwargs)
@@ -145,25 +149,27 @@ class CSPosterView(generic.ListView):
         ctx = super(CSPosterView, self).get_context_data(**kwargs)
         return ctx
 
-        
-# step 1: the intial question object will be created. 
+# step 1: the intial question object will be created.
 def AddStep1View(request):
     context = RequestContext(request)
     if request.method == 'POST':
-        questionString = request.POST['questionTitle']   
+        questionString = request.POST['questionTitle']
         questionDesc = request.POST['desc']
         questionType = request.POST['questiontype']
         imageURL = request.POST['imageURL']
-        # create a new question using information from the form and inherit settings from the user's preferences
+        # create a new question using information from the form and inherit
+        #   settings from the user's preferences
         question = Question(question_text=questionString, question_desc=questionDesc,
-            pub_date=timezone.now(), question_owner=request.user,
-            display_pref=request.user.userprofile.displayPref, emailInvite=request.user.userprofile.emailInvite,
-            emailDelete=request.user.userprofile.emailDelete, emailStart=request.user.userprofile.emailStart,
-            emailStop=request.user.userprofile.emailStop, creator_pref=1)
+                            pub_date=timezone.now(), question_owner=request.user,
+                            display_pref=request.user.userprofile.displayPref,
+                            emailInvite=request.user.userprofile.emailInvite,
+                            emailDelete=request.user.userprofile.emailDelete,
+                            emailStart=request.user.userprofile.emailStart,
+                            emailStop=request.user.userprofile.emailStop, creator_pref=1)
         if request.FILES.get('docfile') != None:
             question.image = request.FILES.get('docfile')
         elif imageURL != '':
-            question.imageURL = imageURL 
+            question.imageURL = imageURL
         question.question_type = questionType
         question.save()
         setupEmail(question)
@@ -199,7 +205,7 @@ class AddStep3View(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
-# step 4: the owner selects the type of poll and other settings    
+# step 4: the owner selects the type of poll and other settings
 class AddStep4View(generic.DetailView):
     model = Question
     template_name = 'polls/add_step4.html'
@@ -218,35 +224,36 @@ class AddStep4View(generic.DetailView):
 
 # Add a single choice to a poll.
 # - A choice must contain text
-# - No duplicate choices (text can't be the same) 
+# - No duplicate choices (text can't be the same)
 # - The user can add an image to the choice, but images are optional
 def addChoice(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     item_text = request.POST['choice']
     imageURL = request.POST['imageURL']
-    
+
     #check for empty strings
     if item_text == "":
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
     # check for duplicates
     allChoices = question.item_set.all()
     for choice in allChoices:
         if item_text == choice.item_text:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
     recentlyAdded = False
     if question.status == 4:
         recentlyAdded = True
     # create the choice
-    item = Item(question=question, item_text=item_text, timestamp=timezone.now(), recently_added=recentlyAdded)
-    
+    item = Item(question=question, item_text=item_text, timestamp=timezone.now(),
+                recently_added=recentlyAdded)
+
     # if the user uploaded an image or set a URL, add it to the item
     if request.FILES.get('docfile') != None:
         item.image = request.FILES.get('docfile')
     elif imageURL != '':
-        item.imageURL = imageURL 
-    
+        item.imageURL = imageURL
+
     # save the choice
     item.save()
     request.session['setting'] = 0
@@ -274,12 +281,12 @@ def editBasicInfo(request, question_id):
     new_title = request.POST["title"]
     new_desc = request.POST["desc"]
     question.question_text = new_title
-    question.question_desc = new_desc    
+    question.question_desc = new_desc
     question.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-# remove a choice from the poll. 
+# remove a choice from the poll.
 # deleting choices should only be done before the poll starts
 def deleteChoice(request, choice_id):
     item = get_object_or_404(Item, pk=choice_id)
@@ -293,27 +300,27 @@ def deletePoll(request, question_id):
 
     # check to make sure the current user is the owner
     if request.user != question.question_owner:
-        return HttpResponseRedirect(reverse('polls:index'))    
-    
+        return HttpResponseRedirect(reverse('polls:index'))
+
     question.delete()
     return HttpResponseRedirect(reverse('polls:index'))
 
-# the voter can opt out of a poll at any time 
+# the voter can opt out of a poll at any time
 def quitPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    
+
     # notify the user if this option is checked
     if request.user.userprofile.emailDelete:
         email_class = EmailThread(request, question_id, 'remove')
         email_class.start()
-        
+
     # remove from the voter list
     question.question_voters.remove(request.user)
     question.save()
 
     return HttpResponseRedirect(reverse('polls:regular_polls'))
 
-# when a poll starts, users can cast votes at any time. 
+# when a poll starts, users can cast votes at any time.
 # however, the owner won't be able to remove voters or choices
 def startPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -321,30 +328,31 @@ def startPoll(request, question_id):
     # check to make sure the owner started the poll
     if request.user != question.question_owner:
         return HttpResponseRedirect(reverse('polls:index'))
-    
+
     # set the poll to start
     question.status = 2
     question.save()
-    
+
     # send notification email
     if question.emailStart:
         email_class = EmailThread(request, question_id, 'start')
         email_class.start()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
-    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 def pausePoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
 
     # check to make sure the owner stopped the poll
     if request.user != question.question_owner:
-        return HttpResponseRedirect(reverse('polls:index'))    
-    
+        return HttpResponseRedirect(reverse('polls:index'))
+
     # set the status to pause
     question.status = 4
     # get winner or allocation, and save it
     if question.question_type == 1: #poll
-        question.winner, question.mixtures_pl1, question.mixtures_pl2, question.mixtures_pl3 = getPollWinner(question)
+        (question.winner, question.mixtures_pl1, question.mixtures_pl2,
+         question.mixtures_pl3) = getPollWinner(question)
     question.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -355,7 +363,7 @@ def resumePoll(request, question_id):
     # check to make sure the owner started the poll
     if request.user != question.question_owner:
         return HttpResponseRedirect(reverse('polls:index'))
-    
+
     allItems = question.item_set.all()
     for item in allItems:
         if item.recently_added:
@@ -365,7 +373,7 @@ def resumePoll(request, question_id):
     question.status = 2
     question.save()
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 # when a poll stops, users can no longer cast votes
 # the final results will be calculated and displayed
 def stopPoll(request, question_id):
@@ -373,20 +381,21 @@ def stopPoll(request, question_id):
 
     # check to make sure the owner stopped the poll
     if request.user != question.question_owner:
-        return HttpResponseRedirect(reverse('polls:index'))    
-    
+        return HttpResponseRedirect(reverse('polls:index'))
+
     # set the status to stop
     question.status = 3
     # get winner or allocation, and save it
     if question.question_type == 1: #poll
-        question.winner, question.mixtures_pl1, question.mixtures_pl2, question.mixtures_pl3 = getPollWinner(question)
+        (question.winner, question.mixtures_pl1, question.mixtures_pl2,
+         question.mixtures_pl3) = getPollWinner(question)
     elif question.question_type == 2: #allocation
         getFinalAllocation(question)
     question.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-# find the winner(s) using the polling algorithm selected earlier 
+# find the winner(s) using the polling algorithm selected earlier
 # Question question
 # return String winnerStr
 def getPollWinner(question):
@@ -395,50 +404,57 @@ def getPollWinner(question):
         return "", ""
 
     (latest_responses, previous_responses) = categorizeResponses(all_responses)
-    candMap = getCandidateMapFromList(list(question.item_set.all()))
-    vote_results, mixtures_pl1, mixtures_pl2, mixtures_pl3 = getVoteResults(latest_responses,candMap)
-    indexVoteResults = question.poll_algorithm - 1
-    current_result = vote_results[indexVoteResults]
+    cand_map = getCandidateMapFromList(list(question.item_set.all()))
+    (vote_results, mixtures_pl1, mixtures_pl2,
+     mixtures_pl3) = getVoteResults(latest_responses, cand_map)
+    index_vote_results = question.poll_algorithm - 1
+    current_result = vote_results[index_vote_results]
 
     winnerStr = ""
-    
+
     #item_set = getCandidateMap(latest_responses[0])
     for index, score in current_result.items():
-        # index 5 uses Simplified Bucklin, where score is rank. A low score means it has a high rank (e.g. rank 1 > rank 2), so the best score is the minimum.
-        # All other indices rank score from highest to lowest, so the best score would be the maximum.  
-        if (score == min(current_result.values()) and indexVoteResults == 5) or (score == max(current_result.values()) and indexVoteResults != 5):
-            #add a comma to separate the winners            
+        # index 5 uses Simplified Bucklin, where score is rank.
+        #   A low score means it has a high rank (e.g. rank 1 > rank 2),
+        #   so the best score is the minimum.
+        # All other indices rank score from highest to lowest, so the best score would be
+        #   the maximum.
+        if ((score == min(current_result.values()) and index_vote_results == 5)
+                or (score == max(current_result.values()) and index_vote_results != 5)):
+            #add a comma to separate the winners
             if winnerStr != "":
                 winnerStr += ", "
             #add the winner
-            winnerStr += candMap[index].item_text
-            
+            winnerStr += cand_map[index].item_text
+
     if hasattr(question, 'finalresult'):
         question.finalresult.delete()
-    result = FinalResult(question=question,timestamp=timezone.now(),result_string="",mov_string="",cand_num=question.item_set.all().count(),node_string="",edge_string="",shade_string="")
+    result = FinalResult(question=question, timestamp=timezone.now(),
+                         result_string="", mov_string="", cand_num=question.item_set.all().count(),
+                         node_string="", edge_string="", shade_string="")
     resultstr = ""
     movstr = ""
     nodestr = ""
     edgestr = ""
     shadestr = ""
-    mov = getMarginOfVictory(latest_responses,candMap)
-    for x in range(0,len(vote_results)):
-        for key,value in vote_results[x].items():
+    mov = getMarginOfVictory(latest_responses, cand_map)
+    for x in range(0, len(vote_results)):
+        for key, value in vote_results[x].items():
             resultstr += str(value)
             resultstr += ","
-    for x in range(0,len(mov)):
+    for x in range(0, len(mov)):
         movstr += str(mov[x])
         movstr += ","
     resultstr = resultstr[:-1]
     movstr = movstr[:-1]
-    (nodes, edges) = parseWmg(latest_responses,candMap)
+    (nodes, edges) = parseWmg(latest_responses, cand_map)
     for node in nodes:
-        for k,v in node.items():
+        for k, v in node.items():
             nodestr += k + "," + str(v) + ";"
         nodestr += "|"
     nodestr = nodestr[:-2]
     for edge in edges:
-        for k,v in edge.items():
+        for k, v in edge.items():
             edgestr += k + "," + str(v) + ";"
         edgestr += "|"
     edgestr = edgestr[:-2]
@@ -454,7 +470,7 @@ def getPollWinner(question):
     result.edge_string = edgestr
     result.shade_string = shadestr
     result.save()
-    
+
     if question.new_vote:
         question.new_vote = False
     question.winner = winnerStr
@@ -462,10 +478,10 @@ def getPollWinner(question):
     question.mixtures_pl2 = json.dumps(mixtures_pl2)
     question.mixtures_pl3 = json.dumps(mixtures_pl3)
     question.save()
-        
+
     return winnerStr, json.dumps(mixtures_pl1), json.dumps(mixtures_pl2), json.dumps(mixtures_pl3)
-    
-    
+
+
 #Interpret result into strings that can be shown on the result page
 #FinalResult finalresult
 #List<List<String>>
@@ -483,7 +499,7 @@ def interpretResult(finalresult):
     if len(resultlist) < candnum*algonum:
         algonum = 7
     if len(resultlist) > 0:
-        for x in range(0,algonum):
+        for x in range(0, algonum):
             tempList = []
             for y in range(x*candnum, (x+1)*candnum):
                 tempList.append(resultlist[y])
@@ -495,7 +511,7 @@ def interpretResult(finalresult):
     shadelist = shadestr.split(";|")
     for item in shadelist:
         tempShades.append(item.split(";"))
-    tempNodes = []
+    temp_nodes = []
     nodelist = nodestr.split(";|")
     for node in nodelist:
         data = {}
@@ -503,7 +519,7 @@ def interpretResult(finalresult):
         for item in l:
             tup = item.split(",")
             data[tup[0]] = tup[1]
-        tempNodes.append(data)
+        temp_nodes.append(data)
     tempEdges = []
     edgelist = edgestr.split(";|")
     if edgestr != "":
@@ -514,13 +530,13 @@ def interpretResult(finalresult):
                 tup = item.split(",")
                 data[tup[0]] = tup[1]
             tempEdges.append(data)
-    return [tempResults, tempMargin, tempShades, tempNodes, tempEdges]
-    
-def recalculateResult(request,question_id):
+    return [tempResults, tempMargin, tempShades, temp_nodes, tempEdges]
+
+def recalculateResult(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     getPollWinner(question)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
 
 # check whether the user clicked 'reset' when ordering preferences
 def isPrefReset(request):
@@ -528,7 +544,7 @@ def isPrefReset(request):
     orderStr = request.GET.get('order', '')
     if orderStr == "null":
         return True
-    return False 
+    return False
 
 # given a list of responses, return the response's selection data
 # List<Response> mostRecentResponse
@@ -538,7 +554,9 @@ def getCurrentSelection(mostRecentResponse):
     if mostRecentResponse.dictionary_set.all().count() > 0:
         responseDict = mostRecentResponse.dictionary_set.all()[0]
     else:
-        responseDict = buildResponseDict(mostRecentResponse,mostRecentResponse.question,getPrefOrder(mostRecentResponse.resp_str, mostRecentResponse.question))
+        responseDict = buildResponseDict(mostRecentResponse, mostRecentResponse.question,
+                                         getPrefOrder(mostRecentResponse.resp_str,
+                                                      mostRecentResponse.question))
     rd = responseDict
     array = []
     for itr in range(mostRecentResponse.question.item_set.all().count()):
@@ -547,14 +565,14 @@ def getCurrentSelection(mostRecentResponse):
         if rd[itr] != 1000:
             array[rd[itr] - 1].append(itr)
     return array
-    
+
 def getUnrankedCandidates(resp):
-    rd = buildResponseDict(resp,resp.question,getPrefOrder(resp.resp_str,resp.question))
+    rd = buildResponseDict(resp, resp.question, getPrefOrder(resp.resp_str, resp.question))
     array = []
     for itr in rd:
         if rd[itr] == 1000:
             array.append(itr)
-            
+
     if len(array) == 0:
         return None
     return array
@@ -565,17 +583,17 @@ class DetailView(generic.DetailView):
     template_name = 'polls/detail.html'
 
     def get_order(self, ctx):
-        otherUserResponses = self.object.response_set.reverse()
-        defaultOrder = list(ctx['object'].item_set.all())
-        random.shuffle(defaultOrder)
-        return defaultOrder
+        other_user_responses = self.object.response_set.reverse()
+        default_order = list(ctx['object'].item_set.all())
+        random.shuffle(default_order)
+        return default_order
         #commented out to improve performance
-        #return getRecommendedOrder(otherUserResponses, self.request, defaultOrder)
+        #return getRecommendedOrder(other_user_responses, self.request, default_order)
 
     def get_context_data(self, **kwargs):
         ctx = super(DetailView, self).get_context_data(**kwargs)
         ctx['lastcomment'] = ""
-        
+
         #Case for anonymous user
         if self.request.user.get_username() == "":
             if isPrefReset(self.request):
@@ -584,13 +602,14 @@ class DetailView(generic.DetailView):
             # check the anonymous voter
             if 'anonymousvoter' in self.request.session and 'anonymousid' in self.request.session:
                 # sort the responses from latest to earliest
-                currentAnonymousResponses = self.object.response_set.filter(anonymous_id = self.request.session['anonymousid']).reverse()
-                if len(currentAnonymousResponses) > 0:
+                anon_id = self.request.session['anonymousid']
+                curr_anon_resps = self.object.response_set.filter(anonymous_id=anon_id).reverse()
+                if len(curr_anon_resps) > 0:
                     # get the voter's most recent selection
-                    mostRecentAnonymousResponse = currentAnonymousResponses[0]
+                    mostRecentAnonymousResponse = curr_anon_resps[0]
                     if mostRecentAnonymousResponse.comment:
                         ctx['lastcomment'] = mostRecentAnonymousResponse.comment
-                    ctx['currentSelection'] = getCurrentSelection(currentAnonymousResponses[0])
+                    ctx['currentSelection'] = getCurrentSelection(curr_anon_resps[0])
             else:
                 # load choices in the default order
                 ctx['items'] = self.object.item_set.all()
@@ -598,7 +617,7 @@ class DetailView(generic.DetailView):
 
         # Get the responses for the current logged-in user from latest to earliest
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
-        
+
         if len(currentUserResponses) > 0:
             if currentUserResponses[0].comment:
                 ctx['lastcomment'] = currentUserResponses[0].comment
@@ -607,9 +626,9 @@ class DetailView(generic.DetailView):
         if isPrefReset(self.request):
             ctx['items'] = self.get_order(ctx)
             return ctx
-        
+
         # check if the user submitted a vote earlier and display that for modification
-        if len(currentUserResponses) > 0: 
+        if len(currentUserResponses) > 0:
             ctx['currentSelection'] = getCurrentSelection(currentUserResponses[0])
             items = []
             for item in ctx['currentSelection']:
@@ -647,26 +666,30 @@ class PollInfoView(generic.DetailView):
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()
-        
+
         # display this user's history
-        currentUserResponses = self.object.response_set.filter(user=self.request.user,active=1).order_by('-timestamp')
-        ctx['user_latest_responses'] = getSelectionList([currentUserResponses[0]]) if (len(currentUserResponses) > 0) else None
+        currentUserResponses = self.object.response_set.filter(user=self.request.user,
+                                                               active=1).order_by('-timestamp')
+        if len(currentUserResponses) > 0:
+            ctx['user_latest_responses'] = getSelectionList([currentUserResponses[0]])
         ctx['user_previous_responses'] = getSelectionList(currentUserResponses[1:])
-        
+
         # get history of all users
         all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')
         (latest_responses, previous_responses) = categorizeResponses(all_responses)
         ctx['latest_responses'] = getSelectionList(latest_responses)
-        ctx['previous_responses'] = getSelectionList(previous_responses)    
-        
+        ctx['previous_responses'] = getSelectionList(previous_responses)
+
         # get deleted votes
-        deleted_responses = self.object.response_set.reverse().filter(active=0).order_by('-timestamp')
-        (latest_deleted_responses, previous_deleted_responses) = categorizeResponses(deleted_responses)
-        ctx['latest_deleted_responses'] = getSelectionList(latest_deleted_responses)
-        ctx['previous_deleted_responses'] = getSelectionList(previous_deleted_responses)
-        
+        deleted_resps = self.object.response_set.reverse().filter(active=0).order_by('-timestamp')
+        (latest_deleted_resps,
+         previous_deleted_resps) = categorizeResponses(deleted_resps)
+        ctx['latest_deleted_resps'] = getSelectionList(latest_deleted_resps)
+        ctx['previous_deleted_resps'] = getSelectionList(previous_deleted_resps)
+
         if self.object.question_voters.all().count() > 0:
-            progressPercentage = len(latest_responses) / self.object.question_voters.all().count() * 100
+            progressPercentage = len(latest_responses) / self.object.question_voters.all().count()
+            progressPercentage = progressPercentage * 100
             ctx['progressPercentage'] = progressPercentage
         return ctx
     def get_queryset(self):
@@ -692,8 +715,8 @@ class VoteResultsView(generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(VoteResultsView, self).get_context_data(**kwargs)
         #print("page accessed")
-        candMap = getCandidateMapFromList(list(self.object.item_set.all()))
-        ctx['cand_map'] = candMap# if (len(latest_responses) > 0) else None
+        cand_map = getCandidateMapFromList(list(self.object.item_set.all()))
+        ctx['cand_map'] = cand_map# if (len(latest_responses) > 0) else None
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['algorithm_links'] = getListAlgorithmLinks()
         if self.object.status != 4 and self.object.new_vote == True:
@@ -721,19 +744,19 @@ class VoteResultsView(generic.DetailView):
         #else:
             #all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')
             #(latest_responses, previous_responses) = categorizeResponses(all_responses)
-            #voteResults, mixtures = getVoteResults(latest_responses,candMap) 
+            #voteResults, mixtures = getVoteResults(latest_responses, cand_map)
             #resultlist = []
             #for r in voteResults:
             #    resultlist.append(r.values())
             #ctx['vote_results'] = resultlist
             #ctx['shade_values'] = getShadeValues(voteResults)
-            #(nodes, edges) = parseWmg(latest_responses,candMap)
+            #(nodes, edges) = parseWmg(latest_responses, cand_map)
             #ctx['wmg_nodes'] = nodes
             #ctx['wmg_edges'] = edges
-            
-            #ctx['margin_victory'] = getMarginOfVictory(latest_responses,candMap)
+
+            #ctx['margin_victory'] = getMarginOfVictory(latest_responses, cand_map)
             #ctx['mixtures_pl'] = mixtures[0]
-        
+
         ctx['mixtures_pl1'] = mixtures_pl1[0]
         ctx['mixtures_pl2'] = mixtures_pl2
         ctx['mixtures_pl3'] = mixtures_pl3
@@ -754,7 +777,7 @@ class VoteResultsView(generic.DetailView):
             if len(resultlist) < candnum*algonum:
                 algonum = 7
             if len(resultlist) > 0:
-                for x in range(0,algonum):
+                for x in range(0, algonum):
                     tempList = []
                     for y in range(x*candnum, (x+1)*candnum):
                         tempList.append(resultlist[y])
@@ -770,23 +793,34 @@ class VoteResultsView(generic.DetailView):
 # get a list of algorithms supported by the system
 # return List<String>
 def getListPollAlgorithms():
-    return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin", "Copeland", "Maximin", "STV", "Baldwin", "Coombs"]
+    return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin",
+            "Copeland", "Maximin", "STV", "Baldwin", "Coombs"]
 
 def getListAlgorithmLinks():
-    return ["https://en.wikipedia.org/wiki/Plurality_voting_method","https://en.wikipedia.org/wiki/Borda_count","","","https://en.wikipedia.org/wiki/Bucklin_voting","https://en.wikipedia.org/wiki/Copeland%27s_method",
-    "https://en.wikipedia.org/wiki/Minimax_Condorcet","https://en.wikipedia.org/wiki/Single_transferable_vote","https://en.wikipedia.org/wiki/Nanson%27s_method#Baldwin_method","https://en.wikipedia.org/wiki/Coombs%27_method"]
-    
+    return ["https://en.wikipedia.org/wiki/Plurality_voting_method",
+            "https://en.wikipedia.org/wiki/Borda_count", "", "",
+            "https://en.wikipedia.org/wiki/Bucklin_voting",
+            "https://en.wikipedia.org/wiki/Copeland%27s_method",
+            "https://en.wikipedia.org/wiki/Minimax_Condorcet",
+            "https://en.wikipedia.org/wiki/Single_transferable_vote",
+            "https://en.wikipedia.org/wiki/Nanson%27s_method#Baldwin_method",
+            "https://en.wikipedia.org/wiki/Coombs%27_method"]
+
 # get a list of allocation methods
 # return List<String>
 def getAllocMethods():
-    return ["Serial dictatorship: early voters first", "Serial dictatorship: late voter first", "Manually allocate"]
+    return ["Serial dictatorship: early voters first",
+            "Serial dictatorship: late voter first", "Manually allocate"]
 
 # get a list of visibility settings
 # return List<String>
 def getViewPreferences():
-    return ["Everyone can see all votes at all times", "Everyone can see all votes", "Only show the names of voters", "Only show number of voters", "Everyone can only see his/her own vote", "All votes will be shown, but usernames will be hidden"]
+    return ["Everyone can see all votes at all times",
+            "Everyone can see all votes", "Only show the names of voters",
+            "Only show number of voters", "Everyone can only see his/her own vote",
+            "All votes will be shown, but usernames will be hidden"]
 
-    
+
 def getWinnersFromIDList(idList):
     winners = {}
     for i in idList:
@@ -796,33 +830,34 @@ def getWinnersFromIDList(idList):
         except Question.DoesNotExist:
             pass
     return winners
-    
+
 def getGMPollIDLIst():
-    return [239,219,220,223,227,229,241,242,243,230,240,224,228,238,232,233,234,235,236,222,226,244,245]
-    
+    return [239, 219, 220, 223, 227, 229, 241, 242, 243, 230, 240, 224, 228, 238,
+            232, 233, 234, 235, 236, 222, 226, 244, 245]
+
 # build a graph of nodes and edges from a 2d dictionary
 # List<Response> latest_responses
 # return (List<Dict> nodes, List<Dict> edges)
-def parseWmg(latest_responses,candMap):
-    pollProfile = getPollProfile(latest_responses,candMap)
+def parseWmg(latest_responses, cand_map):
+    pollProfile = getPollProfile(latest_responses, cand_map)
     if pollProfile == None:
         return ([], [])
-   
+
     #make sure no incomplete results are in the votes
     if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
-        return ([], [])  
+        return ([], [])
 
     # make sure there's at least one response
     if len(latest_responses) == 0:
         return ([], [])
-        
+
     # get nodes (the options)
     nodes = []
-    for rowIndex in candMap:
+    for rowIndex in cand_map:
         data = {}
         data['id'] = rowIndex
         data['value'] = 1
-        data['label'] = candMap[rowIndex].item_text
+        data['label'] = cand_map[rowIndex].item_text
         nodes.append(data)
 
     # get edges from the weighted majority graph
@@ -855,13 +890,13 @@ def getSelectionList(responseList):
 def categorizeResponses(all_responses):
     latest_responses = []
     previous_responses = []
-    
+
     if len(all_responses) > 0:
-        #the first response must be the most recent 
-        latest_responses.append(all_responses[0])   
-    
+        #the first response must be the most recent
+        latest_responses.append(all_responses[0])
+
     others = all_responses[1:]
-    
+
     #the outer loop goes through all the responses
     for response1 in others:
         #for anonymous users, check anonymous name instead of username
@@ -874,8 +909,8 @@ def categorizeResponses(all_responses):
                         previous_responses.append(response1)
                         break
             if add:
-                latest_responses.append(response1)  
-                    
+                latest_responses.append(response1)
+
         else:
             add = True
             #check if the user has voted multiple times
@@ -888,55 +923,57 @@ def categorizeResponses(all_responses):
 
             #this is the most recent vote
             if add:
-                latest_responses.append(response1)   
-    
+                latest_responses.append(response1)
+
     return (latest_responses, previous_responses)
 
 # get a list of options for this poll
 # Response response
-# return Dict<int, Item> candMap
+# return Dict<int, Item> cand_map
 def getCandidateMap(response):
     d = {}
     if response.dictionary_set.all().count() > 0:
         d = Dictionary.objects.get(response=response)
     else:
-        d = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
+        d = buildResponseDict(response, response.question,
+                              getPrefOrder(response.resp_str, response.question))
     d = interpretResponseDict(d)
-    candMap = {}
+    cand_map = {}
 
     counter = 0
     for item in d.items():
-        candMap[counter] = item[0]
+        cand_map[counter] = item[0]
         counter += 1
-    return candMap
+    return cand_map
 
 def getCandidateMapFromList(candlist):
-    candMap = {}
+    cand_map = {}
     counter = 0
     for item in candlist:
-        candMap[counter] = item
+        cand_map[counter] = item
         counter += 1
-    return candMap
+    return cand_map
 
 #convert a user's preference into a 2d map
 # Response response
-# return Dict<int, Dict<int, int>> prefGraph
-def getPreferenceGraph(response,candMap):
-    prefGraph = {}
+# return Dict<int, Dict<int, int>> pref_graph
+def getPreferenceGraph(response, cand_map):
+    pref_graph = {}
     dictionary = {}
     if response.dictionary_set.all().count() > 0:
         dictionary = Dictionary.objects.get(response=response)
     else:
-        dictionary = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
+        dictionary = buildResponseDict(response, response.question,
+                                       getPrefOrder(response.resp_str, response.question))
     dictionary = interpretResponseDict(dictionary)
-    for cand1Index in candMap:
+    for cand1Index in cand_map:
         tempDict = {}
-        for cand2Index in candMap:
+        for cand2Index in cand_map:
             if cand1Index == cand2Index:
                 continue
-            
-            cand1 = candMap[cand1Index]
-            cand2 = candMap[cand2Index]
+
+            cand1 = cand_map[cand1Index]
+            cand2 = cand_map[cand2Index]
             cand1Rank = dictionary.get(cand1)
             cand2Rank = dictionary.get(cand2)
             #lower number is better (i.e. rank 1 is better than rank 2)
@@ -946,27 +983,27 @@ def getPreferenceGraph(response,candMap):
                 tempDict[cand2Index] = -1
             else:
                 tempDict[cand2Index] = 0
-        prefGraph[cand1Index] = tempDict
+        pref_graph[cand1Index] = tempDict
 
-    return prefGraph
+    return pref_graph
 
 # initialize a profile object using all the preferences
 # List<Response> latest_responses
 # return Profile object
-def getPollProfile(latest_responses,candMap):
+def getPollProfile(latest_responses, cand_map):
     if len(latest_responses) == 0:
         return None
-    
-    prefList = []
+
+    pref_list = []
     for response in latest_responses:
-        prefGraph = getPreferenceGraph(response,candMap)
-        userPref = Preference(prefGraph)
-        prefList.append(userPref)
-    return Profile(candMap, prefList)
-    
-def translateWinnerList(winners, candMap):
+        pref_graph = getPreferenceGraph(response, cand_map)
+        userPref = Preference(pref_graph)
+        pref_list.append(userPref)
+    return Profile(cand_map, pref_list)
+
+def translateWinnerList(winners, cand_map):
     result = {}
-    for cand in candMap.keys():
+    for cand in cand_map.keys():
         if cand in winners:
             result[cand] = 1
         else:
@@ -976,8 +1013,8 @@ def translateWinnerList(winners, candMap):
 #calculate the results of the vote using different algorithms
 # List<Response> latest_responses
 # return a List<Dictionary<Double>>
-def getVoteResults(latest_responses,candMap):
-    pollProfile = getPollProfile(latest_responses,candMap)
+def getVoteResults(latest_responses, cand_map):
+    pollProfile = getPollProfile(latest_responses, cand_map)
     if pollProfile == None:
         return []
 
@@ -986,52 +1023,56 @@ def getVoteResults(latest_responses,candMap):
         return []
 
     scoreVectorList = []
-    scoreVectorList.append(MechanismPlurality().getCandScoresMap(pollProfile))  
+    scoreVectorList.append(MechanismPlurality().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismBorda().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismVeto().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismKApproval(3).getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismSimplifiedBucklin().getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismCopeland(1).getCandScoresMap(pollProfile))
     scoreVectorList.append(MechanismMaximin().getCandScoresMap(pollProfile))
-    
+
     #STV, Baldwin, Coombs give list of integers as output
     stv = MechanismSTV().STVwinners(pollProfile)
     baldwin = MechanismBaldwin().baldwin_winners(pollProfile)
     coombs = MechanismCoombs().coombs_winners(pollProfile)
-    scoreVectorList.append(translateWinnerList(stv,candMap))
-    scoreVectorList.append(translateWinnerList(baldwin,candMap))
-    scoreVectorList.append(translateWinnerList(coombs,candMap))
+    scoreVectorList.append(translateWinnerList(stv, cand_map))
+    scoreVectorList.append(translateWinnerList(baldwin, cand_map))
+    scoreVectorList.append(translateWinnerList(coombs, cand_map))
 
     #for Mixtures
     rankings = pollProfile.getOrderVectorsEGMM()
     m = len(rankings[0])
-    mixtures_pl1 = egmm_mixpl(rankings, m, k = 1, itr = 10).tolist()
-    mixtures_pl2 = egmm_mixpl(rankings, m, k = 2, itr = 10).tolist()
-    mixtures_pl3 = egmm_mixpl(rankings, m, k = 3, itr = 10).tolist()
-    #gmm = GMMMixPLAggregator(list(pollProfile.candMap.values()), use_matlab=False)
-    
+    mixtures_pl1 = egmm_mixpl(rankings, m, k=1, itr=10).tolist()
+    mixtures_pl2 = egmm_mixpl(rankings, m, k=2, itr=10).tolist()
+    mixtures_pl3 = egmm_mixpl(rankings, m, k=3, itr=10).tolist()
+    #gmm = GMMMixPLAggregator(list(pollProfile.cand_map.values()), use_matlab=False)
+
     return scoreVectorList, mixtures_pl1, mixtures_pl2, mixtures_pl3
-    
+
 def calculatePreviousResults(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.voteresult_set.clear()
-    candMap = getCandidateMapFromList(list(question.item_set.all()))
+    cand_map = getCandidateMapFromList(list(question.item_set.all()))
     previous_winners = question.oldwinner_set.all()
     for pw in previous_winners:
-        
-        result = VoteResult(question=question,timestamp=pw.response.timestamp,result_string="",mov_string="",cand_num=question.item_set.all().count())
+
+        result = VoteResult(question=question, timestamp=pw.response.timestamp,
+                            result_string="", mov_string="",
+                            cand_num=question.item_set.all().count())
         result.save()
         resultstr = ""
         movstr = ""
-        responses = question.response_set.reverse().filter(timestamp__range=[datetime.date(1899, 12, 30), pw.response.timestamp],active=1)
+        responses = question.response_set.reverse()
+        responses = responses.filter(timestamp__range=[datetime.date(1899, 12, 30),
+                                                       pw.response.timestamp], active=1)
         (lr, pr) = categorizeResponses(responses)
-        scorelist, mixtures_pl1, mixtures_pl2, mixtures_pl3 = getVoteResults(lr,candMap)
-        mov = getMarginOfVictory(lr,candMap)
-        for x in range(0,len(scorelist)):
-            for key,value in scorelist[x].items():
+        scorelist, mixtures_pl1, mixtures_pl2, mixtures_pl3 = getVoteResults(lr, cand_map)
+        mov = getMarginOfVictory(lr, cand_map)
+        for x in range(0, len(scorelist)):
+            for key, value in scorelist[x].items():
                 resultstr += str(value)
                 resultstr += ","
-        for x in range(0,len(mov)):
+        for x in range(0, len(mov)):
             movstr += str(mov[x])
             movstr += ","
         resultstr = resultstr[:-1]
@@ -1040,7 +1081,7 @@ def calculatePreviousResults(request, question_id):
         result.mov_string = movstr
         result.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
 
 # return lighter (+lum) or darker (-lum) color as a hex string
 # pass original hex string and luminosity factor, e.g. -0.1 = 10% darker
@@ -1049,14 +1090,14 @@ def calculatePreviousResults(request, question_id):
 def colorLuminance(hexVal, lum):
     #convert to decimal and change luminosity
     rgb = "#"
-    for i in range(0, 3): 
+    for i in range(0, 3):
         c = int(hexVal[i * 2 : i * 2 + 2], 16)
         c = round(min(max(0, c + (c * float(lum))), 255))
         c = hex(int(c))
         rgb += ("00" + str(c))[len(str(c)):]
     return rgb
 
-# get a range of colors from green to red 
+# get a range of colors from green to red
 # List<int> scoreVectorList
 # return a List<List<String>> shadeValues
 def getShadeValues(scoreVectorList):
@@ -1077,22 +1118,24 @@ def getShadeValues(scoreVectorList):
                 newRow.append("#" + greenColor)
                 continue
 
-            # make the colors closer to the left lighter (higher value) and toward the right darker (lower value) 
-            
-            #the 5th row is Simplified Bucklin (lower score is better so reverse the colorings for this row)
+            # make the colors closer to the left lighter (higher value) and toward the right
+            #   darker (lower value)
+
+            # the 5th row is Simplified Bucklin (lower score is better so reverse the colorings
+            #   for this row)
             counter = len(shadeValues)
             if counter != 4:
                 luminance = 1 - rank / float(highestRank)
             else:
                 luminance = rank / float(highestRank)
-                
+
             # set lowest rank to white
             if luminance == 1:
                 newRow.append("#" + whiteColor)
                 continue
             if luminance <= 0.5:
                 luminance /= 2.0
-            
+
             newRow.append(colorLuminance(greenColor, luminance))
 
         shadeValues.append(newRow)
@@ -1101,19 +1144,19 @@ def getShadeValues(scoreVectorList):
 # find the minimum number of votes needed to change the poll results
 # List<Response> latest_responses
 # return List<int> marginList
-def getMarginOfVictory(latest_responses,candMap):
-    pollProfile = getPollProfile(latest_responses,candMap)
+def getMarginOfVictory(latest_responses, cand_map):
+    pollProfile = getPollProfile(latest_responses, cand_map)
     if pollProfile == None:
         return []
-    
+
     #make sure no incomplete results are in the votes
     if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
         return []
     marginList = []
-    marginList.append(MoVPlurality(pollProfile))  
+    marginList.append(MoVPlurality(pollProfile))
     marginList.append(MoVBorda(pollProfile))
     marginList.append(MoVVeto(pollProfile))
-    marginList.append(MoVkApproval(pollProfile,3))
+    marginList.append(MoVkApproval(pollProfile, 3))
     #if len(latest_responses) > 1:
      #   marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
     #marginList.append("-")
@@ -1122,79 +1165,79 @@ def getMarginOfVictory(latest_responses,candMap):
 # used to help find the recommended order
 # User user
 # User otherUser
-# return double KT
+# return double kendall_tau
 def getKTScore(user, otherUser):
-    KT = 0
+    kendall_tau = 0
     num = 0
     questions = Question.objects.all().filter(question_voters=otherUser).filter(question_voters=user)
     for q in questions:
         userResponse = q.response_set.filter(user=user).reverse()
-        otherUserResponse = q.response_set.filter(user=otherUser).reverse()
-        if len(userResponse) > 0 and len(otherUserResponse) > 0:
+        other_user_response = q.response_set.filter(user=otherUser).reverse()
+        if len(userResponse) > 0 and len(other_user_response) > 0:
             num = num + 1
             userResponse = get_object_or_404(Dictionary, response=userResponse[0])
-            otherUserResponse = get_object_or_404(Dictionary, response=otherUserResponse[0])
-            KT += getKendallTauScore(userResponse, otherUserResponse)
-    
+            other_user_response = get_object_or_404(Dictionary, response=other_user_response[0])
+            kendall_tau += getKendallTauScore(userResponse, other_user_response)
+
     if num != 0:
-        KT /= num
-    if KT == 0:
-        KT = .25
+        kendall_tau /= num
+    if kendall_tau == 0:
+        kendall_tau = .25
     else:
-        KT = 1/(1 + KT)
-    return KT    
+        kendall_tau = 1/(1 + kendall_tau)
+    return kendall_tau
 
 # use other responses to recommend a response order for you
 # responses are sorted from latest to earliest
 # List<Response> response
 # request request
-# List<Item> defaultOrder
+# List<Item> default_order
 # return List<Item> final_list
-def getRecommendedOrder(otherUserResponses, request, defaultOrder):  
+def getRecommendedOrder(other_user_responses, request, default_order):
     # no responses
-    if len(otherUserResponses) == 0:
-        return defaultOrder
-    
+    if len(other_user_responses) == 0:
+        return default_order
+
     # if the poll owner added more choices during the poll, then reset using the default order
-    itemsLastResponse = len(getCandidateMap(otherUserResponses[0])) 
-    itemsCurrent = defaultOrder.count()
+    itemsLastResponse = len(getCandidateMap(other_user_responses[0]))
+    itemsCurrent = default_order.count()
     if itemsLastResponse != itemsCurrent:
-        return defaultOrder    
-    
+        return default_order
+
     # iterate through all the responses
     preferences = []
-    for resp in otherUserResponses:
+    for resp in other_user_responses:
         user = request.user
         otherUser = resp.user
-        
+
         # get current user and other user preferences
         KT = getKTScore(user, otherUser)
-        prefGraph = getPreferenceGraph(resp,candMap)
-        preferences.append(Preference(prefGraph, KT))
-    
-    candMap = getCandidateMap(otherUserResponses[0])        
-    pollProfile = Profile(candMap, preferences)
-    
-    # incomplete answers 
-    if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
-        return defaultOrder
+        pref_graph = getPreferenceGraph(resp, cand_map)
+        preferences.append(Preference(pref_graph, KT))
 
-    # return the order based off of ranking 
+    cand_map = getCandidateMap(other_user_responses[0])
+    pollProfile = Profile(cand_map, preferences)
+
+    # incomplete answers
+    if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
+        return default_order
+
+    # return the order based off of ranking
     pref = MechanismBorda().getCandScoresMap(pollProfile)
     l = list(sorted(pref.items(), key=lambda kv: (kv[1], kv[0])))
     final_list = []
     for p in reversed(l):
-        final_list.append(candMap[p[0]])
-    return final_list    
- 
+        final_list.append(cand_map[p[0]])
+    return final_list
+
 # function to add voter to voter list (invite only)
 # can invite new voters at any time
 def addVoter(request, question_id):
-    question    = get_object_or_404(Question, pk=question_id)
+    question = get_object_or_404(Question, pk=question_id)
     creator_obj = User.objects.get(id=question.question_owner_id)
 
     newVoters = request.POST.getlist('voters')
-    # send an invitation email 
+    # send an invitation email
     email = request.POST.get('email') == 'email'
     question.emailInvite = email
     question.save()
@@ -1213,14 +1256,14 @@ def addVoter(request, question_id):
 # should only be done before a poll starts
 def removeVoter(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    
+
     newVoters = request.POST.getlist('voters')
     email = request.POST.get('email') == 'email'
     question.emailDelete = email
     question.save()
     if email:
         email_class = EmailThread(request, question_id, 'remove')
-        email_class.start()   
+        email_class.start()
     for voter in newVoters:
         voterObj = User.objects.get(username=voter)
         question.question_voters.remove(voterObj.id)
@@ -1249,9 +1292,10 @@ def setPollingSettings(request, question_id):
     # set the poll algorithm or allocation method using an integer
     if 'pollpreferences' in request.POST:
         question.poll_algorithm = request.POST['pollpreferences']
-    
+
     # set the visibility settings, how much information should be shown to the user
-    # options range from showing everything (most visibility) to showing only the user's vote (least visibility)        
+    # options range from showing everything (most visibility) to showing only the user's vote
+    #   (least visibility)
     displayChoice = request.POST['viewpreferences']
     if displayChoice == "always":
         question.display_pref = 0
@@ -1269,14 +1313,14 @@ def setPollingSettings(request, question_id):
     if creatorChoice == "1":
         question.creator_pref = 1
     else:
-        question.creator_pref= 2
+        question.creator_pref = 2
     question.save()
     request.session['setting'] = 2
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # poll is open to anonymous voters
-def changeType(request,question_id):
+def changeType(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     openstring = request.POST['openpoll']
     if openstring == "anon":
@@ -1289,9 +1333,9 @@ def changeType(request,question_id):
     request.session['setting'] = 4
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
 # poll is closed to anonymous voters
-def closePoll(request,question_id):
+def closePoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.open = 0
     question.save()
@@ -1300,15 +1344,15 @@ def closePoll(request,question_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # poll is closed to anonymous voters, open to people logged in
-def uninvitedPoll(request,question_id):
+def uninvitedPoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     question.open = 2
     question.save()
     request.session['setting'] = 4
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
-def duplicatePoll(request,question_id):
+
+def duplicatePoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     title = question.question_text + "_COPY"
     desc = question.question_desc
@@ -1316,35 +1360,39 @@ def duplicatePoll(request,question_id):
     user = request.user
     items = question.item_set.all()
     new_question = Question(question_text=title, question_desc=desc,
-            pub_date=timezone.now(), question_owner=user,
-            display_pref=user.userprofile.displayPref, emailInvite=user.userprofile.emailInvite,
-            emailDelete=user.userprofile.emailDelete, emailStart=user.userprofile.emailStart,
-            emailStop=user.userprofile.emailStop, creator_pref=1)
+                            pub_date=timezone.now(), question_owner=user,
+                            display_pref=user.userprofile.displayPref,
+                            emailInvite=user.userprofile.emailInvite,
+                            emailDelete=user.userprofile.emailDelete,
+                            emailStart=user.userprofile.emailStart,
+                            emailStop=user.userprofile.emailStop, creator_pref=1)
     new_question.save()
     new_question.question_voters.add(*voters)
     new_items = []
     for item in items:
-        new_item = Item(question=new_question,item_text=item.item_text,item_description=item.item_description,timestamp=timezone.now(),image=item.image,imageURL=item.imageURL)
+        new_item = Item(question=new_question, item_text=item.item_text,
+                        item_description=item.item_description, timestamp=timezone.now(),
+                        image=item.image, imageURL=item.imageURL)
         new_item.save()
         new_items.append(new_item)
     new_question.item_set.add(*new_items)
     setupEmail(new_question)
     return HttpResponseRedirect(reverse('polls:regular_polls'))
-    
-def deleteUserVotes(request,response_id):
-    response = get_object_or_404(Response,pk=response_id)
+
+def deleteUserVotes(request, response_id):
+    response = get_object_or_404(Response, pk=response_id)
     user = response.user
     question = response.question
     question.response_set.filter(user=user).update(active=0)
     request.session['setting'] = 6
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
-def restoreUserVotes(request,response_id):
-    response = get_object_or_404(Response,pk=response_id)
+
+def restoreUserVotes(request, response_id):
+    response = get_object_or_404(Response, pk=response_id)
     user = response.user
     question = response.question
-    question.response_set.filter(user=user,active=0).update(active=1)
+    question.response_set.filter(user=user, active=0).update(active=1)
     request.session['setting'] = 7
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1352,7 +1400,7 @@ def restoreUserVotes(request,response_id):
 # view for ordering voters for allocation
 class AllocationOrder(generic.DetailView):
     model = Question
-    template_name = 'polls/allocation_order.html' 
+    template_name = 'polls/allocation_order.html'
     def get_context_data(self, **kwargs):
         ctx = super(AllocationOrder, self).get_context_data(**kwargs)
         currentAllocationOrder = self.object.allocationvoter_set.all()
@@ -1360,13 +1408,13 @@ class AllocationOrder(generic.DetailView):
         if tempOrderStr == "null":
             ctx['question_voters'] = self.object.question_voters.all()
             return ctx
-        
+
         # check if the user submitted a vote earlier and display that for modification
         if len(currentAllocationOrder) > 0:
             ctx['currentSelection'] = currentAllocationOrder
 
         ctx['question_voters'] = self.object.question_voters.all()
-        return ctx    
+        return ctx
     def get_queryset(self):
         """
         Excludes any questions that aren't published yet.
@@ -1382,12 +1430,12 @@ def setAllocationOrder(request, question_id):
     prefOrder = getPrefOrder(orderStr, question)
     if orderStr == "":
         # the user must rank all voters
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
-        
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
     prefOrder = orderStr.split(",")
     if len(prefOrder) != len(question.question_voters.all()):
         # the user must rank all voters
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     #reset allocation order
     for voter in question.allocationvoter_set.all():
@@ -1400,14 +1448,16 @@ def setAllocationOrder(request, question_id):
         if arrayIndex != -1:
             user = question.question_voters.all()[arrayIndex]
             # add pref to list
-            voter, created = AllocationVoter.objects.get_or_create(question=question, user=user, response=None)
-            voter.save()  
+            voter, created = AllocationVoter.objects.get_or_create(question=question,
+                                                                   user=user, response=None)
+            voter.save()
 
-        item_num += 1    
-    
+        item_num += 1
+
     return HttpResponseRedirect(reverse('polls:viewAllocationOrder', args=(question.id,)))
 
-# if the allocation mechanism is early-first or late-first serial dictatorship, assign the order based off of latest response time
+# if the allocation mechanism is early-first or late-first serial dictatorship,
+#   assign the order based off of latest response time
 # Question question
 # List<Response> latest_responses
 def getInitialAllocationOrder(question, latest_responses):
@@ -1416,18 +1466,19 @@ def getInitialAllocationOrder(question, latest_responses):
 
     # assign the default allocation order from earliest to latest
     counter = len(question.item_set.all())
-    for user_response in (list(reversed(latest_responses))):
+    for user_response in list(reversed(latest_responses)):
         # no more items left to allocate
         if counter == 0:
             return
 
         counter -= 1
         # create the object
-        voter, created = AllocationVoter.objects.get_or_create(question=user_response.question, user=user_response.user)
+        voter, created = AllocationVoter.objects.get_or_create(question=user_response.question,
+                                                               user=user_response.user)
         # save the most recent response
         voter.response = user_response
-        voter.save()     
-    return 
+        voter.save()
+    return
 
 # get the current allocation order for this poll
 # if this poll is part of a multi-poll, then it must consider the order of the previous subpolls
@@ -1441,7 +1492,7 @@ def getCurrentAllocationOrder(question, latest_responses):
         multipoll = question.multipoll_set.all()[0]
         firstSubpoll = multipoll.questions.all()[0]
         allocation_order = firstSubpoll.allocationvoter_set.all()
-        
+
         # fix the allocation order from the first subpoll
         if len(allocation_order) == 0:
             # get allocation order
@@ -1449,7 +1500,8 @@ def getCurrentAllocationOrder(question, latest_responses):
         else:
             # copy a new allocation order based off of the first subpoll
             for alloc_item in allocation_order:
-                voter, created = AllocationVoter.objects.get_or_create(question=question, user=alloc_item.user)
+                voter, created = AllocationVoter.objects.get_or_create(question=question,
+                                                                       user=alloc_item.user)
                 voter.response = question.response_set.reverse().filter(user=alloc_item.user)[0]
                 voter.save()
         allocation_order = question.allocationvoter_set.all()
@@ -1458,10 +1510,10 @@ def getCurrentAllocationOrder(question, latest_responses):
         allocation_order = question.allocationvoter_set.all()
 
         # calculate initial order if there is none or if new voters are added during the poll
-        if len(allocation_order) == 0 or len(allocation_order) != len(latest_responses):    
+        if len(allocation_order) == 0 or len(allocation_order) != len(latest_responses):
             getInitialAllocationOrder(question, latest_responses)
-            allocation_order = question.allocationvoter_set.all()    
-    
+            allocation_order = question.allocationvoter_set.all()
+
     return allocation_order
 
 # order user responses similar to the allocation order
@@ -1472,16 +1524,16 @@ def getResponseOrder(allocation_order):
     for order_item in allocation_order:
         question = order_item.question
         user = order_item.user
-        
+
         # skip if no vote
         if question.response_set.reverse().filter(user=user).count() == 0:
-            continue        
+            continue
 
         # save response
         response = question.response_set.reverse().filter(user=user)[0]
         order_item.response = response
         order_item.save()
-        
+
         # add to the list
         response_set.append(response)
     return response_set
@@ -1491,32 +1543,33 @@ def getResponseOrder(allocation_order):
 # Dict<String, String> allocationResults
 def assignAllocation(question, allocationResults):
     for username, item in allocationResults.items():
-        currentUser = User.objects.filter(username = username)
-        allocatedItem = question.item_set.get(item_text = item)
+        currentUser = User.objects.filter(username=username)
+        allocatedItem = question.item_set.get(item_text=item)
         mostRecentResponse = question.response_set.reverse().filter(user=currentUser)[0]
         mostRecentResponse.allocation = allocatedItem
         mostRecentResponse.save()
     return
 
-# organize the data into items and responses (most recent) and then apply allocation algorithms 
+# organize the data into items and responses (most recent) and then apply allocation algorithms
 # to get the final result
 # Question question
 def getFinalAllocation(question):
     # the latest and previous responses are from latest to earliest
-    (latest_responses, previous_responses) = categorizeResponses(question.response_set.filter(active=1).order_by('-timestamp'))
+    response_set = question.response_set.filter(active=1).order_by('-timestamp')
+    (latest_responses, previous_responses) = categorizeResponses(response_set)
 
     # no responses, so stop here
     if len(latest_responses) == 0:
         return
-    
+
     allocation_order = getCurrentAllocationOrder(question, latest_responses)
-    response_set = getResponseOrder(allocation_order)   # get the list of responses in the specified order 
+    response_set = getResponseOrder(allocation_order) # get list of responses in specified order
 
     # make items and responses generic
     item_set = latest_responses[0].question.item_set.all()
     itemList = []
     for item in item_set:
-        itemList.append(item.item_text)          
+        itemList.append(item.item_text)
     responseList = []
     for response in response_set:
         tempDict = {}
@@ -1524,17 +1577,19 @@ def getFinalAllocation(question):
         if response.dictionary_set.all().count() > 0:
             dictionary = Dictionary.objects.get(response=response)
         else:
-            dictionary = buildResponseDict(response,response.question,getPrefOrder(response.resp_str, response.question))
+            dictionary = buildResponseDict(response, response.question,
+                                           getPrefOrder(response.resp_str,
+                                                        response.question))
         dictionary = interpretResponseDict(dictionary)
         for item, rank in dictionary.items():
             tempDict[item.item_text] = rank
         responseList.append((response.user.username, tempDict))
-        
-    allocationResults = allocation(question.poll_algorithm, itemList, responseList)
-    assignAllocation(question, allocationResults)    
 
-            
-# function to get preference order from a string 
+    allocationResults = allocation(question.poll_algorithm, itemList, responseList)
+    assignAllocation(question, allocationResults)
+
+
+# function to get preference order from a string
 # String orderStr
 # Question question
 # return List<List<String>> prefOrder
@@ -1553,7 +1608,7 @@ def getPrefOrder(orderStr, question):
     # the user hasn't ranked all the preferences yet
     #if length != len(question.item_set.all()):
      #   return None
-    
+
     return prefOrder
 
 # function to process student submission
@@ -1567,17 +1622,18 @@ def vote(request, question_id):
     if prefOrder == None:
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
     # make Response object to store data
     comment = request.POST['comment']
-    response = Response(question=question, user=request.user, timestamp=timezone.now(), resp_str = orderStr)
+    response = Response(question=question, user=request.user, timestamp=timezone.now(),
+                        resp_str=orderStr)
     if comment != "":
         response.comment = comment
     response.save()
-    
+
     #enqueue
     #enqueue(getCurrentResult(question))
-    
+
     #get current winner
     old_winner = OldWinner(question=question, response=response)
     old_winner.save()
@@ -1589,7 +1645,7 @@ def vote(request, question_id):
 
     if question.open == 2 and request.user not in question.question_voters.all():
         question.question_voters.add(request.user.id)
-        
+
     if not question.new_vote:
         question.new_vote = True
         question.save()
@@ -1628,7 +1684,7 @@ def buildResponseDict(response, question, prefOrder):
         #     # add pref to response dict
         #     d[item] = rank
     return d
-    
+
 def interpretResponseDict(dict):
     d = dict
     max = -1
@@ -1638,9 +1694,9 @@ def interpretResponseDict(dict):
     for k, v in d.items():
         if v == 1000:
             d[k] = max + 1
-            
+
     return d
-    
+
 
 # join a poll without logging in
 def anonymousJoin(request, question_id):
@@ -1648,7 +1704,7 @@ def anonymousJoin(request, question_id):
     name = request.POST['name']
     request.session['anonymousvoter'] = name
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
-    
+
 # submit a vote without logging in
 def anonymousVote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -1662,17 +1718,18 @@ def anonymousVote(request, question_id):
     else:
         voter = request.session['anonymousvoter']
         id = request.session['anonymousid']
-    
+
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
     # make Response object to store data
     comment = request.POST['comment']
-    response = Response(question=question, timestamp=timezone.now(), anonymous_voter = voter, anonymous_id=id, resp_str = orderStr)
+    response = Response(question=question, timestamp=timezone.now(),
+                        anonymous_voter=voter, anonymous_id=id, resp_str=orderStr)
     if comment != "":
         response.comment = comment
     response.save()
@@ -1688,16 +1745,17 @@ def anonymousVote(request, question_id):
     # notify the user that the vote has been updated
     messages.success(request, 'Your preferences have been updated.')
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
-    
+
 def sendMessage(request):
     if request.method == 'POST':
         message = request.POST["message"]
         name = request.POST["name"]
         email = request.POST["email"]
         if request.user.username != "":
-            m1 = Message(text=message,timestamp=timezone.now(),user=request.user,name=name,email=email)
+            m1 = Message(text=message, timestamp=timezone.now(), user=request.user,
+                         name=name, email=email)
             m1.save()
         else:
-            m2 = Message(text=message,timestamp=timezone.now(),name=name,email=email)
+            m2 = Message(text=message, timestamp=timezone.now(), name=name, email=email)
             m2.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

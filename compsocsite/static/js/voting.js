@@ -103,22 +103,22 @@ function starSort( order ){
 function changeMethod (value){
 	var order;
 	if(method == 1){ 
-		$("#twoCol").hide();
+		// $("#twoCol").hide();
 		order = orderCol(method);
 	}else if(method == 2){
-		$("#oneCol").hide();
+		// $("#oneCol").hide();
 		order = orderCol(method);
 	}
 	else if(method == 3){
-		$("#slider").hide();
+		// $("#slider").hide();
 		order = orderSlideStar('slide');
 	}
 	else if(method == 4){
-		$("#star").hide();
+		// $("#star").hide();
 		order = orderSlideStar('star');
 	}
 	console.log(order.length);
-	method = parseInt(value.value);
+	method = value;
 	if(method == 1){ $("#twoCol").show(); twoColSort(order); }
 	else if(method == 2){ $("#oneCol").show(); oneColSort(order); }
 	else if(method == 3){ $("#slider").show(); sliderSort(order); }
@@ -394,6 +394,8 @@ $( document ).ready(function() {
 		$('.ept',this).show();
 	});
 	VoteUtil.checkStyle();
+
+	$( "#tabs" ).tabs();
 	
 	function enableSubmission() {
 		$('#submitbutton').css("display", "inline");

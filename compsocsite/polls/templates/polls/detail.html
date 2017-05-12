@@ -106,18 +106,19 @@
         </div>
     </div>
 
-    <select class="selectpicker" onchange="changeMethod(this);">
-        <option value="1">Two Columns</option>
-        <option value="2">One Column</option>
-        <option value="3">Sliders</option>
-        <option value="4">Stars</option>
-    </select>
+    <div id="tabs">
+        <ul>
+            <li><a href="#twoColSection" onclick="changeMethod(1);">Two Columns</a></li>
+            <li><a href="#oneColSection" onclick="changeMethod(2);">One Column</a></li>
+            <li><a href="#sliderSection" onclick="changeMethod(3);">Sliders</a></li>
+            <li><a href="#starsSection" onclick="changeMethod(4);">Stars</a></li>
+        </ul>
+            {% include "polls/voteOptions/twoCol.html" %}
+            {% include "polls/voteOptions/oneCol.html" %}
+            {% include "polls/voteOptions/slider.html" %}
+            {% include "polls/voteOptions/stars.html" %}
+    </div>
 
-        {% include "polls/voteOptions/twoCol.html" %}
-        {% include "polls/voteOptions/oneCol.html" %}
-        {% include "polls/voteOptions/slider.html" %}
-        {% include "polls/voteOptions/stars.html" %}
-    </form>
     {% endif %}
     {% elif question.status == 1 %}
     <p>

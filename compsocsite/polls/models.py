@@ -8,6 +8,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import User
 import os
 from django.conf import settings
+from django.contrib.postgres.fields import JSONField
 
 # Models
 
@@ -303,6 +304,9 @@ class UserVoteRecord(models.Model):
     user =models.CharField(max_length=100,default="(Anonymous)")
     question = models.ForeignKey(Question,default=None)
     record = models.CharField(max_length=10000)
+    slider = models.TextField(default="")
+    star = models.TextField(default="")
+    swit = models.TextField(default="")
     initial_order = models.CharField(max_length=400,default="")
     initial_type = models.IntegerField(default=0)
     final_order = models.CharField(max_length=400,default="")

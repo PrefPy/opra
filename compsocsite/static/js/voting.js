@@ -1,5 +1,8 @@
 //  Helper JavaScript created for the voting page (detail.html)
-var record = "";
+var record = ""; //for recording two col behaviors
+var swit = ""; //for recording users' action on swritching between voting interfaces
+var slider_record = '{"slider":[]}';
+var star_record = '{"star":[]}';
 var submissionURL = "";
 var order1 = "";
 var order2 = "";
@@ -32,8 +35,12 @@ function orderSlideStar(str){
 	var arr = [];
 	var values = [];
 	$('.' + str).each(function(i, obj){
-		if(str == 'slide'){ var score = $( this ).slider("option", "value"); }
-		else if(str == 'star'){ var score = parseInt($( this ).rateYo("option", "rating")); }
+		if(str == 'slide'){ 
+			var score = $( this ).slider("option", "value");
+		}
+		else if(str == 'star'){ 
+			var score = parseInt($( this ).rateYo("option", "rating")); 
+		}
 		else{ return false; }
 		var type = $( this ).attr('type')
 		var bool = 0;
@@ -104,17 +111,25 @@ function changeMethod (value){
 	var order;
 	if(method == 1){ 
 		// $("#twoCol").hide();
+		var d = Date.now() - startTime;
+		swit += d + ";1;;";
 		order = orderCol(method);
 	}else if(method == 2){
 		// $("#oneCol").hide();
+		var d = Date.now() - startTime;
+		swit += d + ";2;;";
 		order = orderCol(method);
 	}
 	else if(method == 3){
 		// $("#slider").hide();
+		var d = Date.now() - startTime;
+		swit += d + ";3;;";
 		order = orderSlideStar('slide');
 	}
 	else if(method == 4){
 		// $("#star").hide();
+		var d = Date.now() - startTime;
+		swit += d + ";4;;";
 		order = orderSlideStar('star');
 	}
 	console.log(order.length);
@@ -261,7 +276,7 @@ var VoteUtil = (function () {
 		$.ajax({
 			url: submissionURL,
 			type: "POST",
-			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'final':order,'device':flavor,'commentTime':commentTime},
+			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'final':order,'device':flavor,'commentTime':commentTime,'slider':slider_record,'star':star_record,'swit':swit},
 			success: function(){}
 		});
 		document.getElementById('submitbutton').style.visibility = "hidden";
@@ -752,12 +767,30 @@ $( document ).ready(function() {
 			step: 1,
 			slide: function( event, ui ) {
 				$("#score" + this.id).text(ui.value);
+			},
+			start: function (event, ui){
+				var d = (Date.now() - startTime).toString();
+				var temp = JSON.parse(slider_record);
+				temp["slider"].push({"time":d, "action":"start", "value":ui.value.toString(), "item":$(this).parent().attr("id") });
+				slider_record = JSON.stringify(temp);
+			},
+			stop: function (event, ui){
+				var d = (Date.now() - startTime).toString();
+				var temp = JSON.parse(slider_record);
+				temp["slider"].push({"time":d, "action":"stop", "value":ui.value.toString(), "item":$(this).parent().attr("id") });
+				slider_record = JSON.stringify(temp);
 			}
 		});
 	});
 	$(".star").each(function(){
 		$(this).rateYo({
-			halfStar: true
+			halfStar: true,
+			onSet: function (rating, rateYoInstance) {
+				var d = (Date.now() - startTime).toString();
+				var temp = JSON.parse(star_record);
+				temp["star"].push({"time":d, "action":"set", "value":rating.toString(), "item":$(this).parent().attr("id") });
+				star_record = JSON.stringify(temp);
+			}
 		});
 	});
 	var t = 1

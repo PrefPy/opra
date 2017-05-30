@@ -20,6 +20,7 @@ from groups.models import *
 from django.conf import settings
 import random
 import string
+import json
 
 def writeUserAction(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -33,21 +34,24 @@ def writeUserAction(request, question_id):
         order2 = request.POST['order2']
         device = request.POST['device']
         final = request.POST['final']
+        slider_record = request.POST['slider']
+        star_record = request.POST['star']
         commentTime = request.POST['commentTime']
+        swit = request.POST['swit']
         init = ""
         if order1 != "":
             init = order1
         else:
             init = order2
             type = 1
-        #print(data)
+        print(slider_record)
         if request.user.username == "":
             anonymous_name = ""
             new_name = "(Anonymous)" + anonymous_name
-            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime)
+            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
             r.save()
         else:
-            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime)
+            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
             r.save()
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -169,6 +173,9 @@ def interpretRecord(record):
                     for i in range(1,len(clear_arr)):
                         str2 += clear_arr[i][4:] + "; "
                     record_arr.append(str2)
+    if record.slider != "":
+        record_arr.append(record.slider)
+        record_arr.append(record.star)
     return record_arr
     
 def interpretRecord1(record):
@@ -188,6 +195,11 @@ def interpretRecord1(record):
     result.append(final)
     result.append(record.comment_time)
     return result
+    
+def interpretSliderStar(record):
+    slider = json.dumps(record.slider)
+    star = json.dumps(record.star)
+    return (slider)
     
 def downloadRecord(request, question_id):
     response = HttpResponse(content_type='text/csv')

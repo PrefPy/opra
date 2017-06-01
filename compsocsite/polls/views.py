@@ -794,7 +794,7 @@ class VoteResultsView(views.generic.DetailView):
 # return List<String>
 def getListPollAlgorithms():
     return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin",
-            "Copeland", "Maximin", "STV", "Baldwin", "Coombs"]
+            "Copeland", "Maximin", "STV", "Baldwin", "Coombs", "Black", "Ranked Pairs"]
 
 def getListAlgorithmLinks():
     return ["https://en.wikipedia.org/wiki/Plurality_voting_method",
@@ -804,7 +804,7 @@ def getListAlgorithmLinks():
             "https://en.wikipedia.org/wiki/Minimax_Condorcet",
             "https://en.wikipedia.org/wiki/Single_transferable_vote",
             "https://en.wikipedia.org/wiki/Nanson%27s_method#Baldwin_method",
-            "https://en.wikipedia.org/wiki/Coombs%27_method"]
+            "https://en.wikipedia.org/wiki/Coombs%27_method","",""]
 
 # get a list of allocation methods
 # return List<String>
@@ -1000,6 +1000,15 @@ def getPollProfile(latest_responses, cand_map):
         userPref = Preference(pref_graph)
         pref_list.append(userPref)
     return Profile(cand_map, pref_list)
+    
+def translateSingleWinner(winner, cand_map):
+    result = {}
+    for cand in cand_map.keys():
+        if cand == winner:
+            result[cand] = 1
+        else:
+            result[cand] = 0
+    return result
 
 def translateWinnerList(winners, cand_map):
     result = {}
@@ -1035,9 +1044,13 @@ def getVoteResults(latest_responses, cand_map):
     stv = MechanismSTV().STVwinners(pollProfile)
     baldwin = MechanismBaldwin().baldwin_winners(pollProfile)
     coombs = MechanismCoombs().coombs_winners(pollProfile)
+    black = MechanismBlack().black_winner(pollProfile)
+    ranked = MechanismRankedPairs().ranked_pairs_cowinners(pollProfile)
     scoreVectorList.append(translateWinnerList(stv, cand_map))
     scoreVectorList.append(translateWinnerList(baldwin, cand_map))
     scoreVectorList.append(translateWinnerList(coombs, cand_map))
+    scoreVectorList.append(translateSingleWinner(black, cand_map))
+    scoreVectorList.append(translateWinnerList(ranked, cand_map))
 
     #for Mixtures
     rankings = pollProfile.getOrderVectorsEGMM()

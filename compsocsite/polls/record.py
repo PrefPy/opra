@@ -44,14 +44,14 @@ def writeUserAction(request, question_id):
         else:
             init = order2
             type = 1
-        print(slider_record)
+        #print(slider_record)
         if request.user.username == "":
             anonymous_name = ""
             new_name = "(Anonymous)" + anonymous_name
-            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
+            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,col=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
             r.save()
         else:
-            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,record=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
+            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,col=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
             r.save()
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -64,115 +64,129 @@ def writeUserAction(request, question_id):
 def interpretRecordForDownload(record):
     order = record.initial_order
     r = record.record
-    action_arr = r.split(";;;")
     title_arr = []
     record_arr = []
-    title_arr.append(record.user)
-    title_arr.append(str(record.question.id))
-    title_arr.append(str(record.timestamp))
-    if record.initial_order == "":
-        title_arr.append("Last user's vote order")
-    else:
-        title_arr.append(order)
-    title_arr.append(record.device)
-    for str1 in action_arr:
-        each_record = []
-        if str1.find(";;") != -1:
-            pair = str1.split(";;")
-            if len(pair) == 2:
-                t1 = pair[0].split("::")
-                t2 = pair[1].split("::")
-                t1[2] = t1[2][4:]
-                t2[2] = t2[2][4:]
-                if t1[1] == "start":
-                    each_record.append("Drag")
-                    str2 = ""
-                    item_arr = t2[3].split("||")
-                    each_record.append(t1[0])
-                    each_record.append(t1[3])
-                    each_record.append(t2[0])
-                    each_record.append(item_arr[0])
-                    for index in range(1,len(item_arr)):
-                        if(item_arr[index] != ""):
-                            str2 += item_arr[index][4:] + ", "
-                    each_record.append(str2)
-                else:
-                    each_record.append("Click")
-                    each_record.append(t1[0])
-                    each_record.append(t1[3])
-                    each_record.append(t2[0])
-                    each_record.append(t2[3])
+    if r != "":
+        action_arr = r.split(";;;")
+        title_arr.append(record.user)
+        title_arr.append(str(record.question.id))
+        title_arr.append(str(record.timestamp))
+        if record.initial_order == "":
+            title_arr.append("Last user's vote order")
         else:
-            if len(str1) != 0:
-                if str1[0] == "S":
-                    each_record.append("Submit")
-                    each_record.append(str1[1:])
-                elif str1.find("||") == -1:
-                    each_record.append("Move All")
-                    each_record.append(str1)
-                else:
-                    str2 = ""
-                    clear_arr = str1.split("||")
-                    each_record.append("Clear All")
-                    each_record.append(clear_arr[0])
-                    each_record.append("")
-                    each_record.append("")
-                    each_record.append("")
-                    for i in range(1,len(clear_arr)):
-                        str2 += clear_arr[i][4:] + "; "
-                    each_record.append(str2)
-        record_arr.append(each_record)
+            title_arr.append(order)
+        title_arr.append(record.device)
+        for str1 in action_arr:
+            each_record = []
+            if str1.find(";;") != -1:
+                pair = str1.split(";;")
+                if len(pair) == 2:
+                    t1 = pair[0].split("::")
+                    t2 = pair[1].split("::")
+                    t1[2] = t1[2][4:]
+                    t2[2] = t2[2][4:]
+                    if t1[1] == "start":
+                        each_record.append("Drag")
+                        str2 = ""
+                        item_arr = t2[3].split("||")
+                        each_record.append(t1[0])
+                        each_record.append(t1[3])
+                        each_record.append(t2[0])
+                        each_record.append(item_arr[0])
+                        for index in range(1,len(item_arr)):
+                            if(item_arr[index] != ""):
+                                str2 += item_arr[index][4:] + ", "
+                        each_record.append(str2)
+                    else:
+                        each_record.append("Click")
+                        each_record.append(t1[0])
+                        each_record.append(t1[3])
+                        each_record.append(t2[0])
+                        each_record.append(t2[3])
+            else:
+                if len(str1) != 0:
+                    if str1[0] == "S":
+                        each_record.append("Submit")
+                        each_record.append(str1[1:])
+                    elif str1.find("||") == -1:
+                        each_record.append("Move All")
+                        each_record.append(str1)
+                    else:
+                        str2 = ""
+                        clear_arr = str1.split("||")
+                        each_record.append("Clear All")
+                        each_record.append(clear_arr[0])
+                        each_record.append("")
+                        each_record.append("")
+                        each_record.append("")
+                        for i in range(1,len(clear_arr)):
+                            str2 += clear_arr[i][4:] + "; "
+                        each_record.append(str2)
+            record_arr.append(each_record)
     return (title_arr,record_arr)
     
 def interpretRecord(record):
     order = record.initial_order
     r = record.record
-    action_arr = r.split(";;;")
     record_arr = []
-    temp = ""
-    temp += record.user + " voted at " + str(record.timestamp) + "\n"
-    if order != "":
-        temp += "\nInitial order: " + order
-    if record.initial_type == 0:
-        temp += "  (recommended order)"
-    else:
-        temp += "  (User's last vote order)"
-    record_arr.append(temp)
-    record_arr.append(record.device)
-    for str1 in action_arr:
-        if str1.find(";;") != -1:
-            pair = str1.split(";;")
-            if len(pair) == 2:
-                t1 = pair[0].split("::")
-                t2 = pair[1].split("::")
-                t1[2] = t1[2][4:]
-                t2[2] = t2[2][4:]
-                if t1[1] == "start":
-                    str2 = ""
-                    item_arr = t2[3].split("||")
-                    str2 += "Moved item " + t1[2] + " from tier " + t1[3] + " to tier " + item_arr[0] + " at time " + t1[0] + ", tier " + item_arr[0] + " has items: "
-                    for index in range(1,len(item_arr)):
-                        if(item_arr[index] != ""):
-                            str2 += item_arr[index][4:] + ", "
-                    record_arr.append(str2)
-                else:
-                    str2 = ""
-                    str2 += "Clicked item " + t1[2] + " on the right at tier " +t1[3] + " and moved it to tier " + t2[3] + " on the left at time " + t1[0] + "."
-                    record_arr.append(str2)
+    if r != "":
+        action_arr = r.split(";;;")
+        temp = ""
+        temp += record.user + " voted at " + str(record.timestamp) + "\n"
+        if order != "":
+            temp += "\nInitial order: " + order
+        if record.initial_type == 0:
+            temp += "  (recommended order)"
         else:
-            if len(str1) != 0:
-                if str1[0] == "S":
-                    str2 = "Clicked submit at time " + str1[1:] + "."
-                    record_arr.append(str2)
-                elif str1.find("||") == -1:
-                    str2 = "Clicked move all at time " + str1 + "."
-                    record_arr.append(str2)
-                else:
-                    clear_arr = str1.split("||")
-                    str2 = "Clicked clear at time " + clear_arr[0] + ", order on the right is: "
-                    for i in range(1,len(clear_arr)):
-                        str2 += clear_arr[i][4:] + "; "
-                    record_arr.append(str2)
+            temp += "  (User's last vote order)"
+        record_arr.append(temp)
+        record_arr.append(record.device)
+        for str1 in action_arr:
+            if str1.find(";;") != -1:
+                pair = str1.split(";;")
+                if len(pair) == 2:
+                    t1 = pair[0].split("::")
+                    t2 = pair[1].split("::")
+                    t1[2] = t1[2][4:]
+                    t2[2] = t2[2][4:]
+                    if t1[1] == "start":
+                        str2 = ""
+                        item_arr = t2[3].split("||")
+                        str2 += "Moved item " + t1[2] + " from tier " + t1[3] + " to tier " + item_arr[0] + " at time " + t1[0] + ", tier " + item_arr[0] + " has items: "
+                        for index in range(1,len(item_arr)):
+                            if(item_arr[index] != ""):
+                                str2 += item_arr[index][4:] + ", "
+                        record_arr.append(str2)
+                    else:
+                        str2 = ""
+                        str2 += "Clicked item " + t1[2] + " on the right at tier " +t1[3] + " and moved it to tier " + t2[3] + " on the left at time " + t1[0] + "."
+                        record_arr.append(str2)
+            else:
+                if len(str1) != 0:
+                    if str1[0] == "S":
+                        str2 = "Clicked submit at time " + str1[1:] + "."
+                        record_arr.append(str2)
+                    elif str1.find("||") == -1:
+                        str2 = "Clicked move all at time " + str1 + "."
+                        record_arr.append(str2)
+                    else:
+                        clear_arr = str1.split("||")
+                        str2 = "Clicked clear at time " + clear_arr[0] + ", order on the right is: "
+                        for i in range(1,len(clear_arr)):
+                            str2 += clear_arr[i][4:] + "; "
+                        record_arr.append(str2)
+    else:
+        temp = ""
+        temp += record.user + " voted at " + str(record.timestamp) + "\n"
+        if order != "":
+            temp += "\nInitial order: " + order
+        if record.initial_type == 0:
+            temp += "  (recommended order)"
+        else:
+            temp += "  (User's last vote order)"
+        record_arr.append(temp)
+        record_arr.append(record.device)
+        record_arr.append(record.col)
     if record.slider != "":
         record_arr.append(record.slider)
         record_arr.append(record.star)
@@ -183,8 +197,13 @@ def interpretRecord1(record):
     if len(init) > 0 and init[len(init)-1] == "":
         init = init[0:len(init)-1]
     final = record.final_order
-    action_arr = record.record.split(";;;")
-    t = action_arr[len(action_arr)-1][1:]
+    t = ""
+    if record.record != "":
+        action_arr = record.record.split(";;;")
+        t = action_arr[len(action_arr)-1][1:]
+    else:
+        r = json.loads(record.col)
+        t = r["submit"]["time"]
     type = str(record.initial_type)
     result = []
     result.append(str(record.question.id))

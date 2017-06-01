@@ -1,5 +1,5 @@
 //  Helper JavaScript created for the voting page (detail.html)
-var record = ""; //for recording two col behaviors
+var record = '{"column":[]}'; //for recording two col behaviors
 var swit = ""; //for recording users' action on swritching between voting interfaces
 var slider_record = '{"slider":[]}';
 var star_record = '{"star":[]}';
@@ -11,6 +11,7 @@ var startTime = 0;
 var allowTies = true;
 var commentTime = "";
 var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
+var methodIndicator = "two_column";
 
 function orderCol(num){
 	var arr;
@@ -134,10 +135,10 @@ function changeMethod (value){
 	}
 	console.log(order.length);
 	method = value;
-	if(method == 1){ $("#twoCol").show(); twoColSort(order); }
-	else if(method == 2){ $("#oneCol").show(); oneColSort(order); }
-	else if(method == 3){ $("#slider").show(); sliderSort(order); }
-	else if(method == 4){ $("#star").show(); starSort(order); }
+	if(method == 1){ methodIndicator = "two_column";$("#twoCol").show(); twoColSort(order); }
+	else if(method == 2){ methodIndicator = "one_column";$("#oneCol").show(); oneColSort(order); }
+	else if(method == 3){ methodIndicator = "slider";$("#slider").show(); sliderSort(order); }
+	else if(method == 4){ methodIndicator = "star";$("#star").show(); starSort(order); }
 
 	VoteUtil.checkStyle();
 };
@@ -178,14 +179,18 @@ var VoteUtil = (function () {
 			checkStyle();
 			disableSubmission();
 			// add the clear action to the record
-			var d = Date.now() - startTime;
-			record += d + "||";
+			//var d = Date.now() - startTime;
+			//record += d + "||";
+			var order = "";
 			$( "#right-sortable" ).children().each(function( index ) {
 				if($(this).children().size()>0){
-					record += $(this).children().first().attr("id") + "||"
+					order += $(this).children().first().attr("id") + "||"
 				}
 			});
-			record += ";;;";
+			var d = (Date.now() - startTime).toString();
+			var temp = JSON.parse(record);
+			temp["column"].push({"method":methodIndicator,"time":d, "action":"clear", "rightOrder":order });
+			record = JSON.stringify(temp);
 		}
 	}
 	
@@ -256,8 +261,12 @@ var VoteUtil = (function () {
 		}
 		var prefcolumn = $('#left-sortable');
 		var order = "";
-		var d = Date.now() - startTime;
-		record += "S" + d;
+		//var d = Date.now() - startTime;
+		//record += "S" + d;
+		var d = (Date.now() - startTime).toString();
+		var temp = JSON.parse(record);
+		temp["column"].push({"method":methodIndicator,"time":d, "action":"submit" });
+		record = JSON.stringify(temp);
 		prefcolumn.children().each(function( index ){
 			if( $( this ).children().size() > 0 ){
 				$( this ).children().each(function( index ){
@@ -295,14 +304,19 @@ var VoteUtil = (function () {
 		console.log(obj.id);
 		prefcolumn.append(currentli);
 		record += d+ "::clickFrom::" + item + "::"+ tier+";;";
+		var prev_tier = tier;
 		VoteUtil.checkStyle();
 		tier = currentli.children().first().attr("alt");
 		if ($('#left-sortable').children().size() != 0) { enableSubmission(); }
 		$('#left-sortable').children().each(function(){
 			$(this).removeAttr('onclick');
 		});
-		d = Date.now() - startTime;
-		record += d+ "::clickTo::" + item + "::"+ tier+";;;";
+		//d = Date.now() - startTime;
+		//record += d+ "::clickTo::" + item + "::"+ tier+";;;";
+		var d = (Date.now() - startTime).toString();
+		var temp = JSON.parse(record);
+		temp["column"].push({"method":methodIndicator,"time":d, "action":"click", "from":prev_tier,"to": tier, "item":item });
+		record = JSON.stringify(temp);
 	};
 	
 	// moves all items from the right side to the bottom of the left, preserving order
@@ -314,9 +328,12 @@ var VoteUtil = (function () {
 		$('#left-sortable li').each(function(){
 			$(this).removeAttr('onclick');
 		});
-		var d = Date.now() - startTime;
-		record += d + ";;;";
-		
+		//var d = Date.now() - startTime;
+		//record += d + ";;;";
+		var d = (Date.now() - startTime).toString();
+		var temp = JSON.parse(record);
+		temp["column"].push({"method":methodIndicator,"time":d, "action":"moveAll" });
+		record = JSON.stringify(temp);
 	};
 	
 	// enables the submit button
@@ -540,9 +557,13 @@ $( document ).ready(function() {
 					ui.placeholder.css("width", "45%").css("display","inline-block").css("vertical-align","top");
 					ui.item.width(ui.placeholder.width());
 				};
-				newList = oldList = oL = ui.item.parent();
-				var d = Date.now() - startTime;
-				record += d+ "::start::" + item.attr("id") + "::"+ item.attr("alt")+";;";
+				//newList = oldList = oL = ui.item.parent();
+				//var d = Date.now() - startTime;
+				//record += d+ "::start::" + item.attr("id") + "::"+ item.attr("alt")+";;";
+				var d = (Date.now() - startTime).toString();
+				var temp = JSON.parse(record);
+				temp["column"].push({"method":methodIndicator,"time":d, "action":"start", "tier":item.attr("alt"), "item":item.attr("id") });
+				record = JSON.stringify(temp);
 				/*
 				$.ajax({
 					url: "{% url 'polls:record' question.id%}",
@@ -630,8 +651,12 @@ $( document ).ready(function() {
 						return false;
 					}
 				});
-				var d = Date.now() - startTime;
-				record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt") + "||" + itemsSameTier +";;;";
+				//var d = Date.now() - startTime;
+				//record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt") + "||" + itemsSameTier +";;;";
+				var d = (Date.now() - startTime).toString();
+				var temp = JSON.parse(record);
+				temp["column"].push({"method":methodIndicator,"time":d, "action":"stop", "tier":item.attr("alt"), "item":item.attr("id"), "itemsSameTier":itemsSameTier });
+				record = JSON.stringify(temp);
 			},
 
 			change: function(event, ui) {

@@ -8,7 +8,7 @@ import time
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.core.urlresolvers import reverse
-from django.views import generic
+from django import views
 
 from django.utils import timezone
 from django.template import RequestContext
@@ -35,13 +35,13 @@ import itertools
 import django_rq
 
 # view for homepage - index of questions & results
-class IndexView(generic.ListView):
+class IndexView(views.generic.ListView):
     template_name = 'polls/index2.html'
     context_object_name = 'question_list'
     def get_queryset(self):
         return Question.objects.all().order_by('-pub_date')
 
-class RegularPollsView(generic.ListView):
+class RegularPollsView(views.generic.ListView):
     template_name = 'polls/regular_polls.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -63,7 +63,7 @@ def reverseListOrder(query):
     list_query.reverse()
     return list_query
 
-class MultiPollsView(generic.ListView):
+class MultiPollsView(views.generic.ListView):
     template_name = 'polls/m_polls.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -78,7 +78,7 @@ class MultiPollsView(generic.ListView):
         return ctx
 
 # guest homepage view
-class MainView(generic.ListView):
+class MainView(views.generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -97,7 +97,7 @@ class MainView(generic.ListView):
 
 # demo for voting page in main page
 # view for question detail
-class DemoView(generic.DetailView):
+class DemoView(views.generic.DetailView):
     model = Question
     template_name = 'polls/demo.html'
 
@@ -119,7 +119,7 @@ class DemoView(generic.DetailView):
         return Question.objects.filter(pub_date__lte=timezone.now())
 
 
-class GMView(generic.ListView):
+class GMView(views.generic.ListView):
     template_name = 'events/GM2017/GM2017.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -129,7 +129,7 @@ class GMView(generic.ListView):
         ctx['winners'] = getWinnersFromIDList(getGMPollIDLIst())
         return ctx
 
-class GMResultsView(generic.ListView):
+class GMResultsView(views.generic.ListView):
     template_name = 'events/GM2017/GM2017results.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -140,7 +140,7 @@ class GMResultsView(generic.ListView):
         return ctx
 
 
-class CSPosterView(generic.ListView):
+class CSPosterView(views.generic.ListView):
     template_name = 'events/CSposter/CSposter.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -177,7 +177,7 @@ def AddStep1View(request):
     return render_to_response('polls/add_step1.html', {}, context)
 
 # step 2: the owner adds choices to a poll
-class AddStep2View(generic.DetailView):
+class AddStep2View(views.generic.DetailView):
     model = Question
     template_name = 'polls/add_step2.html'
     def get_context_data(self, **kwargs):
@@ -191,7 +191,7 @@ class AddStep2View(generic.DetailView):
         return Question.objects.filter(pub_date__lte=timezone.now())
 
 # step 3: the owner invites voters and groups to a poll
-class AddStep3View(generic.DetailView):
+class AddStep3View(views.generic.DetailView):
     model = Question
     template_name = 'polls/add_step3.html'
     def get_context_data(self, **kwargs):
@@ -206,7 +206,7 @@ class AddStep3View(generic.DetailView):
         return Question.objects.filter(pub_date__lte=timezone.now())
 
 # step 4: the owner selects the type of poll and other settings
-class AddStep4View(generic.DetailView):
+class AddStep4View(views.generic.DetailView):
     model = Question
     template_name = 'polls/add_step4.html'
     def get_context_data(self, **kwargs):
@@ -578,7 +578,7 @@ def getUnrankedCandidates(resp):
     return array
 
 # view for question detail
-class DetailView(generic.DetailView):
+class DetailView(views.generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
 
@@ -648,7 +648,7 @@ class DetailView(generic.DetailView):
         return Question.objects.filter(pub_date__lte=timezone.now())
 
 # view for settings detail
-class PollInfoView(generic.DetailView):
+class PollInfoView(views.generic.DetailView):
     model = Question
     template_name = 'polls/pollinfo.html'
     def get_context_data(self, **kwargs):
@@ -699,17 +699,17 @@ class PollInfoView(generic.DetailView):
         return Question.objects.filter(pub_date__lte=timezone.now())
 
 # view for results detail
-class AllocateResultsView(generic.DetailView):
+class AllocateResultsView(views.generic.DetailView):
     model = Question
     template_name = 'polls/allocate_results.html'
 
 # view for submission confirmation
-class ConfirmationView(generic.DetailView):
+class ConfirmationView(views.generic.DetailView):
     model = Question
     template_name = 'polls/confirmation.html'
 
 # view that displays vote results using various algorithms
-class VoteResultsView(generic.DetailView):
+class VoteResultsView(views.generic.DetailView):
     model = Question
     template_name = 'polls/vote_rule.html'
     def get_context_data(self, **kwargs):
@@ -1398,7 +1398,7 @@ def restoreUserVotes(request, response_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # view for ordering voters for allocation
-class AllocationOrder(generic.DetailView):
+class AllocationOrder(views.generic.DetailView):
     model = Question
     template_name = 'polls/allocation_order.html'
     def get_context_data(self, **kwargs):
@@ -1565,7 +1565,7 @@ def getFinalAllocation(question):
     allocation_order = getCurrentAllocationOrder(question, latest_responses)
     response_set = getResponseOrder(allocation_order) # get list of responses in specified order
 
-    # make items and responses generic
+    # make items and responses views.generic
     item_set = latest_responses[0].question.item_set.all()
     itemList = []
     for item in item_set:

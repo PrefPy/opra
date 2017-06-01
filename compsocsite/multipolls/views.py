@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from django.views import generic
 
 from .models import *
 
@@ -41,7 +40,7 @@ def AddStep1(request):
         return HttpResponseRedirect('/multipolls/%s/add_step2' % multipoll.id)
     return render_to_response('multipolls/add_step1.html', {}, context)
     
-class AddStep2View(generic.DetailView):
+class AddStep2View(views.generic.DetailView):
     model = MultiPoll
     template_name = 'multipolls/add_step2.html'
     def get_context_data(self, **kwargs):
@@ -49,7 +48,7 @@ class AddStep2View(generic.DetailView):
         ctx['question'] = self.get_object().questions.all()[self.get_object().pos]
         return ctx
         
-class AddStep3View(generic.DetailView):
+class AddStep3View(views.generic.DetailView):
     model = MultiPoll
     template_name = 'multipolls/add_step3.html'
     def get_context_data(self, **kwargs):
@@ -63,7 +62,7 @@ class AddStep3View(generic.DetailView):
         ctx['view_preferences'] = getViewPreferences()    
         return ctx
         
-class SetVotersView(generic.DetailView):
+class SetVotersView(views.generic.DetailView):
     model = MultiPoll
     template_name = 'multipolls/setvoters.html'
     def get_context_data(self, **kwargs):
@@ -234,7 +233,7 @@ def progress(request, multipoll_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-class mpollinfoView(generic.DetailView):
+class mpollinfoView(views.generic.DetailView):
     model = MultiPoll
     template_name = 'multipolls/mpollinfo.html'
     
@@ -313,7 +312,7 @@ def editBasicInfo(request, multipoll_id):
 
 # display the dependent polls selected 
 # allow the user to vote on this poll given the preferences for the previous dependent polls
-class DependencyView(generic.DetailView):
+class DependencyView(views.generic.DetailView):
     model = Question
     template_name = 'multipolls/dependency.html'
     def get_order(self, ctx):

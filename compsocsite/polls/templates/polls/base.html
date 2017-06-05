@@ -91,10 +91,7 @@
 		<!--nav bar for main page-->
     {% if user.is_authenticated %}
         <nav class="navbar navbar-default navbar-fixed-top" style="border-color: transparent; opacity: 0.9;">
-    {% else %}      
-        <iframe src="/auth/logoutCas" style="display:none;">
-          <p>Your browser does not support iframes.</p>
-        </iframe>
+    {% else %}
         <nav class="navbar navbar-default navbar-fixed-top" style="background-color:white; border-color: transparent;">
     {%endif%}
         

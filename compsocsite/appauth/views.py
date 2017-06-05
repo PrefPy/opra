@@ -77,9 +77,6 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-
-        if '@' in username:
-            return HttpResponseRedirect(reverse('appauth:loginCas'))
         
         # Check if the username/password combination is valid - a User object is returned if it is.
         user = authenticate(username=username, password=password)

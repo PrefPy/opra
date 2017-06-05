@@ -46,12 +46,21 @@ window.location = "{% url 'polls:index' %}";
 
 {% endif %}
 
-<form action="{% url 'appauth:login' %}" method="post">{% csrf_token %}
-	First name:<br>
-	<input type="text" name="username"><br>
-	Last name:<br>
-	<input type="password" name="password">
-	<button>Submit</button>
-</form>
+<div class="col-md-6 col-md-offset-3" align="center" style="padding: 60px 20px;">
+    <h3>Sign in</h3>
+    <br/>
+    <div id="error"></div>
+    <form id="user_form" method="post" action="{% url 'appauth:login' %}">
+        {% csrf_token %}
+        
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" />
+
+        <label for="password">Password</label> 
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
+
+        <button class="btn btn-primary">Sign in</button>
+    </form>
+</div>
 
 {% endblock %}

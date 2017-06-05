@@ -122,9 +122,10 @@
 					{% if user.is_authenticated %}
 					<ul class="nav navbar-nav">
 						{% if not request.flavour == "mobile" %}
-						<li><a class="navbar-brand" href="/">
-						       	 <img alt ="O" src="/static/img/oprafulllogowhitenolink.png" style = "width:60px;" >
-						      </a>
+						<li>
+                            <a class="navbar-brand" href="/">
+						       	<img alt="O" src="/static/img/oprafulllogowhitenolink.png" style="width:60px;">
+                            </a>
 						</li>
 						{% endif %}
 						 <li><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span>Polls</a></li>

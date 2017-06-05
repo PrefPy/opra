@@ -1772,3 +1772,22 @@ def sendMessage(request):
             m2 = Message(text=message, timestamp=timezone.now(), name=name, email=email)
             m2.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# Mixture API
+def mixtureAPI(request):
+    context = RequestContext(request)
+    if request.method == 'POST':
+        votes = json.loads(request.GET['data'])
+        m = len(votes[0])
+        mixtures_pl1 = egmm_mixpl(votes, m, k=1, itr=10).tolist()
+        mixtures_pl2 = egmm_mixpl(votes, m, k=2, itr=10).tolist()
+        mixtures_pl3 = egmm_mixpl(votes, m, k=3, itr=10).tolist()
+        return HttpResponse(
+            json.dumps(mixtures_pl2),
+            content_type="application/json"
+        )
+
+# Mixture API
+def mixtureAPI_test(request):
+    context = RequestContext(request)
+    return render_to_response('polls/api_test.html')

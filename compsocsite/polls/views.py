@@ -1290,6 +1290,23 @@ def setInitialSettings(request, question_id):
     question.display_pref = request.POST['viewpreferences']
     question.creator_pref = request.POST['creatorpreferences']
     openstring = request.POST['openpoll']
+    twocol = False
+    onecol = False
+    slider = False
+    star = False
+    uilist = request.POST.getlist('ui')
+    if "twocol" in uilist:
+        twocol = True
+    if "onecol" in uilist:
+        onecol = True
+    if "slider" in uilist:
+        slider = True
+    if "star" in uilist:
+        star = True
+    question.twocol_enabled = twocol
+    question.onecol_enabled = onecol
+    question.slider_enabled = slider
+    question.star_enabled = star
     if openstring == "anon":
         question.open = 1
     elif openstring == "invite":

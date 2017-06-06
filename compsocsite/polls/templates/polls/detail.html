@@ -108,15 +108,15 @@
 
     <div id="tabs">
         <ul>
-            <li><a href="#twoColSection" onclick="changeMethod(1);">Two Columns</a></li>
-            <li><a href="#oneColSection" onclick="changeMethod(2);">One Column</a></li>
-            <li><a href="#sliderSection" onclick="changeMethod(3);">Sliders</a></li>
-            <li><a href="#starsSection" onclick="changeMethod(4);">Stars</a></li>
+            {% if question.twocol_enabled %}<li><a href="#twoColSection" onclick="changeMethod(1);">Two Columns</a></li> {% endif %}
+            {% if question.onecol_enabled %}<li><a href="#oneColSection" onclick="changeMethod(2);">One Column</a></li> {% endif %}
+            {% if question.slider_enabled %}<li><a href="#sliderSection" onclick="changeMethod(3);">Sliders</a></li> {% endif %}
+            {% if question.star_enabled %}<li><a href="#starsSection" onclick="changeMethod(4);">Stars</a></li> {% endif %}
         </ul>
-            {% include "polls/voteOptions/twoCol.html" %}
-            {% include "polls/voteOptions/oneCol.html" %}
-            {% include "polls/voteOptions/slider.html" %}
-            {% include "polls/voteOptions/stars.html" %}
+            {% if question.twocol_enabled %}{% include "polls/voteOptions/twoCol.html" %}{% endif %}
+            {% if question.onecol_enabled %}{% include "polls/voteOptions/oneCol.html" %}{% endif %}
+            {% if question.slider_enabled %}{% include "polls/voteOptions/slider.html" %}{% endif %}
+            {% if question.star_enabled %}{% include "polls/voteOptions/stars.html" %}{% endif %}
     </div>
 
     {% endif %}

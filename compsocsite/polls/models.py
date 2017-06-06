@@ -38,6 +38,11 @@ class Question(models.Model):
     m_poll = models.BooleanField(default=False)
     open = models.IntegerField(default=0)
     new_vote = models.BooleanField(default=False)
+    twocol_enabled = models.BooleanField(default=True)
+    onecol_enabled = models.BooleanField(default=True)
+    slider_enabled = models.BooleanField(default=True)
+    star_enabled = models.BooleanField(default=True)
+    initial_ui = models.IntegerField(default=1)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):

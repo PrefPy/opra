@@ -19,7 +19,7 @@
     </div>
     <br/>
 
-        <form class="form-group" method="post" action="{% url 'polls:setinitial' question.id %}">
+        <form class="form-group" method="post" action="{% url 'polls:setinitial' question.id %}" onsubmit="javascript:UICheckboxes();">
             {% csrf_token %}
             
             {% if question.question_type == 1 %}
@@ -116,10 +116,10 @@
             
 			<label>Allowed Interfaces</label>
 			<div>
-				<label class="checkbox-inline"><input type="checkbox" value="twocol" name="ui" checked>Two Column</label>
-				<label class="checkbox-inline"><input type="checkbox" value="onecol" name="ui" checked>One Column</label>
-				<label class="checkbox-inline"><input type="checkbox" value="slider" name="ui" checked>Slider</label>
-				<label class="checkbox-inline"><input type="checkbox" value="star" name="ui" checked>Star Rating</label>
+				<label class="checkbox-inline"><input id="twocol_checkbox" type="checkbox" value="twocol" name="ui" checked>Two Column</label>
+				<label class="checkbox-inline"><input id="onecol_checkbox" type="checkbox" value="onecol" name="ui" checked>One Column</label>
+				<label class="checkbox-inline"><input id="slider_checkbox" type="checkbox" value="slider" name="ui" checked>Slider</label>
+				<label class="checkbox-inline"><input id="star_checkbox" type="checkbox" value="star" name="ui" checked>Star Rating</label>
 			</div>
             <br />
             <div class="col-md-6 col-md-offset-3" align="center">

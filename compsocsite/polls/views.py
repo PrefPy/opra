@@ -278,10 +278,31 @@ def editChoice(request, question_id):
 
 def editBasicInfo(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    new_title = request.POST["title"]
-    new_desc = request.POST["desc"]
+    new_title = question.question_text
+    if "title" in request.POST:
+        new_title = request.POST["title"]
+    new_desc = question.question_desc
+    if "desc" in request.POST:
+        new_desc = request.POST["desc"]
     question.question_text = new_title
     question.question_desc = new_desc
+    twocol = False
+    onecol = False
+    slider = False
+    star = False
+    uilist = request.POST.getlist('ui')
+    if "twocol" in uilist:
+        twocol = True
+    if "onecol" in uilist:
+        onecol = True
+    if "slider" in uilist:
+        slider = True
+    if "star" in uilist:
+        star = True
+    question.twocol_enabled = twocol
+    question.onecol_enabled = onecol
+    question.slider_enabled = slider
+    question.star_enabled = star
     question.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

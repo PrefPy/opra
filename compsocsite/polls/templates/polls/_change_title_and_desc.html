@@ -23,6 +23,16 @@
 						</label>
 				</div>
 		</fieldset>
+		
+	<fieldset class="form-group">
+        <label>Allowed Interfaces</label>
+        <div>
+			<label class="checkbox-inline"><input type="checkbox" value="twocol" name="ui" {% if question.twocol_enabled %} checked {% endif %}>Two Column</label>
+			<label class="checkbox-inline"><input type="checkbox" value="onecol" name="ui" {% if question.onecol_enabled %} checked {% endif %}>One Column</label>
+			<label class="checkbox-inline"><input type="checkbox" value="slider" name="ui" {% if question.slider_enabled %} checked {% endif %}>Slider</label>
+			<label class="checkbox-inline"><input type="checkbox" value="star" name="ui" {% if question.star_enabled %} checked {% endif %}>Star Rating</label>
+		</div>
+    </fieldset>
 
     <br />
     <input type="submit" class="btn btn-primary" value="Save Changes"/>

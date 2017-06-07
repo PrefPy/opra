@@ -293,6 +293,7 @@ var VoteUtil = (function () {
 			if(method == 2){ order_list = orderCol(method); }
 			else if(method == 3){ order_list = orderSlideStar('slide'); }
 			else if(method == 4){ order_list = orderSlideStar('star'); }
+			else if(method == 5){ order_list = orderYesNo(); }
 			else{ location.reload(); }
 			twoColSort(order_list);
 		}

@@ -71,12 +71,12 @@ input[type="submit"] {
 }
 
 /* Ranking UI */
-#left-sortable, #right-sortable, #one-sortable {
+#left-sortable, #right-sortable, #one-sortable, #yesNoList {
     list-style-type: none;
     margin: 0;
     padding: 0px;
 }
-#left-sortable li, #right-sortable li, #one-sortable li {
+#left-sortable li, #right-sortable li, #one-sortable li, #yesNoList label {
     display: block;
     margin: 5px 5px 5px 5px;
     padding: 5px;
@@ -84,6 +84,10 @@ input[type="submit"] {
     border: solid;
     border-radius: 2px;
     padding-left:10px;
+}
+
+#yesNoList label {
+    border-width: 5px;
 }
 
 html > body #sortable li {

@@ -154,7 +154,9 @@
         title : '<span class="text-info"><strong>Hint</strong></span>',
         html: 'true',
     });
-	
+	if(document.getElementById("twoColSection") == null && document.getElementById("oneColSection") != null){
+		method = 2;
+	}
 
 
 	{% if request.flavour == "mobile" %}

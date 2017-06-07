@@ -40,7 +40,7 @@ function orderSlideStar(str){
 			var score = $( this ).slider("option", "value");
 		}
 		else if(str == 'star'){ 
-			var score = parseInt($( this ).rateYo("option", "rating")); 
+			var score = parseFloat($( this ).rateYo("option", "rating")); 
 		}
 		else{ return false; }
 		var type = $( this ).attr('type')
@@ -103,7 +103,8 @@ function sliderSort( order ){
 function starSort( order ){
 	$.each(order, function(index, value){
 		$.each(value, function(i, v){
-			$(".star[type='" + v.toString() + "']").rateYo("option", "rating", Math.round(10 - (10 * index / order.length)) / 2);
+			if(index >= 10){ $(".star[type='" + v.toString() + "']").rateYo("option", "rating", 0); }
+			else{ $(".star[type='" + v.toString() + "']").rateYo("option", "rating", Math.round(10 - (10 * index / Math.min(order.length, 10))) / 2); }
 		});
 	});
 }

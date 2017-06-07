@@ -13,6 +13,28 @@ var commentTime = "";
 var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
 var methodIndicator = "two_column";
 
+function select(item){
+	if($(item).children()[0].checked){ $(item).css('border-color', 'green'); }
+	else{ $(item).css('border-color', 'red'); }
+}
+
+//Get order of one or two column
+function orderYesNo(){
+	var arr = $('#yesNoList').children();
+	var order = [];
+	var yes = [];
+	var no = [];
+	$.each(arr, function( index, value ){
+		if(!(typeof $(value).children()[0] === "undefined")){
+			if($(value).children()[0].checked){ yes.push($(value).attr("type")); }
+			else{ no.push($(value).attr("type")); }
+		}
+	});
+	if(yes.length != 0){ order.push(yes); }
+	if(no.length != 0){ order.push(no); }
+	return order;
+}
+
 function orderCol(num){
 	var arr;
 	if(num == 1){ arr = [$('#left-sortable'), $('#right-sortable')]; }
@@ -109,37 +131,51 @@ function starSort( order ){
 	});
 }
 
+function yesNoSort( order ){
+	$.each(order, function(index, value){
+		$.each(value, function(i, v){
+			if(index == 0){
+				$($(".checkbox[type='" + v.toString() + "']").children()[0]).attr('checked', 'checked');
+				$(".checkbox[type='" + v.toString() + "']").css('border-color', 'green');
+			}
+			else{
+				$($(".checkbox[type='" + v.toString() + "']").children()[0]).removeAttr('checked');
+				$(".checkbox[type='" + v.toString() + "']").css('border-color', 'red');
+			}
+		});
+	});
+}
+
 function changeMethod (value){
 	var order;
 	if(method == 1){ 
-		// $("#twoCol").hide();
 		var d = Date.now() - startTime;
 		swit += d + ";1;;";
 		order = orderCol(method);
 	}else if(method == 2){
-		// $("#oneCol").hide();
 		var d = Date.now() - startTime;
 		swit += d + ";2;;";
 		order = orderCol(method);
 	}
 	else if(method == 3){
-		// $("#slider").hide();
 		var d = Date.now() - startTime;
 		swit += d + ";3;;";
 		order = orderSlideStar('slide');
 	}
 	else if(method == 4){
-		// $("#star").hide();
 		var d = Date.now() - startTime;
 		swit += d + ";4;;";
 		order = orderSlideStar('star');
 	}
-	console.log(order.length);
+	else if(method == 5){
+		order = orderYesNo();
+	}
 	method = value;
-	if(method == 1){ methodIndicator = "two_column";$("#twoCol").show(); twoColSort(order); }
-	else if(method == 2){ methodIndicator = "one_column";$("#oneCol").show(); oneColSort(order); }
-	else if(method == 3){ methodIndicator = "slider";$("#slider").show(); sliderSort(order); }
-	else if(method == 4){ methodIndicator = "star";$("#star").show(); starSort(order); }
+	if(method == 1){ methodIndicator = "two_column"; twoColSort(order); }
+	else if(method == 2){ methodIndicator = "one_column"; oneColSort(order); }
+	else if(method == 3){ methodIndicator = "slider"; sliderSort(order); }
+	else if(method == 4){ methodIndicator = "star"; starSort(order); }
+	else if(method == 5){ yesNoSort(order); }
 
 	VoteUtil.checkStyle();
 };

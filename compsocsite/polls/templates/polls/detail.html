@@ -112,13 +112,13 @@
             {% if question.onecol_enabled %}<li><a href="#oneColSection" onclick="changeMethod(2);">One Column</a></li> {% endif %}
             {% if question.slider_enabled %}<li><a href="#sliderSection" onclick="changeMethod(3);">Sliders</a></li> {% endif %}
             {% if question.star_enabled %}<li><a href="#starsSection" onclick="changeMethod(4);">Stars</a></li> {% endif %}
-            <li><a href="#yesNoSection" onclick="changeMethod(5);">Yes/No</a></li>
+            {% if question.yesno_enabled %}<li><a href="#yesNoSection" onclick="changeMethod(5);">Yes/No</a></li> {% endif %}
         </ul>
             {% if question.twocol_enabled %}{% include "polls/voteOptions/twoCol.html" %}{% endif %}
             {% if question.onecol_enabled %}{% include "polls/voteOptions/oneCol.html" %}{% endif %}
             {% if question.slider_enabled %}{% include "polls/voteOptions/slider.html" %}{% endif %}
             {% if question.star_enabled %}{% include "polls/voteOptions/stars.html" %}{% endif %}
-            {% include "polls/voteOptions/yesNo.html" %}
+            {% if question.yesno_enabled %}{% include "polls/voteOptions/yesNo.html" %}{% endif %}
     </div>
 
     {% endif %}

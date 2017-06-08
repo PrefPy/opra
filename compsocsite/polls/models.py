@@ -42,6 +42,7 @@ class Question(models.Model):
     onecol_enabled = models.BooleanField(default=True)
     slider_enabled = models.BooleanField(default=True)
     star_enabled = models.BooleanField(default=True)
+    yesno_enabled = models.BooleanField(default=True)
     initial_ui = models.IntegerField(default=1)
     def __str__(self):
         return self.question_text

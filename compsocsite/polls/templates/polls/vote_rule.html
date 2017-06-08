@@ -379,7 +379,7 @@
                                     <td style='background-color: {{shade_values|index:forloop.parentloop.counter0|index:forloop.counter0}}'>{{ score }}</td>
                             {% endfor %}
 
-                            <!-- margin of victory column 
+                            <!-- margin of victory column -->
                             {% if forloop.counter < 5 %}
                                 <td>{{ margin_victory|index:forloop.counter0 }} </td>
                             {% elif forloop.counter == 5 %}
@@ -387,7 +387,7 @@
                             {% else %}
                                 <td>-</td>
                             {% endif %}
-							-->
+							
                         </tr>
                     {% endfor %}
                 </table>

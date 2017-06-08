@@ -290,6 +290,7 @@ def editBasicInfo(request, question_id):
     onecol = False
     slider = False
     star = False
+    yesno = False
     uilist = request.POST.getlist('ui')
     if "twocol" in uilist:
         twocol = True
@@ -299,10 +300,13 @@ def editBasicInfo(request, question_id):
         slider = True
     if "star" in uilist:
         star = True
+    if "yesno" in uilist:
+        yesno = True
     question.twocol_enabled = twocol
     question.onecol_enabled = onecol
     question.slider_enabled = slider
     question.star_enabled = star
+    question.yesno_enabled = yesno
     question.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1315,6 +1319,7 @@ def setInitialSettings(request, question_id):
     onecol = False
     slider = False
     star = False
+    yesno = False
     uilist = request.POST.getlist('ui')
     if "twocol" in uilist:
         twocol = True
@@ -1324,10 +1329,13 @@ def setInitialSettings(request, question_id):
         slider = True
     if "star" in uilist:
         star = True
+    if "yesno" in uilist:
+        yesno = True
     question.twocol_enabled = twocol
     question.onecol_enabled = onecol
     question.slider_enabled = slider
     question.star_enabled = star
+    question.yesno_enabled = yesno
     if openstring == "anon":
         question.open = 1
     elif openstring == "invite":
@@ -1412,11 +1420,18 @@ def duplicatePoll(request, question_id):
     items = question.item_set.all()
     new_question = Question(question_text=title, question_desc=desc,
                             pub_date=timezone.now(), question_owner=user,
-                            display_pref=user.userprofile.displayPref,
-                            emailInvite=user.userprofile.emailInvite,
-                            emailDelete=user.userprofile.emailDelete,
-                            emailStart=user.userprofile.emailStart,
-                            emailStop=user.userprofile.emailStop, creator_pref=1)
+                            display_pref=question.display_pref,
+                            emailInvite=question.emailInvite,
+                            emailDelete=question.emailDelete,
+                            emailStart=question.emailStart,
+                            emailStop=question.emailStop, creator_pref=question.creator_pref,
+                            poll_algorithm=question.poll_algorithm,
+                            question_type=question.question_type,
+                            open=question.open,twocol_enabled=question.twocol_enabled,
+                            onecol_enabled=question.onecol_enabled,
+                            slider_enabled=question.slider_enabled,
+                            star_enabled=question.star_enabled,
+                            yesno_enabled=question.yesno_enabled)
     new_question.save()
     new_question.question_voters.add(*voters)
     new_items = []

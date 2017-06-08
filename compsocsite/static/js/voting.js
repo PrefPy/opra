@@ -288,38 +288,32 @@ var VoteUtil = (function () {
 	
 	// submits the current left side preferences	
 	function submitPref() {
-		if(method != 1){
-			var order_list;
-			if(method == 2){ order_list = orderCol(method); }
-			else if(method == 3){ order_list = orderSlideStar('slide'); }
-			else if(method == 4){ order_list = orderSlideStar('star'); }
-			else if(method == 5){ order_list = orderYesNo(); }
-			else{ location.reload(); }
-			twoColSort(order_list);
-		}
-		var prefcolumn = $('#left-sortable');
 		var order = "";
+		var order_list;
+		if(method == 1){ order_list = orderCol(method); }
+		else if(method == 2){ order_list = orderCol(method); }
+		else if(method == 3){ order_list = orderSlideStar('slide'); }
+		else if(method == 4){ order_list = orderSlideStar('star'); }
+		else if(method == 5){ order_list = orderYesNo(); }
+		else{ location.reload(); }
+		for (var i = 0; i < order_list.length; i++) {
+			for (var j = 0; j < order_list[i].length; j++) {
+				order = order + $(".li_item[type='" + order_list[i][j].toString() + "']").attr('id') + ";;";
+				console.log($(".li_item[type='" + order_list[i][j].toString() + "']").attr('id'));
+			};
+			order = order + "|;;";
+		}
+
 		//var d = Date.now() - startTime;
 		//record += "S" + d;
 		var d = (Date.now() - startTime).toString();
 		var temp = JSON.parse(record);
 		temp["column"].push({"method":methodIndicator,"time":d, "action":"submit" });
 		record = JSON.stringify(temp);
-		prefcolumn.children().each(function( index ){
-			if( $( this ).children().size() > 0 ){
-				$( this ).children().each(function( index ){
-					if($( this ).attr('id')){
-						order += $( this ).attr('id');
-					order += ";;";
-          }
-				});
-				order += "|;;";
-			}
-		});
+
 		$('.pref_order').each(function(){
 			$(this).val(order);
 		});
-		
 		$.ajax({
 			url: submissionURL,
 			type: "POST",
@@ -341,7 +335,7 @@ var VoteUtil = (function () {
 		var item = currentli.children().first().attr("id");
 		console.log(obj.id);
 		prefcolumn.append(currentli);
-		record += d+ "::clickFrom::" + item + "::"+ tier+";;";
+		//record += d+ "::clickFrom::" + item + "::"+ tier+";;";
 		var prev_tier = tier;
 		VoteUtil.checkStyle();
 		tier = currentli.children().first().attr("alt");

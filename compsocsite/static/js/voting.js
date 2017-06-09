@@ -37,6 +37,7 @@ function orderYesNo(){
 
 function orderCol(num){
 	var arr;
+	if(num == 0){ arr = [$('#left-sortable')]; }
 	if(num == 1){ arr = [$('#left-sortable'), $('#right-sortable')]; }
 	else if(num == 2){ arr = [$('#one-sortable')]; }
 	var order = [];
@@ -290,7 +291,7 @@ var VoteUtil = (function () {
 	function submitPref() {
 		var order = "";
 		var order_list;
-		if(method == 1){ order_list = orderCol(method); }
+		if(method == 1){ order_list = orderCol(0); }
 		else if(method == 2){ order_list = orderCol(method); }
 		else if(method == 3){ order_list = orderSlideStar('slide'); }
 		else if(method == 4){ order_list = orderSlideStar('star'); }

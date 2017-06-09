@@ -308,7 +308,6 @@ def editBasicInfo(request, question_id):
     question.star_enabled = star
     question.yesno_enabled = yesno
     question.ui_number = twocol+onecol+slider+star+yesno
-    print(question.ui_number)
     question.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

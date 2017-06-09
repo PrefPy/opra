@@ -104,8 +104,8 @@ function oneColSort( order ){
 	$.each(order, function(index, value){
 		html += "<ul class=\"choice2\"><div class=\"tier\">" + index.toString() + "</div>";
 		$.each(value, function(i, v){
-			html += "<li class=\"one_li_item\" id=\"" + $(".one_li_item[type='" + v.toString() + "']").attr('id') + "\" type=" + v.toString() + ">";
-			html += $(".one_li_item[type='" + v.toString() + "']").html();
+			html += "<li class=\"li_item\" id=\"" + $("#oneColSection .li_item[type='" + v.toString() + "']").attr('id') + "\" type=" + v.toString() + ">";
+			html += $("#oneColSection .li_item[type='" + v.toString() + "']").html();
 			html += "</li>";
 		});
 		html += "</ul><ul class=\"choice2 empty\"></ul>";
@@ -299,7 +299,6 @@ var VoteUtil = (function () {
 		for (var i = 0; i < order_list.length; i++) {
 			for (var j = 0; j < order_list[i].length; j++) {
 				order = order + $(".li_item[type='" + order_list[i][j].toString() + "']").attr('id') + ";;";
-				console.log($(".li_item[type='" + order_list[i][j].toString() + "']").attr('id'));
 			};
 			order = order + "|;;";
 		}
@@ -333,7 +332,6 @@ var VoteUtil = (function () {
 		var tier = currentli.children().first().attr("alt");
 		var d = Date.now() - startTime;
 		var item = currentli.children().first().attr("id");
-		console.log(obj.id);
 		prefcolumn.append(currentli);
 		//record += d+ "::clickFrom::" + item + "::"+ tier+";;";
 		var prev_tier = tier;
@@ -465,6 +463,25 @@ $( document ).ready(function() {
 		$('#submitbutton').css("display", "inline");
 	}
 	
+	// var type_num = 1, alt_num = 0;
+	// $('#one-sortable').children().each(function(index, value){
+	// 	var string = "";
+	// 	if($(value).children().length > 0){ console.log(alt_num); alt_num += 1; }
+	// 	$(value).children().each(function(i, v){
+	// 		string += "<li class=\"li_item\" id=\"" + $(v).attr("id") + "\" type=\"" + type_num.toString() + "\" alt=\"" + alt_num.toString() + "\">";
+	// 		string += $(v).html();
+	// 		string += "</li>\n";
+	// 		type_num += 1;
+	// 	});
+	// 	//console.log($(value).html());
+	// 	//console.log(string);
+	// 	console.log("string " + string);
+	// 	$(value).html(string);
+	// 	console.log(value);
+	// });
+	// $('#one-sortable').children().each(function(index, value){
+	// 	//console.log(value);
+	// });
 	
 	var oldList, newList, item;
 	
@@ -851,7 +868,12 @@ $( document ).ready(function() {
 		});
 	});
 	var t = 1
-	$(".li_item").each(function(){
+	$("#twoColSection .li_item").each(function(){
+		$(this).attr({type:t.toString()});
+		t += 1;
+	});
+	t = 1
+	$("#oneColSection .li_item").each(function(){
 		$(this).attr({type:t.toString()});
 		t += 1;
 	});

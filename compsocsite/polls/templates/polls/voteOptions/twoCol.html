@@ -13,7 +13,6 @@
             </div>
             {% endif %}
 
-            
                 {% if request.flavour == "mobile" %}
                
                 <!-- Panel for your preferences -->
@@ -117,7 +116,9 @@
 
                    
                 </div>
+				{% if not request.flavour == "mobile"%}
             </div>
+			{% endif %}
             <div class="col-xs-12 col-sm-6" style="padding:0%;margin:0%;">
             	
                 
@@ -130,12 +131,7 @@
                             <div class="panel panel-default">
                             <div class="panel-heading">
                             <h4>Unranked Options:</h4>
-                    </div>
-                        
-                            
-                            	
-                            
-                                
+							</div>
                             {% else %}
                             <div class="panel panel-default">
                          <div class="panel-heading">
@@ -145,9 +141,10 @@
                                 </button>
                                 <a tabindex="0" style="float:right; {%if request.user.userprofile.showHint == True%} visibility:visible;{% else %}visibility:hidden; {%endif%}"  class="hint fa fa-question-circle" role="button" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="These are the available options <form action='{% url 'appauth:disableHint' %}' method='POST'>{% csrf_token %}<input id='toggle-button' class='btn btn-primary btn-sm' type='submit' value='Disable All Hints'/></form><br/>"></a>
                             </h4>
-                    </div> <!-- end of panel header -->
+							</div>
+							 {% endif %}<!-- end of panel header -->
                             
-                            {% endif %}
+                           
                             
                         
 

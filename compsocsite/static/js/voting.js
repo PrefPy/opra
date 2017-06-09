@@ -457,7 +457,7 @@ $( document ).ready(function() {
 	});
 	VoteUtil.checkStyle();
 
-	$( "#tabs" ).tabs();
+	
 	
 	function enableSubmission() {
 		$('#submitbutton').css("display", "inline");

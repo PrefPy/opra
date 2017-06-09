@@ -307,6 +307,7 @@ def editBasicInfo(request, question_id):
     question.slider_enabled = slider
     question.star_enabled = star
     question.yesno_enabled = yesno
+    question.ui_number = twocol+onecol+slider+star+yesno
     question.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -375,7 +376,7 @@ def pausePoll(request, question_id):
     # set the status to pause
     question.status = 4
     # get winner or allocation, and save it
-    if question.question_type == 1: #poll
+    if question.question_type == 1 and question.response_set.filter(active=1).count() >= 1: #poll
         (question.winner, question.mixtures_pl1, question.mixtures_pl2,
          question.mixtures_pl3) = getPollWinner(question)
     question.save()
@@ -425,8 +426,6 @@ def stopPoll(request, question_id):
 # return String winnerStr
 def getPollWinner(question):
     all_responses = question.response_set.filter(active=1).order_by('-timestamp')
-    if len(all_responses) == 0:
-        return "", ""
 
     (latest_responses, previous_responses) = categorizeResponses(all_responses)
     cand_map = getCandidateMapFromList(list(question.item_set.all()))
@@ -1336,6 +1335,7 @@ def setInitialSettings(request, question_id):
     question.slider_enabled = slider
     question.star_enabled = star
     question.yesno_enabled = yesno
+    question.ui_number = twocol+onecol+slider+star+yesno
     if openstring == "anon":
         question.open = 1
     elif openstring == "invite":

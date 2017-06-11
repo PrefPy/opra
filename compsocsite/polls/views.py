@@ -596,7 +596,6 @@ def getUnrankedCandidates(resp):
     for itr in rd:
         if rd[itr] == 1000:
             array.append(itr)
-
     if len(array) == 0:
         return None
     return array
@@ -660,8 +659,9 @@ class DetailView(views.generic.DetailView):
             for item in ctx['currentSelection']:
                 for i in item:
                     items.append(i)
-            for item in ctx['unrankedCandidates']:
-                items.append(item)
+            if not ctx['unrankedCandidates'] == None:
+                for item in ctx['unrankedCandidates']:
+                    items.append(item)
             ctx['items'] = items
         else:
             # no history so display the list of choices

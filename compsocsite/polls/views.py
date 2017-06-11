@@ -1079,11 +1079,16 @@ def getVoteResults(latest_responses, cand_map):
     scoreVectorList.append(translateWinnerList(ranked, cand_map))
 
     #for Mixtures
+    print("test1")
     rankings = pollProfile.getOrderVectorsEGMM()
     m = len(rankings[0])
+    print("test2")
     mixtures_pl1 = egmm_mixpl(rankings, m, k=1, itr=10).tolist()
+    print("test3")
     mixtures_pl2 = egmm_mixpl(rankings, m, k=2, itr=10).tolist()
+    print("test4")
     mixtures_pl3 = egmm_mixpl(rankings, m, k=3, itr=10).tolist()
+    print("test5")
     #gmm = GMMMixPLAggregator(list(pollProfile.cand_map.values()), use_matlab=False)
 
     return scoreVectorList, mixtures_pl1, mixtures_pl2, mixtures_pl3

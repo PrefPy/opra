@@ -1694,6 +1694,7 @@ def vote(request, question_id):
     prevResponseCount = question.response_set.filter(user=request.user).count()
     # get the preference order
     orderStr = request.POST["pref_order"]
+    print(orderStr)
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:
         # the user must rank all preferences

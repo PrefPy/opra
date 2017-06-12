@@ -34,6 +34,10 @@ input[type=text], input[type=url], input[type=email], input[type=password], inpu
 	border: 1px solid #bbb;
 }
 
+li.li_item{
+	font-size: 50%;
+}
+
 input[type=checkbox] {
 	width: 44px;
 	height: 44px;

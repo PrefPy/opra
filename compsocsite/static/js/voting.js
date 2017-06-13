@@ -304,7 +304,6 @@ var VoteUtil = (function () {
 			};
 			order = order + "|;;";
 		}
-		alert(order);
 
 		//var d = Date.now() - startTime;
 		//record += "S" + d;

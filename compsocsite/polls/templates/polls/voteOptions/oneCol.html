@@ -97,7 +97,7 @@
 
                                     <!-- Display each option. Each option gets its own tier -->
                                     {% with prev=forloop.counter|mul:2 %}
-                                    <ul class="choice2" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
+                                    <ul class="choice2" id="{{ prev|add:1 }}">
                                     {% endwith %}
                                         <li class="li_item" id="item{{ item.item_text }}" >
                                             <!-- Display image (uploaded) -->
@@ -125,7 +125,7 @@
                                         <ul class="choice2 empty"></ul>
                                         <div class="tier">{{ forloop.counter }}</div>
                                         {% with prev=forloop.counter|mul:2 %}
-                                        <ul class="choice2" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
+                                        <ul class="choice2" id="{{ prev|add:1 }}">
                                         {% endwith %}
                                             <li class="li_item" id="item{{ item.item_text }}">
                                                 <!-- Display image (uploaded) -->

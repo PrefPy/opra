@@ -1694,7 +1694,6 @@ def vote(request, question_id):
     prevResponseCount = question.response_set.filter(user=request.user).count()
     # get the preference order
     orderStr = request.POST["pref_order"]
-    print(orderStr)
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:
         # the user must rank all preferences
@@ -1788,6 +1787,8 @@ def anonymousVote(request, question_id):
     voter = "Anonymous"
     id = 0
     # check if the anonymous voter has voted before
+    if 'anonymousname' in request.POST:
+        voter = request.POST['anonymousname']
     if 'anonymousid' not in request.session:
         request.session['anonymousvoter'] = voter
         id = question.response_set.all().count()
@@ -1820,7 +1821,7 @@ def anonymousVote(request, question_id):
         question.new_vote = True
         question.save()
     # notify the user that the vote has been updated
-    messages.success(request, 'Your preferences have been updated.')
+    messages.success(request, 'Saved!')
     return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 
 def sendMessage(request):

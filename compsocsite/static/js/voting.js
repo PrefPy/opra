@@ -321,8 +321,8 @@ var VoteUtil = (function () {
 			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'final':order,'device':flavor,'commentTime':commentTime,'slider':slider_record,'star':star_record,'swit':swit},
 			success: function(){}
 		});
-		document.getElementById('submitbutton').style.visibility = "hidden";
-		document.getElementById('submitting').style.visibility = "visible";
+		$('.submitbutton').css( "visibility","hidden");
+		$('.submitting').css("visibility","visible");
 		$('#pref_order').submit();
 	};
 	
@@ -371,17 +371,17 @@ var VoteUtil = (function () {
 	// enables the submit button
 	function enableSubmission() {
 		if( VoteUtil.isMobileAgent() ){
-			$("#submitbutton").css("display", "inline");
+			$(".submitbutton").css("display", "inline");
 		}else{
-			document.getElementById('submitbutton').disabled = false;
+			$(".submitbutton").prop("disabled",false);
 		}
 	}
 	
 	function disableSubmission(){
 		if( VoteUtil.isMobileAgent() ){
-			$("#submitbutton").css("display", "none");
+			$(".submitbutton").css("display", "none");
 		}else{
-			document.getElementById('submitbutton').disabled = true;
+			$(".submitbutton").prop("disabled",true);
 		}
 	}
 	// returns the public members of the VoteUtil class
@@ -462,7 +462,7 @@ $( document ).ready(function() {
 	
 	
 	function enableSubmission() {
-		$('#submitbutton').css("display", "inline");
+		$('.submitbutton').css("display", "inline");
 	}
 	
 	// var type_num = 1, alt_num = 0;
@@ -686,7 +686,7 @@ $( document ).ready(function() {
 						if($( "#right-sortable" ).children().size() > 0){
 							$( "#right-sortable" ).children().last().after("<ul class=\"choice1 empty\" id=\"" + id.toString() + "\"></ul>");
 						}
-						if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton').disabled = false; }
+						if( $( "#right-sortable" ).children().size() == 0 ){ document.getElementById('submitbutton-twocol').disabled = false; }
 					}
 				var t = parseInt(item.attr("alt"));
 				var count = 0;

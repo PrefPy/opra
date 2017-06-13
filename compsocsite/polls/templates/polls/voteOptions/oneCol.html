@@ -1,5 +1,5 @@
 {% load mathfilters %}
-<div id="oneColSection">
+<div id="oneColSection" {% if request.flavour == "mobile" %}style="padding:0.4em;" {% endif %}>
     <!-- This is the voting form. Submit results through a voting function -->
     <form id="oneCol" {% if request.user.username == "" %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
         <div class="row">
@@ -7,18 +7,18 @@
             <!-- If this user isn't logged in and hasn't voted before -->
             {% if request.user.username == "" and 'anonymousid' not in request.session %}
             <div class="col-md-12" style="clear:right; ">
-                <h4>Please enter your name: </h4>
+                <h4>Your name (optional)</h4>
                 <input type="text" size="50" class="form-control" style="width=50%; clear:right;" name="anonymousname"/>
             </div>
             {% endif %}
 
-            <div class="col-md-12 margin-panel-top">
+            <div class="col-md-12">
 				
                 <!-- Panel for your preferences -->
                 <div class="panel panel-default" >
 				{% if request.flavour == "mobile" %}
 				<div class = "row col-xs-12" style="padding:0%;margin:0%;margin-bottom: 4%;">
-						<button id="submitbutton-onecol" type="submit" onclick="VoteUtil.submitPref();" class="reset-button-mobile" style = "height:2.7em;padding:0%;margin:0%;background:darkgreen;">
+						<button id="submitbutton-onecol" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton reset-button-mobile" style = "height:2.7em;padding:0%;margin:0%;background:darkgreen;">
                             <span class="glyphicon glyphicon-upload" style="font-size:140%;color:white;margin:0%;">Submit</span>
                         </button> 
                 </div>
@@ -27,10 +27,10 @@
                     <div class="panel-heading" >
                         <h4>Your preferences:
                             {% if not request.flavour == "mobile" %}
-                                <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="btn btn-success" style="position:absolute;">
+                                <button id="submitbutton-onecol" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton btn btn-success" style="position:absolute;">
                                     Submit
                                 </button>
-                                <button id="submitting" type="button" class="btn btn-default" style="visibility:hidden;position:relative;position:absolute;z-index:1;">
+                                <button id="submitting-onecol" type="button" class="submitting btn btn-default" style="visibility:hidden;position:absolute;z-index:1;">
                                     Submitting...
                                 </button>
                             {% endif %}

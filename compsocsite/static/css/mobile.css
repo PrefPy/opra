@@ -9,6 +9,10 @@ body {
 	font-size: 100%;
 }
 
+li.li_item{
+	font-size: 18px;
+}
+
 img.item {
 	height: 40px;
 	width:auto;
@@ -59,6 +63,10 @@ button {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
+}
+
+input[type=submit]{
+	font-size: 100%;
 }
 
 .form-control {

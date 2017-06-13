@@ -820,7 +820,7 @@ class VoteResultsView(views.generic.DetailView):
 # return List<String>
 def getListPollAlgorithms():
     return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin",
-            "Copeland", "Maximin", "STV", "Baldwin", "Coombs", "Black"]
+            "Copeland", "Maximin", "STV", "Baldwin", "Coombs", "Black", "Ranked Pairs"]
 
 def getListAlgorithmLinks():
     return ["https://en.wikipedia.org/wiki/Plurality_voting_method",
@@ -830,7 +830,7 @@ def getListAlgorithmLinks():
             "https://en.wikipedia.org/wiki/Minimax_Condorcet",
             "https://en.wikipedia.org/wiki/Single_transferable_vote",
             "https://en.wikipedia.org/wiki/Nanson%27s_method#Baldwin_method",
-            "https://en.wikipedia.org/wiki/Coombs%27_method",""]
+            "https://en.wikipedia.org/wiki/Coombs%27_method","",""]
 
 # get a list of allocation methods
 # return List<String>
@@ -1073,13 +1073,13 @@ def getVoteResults(latest_responses, cand_map):
     #print("test8")
     black = MechanismBlack().black_winner(pollProfile)
     #print("test7")
-    #ranked = MechanismRankedPairs().ranked_pairs_cowinners(pollProfile)
+    ranked = MechanismRankedPairs().ranked_pairs_cowinners(pollProfile)
     #print("test6")
     scoreVectorList.append(translateWinnerList(stv, cand_map))
     scoreVectorList.append(translateWinnerList(baldwin, cand_map))
     scoreVectorList.append(translateWinnerList(coombs, cand_map))
     scoreVectorList.append(translateSingleWinner(black, cand_map))
-    #scoreVectorList.append(translateWinnerList(ranked, cand_map))
+    scoreVectorList.append(translateWinnerList(ranked, cand_map))
 
     #for Mixtures
     #print("test1")

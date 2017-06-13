@@ -86,3 +86,12 @@ ul.empty {
     background-color:lightgrey;
     height: 15px;
 }
+
+ul#sliders{
+	padding-left:10px;
+}
+
+ul#stars{
+	list-style-type: none;
+	padding-left:10px;
+}

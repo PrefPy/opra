@@ -73,7 +73,7 @@
                                         <img class="item" src='{{ item.imageURL }}'/>
                                     {% endif %}
                                     <!-- Display option text -->
-                                    {{ item.item_text }} : <div id="scoreSlideI{{forloop.counter}}">0</div>
+                                    <strong>{{ item.item_text }}</strong> : <div id="scoreSlideI{{forloop.counter}}">0</div>
                                     <!-- Display tooltip for option description -->
                                     {% if item.item_description %}
                                         <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}" data-title="Meddelanden">
@@ -81,6 +81,7 @@
                                     {% endif %}
                                     <div class="slide" id="SlideI{{ forloop.counter }}" type="{{ forloop.counter }}"></div>
                                 </li>
+								<hr/>
                             {% endfor %}
                         </ul> <!-- end of main panel (left-sortable) -->
                     </div>

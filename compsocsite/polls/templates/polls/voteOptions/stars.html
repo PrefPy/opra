@@ -66,7 +66,7 @@
                                     <img class="item" src='{{ item.imageURL }}'/>
                                 {% endif %}
                                 <!-- Display option text -->
-                                {{ item.item_text }}
+                                <strong>{{ item.item_text }}</strong>
                                 <!-- Display tooltip for option description -->
                                 {% if item.item_description %}
                                     <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}" data-title="Meddelanden">
@@ -74,6 +74,7 @@
                                 {% endif %}
                                 <div class="star" id="starI{{ forloop.counter }}" type="{{ forloop.counter }}"></div>
                             </li>
+							<hr/>
                         {% endfor %}
                         </ul> <!-- end of main panel (left-sortable) -->
                     </div>

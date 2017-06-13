@@ -104,7 +104,7 @@
               </div>
               <div class="modal-body">
                 <div id="error"></div>
-                <form id="user_form" method="post" action="{% url 'appauth:login' %}">
+                <form id="user_form_login" method="post" action="{% url 'appauth:login' %}">
                     {% csrf_token %}
                     
                     <label for="username">Username</label>

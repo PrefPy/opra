@@ -87,43 +87,47 @@
 	</head>
 
 	<body>
-    
+    <div class="modal fade" role="dialog" id="loginmodal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="login_form" method="post" action="/auth/login/">
+		        {% csrf_token %}
+		        <div class="modal-header">
+	            Login
+		        </div>
+            <!--login model-->
+		        <div class="modal-body">
+              <fieldset class="form-group">
+                <label for="username">Username </label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" autofocus/>
+              </fieldset>
+              <fieldset class="form-group">
+                <label for="username">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
+              </fieldset>
+              <script>
+	              if (typeof(QueryString["name"]) != "undefined"){
+	                $('#username').val(QueryString["name"]);
+	                $('#password').focus();
+	              }
+	              else{
+	                $('#username').focus();
+	              }
+              </script>
+		        </div>
+		        <div class="modal-footer">
+	            <input type="submit" class="btn btn-primary" value="Login"/>
+	            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		        </div>
+		        <!-- end for login model-->
+          </form>
+        </div>
+      </div>
+		</div>
 		<!--nav bar for main page-->
     {% if user.is_authenticated %}
         <nav class="navbar navbar-default navbar-fixed-top" style="border-color: transparent; opacity: 0.9;">
     {% else %}
-        <!-- Modal -->
-        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel" style="float:left;">Login</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div id="error"></div>
-                <form id="user_form_login" method="post" action="{% url 'appauth:login' %}">
-                    {% csrf_token %}
-                    
-                    <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" autofocus/>
-
-                    <br/>
-
-                    <label for="password">Password</label> 
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />
-
-                    <br/>
-                    
-                    <button class="btn btn-primary">Sign in</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <nav class="navbar navbar-default navbar-fixed-top" style="background-color:white; border-color: transparent;">
     {%endif%}
         
@@ -209,12 +213,11 @@
 					</ul>
 					{% endif %}
 					<ul class="nav navbar-nav navbar-right pull-right">
-						
 						<li>
-							<a href="{% url 'appauth:register' %}" ><span class="fa fa-user-plus"></span> Sign Up </a>
+							<a href="{% url 'appauth:register' %}" style="color:black;"><span class="glyphicon glyphicon-user"></span> Sign Up </a>
 						</li>
 						<li>
-							<a data-toggle="modal" data-target="#loginModal"> <span class="fa fa-sign-in"></span> Login </a>
+							<a data-toggle="modal" data-target="#loginmodal" style="color:black;"> <span class="glyphicon glyphicon-log-in"></span> Login </a>
 						</li>
 					</ul>
 					

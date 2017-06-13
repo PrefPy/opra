@@ -1378,7 +1378,9 @@ def setPollingSettings(request, question_id):
         question.display_pref = 4
     else:
         question.display_pref = 5
-    creatorChoice = request.POST['creatorpreferences']
+    creatorChoice = str(question.creator_pref)
+    if 'creatorpreferences' in request.POST:
+        creatorChoice = request.POST['creatorpreferences']
     if creatorChoice == "1":
         question.creator_pref = 1
     else:

@@ -633,6 +633,16 @@ class DetailView(views.generic.DetailView):
                     if mostRecentAnonymousResponse.comment:
                         ctx['lastcomment'] = mostRecentAnonymousResponse.comment
                     ctx['currentSelection'] = getCurrentSelection(curr_anon_resps[0])
+                    ctx['unrankedCandidates'] = getUnrankedCandidates(curr_anon_resps[0])
+                    ctx['itr'] = itertools.count(1, 1)
+                    items_ano = []
+                    for item in ctx['currentSelection']:
+                        for i in item:
+                            items_ano.append(i)
+                    if not ctx['unrankedCandidates'] == None:
+                        for item in ctx['unrankedCandidates']:
+                            items_ano.append(item)
+                    ctx['items'] = items_ano
             else:
                 # load choices in the default order
                 ctx['items'] = self.object.item_set.all()
@@ -651,7 +661,7 @@ class DetailView(views.generic.DetailView):
             return ctx
 
         # check if the user submitted a vote earlier and display that for modification
-        if len(currentUserResponses) > 0:
+        if len(currentUserResponses) > 0 and self.request.user.get_username() != "":
             ctx['currentSelection'] = getCurrentSelection(currentUserResponses[0])
             ctx['itr'] = itertools.count(1, 1)
             ctx['unrankedCandidates'] = getUnrankedCandidates(currentUserResponses[0])
@@ -1461,7 +1471,10 @@ def deleteUserVotes(request, response_id):
     response = get_object_or_404(Response, pk=response_id)
     user = response.user
     question = response.question
-    question.response_set.filter(user=user).update(active=0)
+    if user: 
+        question.response_set.filter(user=user).update(active=0)
+    else:
+        question.response_set.filter(anonymous_id=response.anonymous_id).update(active=0)
     request.session['setting'] = 6
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1791,6 +1804,7 @@ def anonymousVote(request, question_id):
     # check if the anonymous voter has voted before
     if 'anonymousname' in request.POST:
         voter = request.POST['anonymousname']
+    print(voter)
     if 'anonymousid' not in request.session:
         request.session['anonymousvoter'] = voter
         id = question.response_set.all().count()

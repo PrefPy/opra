@@ -84,3 +84,38 @@
         {% include "polls/voteOptions/_comment_section.html" %}
     </form>
 </div>
+
+<script>
+    $(window).load(function(){
+        var original_order = [];
+        var t = 1;
+        {% if currentSelection %}
+            {% for s in currentSelection %}
+                {% if s %}
+                    var inner = [];
+                    {% for selection in s %}
+                        inner.push(t);
+                        t = t + 1;
+                    {% endfor %}
+                    original_order.push(inner);
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        
+        {% if currentSelection == None %}
+            {% for item in items %}
+                original_order.push([t]);
+                t = t + 1;
+            {% endfor %}
+        {% else %}
+
+            {% if unrankedCandidates %}
+                {% for item in unrankedCandidates %}
+                    original_order.push([t]);
+                    t = t + 1;
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+        yesNoSort(original_order);
+    });
+</script>

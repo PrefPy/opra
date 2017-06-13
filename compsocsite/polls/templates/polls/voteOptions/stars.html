@@ -56,7 +56,7 @@
                     <div class="panel-body" >
                         <ul id="stars" >
                         {% for item in items %}
-                            <li class="star_item" id="item{{ item.item_text }}">
+                            <li class="star_item" id="item{{ item.item_text }}" type="{{ forloop.counter }}" style="list-style-type: none;">
                                 <!-- Display image (uploaded) -->
                                 {% if item.image %}
                                     <img class="item" src='/{{ item.image.url }}'/>
@@ -85,3 +85,38 @@
         {% include "polls/voteOptions/_comment_section.html" %}
     </form>
 </div>
+
+<script>
+    $(window).load(function(){
+        var original_order = [];
+        var t = 1;
+        {% if currentSelection %}
+            {% for s in currentSelection %}
+                {% if s %}
+                    var inner = [];
+                    {% for selection in s %}
+                        inner.push(t);
+                        t = t + 1;
+                    {% endfor %}
+                    original_order.push(inner);
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        
+        {% if currentSelection == None %}
+            {% for item in items %}
+                original_order.push([t]);
+                t = t + 1;
+            {% endfor %}
+        {% else %}
+
+            {% if unrankedCandidates %}
+                {% for item in unrankedCandidates %}
+                    original_order.push([t]);
+                    t = t + 1;
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+        starSort(original_order);
+    });
+</script>

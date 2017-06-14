@@ -95,7 +95,10 @@ class Response(models.Model):
     comment = models.CharField(max_length=1000, blank=True, null=True)
     active = models.IntegerField(default=1)
     def __str__(self):
-        return "Response of user " + self.user.username + "\nfor question " + self.question.question_text
+        if self.user:
+            return "Response of user " + self.user.username + "\nfor question " + self.question.question_text
+        else:
+            return "Response of user " + self.anonymous_voter + "\nfor question " + self.question.question_text
     class Meta:
         ordering = ['timestamp']
 

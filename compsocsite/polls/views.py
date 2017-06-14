@@ -717,9 +717,8 @@ class PollInfoView(views.generic.DetailView):
         ctx['previous_responses'] = getSelectionList(previous_responses)
 
         # get deleted votes
-        deleted_resps = self.object.response_set.reverse().filter(active=0).order_by('-timestamp')
-        (latest_deleted_resps,
-         previous_deleted_resps) = categorizeResponses(deleted_resps)
+        deleted_resps = self.object.response_set.filter(active=0).order_by('-timestamp')
+        (latest_deleted_resps,previous_deleted_resps) = categorizeResponses(deleted_resps)
         ctx['latest_deleted_resps'] = getSelectionList(latest_deleted_resps)
         ctx['previous_deleted_resps'] = getSelectionList(previous_deleted_resps)
 
@@ -1483,7 +1482,10 @@ def restoreUserVotes(request, response_id):
     response = get_object_or_404(Response, pk=response_id)
     user = response.user
     question = response.question
-    question.response_set.filter(user=user, active=0).update(active=1)
+    if user: 
+        question.response_set.filter(user=user, active=0).update(active=1)
+    else:
+        question.response_set.filter(anonymous_id=response.anonymous_id, active=0).update(active=1)
     request.session['setting'] = 7
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1804,7 +1806,6 @@ def anonymousVote(request, question_id):
     # check if the anonymous voter has voted before
     if 'anonymousname' in request.POST:
         voter = request.POST['anonymousname']
-    print(voter)
     if 'anonymousid' not in request.session:
         request.session['anonymousvoter'] = voter
         id = question.response_set.all().count()

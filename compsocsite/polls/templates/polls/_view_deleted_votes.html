@@ -1,7 +1,7 @@
 <h3 class="page-header">Deleted votes of {{ question.question_text }} </h3>
 
-{% if latest_deleted_responses|length > 0 %}
-	{% for response, currentSelection in latest_deleted_responses %}
+{% if latest_deleted_resps|length > 0 %}
+	{% for response, currentSelection in latest_deleted_resps %}
 		<!-- display name -->
 		<a class="btn btn-primary" href="{% url 'polls:resuservotes' response.id %}">Restore</a>
 		{% if response.user %}
@@ -19,11 +19,11 @@
 	{% endfor %} <!-- for response-->
 	<br />
 	<br />
-	{% if previous_deleted_responses %}
+	{% if previous_deleted_resps %}
 		<button data-toggle="collapse" data-target="#history2" class="btn btn-info" >Show/Hide More History</button>
 		<div id="history2" class="collapse">
 			<div class="well">
-			{% for response, currentSelection in previous_deleted_responses %}
+			{% for response, currentSelection in previous_deleted_resps %}
 				<div class="btn-group">
 					<!-- display name -->
 					{% if response.user %}
@@ -39,5 +39,5 @@
 		</div>
 	{% endif %} <!--previous responses-->
 {% else %} 
-	<p>No one has voted on this poll yet.</p>
+	<p>No votes are deleted.</p>
 {% endif %} <!-- no response-->

@@ -49,7 +49,7 @@ def register(request):
                 registered = True
                 user.is_active = False
                 user.save()
-                htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/register/confirm/"+user.id+"'>Click This Link To Activate Your Account</a></p>"
+                htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/register/confirm/"+str(user.id)+"'>Click This Link To Activate Your Account</a></p>"
                 mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
         #else    print (user_form.errors)
 

@@ -21,4 +21,6 @@ urlpatterns = [
     url(r'^settings/update/global$', views.updateGlobalSettings, name='updateGlobalSettings'),
 	url(r'^register/confirm/(?P<key>\w+)/$',views.confirm, name='confirm'),
     url(r'^messages$', views.MessageView.as_view(), name='messages'),
+    url(r'^(?P<question_id>[0-9]+)/quickregister/$', views.quickRegister, name='quickregister'),
+    url(r'^(?P<question_id>[0-9]+)/quickconfirm/(?P<key>\w+)/$', views.quickConfirm, name='quickconfirm'),
 ]

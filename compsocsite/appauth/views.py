@@ -42,13 +42,13 @@ def register(request):
                 
                 # Hash the password with the set_password method
                 user.set_password(user.password)
+                user.is_active = False
                 user.save()
                 profile = UserProfile(user=user, displayPref = 1)
                 profile.save()
                 # Update our variable to tell the template registration was successful.
                 registered = True
-                user.is_active = False
-                user.save()
+                
                 htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>Click This Link To Activate Your Account</a></p>"
                 mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
         #else    print (user_form.errors)
@@ -72,6 +72,42 @@ def confirm(request, key):
     user.is_active = True
     user.save()
     return render(request, 'activation.html', {}, context)
+
+def quickRegister(request, question_id):
+    context = RequestContext(request)
+    
+    registered = False
+    if request.method == 'POST':
+        user_form = UserForm(data=request.POST)
+        if user_form.is_valid():
+            if '@' in request.POST['username']:
+                user_form = UserForm()
+            else:
+                # Save the user's form data to the database.
+                user = user_form.save()
+                
+                # Hash the password with the set_password method
+                user.set_password(user.password)
+                user.is_active = False
+                user.save()
+                profile = UserProfile(user=user, displayPref = 1)
+                profile.save()
+                # Update our variable to tell the template registration was successful.
+                registered = True
+                
+                htmlstr =  "<p><a href='https://opra.cs.rpi.edu/polls/"+str(question_id)+"/quickconfirm/"+opra_crypto.encrypt(user.id)+"'>Click This Link To Activate Your Account</a></p>"
+                mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
+        #else    print (user_form.errors)
+        else:
+            return HttpResponse("This user name already exists. Please try a different one. <a href='/polls/"+str(question_id)+"'>Return to registration</a>")
+
+def quickConfirm(request,question_id,key):
+    user_id = opra_crypto.decrypt(key)
+    user = get_object_or_404(User, pk=user_id)
+    user.is_active = True
+    user.save()
+    login(request,user)
+    return HttpResponseRedirect("polls/"+str(question_id)+"/")
 
 def user_login(request):
     context = RequestContext(request)

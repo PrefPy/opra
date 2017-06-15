@@ -71,7 +71,7 @@ def confirm(request, key):
     user = get_object_or_404(User, pk=user_id)
     user.is_active = True
     user.save()
-    return render(request, 'activation.html', {}, context)
+    return render(request, 'activation.html', {'quick':False}, context)
 
 def quickRegister(request, question_id):
     context = RequestContext(request)
@@ -95,19 +95,24 @@ def quickRegister(request, question_id):
                 # Update our variable to tell the template registration was successful.
                 registered = True
                 
-                htmlstr =  "<p><a href='https://opra.cs.rpi.edu/polls/"+str(question_id)+"/quickconfirm/"+opra_crypto.encrypt(user.id)+"'>Click This Link To Activate Your Account</a></p>"
+                htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/"+str(question_id)+"/quickconfirm/"+opra_crypto.encrypt(user.id)+"'>Click This Link To Activate Your Account</a></p>"
                 mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
         #else    print (user_form.errors)
         else:
             return HttpResponse("This user name already exists. Please try a different one. <a href='/polls/"+str(question_id)+"'>Return to registration</a>")
+    return render(request,
+                              'register.html',
+                              {'user_form': user_form, 'registered': registered},
+                              context)
 
 def quickConfirm(request,question_id,key):
     user_id = opra_crypto.decrypt(key)
     user = get_object_or_404(User, pk=user_id)
     user.is_active = True
     user.save()
-    login(request,user)
-    return HttpResponseRedirect("polls/"+str(question_id)+"/")
+    context = RequestContext(request)
+    link = "/polls/"+ str(question_id)+"/"
+    return render(request, 'activation.html', {'quick':True, 'link':link}, context)
 
 def user_login(request):
     context = RequestContext(request)
@@ -125,7 +130,6 @@ def user_login(request):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             return HttpResponse("Your account is not active.")
         else:
-            print ("Invalid login details")
             return HttpResponse("Invalid login details supplied.")
 	
 # Display the login form.

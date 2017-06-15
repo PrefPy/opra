@@ -462,6 +462,7 @@ def getPollWinner(question):
     edgestr = ""
     shadestr = ""
     mov = getMarginOfVictory(latest_responses, cand_map)
+    print(mov)
     for x in range(0, len(vote_results)):
         for key, value in vote_results[x].items():
             resultstr += str(value)

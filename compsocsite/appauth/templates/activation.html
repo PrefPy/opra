@@ -4,4 +4,9 @@
 <br />
 
 <p>Your account was successfully activated.</p>
+{% if quick %}
+	<p><a href="{{link}}">Click here</a> to return to the poll.</p>
+{% else %}
+	<p><a href="/polls/main">Click here</a> to return to homepage.</p>
+{% endif %}
 {% endblock %}

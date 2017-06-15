@@ -95,7 +95,7 @@
                     {% elif question.status == 3 %}
                             <td>
                                 {% if question.question_type == 1 %}
-                                    <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
+                                    <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" class="overflow">
                                         {{question.winner}} wins
                                     </a>
                                 {% elif question.question_type == 2 %}

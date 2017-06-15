@@ -19,6 +19,6 @@ urlpatterns = [
     url(r'^settings/update/$', views.updateSettings, name='updateSettings'),
     url(r'^settings/diablehint/$', views.disableHint, name='disableHint'),
     url(r'^settings/update/global$', views.updateGlobalSettings, name='updateGlobalSettings'),
-	url(r'^register/confirm/(?P<user_id>[0-9]+)/$',views.confirm, name='confirm'),
+	url(r'^register/confirm/(?P<key>\w+)/$',views.confirm, name='confirm'),
     url(r'^messages$', views.MessageView.as_view(), name='messages'),
 ]

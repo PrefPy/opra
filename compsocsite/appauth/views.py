@@ -18,7 +18,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 from polls.models import Message
-
+from polls import opra_crypto
 import cas.middleware
 
 def register(request):
@@ -49,7 +49,7 @@ def register(request):
                 registered = True
                 user.is_active = False
                 user.save()
-                htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/register/confirm/"+str(user.id)+"'>Click This Link To Activate Your Account</a></p>"
+                htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>Click This Link To Activate Your Account</a></p>"
                 mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
         #else    print (user_form.errors)
         else:
@@ -65,8 +65,9 @@ def register(request):
                               context)
 
 							  
-def confirm(request, user_id):
+def confirm(request, key):
     context = RequestContext(request)
+    user_id = opra_crypto.decrypt(key)
     user = get_object_or_404(User, pk=user_id)
     user.is_active = True
     user.save()

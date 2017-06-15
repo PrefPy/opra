@@ -296,6 +296,15 @@ th {
     text-overflow: ellipsis;
 }
 
+/* handle overflowing text */
+.overflow {
+    white-space: nowrap;
+    max-width:300px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    font-size: 1.2em;
+}
+
 .li_item {
     overflow: hidden;
     text-overflow: ellipsis;

@@ -376,7 +376,7 @@
                             <td {% if question.poll_algorithm == forloop.counter %}class="info"{% endif %}><a target="_blank" href="{{algorithm_links|index:forloop.counter0}}">{{ poll_algorithms|index:forloop.counter0 }}</a></td>
 
                             {% for score in item %}
-                                    <td style='background-color: {{shade_values|index:forloop.parentloop.counter0|index:forloop.counter0}}'>{{ score }}</td>
+                                <td style='background-color: {{shade_values|index:forloop.parentloop.counter0|index:forloop.counter0}}'>{{ score }}</td>
                             {% endfor %}
 
                             <!-- margin of victory column -->
@@ -482,7 +482,7 @@
                 </h4>
             </div>
             <div id="collapse_mix" class="panel-body">
-                <div class="table-responsive" onload="alert(0)">
+                <div class="table-responsive">
                     <canvas id="mixtures" width="700" height="200" style="display: block"></canvas>
                     <button id="bigger" onclick="enlarge()">Make Larger</button>
                     <button id="smaller" onclick="smaller()">Make Smaller</button>

@@ -58,6 +58,7 @@
                         {% for item in items %}
                             <label class="checkbox" id="item{{ item.item_text }}" type="{{ forloop.counter }}" onclick="select(this);">
                               <input type="checkbox" style="display:none">
+                              <span class="glyphicon" aria-hidden="true"></span>
                                 <!-- Display image (uploaded) -->
                                 {% if item.image %}
                                     <img class="item" src='/{{ item.image.url }}'/>

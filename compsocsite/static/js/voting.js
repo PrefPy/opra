@@ -14,8 +14,16 @@ var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
 var methodIndicator = "two_column";
 
 function select(item){
-	if($(item).children()[0].checked){ $(item).css('border-color', 'green'); }
-	else{ $(item).css('border-color', 'red'); }
+	if($(item).children()[0].checked){
+		$(item).css('border-color', 'green');
+		$($(item).children()[1]).removeClass('glyphicon-unchecked');
+		$($(item).children()[1]).addClass('glyphicon-check');
+	}
+	else{
+		$(item).css('border-color', 'black');
+		$($(item).children()[1]).removeClass('glyphicon-check');
+		$($(item).children()[1]).addClass('glyphicon-unchecked');
+	}
 }
 
 //Get order of one or two column
@@ -137,11 +145,15 @@ function yesNoSort( order ){
 		$.each(value, function(i, v){
 			if(index == 0){
 				$($(".checkbox[type='" + v.toString() + "']").children()[0]).attr('checked', 'checked');
+				$($(".checkbox[type='" + v.toString() + "']").children()[1]).removeClass('glyphicon-unchecked');
+				$($(".checkbox[type='" + v.toString() + "']").children()[1]).addClass('glyphicon-check');
 				$(".checkbox[type='" + v.toString() + "']").css('border-color', 'green');
 			}
 			else{
 				$($(".checkbox[type='" + v.toString() + "']").children()[0]).removeAttr('checked');
-				$(".checkbox[type='" + v.toString() + "']").css('border-color', 'red');
+				$($(".checkbox[type='" + v.toString() + "']").children()[1]).removeClass('glyphicon-check');
+				$($(".checkbox[type='" + v.toString() + "']").children()[1]).addClass('glyphicon-unchecked');
+				$(".checkbox[type='" + v.toString() + "']").css('border-color', 'black');
 			}
 		});
 	});

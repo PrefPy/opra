@@ -788,7 +788,7 @@ class VoteResultsView(views.generic.DetailView):
         start_algorithm_links = getListAlgorithmLinks()
         to_show = self.object.vote_rule
         itr = 0
-        print(to_show)
+        poll_alg_num = self.object.poll_algorithm
         while to_show > 0:
             if to_show % 2 == 1:
                 poll_algorithms.append(start_poll_algorithms[itr])
@@ -798,10 +798,12 @@ class VoteResultsView(views.generic.DetailView):
                 if itr < 4:
                     margin_victory.append(l[1][itr])
                 to_show = to_show - 1
+            elif itr < self.object.poll_algorithm - 1:
+                poll_alg_num -= 1
             to_show = int(to_show / 2)
-            print(to_show)
             itr += 1
         ctx['poll_algorithms'] = poll_algorithms
+        ctx['poll_alg_num'] = poll_alg_num
         ctx['algorithm_links'] = algorithm_links
         ctx['vote_results'] = vote_results
         ctx['margin_victory'] = margin_victory

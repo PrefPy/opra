@@ -371,7 +371,7 @@
 
                     {% for item in vote_results %}
                         <tr>
-                            <td {% if question.poll_algorithm == forloop.counter %}class="info"{% endif %}><a target="_blank" href="{{algorithm_links|index:forloop.counter0}}">{{ poll_algorithms|index:forloop.counter0 }}</a></td>
+                            <td {% if poll_alg_num == forloop.counter %}class="info"{% endif %}><a target="_blank" href="{{algorithm_links|index:forloop.counter0}}">{{ poll_algorithms|index:forloop.counter0 }}</a></td>
 
                             {% for score in item %}
                                 <td style='background-color: {{shade_values|index:forloop.parentloop.counter0|index:forloop.counter0}}'>{{ score }}</td>

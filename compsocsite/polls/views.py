@@ -302,12 +302,17 @@ def editBasicInfo(request, question_id):
         star = True
     if "yesno" in uilist:
         yesno = True
+    vr = 0
+    print(request.POST.getlist('vr'))
+    for rule in request.POST.getlist('vr'):
+        vr += int(rule)
     question.twocol_enabled = twocol
     question.onecol_enabled = onecol
     question.slider_enabled = slider
     question.star_enabled = star
     question.yesno_enabled = yesno
     question.ui_number = twocol+onecol+slider+star+yesno
+    question.vote_rule = vr
     question.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -702,6 +707,11 @@ class PollInfoView(views.generic.DetailView):
         ctx['groups'] = Group.objects.all()
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()
+        twos = []
+        for i in range(0, len(ctx['poll_algorithms'])):
+            twos.append(2 ** i)
+        ctx['twos'] = twos
+        ctx['bools'] = self.object.vote_rule
 
         # display this user's history
         currentUserResponses = self.object.response_set.filter(user=self.request.user,
@@ -752,8 +762,6 @@ class VoteResultsView(views.generic.DetailView):
         #print("page accessed")
         cand_map = getCandidateMapFromList(list(self.object.item_set.all()))
         ctx['cand_map'] = cand_map# if (len(latest_responses) > 0) else None
-        ctx['poll_algorithms'] = getListPollAlgorithms()
-        ctx['algorithm_links'] = getListAlgorithmLinks()
         if self.object.status != 4 and self.object.new_vote == True:
             getPollWinner(self.object)
         final_result = self.object.finalresult
@@ -769,13 +777,39 @@ class VoteResultsView(views.generic.DetailView):
             mixtures_pl3 = []
 
         l = interpretResult(final_result)
-        #print(l[0])
-        ctx['vote_results'] = l[0]
-        ctx['margin_victory'] = l[1]
-        ctx['shade_values'] = l[2]
+        # print(l[0])
+        poll_algorithms = []
+        algorithm_links = []
+        vote_results = []
+        margin_victory = []
+        shade_values = []
+
+        start_poll_algorithms = getListPollAlgorithms()
+        start_algorithm_links = getListAlgorithmLinks()
+        to_show = self.object.vote_rule
+        itr = 0
+        print(to_show)
+        while to_show > 0:
+            if to_show % 2 == 1:
+                poll_algorithms.append(start_poll_algorithms[itr])
+                algorithm_links.append(start_algorithm_links[itr])
+                vote_results.append(l[0][itr])
+                shade_values.append(l[2][itr])
+                if itr < 4:
+                    margin_victory.append(l[1][itr])
+                to_show = to_show - 1
+            to_show = int(to_show / 2)
+            print(to_show)
+            itr += 1
+        ctx['poll_algorithms'] = poll_algorithms
+        ctx['algorithm_links'] = algorithm_links
+        ctx['vote_results'] = vote_results
+        ctx['margin_victory'] = margin_victory
+        ctx['shade_values'] = shade_values
         ctx['wmg_nodes'] = l[3]
         ctx['wmg_edges'] = l[4]
         ctx['time'] = final_result.timestamp
+        ctx['margin_len'] = len(margin_victory)
         #else:
             #all_responses = self.object.response_set.filter(active=1).order_by('-timestamp')
             #(latest_responses, previous_responses) = categorizeResponses(all_responses)
@@ -1349,12 +1383,17 @@ def setInitialSettings(request, question_id):
         star = True
     if "yesno" in uilist:
         yesno = True
+    vr = 0
+    print(request.POST.getlist('vr'))
+    for rule in request.POST.getlist('vr'):
+        vr += int(rule)
     question.twocol_enabled = twocol
     question.onecol_enabled = onecol
     question.slider_enabled = slider
     question.star_enabled = star
     question.yesno_enabled = yesno
     question.ui_number = twocol+onecol+slider+star+yesno
+    question.vote_rule = vr
     if openstring == "anon":
         question.open = 1
     elif openstring == "invite":

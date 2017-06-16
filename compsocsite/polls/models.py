@@ -45,6 +45,7 @@ class Question(models.Model):
     yesno_enabled = models.BooleanField(default=True)
     initial_ui = models.IntegerField(default=1)
     ui_number = models.IntegerField(default=5)
+    vote_rule = models.IntegerField(default=4095)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):

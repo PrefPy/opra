@@ -17,7 +17,6 @@
         var l1 = left1;
         ctx.font=font_size.toString().concat("px Arial");
         for (var i = 0; i < colors.length; i++) {
-            console.log("what?");
             ctx.fillStyle=colors[i];
             ctx.fillRect(left1,down1,(nums[i + 1] * length),height * (nums[0]));
             left1 += (nums[i + 1] * length) + (15 / (colors.length - 1));
@@ -66,7 +65,6 @@
         var alpha2 = nums[len + 1];
         var alpha3 = nums[2*(len + 1)];
         ctx.font=font_size.toString().concat("px Arial");
-        console.log("nums " + nums)
         for (var i = 0; i < colors.length; i++) {
             ctx.fillStyle=colors[i];
             ctx.fillRect(left1,down1,(nums[i + 1] * length),height * alpha1);
@@ -380,9 +378,9 @@
                             {% endfor %}
 
                             <!-- margin of victory column -->
-                            {% if forloop.counter < 5 %}
+                            {% if forloop.counter <= margin_len %}
                                 <td>{{ margin_victory|index:forloop.counter0 }} </td>
-                            {% elif forloop.counter == 5 %}
+                            {% elif forloop.counter == margin_len %}
                                 <td>{{ margin_victory.4 }}</td>
                             {% else %}
                                 <td>-</td>

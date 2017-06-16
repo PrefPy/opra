@@ -871,7 +871,8 @@ $( document ).ready(function() {
 	});
 	$(".star").each(function(){
 		$(this).rateYo({
-			halfStar: true,
+			numStars: 10,
+			fullStar: true,
 			onSet: function (rating, rateYoInstance) {
 				var d = (Date.now() - startTime).toString();
 				var temp = JSON.parse(star_record);

@@ -795,7 +795,7 @@ class VoteResultsView(views.generic.DetailView):
                 algorithm_links.append(start_algorithm_links[itr])
                 vote_results.append(l[0][itr])
                 shade_values.append(l[2][itr])
-                if itr < 5:
+                if itr < len(l[1]):
                     margin_victory.append(l[1][itr])
                 to_show = to_show - 1
             elif itr < self.object.poll_algorithm - 1:
@@ -1247,11 +1247,15 @@ def getMarginOfVictory(latest_responses, cand_map):
     if pollProfile.getElecType() != "soc" and pollProfile.getElecType() != "toc":
         return []
     marginList = []
-    marginList.append(MoVPlurality(pollProfile))
-    marginList.append(MoVBorda(pollProfile))
-    marginList.append(MoVVeto(pollProfile))
-    marginList.append(MoVkApproval(pollProfile, 3))
-    marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
+    for x in range(0,len(getListPollAlgorithms())):
+        marginList.append(-1)
+    marginList[0] = MoVPlurality(pollProfile)
+    marginList[1] = MoVBorda(pollProfile)
+    marginList[2] = MoVVeto(pollProfile)
+    marginList[3] = MoVkApproval(pollProfile, 3)
+    marginList[4] = MechanismSimplifiedBucklin().getMov(pollProfile)
+    marginList[12] = MechanismPluralityRunOff().getMov(pollProfile)
+
     return marginList
 
 # used to help find the recommended order

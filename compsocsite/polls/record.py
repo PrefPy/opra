@@ -189,6 +189,7 @@ def interpretRecord(record):
     if record.slider != "":
         record_arr.append(record.slider)
         record_arr.append(record.star)
+        record_arr.append(record.swit)
     return record_arr
     
 def interpretRecord1(record):
@@ -226,7 +227,7 @@ def downloadRecord(request, question_id):
     response['Content-Disposition'] = 'attachment; filename="record.csv"'
     writer = csv.writer(response)
     for r in records:
-        writer.writerow(interpretRecord1(r))
+        writer.writerow(interpretRecord(r))
     return response
 
 def downloadAllRecord(request, user_id):

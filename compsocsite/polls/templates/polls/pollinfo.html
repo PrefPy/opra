@@ -135,7 +135,7 @@
 <div class="col-xs-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         {% if question.question_owner == request.user %}
-            <li><a data-toggle="tab" href="#title">Basic Info</a></li>
+            <li {% if request.session.setting == 8 %} class="active" {% endif %}><a data-toggle="tab" href="#title">Basic Info</a></li>
             <li {% if request.session.setting == 0 %} class="active" {% endif %}><a data-toggle="tab" href="#choices" >Choices</a></li>
             <li {% if request.session.setting == 2 %} class="active" {% endif %}><a data-toggle="tab" href="#algorithm">Algorithms and Visibility</a></li>
             <li {% if request.session.setting == 6 %} class="active" {% endif %}><a data-toggle="tab" href="#historyinfo">History</a></li>
@@ -196,7 +196,7 @@
     {% include 'polls/_set_polling_settings.html' %}
 </div>
             
-<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="title">
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 8 %}active{% endif %}" id="title">
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
     
     {% include 'polls/_change_title_and_desc.html' %}

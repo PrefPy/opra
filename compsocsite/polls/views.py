@@ -314,7 +314,7 @@ def editBasicInfo(request, question_id):
     question.ui_number = twocol+onecol+slider+star+yesno
     question.vote_rule = vr
     question.save()
-    request.session['setting'] = 0
+    request.session['setting'] = 8
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # remove a choice from the poll.

@@ -380,8 +380,6 @@
                             <!-- margin of victory column -->
                             {% if forloop.counter <= margin_len %}
                                 <td>{{ margin_victory|index:forloop.counter0 }} </td>
-                            {% elif forloop.counter == margin_len %}
-                                <td>{{ margin_victory.4 }}</td>
                             {% else %}
                                 <td>-</td>
                             {% endif %}

@@ -865,7 +865,7 @@ class VoteResultsView(views.generic.DetailView):
 # return List<String>
 def getListPollAlgorithms():
     return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin",
-            "Copeland", "Maximin", "STV", "Baldwin", "Coombs", "Black", "Ranked Pairs"]
+            "Copeland", "Maximin", "STV", "Baldwin", "Coombs", "Black", "Ranked Pairs", "Plurality With Runoff"]
 
 def getListAlgorithmLinks():
     return ["https://en.wikipedia.org/wiki/Plurality_voting_method",
@@ -875,7 +875,7 @@ def getListAlgorithmLinks():
             "https://en.wikipedia.org/wiki/Minimax_Condorcet",
             "https://en.wikipedia.org/wiki/Single_transferable_vote",
             "https://en.wikipedia.org/wiki/Nanson%27s_method#Baldwin_method",
-            "https://en.wikipedia.org/wiki/Coombs%27_method","",""]
+            "https://en.wikipedia.org/wiki/Coombs%27_method","","",""]
 
 # get a list of allocation methods
 # return List<String>
@@ -1119,12 +1119,14 @@ def getVoteResults(latest_responses, cand_map):
     black = MechanismBlack().black_winner(pollProfile)
     #print("test7")
     ranked = MechanismRankedPairs().ranked_pairs_cowinners(pollProfile)
+    pwro = MechanismPluralityRunOff().PluRunOff_cowinners(pollProfile)
     #print("test6")
     scoreVectorList.append(translateWinnerList(stv, cand_map))
     scoreVectorList.append(translateWinnerList(baldwin, cand_map))
     scoreVectorList.append(translateWinnerList(coombs, cand_map))
     scoreVectorList.append(translateSingleWinner(black, cand_map))
     scoreVectorList.append(translateWinnerList(ranked, cand_map))
+    scoreVectorList.append(translateWinnerList(pwro, cand_map))
 
     #for Mixtures
     #print("test1")
@@ -1249,9 +1251,7 @@ def getMarginOfVictory(latest_responses, cand_map):
     marginList.append(MoVBorda(pollProfile))
     marginList.append(MoVVeto(pollProfile))
     marginList.append(MoVkApproval(pollProfile, 3))
-    #if len(latest_responses) > 1:
-     #   marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
-    #marginList.append("-")
+    #marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
     return marginList
 
 # used to help find the recommended order

@@ -34,31 +34,6 @@
 			<label class="checkbox-inline"><input id="yesno_checkbox" type="checkbox" value="yesno" name="ui" {% if question.yesno_enabled %} checked {% endif %}>Yes/No</label>
 		</div>
     </fieldset>
-		
-	<fieldset class="form-group">
-        <label>Visible Voting Rules</label>
-        <div id="visible">
-        	{% for rule in poll_algorithms %}
-            	<label class="checkbox-inline"><input type="checkbox" name="vr">{{ rule }}</label>
-            {% endfor %}
-		</div>
-    </fieldset>
-    <script>
-    	var val = 0;
-    	var bools = {{ bools }};
-    	$("#visible").children().each(function(index, value){
-    		$(value).children().each(function(i, v){
-    			$(v).val(Math.pow(2, val));
-    			if(bools % 2 == 1){
-					$(v).prop( "checked", true );
-					bools = bools - 1;
-    			}
-    		});
-	    	bools = bools / 2;
-    		val = val + 1;
-    	});
-    </script>
-
-    <br />
+    <br/>
     <input type="submit" class="btn btn-primary" value="Save Changes"/>
 </form>

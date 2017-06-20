@@ -302,17 +302,12 @@ def editBasicInfo(request, question_id):
         star = True
     if "yesno" in uilist:
         yesno = True
-    vr = (2 ** (question.poll_algorithm - 1))
-    for rule in request.POST.getlist('vr'):
-        if int(rule) != (2 ** (question.poll_algorithm - 1)):
-            vr += int(rule)
     question.twocol_enabled = twocol
     question.onecol_enabled = onecol
     question.slider_enabled = slider
     question.star_enabled = star
     question.yesno_enabled = yesno
     question.ui_number = twocol+onecol+slider+star+yesno
-    question.vote_rule = vr
     question.save()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1435,6 +1430,11 @@ def setPollingSettings(request, question_id):
         question.creator_pref = 1
     else:
         question.creator_pref = 2
+    vr = (2 ** (int(request.POST['pollpreferences']) - 1))
+    for rule in request.POST.getlist('vr'):
+        if int(rule) != (2 ** (int(request.POST['pollpreferences']) - 1)):
+            vr += int(rule)
+    question.vote_rule = vr
     question.save()
     request.session['setting'] = 2
     messages.success(request, 'Your changes have been saved.')

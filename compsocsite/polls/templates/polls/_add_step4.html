@@ -24,7 +24,7 @@
             
             {% if question.question_type == 1 %}
                 <label for="pollpreferences">Select a voting algorithm <i class="fa fa-question-circle" aria-hidden="true" data-toggle="modal" data-target=".bs-example-modal-lg" style="color:GoldenRod;"></i></label>
-                <select name="pollpreferences" class="form-control">
+                <select id="pollpreferences" name="pollpreferences" class="form-control">
                 {% for item in poll_algorithms %}
                     <option value="{{ forloop.counter }}">
                         {{ item }}
@@ -125,20 +125,34 @@
             <br /><br />
             
             <label>Visible Voting Rules</label>
-            <div>
-                <label class="checkbox-inline"><input id="plurality_checkbox" type="checkbox" value="1" name="vr" checked>Plurality</label>
-                <label class="checkbox-inline"><input id="borda_checkbox" type="checkbox" value="2" name="vr" checked>Borda</label>
-                <label class="checkbox-inline"><input id="veto_checkbox" type="checkbox" value="4" name="vr" checked>Veto</label>
-                <label class="checkbox-inline"><input id="kapproval_checkbox" type="checkbox" value="8" name="vr" checked>K-Approval (K=3)</label>
-                <label class="checkbox-inline"><input id="bucklin_checkbox" type="checkbox" value="16" name="vr" checked>Simplified Bucklin</label>
-                <label class="checkbox-inline"><input id="copeland_checkbox" type="checkbox" value="32" name="vr" checked>Copeland</label>
-                <label class="checkbox-inline"><input id="maximin_checkbox" type="checkbox" value="64" name="vr" checked>Maximin</label>
-                <label class="checkbox-inline"><input id="stv_checkbox" type="checkbox" value="128" name="vr" checked>STV</label>
-                <label class="checkbox-inline"><input id="baldwin_checkbox" type="checkbox" value="256" name="vr" checked>Baldwin</label>
-                <label class="checkbox-inline"><input id="coombs_checkbox" type="checkbox" value="512" name="vr" checked>Coombs</label>
-                <label class="checkbox-inline"><input id="black_checkbox" type="checkbox" value="1024" name="vr" checked>Black</label>
-                <label class="checkbox-inline"><input id="rankedpairs_checkbox" type="checkbox" value="2048" name="vr" checked>Ranked Pairs</label>
+            <div id="visible">
+                <label class="checkbox-inline"><input id="vis1" type="checkbox" value="1" name="vr" checked disabled>Plurality</label>
+                <label class="checkbox-inline"><input id="vis2" type="checkbox" value="2" name="vr" checked>Borda</label>
+                <label class="checkbox-inline"><input id="vis4" type="checkbox" value="4" name="vr" checked>Veto</label>
+                <label class="checkbox-inline"><input id="vis8" type="checkbox" value="8" name="vr" checked>K-Approval (K=3)</label>
+                <label class="checkbox-inline"><input id="vis16" type="checkbox" value="16" name="vr" checked>Simplified Bucklin</label>
+                <label class="checkbox-inline"><input id="vis32" type="checkbox" value="32" name="vr" checked>Copeland</label>
+                <label class="checkbox-inline"><input id="vis64" type="checkbox" value="64" name="vr" checked>Maximin</label>
+                <label class="checkbox-inline"><input id="vis128" type="checkbox" value="128" name="vr" checked>STV</label>
+                <label class="checkbox-inline"><input id="vis256" type="checkbox" value="256" name="vr" checked>Baldwin</label>
+                <label class="checkbox-inline"><input id="vis512" type="checkbox" value="512" name="vr" checked>Coombs</label>
+                <label class="checkbox-inline"><input id="vis1024" type="checkbox" value="1024" name="vr" checked>Black</label>
+                <label class="checkbox-inline"><input id="vis2048" type="checkbox" value="2048" name="vr" checked>Ranked Pairs</label>
             </div>
+
+            <script>
+                $('#pollpreferences').change(function(){
+                    $("#visible").children().each(function(index, value){
+                        $(value).children().each(function(i, v){
+                            $(v).prop( "disabled", false );
+                        });
+                    });
+                    var changed = Math.pow(2, $('#pollpreferences option:selected').val() - 1);
+                    $('#vis' + changed).prop("checked", true);
+                    $('#vis' + changed).prop("disabled", true);
+                });
+            </script>
+
             <br />
             <div class="col-md-6 col-md-offset-3" align="center">
                 <input type="submit" value="Finish" class="btn btn-primary">

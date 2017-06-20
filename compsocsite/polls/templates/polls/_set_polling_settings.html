@@ -2,9 +2,9 @@
     {% csrf_token %}
     {% if question.question_type == 1 %}
         <label for="pollpreferences">Select a voting algorithm</label>
-        <select name="pollpreferences" class="form-control" {% if question.status != 1 %} disabled {% endif %}>
+        <select id="pollpreferences" name="pollpreferences" class="form-control" {% if question.status != 1 %} disabled {% endif %}>
         {% for item in poll_algorithms %}
-            <option value="{{ forloop.counter }}" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
+            <option value="{{ forloop.counter }}" class="poll_alg" {% if question.poll_algorithm == forloop.counter %} selected {% endif %}>
                 {{ item }}
             </option>
         {% endfor %}
@@ -51,5 +51,44 @@
         <option value="1" {% if question.creator_pref == 1 %} selected {% endif %}>Creator can see everyone's vote</option>
         <option value="2" {% if question.creator_pref == 2 %} selected {% endif %}>Creator has the same visibility setting as all voters</option>
     </select>
+    
+    <br/>
+
+    <fieldset class="form-group">
+        <label>Visible Voting Rules</label>
+        <div id="visible">
+            {% for rule in poll_algorithms %}
+                <label class="checkbox-inline"><input type="checkbox" name="vr" {% if question.poll_algorithm == forloop.counter %}disabled{% endif %}>{{ rule }}</label>
+            {% endfor %}
+        </div>
+    </fieldset>
+    <script>
+        var val = 0;
+        var bools = {{ bools }};
+        $("#visible").children().each(function(index, value){
+            $(value).children().each(function(i, v){
+                $(v).val(Math.pow(2, val));
+                $(v).attr('id', 'vis' + Math.pow(2, val));
+                if(bools % 2 == 1){
+                    $(v).prop( "checked", true );
+                    bools = bools - 1;
+                }
+            });
+            bools = bools / 2;
+            val = val + 1;
+        });
+        $('#pollpreferences').change(function(){
+            $("#visible").children().each(function(index, value){
+                $(value).children().each(function(i, v){
+                    $(v).prop( "disabled", false );
+                });
+            });
+            var changed = Math.pow(2, $('#pollpreferences option:selected').val() - 1);
+            $('#vis' + changed).attr("checked", "checked");
+            $('#vis' + changed).prop("disabled", true);
+        });
+    </script>
+
+    <br />
     <input type="submit" value="Submit" class="btn btn-success">
 </form>

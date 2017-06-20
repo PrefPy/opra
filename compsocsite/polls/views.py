@@ -795,7 +795,7 @@ class VoteResultsView(views.generic.DetailView):
                 algorithm_links.append(start_algorithm_links[itr])
                 vote_results.append(l[0][itr])
                 shade_values.append(l[2][itr])
-                if itr < 4:
+                if itr < 5:
                     margin_victory.append(l[1][itr])
                 to_show = to_show - 1
             elif itr < self.object.poll_algorithm - 1:
@@ -1251,7 +1251,7 @@ def getMarginOfVictory(latest_responses, cand_map):
     marginList.append(MoVBorda(pollProfile))
     marginList.append(MoVVeto(pollProfile))
     marginList.append(MoVkApproval(pollProfile, 3))
-    #marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
+    marginList.append(MechanismSimplifiedBucklin().getMov(pollProfile))
     return marginList
 
 # used to help find the recommended order
@@ -1516,6 +1516,9 @@ def deleteUserVotes(request, response_id):
     else:
         question.response_set.filter(anonymous_id=response.anonymous_id).update(active=0)
     request.session['setting'] = 6
+    if not question.new_vote:
+    	question.new_vote = True
+    	question.save()
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -1528,6 +1531,9 @@ def restoreUserVotes(request, response_id):
     else:
         question.response_set.filter(anonymous_id=response.anonymous_id, active=0).update(active=1)
     request.session['setting'] = 7
+    if not question.new_vote:
+    	question.new_vote = True
+    	question.save()
     messages.success(request, 'Your changes have been saved.')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -1849,12 +1855,11 @@ def anonymousVote(request, question_id):
         voter = request.POST['anonymousname']
     if 'anonymousid' not in request.session:
         request.session['anonymousvoter'] = voter
-        id = question.response_set.all().count()
+        id = question.response_set.all().count() + 1
         request.session['anonymousid'] = id
     else:
         voter = request.session['anonymousvoter']
         id = request.session['anonymousid']
-
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)

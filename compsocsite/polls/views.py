@@ -302,10 +302,10 @@ def editBasicInfo(request, question_id):
         star = True
     if "yesno" in uilist:
         yesno = True
-    vr = 0
-    print(request.POST.getlist('vr'))
+    vr = (2 ** (question.poll_algorithm - 1))
     for rule in request.POST.getlist('vr'):
-        vr += int(rule)
+        if int(rule) != (2 ** (question.poll_algorithm - 1)):
+            vr += int(rule)
     question.twocol_enabled = twocol
     question.onecol_enabled = onecol
     question.slider_enabled = slider
@@ -1385,10 +1385,10 @@ def setInitialSettings(request, question_id):
         star = True
     if "yesno" in uilist:
         yesno = True
-    vr = 0
-    print(request.POST.getlist('vr'))
+    vr = (2 ** (int(request.POST['pollpreferences']) - 1))
     for rule in request.POST.getlist('vr'):
-        vr += int(rule)
+        if int(rule) != (2 ** (int(request.POST['pollpreferences']) - 1)):
+            vr += int(rule)
     question.twocol_enabled = twocol
     question.onecol_enabled = onecol
     question.slider_enabled = slider

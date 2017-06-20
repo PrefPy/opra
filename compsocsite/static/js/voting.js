@@ -17,6 +17,8 @@ function select(item){
 	if($(item).children()[0].checked){
 		$(item).css('border-color', 'green');
 		$(item).css('border-width', '5px');
+		$(item).css('margin-top', '1px');
+		$(item).css('margin-bottom', '1px');
 		$($(item).children()[1]).removeClass('glyphicon-unchecked');
 		$($(item).children()[1]).addClass('glyphicon-check');
 		$($(item).children()[1]).css('color', "green");
@@ -24,6 +26,8 @@ function select(item){
 	else{
 		$(item).css('border-color', 'grey');
 		$(item).css('border-width', '1px');
+		$(item).css('margin-top', '5px');
+		$(item).css('margin-bottom', '9px');
 		$($(item).children()[1]).removeClass('glyphicon-check');
 		$($(item).children()[1]).addClass('glyphicon-unchecked');
 		$($(item).children()[1]).css('color', "grey");
@@ -154,6 +158,8 @@ function yesNoSort( order ){
 				$($(".checkbox[type='" + v.toString() + "']").children()[1]).css('color', "green");
 				$(".checkbox[type='" + v.toString() + "']").css('border-color', 'green');
 				$(".checkbox[type='" + v.toString() + "']").css('border-width', '5px');
+				$(".checkbox[type='" + v.toString() + "']").css('margin-top', '1px');
+				$(".checkbox[type='" + v.toString() + "']").css('margin-bottom', '1px');
 			}
 			else{
 				$($(".checkbox[type='" + v.toString() + "']").children()[0]).removeAttr('checked');
@@ -162,6 +168,8 @@ function yesNoSort( order ){
 				$($(".checkbox[type='" + v.toString() + "']").children()[1]).css('color', "grey");
 				$(".checkbox[type='" + v.toString() + "']").css('border-color', 'grey');
 				$(".checkbox[type='" + v.toString() + "']").css('border-width', '1px');
+				$(".checkbox[type='" + v.toString() + "']").css('margin-top', '5px');
+				$(".checkbox[type='" + v.toString() + "']").css('margin-bottom', '9px');
 			}
 		});
 	});

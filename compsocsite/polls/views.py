@@ -4,6 +4,7 @@ from groups.models import *
 import datetime
 import os
 import time
+import collections
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
@@ -1067,6 +1068,8 @@ def getPollProfile(latest_responses, cand_map):
     
 def translateSingleWinner(winner, cand_map):
     result = {}
+    if isinstance(winner, collections.Iterable):
+        return translateWinnerList(winner,cand_map)
     for cand in cand_map.keys():
         if cand == winner:
             result[cand] = 1
@@ -1117,7 +1120,7 @@ def getVoteResults(latest_responses, cand_map):
     scoreVectorList.append(translateWinnerList(stv, cand_map))
     scoreVectorList.append(translateWinnerList(baldwin, cand_map))
     scoreVectorList.append(translateWinnerList(coombs, cand_map))
-    scoreVectorList.append(translateWinnerList(black, cand_map))
+    scoreVectorList.append(translateSingleWinner(black, cand_map))
     scoreVectorList.append(translateWinnerList(ranked, cand_map))
     scoreVectorList.append(translateWinnerList(pwro, cand_map))
 

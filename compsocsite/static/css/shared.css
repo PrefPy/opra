@@ -291,6 +291,7 @@ ul.empty {
 
 /* handle overflowing text */
 th {
+    white-space: nowrap;
     max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;

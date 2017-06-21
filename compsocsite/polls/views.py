@@ -1243,7 +1243,7 @@ def getMarginOfVictory(latest_responses, cand_map):
     marginList[0] = MechanismPlurality().getMov(pollProfile)
     marginList[1] = MechanismBorda().getMov(pollProfile)
     marginList[2] = MechanismVeto().getMov(pollProfile)
-    marginList[3] = MechanismKApproval.getMov(pollProfile)
+    marginList[3] = MechanismKApproval(3).getMov(pollProfile)
     marginList[4] = MechanismSimplifiedBucklin().getMov(pollProfile)
     marginList[12] = MechanismPluralityRunOff().getMov(pollProfile)
 
@@ -1404,8 +1404,10 @@ def setInitialSettings(request, question_id):
 def setPollingSettings(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     # set the poll algorithm or allocation method using an integer
+    poll_alg = question.poll_algorithm
     if 'pollpreferences' in request.POST:
-        question.poll_algorithm = request.POST['pollpreferences']
+        poll_alg = int(request.POST['pollpreferences'])
+        question.poll_algorithm = poll_alg
 
     # set the visibility settings, how much information should be shown to the user
     # options range from showing everything (most visibility) to showing only the user's vote
@@ -1430,9 +1432,9 @@ def setPollingSettings(request, question_id):
         question.creator_pref = 1
     else:
         question.creator_pref = 2
-    vr = (2 ** (int(request.POST['pollpreferences']) - 1))
+    vr = (2 ** (poll_alg - 1))
     for rule in request.POST.getlist('vr'):
-        if int(rule) != (2 ** (int(request.POST['pollpreferences']) - 1)):
+        if int(rule) != (2 ** (poll_alg - 1)):
             vr += int(rule)
     question.vote_rule = vr
     question.save()

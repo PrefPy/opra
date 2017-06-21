@@ -818,10 +818,12 @@ class VoteResultsView(views.generic.DetailView):
 
             #ctx['margin_victory'] = getMarginOfVictory(latest_responses, cand_map)
             #ctx['mixtures_pl'] = mixtures[0]
-
-        ctx['mixtures_pl1'] = mixtures_pl1[0]
-        ctx['mixtures_pl2'] = mixtures_pl2
-        ctx['mixtures_pl3'] = mixtures_pl3
+        m = len(mixtures_pl1) - 1
+        print(mixtures_pl3)
+        print()
+        ctx['mixtures_pl1'] = mixtures_pl1
+        ctx['mixtures_pl2'] = [[mixtures_pl2[0]] + mixtures_pl2[2:m + 2], [mixtures_pl2[1]] + mixtures_pl2[m + 2:]]
+        ctx['mixtures_pl3'] = [[mixtures_pl3[0]] + mixtures_pl3[3:m + 3], [mixtures_pl3[1]] + mixtures_pl3[m + 3:(2 * m) + 3], [mixtures_pl3[2]] + mixtures_pl3[(2 * m) + 3:]]
         previous_results = self.object.voteresult_set.all()
         ctx['previous_winners'] = []
         for pw in previous_results:
@@ -1075,7 +1077,7 @@ def translateSingleWinner(winner, cand_map):
 def translateWinnerList(winners, cand_map):
     result = {}
     for cand in cand_map.keys():
-        if cand in winners:
+        if (isinstance(winners, list) and cand in winners) or winners == cand:
             result[cand] = 1
         else:
             result[cand] = 0
@@ -1124,11 +1126,11 @@ def getVoteResults(latest_responses, cand_map):
     rankings = pollProfile.getOrderVectorsEGMM()
     m = len(rankings[0])
     #print("test2")
-    mixtures_pl1 = egmm_mixpl(rankings, m, k=1, itr=10).tolist()
+    mixtures_pl1 = egmm_mixpl(rankings, k=1, itr=10)[0].tolist()
     #print("test3")
-    mixtures_pl2 = egmm_mixpl(rankings, m, k=2, itr=10).tolist()
+    mixtures_pl2 = egmm_mixpl(rankings, k=2, itr=10)[0].tolist()
     #print("test4")
-    mixtures_pl3 = egmm_mixpl(rankings, m, k=3, itr=10).tolist()
+    mixtures_pl3 = egmm_mixpl(rankings, k=3, itr=10)[0].tolist()
     #print("test5")
     #gmm = GMMMixPLAggregator(list(pollProfile.cand_map.values()), use_matlab=False)
 

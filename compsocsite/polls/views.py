@@ -1115,7 +1115,7 @@ def getVoteResults(latest_responses, cand_map):
     scoreVectorList.append(translateWinnerList(stv, cand_map))
     scoreVectorList.append(translateWinnerList(baldwin, cand_map))
     scoreVectorList.append(translateWinnerList(coombs, cand_map))
-    scoreVectorList.append(translateSingleWinner(black, cand_map))
+    scoreVectorList.append(translateWinnerList(black, cand_map))
     scoreVectorList.append(translateWinnerList(ranked, cand_map))
     scoreVectorList.append(translateWinnerList(pwro, cand_map))
 

@@ -275,7 +275,7 @@ class FinalResult(models.Model):
     timestamp = models.DateTimeField('result timestamp')
 
 class VoteResult(models.Model):
-    question = models.ForeignKey(Question, null=True)
+    question = models.ForeignKey(Question, null=True, on_delete=models.CASCADE)
     result_string = models.TextField(default="")
     mov_string = models.TextField(default="")
     cand_num = models.IntegerField(default = 1)
@@ -284,14 +284,14 @@ class VoteResult(models.Model):
         ordering = ['-timestamp']
         
 class MoV(models.Model):
-    result = models.ForeignKey(VoteResult)
+    result = models.ForeignKey(VoteResult, on_delete=models.CASCADE)
     value = models.IntegerField(default=0)
     order = models.IntegerField(default=0)
     class Meta:
         ordering = ['order']
     
 class ScoreMap(models.Model):
-    result = models.ForeignKey(VoteResult)
+    result = models.ForeignKey(VoteResult, on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
     def asPyDict(self):
         """Get a python dictionary that represents this Dictionary object.
@@ -305,7 +305,7 @@ class ScoreMap(models.Model):
         ordering = ['order']
 
 class CandScorePair(models.Model):
-    container = models.ForeignKey(ScoreMap)
+    container = models.ForeignKey(ScoreMap, on_delete=models.CASCADE)
     cand = models.IntegerField(default = 0)
     score = models.FloatField(default = 0.0)
     

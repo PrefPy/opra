@@ -21,10 +21,6 @@ from prefpy.mechanism import *
 from prefpy.allocation_mechanism import *
 from prefpy.gmm_mixpl import *
 from prefpy.egmm_mixpl import *
-from prefpy.mov import MoVPlurality
-from prefpy.mov import MoVBorda
-from prefpy.mov import MoVVeto
-from prefpy.mov import MoVkApproval
 from .email import EmailThread, setupEmail
 from django.conf import settings
 from multipolls.models import *

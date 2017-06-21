@@ -1244,10 +1244,10 @@ def getMarginOfVictory(latest_responses, cand_map):
     marginList = []
     for x in range(0,len(getListPollAlgorithms())):
         marginList.append(-1)
-    marginList[0] = MoVPlurality(pollProfile)
-    marginList[1] = MoVBorda(pollProfile)
-    marginList[2] = MoVVeto(pollProfile)
-    marginList[3] = MoVkApproval(pollProfile, 3)
+    marginList[0] = MechanismPlurality().getMov(pollProfile)
+    marginList[1] = MechanismBorda().getMov(pollProfile)
+    marginList[2] = MechanismVeto().getMov(pollProfile)
+    marginList[3] = MechanismKApproval.getMov(pollProfile)
     marginList[4] = MechanismSimplifiedBucklin().getMov(pollProfile)
     marginList[12] = MechanismPluralityRunOff().getMov(pollProfile)
 

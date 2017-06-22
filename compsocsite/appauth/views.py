@@ -112,7 +112,15 @@ def quickConfirm(request,question_id,key):
     user.save()
     context = RequestContext(request)
     link = "/polls/"+ str(question_id)+"/"
-    return render(request, 'activation.html', {'quick':True, 'link':link}, context)
+    return render(request, 'activation.html', {'quick':True, 'link':link, 'loginkey':key, 'qid':question_id}, context)
+    
+def quickLogin(request, key, question_id):
+    user_id = opra_crypto.decrypt(key)
+    user = get_object_or_404(User, pk=user_id)
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request,user)
+    return HttpResponseRedirect(reverse("polls:detail",args=(question_id,)))
+    
 
 def user_login(request):
     context = RequestContext(request)

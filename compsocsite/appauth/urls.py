@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^messages$', views.MessageView.as_view(), name='messages'),
     url(r'^(?P<question_id>[0-9]+)/quickregister/$', views.quickRegister, name='quickregister'),
     url(r'^(?P<question_id>[0-9]+)/quickconfirm/(?P<key>\w+)/$', views.quickConfirm, name='quickconfirm'),
+    url(r'^(?P<key>\w+)/(?P<question_id>[0-9]+)/quicklogin/$', views.quickLogin, name='quickLogin'),
 ]

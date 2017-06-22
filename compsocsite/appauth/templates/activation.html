@@ -5,8 +5,8 @@
 
 <p>Your account was successfully activated.</p>
 {% if quick %}
-	<p><a href="{{link}}">Click here</a> to return to the poll.</p>
-	<script> var link = "{{link}}"; </script>
+		<p><a href="{% url 'appauth:quickLogin' key=loginkey question_id=qid %}">Click here</a> to return to the poll.</p>
+		<script> var link = "{% url 'appauth:quickLogin' key=loginkey question_id=qid %}"; </script>
 {% else %}
 	<p>Wait <span id="countdown"></span> seconds or <a href="/polls/main">click here</a> to return to homepage.</p>
 	<script> var link = "/polls/main"; </script>

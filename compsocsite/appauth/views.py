@@ -71,6 +71,8 @@ def confirm(request, key):
     user = get_object_or_404(User, pk=user_id)
     user.is_active = True
     user.save()
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request,user)
     return render(request, 'activation.html', {'quick':False}, context)
 
 def quickRegister(request, question_id):

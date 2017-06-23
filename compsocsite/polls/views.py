@@ -1115,8 +1115,6 @@ def getVoteResults(latest_responses, cand_map):
     black = MechanismBlack().black_winner(pollProfile)
     #print("test7")
     ranked = MechanismRankedPairs().ranked_pairs_cowinners(pollProfile)
-    print("test ranked")
-    print(ranked)
     pwro = MechanismPluralityRunOff().PluRunOff_cowinners(pollProfile)
     #print("test6")
     scoreVectorList.append(translateWinnerList(stv, cand_map))

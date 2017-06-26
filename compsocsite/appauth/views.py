@@ -140,7 +140,7 @@ def user_login(request):
             else:
                 email = user.email
                 if email:
-                    htmlstr = "Please <a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>CLICK HERE</a> to resend the activation email."
+                    htmlstr = "Please <a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>CLICK HERE</a> to activate your account."
                     mail.send_mail("OPRA Confirmation From Invalid Login","Please confirm your account registration.",'oprahprogramtest@gmail.com',[email],html_message=htmlstr)
                 return HttpResponse("Your account is not active. We have resent an activation link to your email address. Please check.")
         else:

@@ -71,6 +71,8 @@ def confirm(request, key):
     user = get_object_or_404(User, pk=user_id)
     user.is_active = True
     user.save()
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request,user)
     return render(request, 'activation.html', {'quick':False}, context)
 
 def quickRegister(request, question_id):
@@ -112,11 +114,18 @@ def quickConfirm(request,question_id,key):
     user.save()
     context = RequestContext(request)
     link = "/polls/"+ str(question_id)+"/"
-    return render(request, 'activation.html', {'quick':True, 'link':link}, context)
+    return render(request, 'activation.html', {'quick':True, 'link':link, 'loginkey':key, 'qid':question_id}, context)
+    
+def quickLogin(request, key, question_id):
+    user_id = opra_crypto.decrypt(key)
+    user = get_object_or_404(User, pk=user_id)
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request,user)
+    return HttpResponseRedirect(reverse("polls:detail",args=(question_id,)))
+    
 
 def user_login(request):
     context = RequestContext(request)
-    
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -128,7 +137,12 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-            return HttpResponse("Your account is not active.")
+            else:
+                email = user.email
+                if email:
+                    htmlstr = "Please <a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>CLICK HERE</a> to activate your account."
+                    mail.send_mail("OPRA Confirmation From Invalid Login","Please confirm your account registration.",'oprahprogramtest@gmail.com',[email],html_message=htmlstr)
+                return HttpResponse("Your account is not active. We have resent an activation link to your email address. Please check.")
         else:
             return HttpResponse("Invalid login details supplied.")
 	

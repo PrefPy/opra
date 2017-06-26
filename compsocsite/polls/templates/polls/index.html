@@ -252,7 +252,8 @@
       <p><i class="fa fa-envelope fa-fw w3-xxlarge w3-margin-right rpi-text-red"> </i> Email: xial@cs.rpi.edu</p>
       <br>
     <hr style="border:1px solid" class="w3-round rpi-text-red">
-      <form action="/action_page.php" target="_blank">
+      <form action="/message" method="post">
+		{% csrf_token %}
         <p><input class="w3-input w3-border" type="text" placeholder="Name" required name="Name"></p>
         <p><input class="w3-input w3-border" type="text" placeholder="Email" required name="Email"></p>
         <p><input class="w3-input w3-border" type="text" placeholder="Message" required name="Message"></p>

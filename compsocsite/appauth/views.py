@@ -126,7 +126,6 @@ def quickLogin(request, key, question_id):
 
 def user_login(request):
     context = RequestContext(request)
-    
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -138,7 +137,12 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-            return HttpResponse("Your account is not active.")
+            else:
+                htmlstr = "Your account is not active."
+                email = user.email
+                if email:
+                    htmlstr += " Please <a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>CLICK HERE</a> to resend the activation email."
+                return HttpResponse(htmlstr)
         else:
             return HttpResponse("Invalid login details supplied.")
 	

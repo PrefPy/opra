@@ -138,11 +138,11 @@ def user_login(request):
                 login(request, user)
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
-                htmlstr = "Your account is not active."
                 email = user.email
                 if email:
-                    htmlstr += " Please <a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>CLICK HERE</a> to resend the activation email."
-                return HttpResponse(htmlstr)
+                    htmlstr = "Please <a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>CLICK HERE</a> to resend the activation email."
+                    mail.send_mail("OPRA Confirmation From Invalid Login","Please confirm your account registration.",'oprahprogramtest@gmail.com',[email],html_message=htmlstr)
+                return HttpResponse("Your account is not active. We have resent an activation link to your email address. Please check.")
         else:
             return HttpResponse("Invalid login details supplied.")
 	

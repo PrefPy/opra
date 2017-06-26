@@ -3,5 +3,18 @@
 {% block content %}
 <br />
 
-<p>Your action was successful.</p>
+<p>Your password was reset successfully.</p>
+<p>Wait <span id="countdown"></span> seconds or <a href="/polls/main">click here</a> to return to homepage.</p>
+<script> var link = "/polls/main"; </script>
+<script>
+	var count = 5;
+	setInterval(function(){
+		count = count - 1;
+		if(count <= 0){
+			window.location = link;
+		}else{
+			$('#countdown').html(count);
+		}
+	}, 1000);
+</script>
 {% endblock %}

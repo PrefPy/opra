@@ -237,9 +237,10 @@ def forgetPasswordView(request):
     context = RequestContext(request)
     return render(request,'forgetpassword.html', {}, context)
     
-class resetPasswordView(generic.DetailView):
-    model = User
-    template_name = "resetpassword.html"
+def resetPage(request, key):
+    context = RequestContext(request)
+    return render(request,'resetpassword.html',{'key':key},context)
+    
 
 def forgetPassword(request):
     email = request.POST['email']
@@ -247,22 +248,22 @@ def forgetPassword(request):
     if email == "" or username == "":
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     user = get_object_or_404(User, email=email, username=username)
-    htmlstr = "<p><a href='" + request.build_absolute_uri("resetpassword/"+str(user.id)) + "'>Click This Link To Reset Password</a></p>"
-    print(htmlstr)
+    htmlstr = "<p><a href='https://opra.cs.rpi.edu/auth/resetpassword/"+opra_crypto.encrypt(user.id) + "'>Click This Link To Reset Password</a></p>"
     mail.send_mail("OPRA Forget Password","Please click the following link to reset password.",'oprahprogramtest@gmail.com',[email],html_message=htmlstr)
     return HttpResponse("An email has been sent to your email account. Please click on the link in that email and reset your password.")
     
-def resetPassword(request, user_id):
+def resetPassword(request, key):
+    context = RequestContext(request)
+    user_id = opra_crypto.decrypt(key)
     user = get_object_or_404(User, pk=user_id)
     new = request.POST['newpassword']
     con = request.POST['confirmpassword']
     if new != "" and new == con:
         user.set_password(new)
         user.save()
-        context = RequestContext(request)
         return render(request,'success.html', {}, context)
     else:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return render(request,'resetpassword.html',{'key':key},context)
 
 @login_required
 def changepassword(request):

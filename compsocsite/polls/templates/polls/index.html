@@ -254,9 +254,9 @@
     <hr style="border:1px solid" class="w3-round rpi-text-red">
       <form action="/message" method="post">
 		{% csrf_token %}
-        <p><input class="w3-input w3-border" type="text" placeholder="Name" required name="Name"></p>
-        <p><input class="w3-input w3-border" type="text" placeholder="Email" required name="Email"></p>
-        <p><input class="w3-input w3-border" type="text" placeholder="Message" required name="Message"></p>
+        <p><input class="w3-input w3-border" type="text" placeholder="Name" required name="name"></p>
+        <p><input class="w3-input w3-border" type="text" placeholder="Email" required name="email"></p>
+        <p><input class="w3-input w3-border" type="text" placeholder="Message" required name="message"></p>
         <p>
           <button class="w3-button w3-black" type="submit">
             <i class="fa fa-paper-plane"></i> SEND MESSAGE

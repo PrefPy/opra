@@ -1,7 +1,7 @@
 from . import views
 from django.contrib.auth.decorators import login_required
 
-app_name = 'sessions'
+app_name = 'sessions_local'
 urlpatterns = [
     #Two main types of polls
     url(r'^$', login_required(views.SessionsMainView.as_view()), name='sessions_main'),

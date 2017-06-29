@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'mathfilters',
     'django_rq',
     'cas',
-    'sessions',
+    'sessions_local',
 ]
 
 MIDDLEWARE_CLASSES = [

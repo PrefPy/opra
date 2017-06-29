@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Session(models.Model):
     title = models.TextField()
     description = models.TextField()
-    creator = models.OneToOneField(User)
+    creator = models.OneToOneField(User,related_name="sessions_created")
     admins = models.ManyToManyField(User)
     participants = models.ManyToManyField(User,related_name='sessions_participated')
     link = models.TextField(default="")

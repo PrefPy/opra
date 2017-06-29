@@ -1080,7 +1080,18 @@ def translateSingleWinner(winner, cand_map):
 def translateWinnerList(winners, cand_map):
     result = {}
     for cand in cand_map.keys():
-        if (isinstance(winners, list) and cand in winners) or winners == cand:
+        if cand in winners:
+            result[cand] = 1
+        else:
+            result[cand] = 0
+    return result
+    
+def translateBinaryWinnerList(winners, cand_map):
+    result = {}
+    if len(cand_map.keys()) != len(winners):
+        return result
+    for cand in cand_map.keys():
+        if winners[cand] == 1:
             result[cand] = 1
         else:
             result[cand] = 0
@@ -1117,6 +1128,7 @@ def getVoteResults(latest_responses, cand_map):
     ranked = MechanismRankedPairs().ranked_pairs_cowinners(pollProfile)
     pwro = MechanismPluralityRunOff().PluRunOff_cowinners(pollProfile)
     bordamean = MechanismBordaMean().Borda_mean_winners(pollProfile)
+    print("pwro=", pwro)
     #print("test6")
     scoreVectorList.append(translateWinnerList(stv, cand_map))
     scoreVectorList.append(translateWinnerList(baldwin, cand_map))
@@ -1124,7 +1136,7 @@ def getVoteResults(latest_responses, cand_map):
     scoreVectorList.append(translateWinnerList(black, cand_map))
     scoreVectorList.append(translateWinnerList(ranked, cand_map))
     scoreVectorList.append(translateWinnerList(pwro, cand_map))
-    scoreVectorList.append(translateWinnerList(bordamean, cand_map))
+    scoreVectorList.append(translateBinaryWinnerList(bordamean, cand_map))
 
     #for Mixtures
     #print("test1")

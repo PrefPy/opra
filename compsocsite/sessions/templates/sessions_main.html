@@ -1,0 +1,84 @@
+{% extends 'polls/base.html' %}
+
+
+{% block content %}
+
+<!-- polls created by you is included in index2 -->
+<!-- for created by you section -->
+<div class="container" >
+    <div name="created" class="panel panel-default">
+        <div class="panel-body">
+        <table style = "width:100%;" class="table" name="created">
+            <thead>
+                <tr>
+                    <th colspan=2>
+		                  Sessions created by you ({{ sessions_created|length }})
+                    </th>
+                    <th>
+                            <a href="{% url 'polls:AddStep1' %}" style='font-size:60%; float:right;' class="btn btn-yellow">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                            </a>
+                    </th>
+                </tr>
+            </thead>
+
+            {% for session in sessions_created %}
+                <tr>
+                    <td>
+                        <a href="{% url 'sessions:info' session.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if session.description %} {{session.description}} {%else%} None. {%endif%}">{{ session.title }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div><!-- end for created by you section-->
+	
+	<div name="admins" class="panel panel-default">
+        <div class="panel-body">
+        <table style = "width:100%;" class="table" name="created">
+            <thead>
+                <tr>
+                    <th>
+		                  Sessions you can manage ({{ sessions_manageable|length }})
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            {% for session in sessions_manageable %}
+                <tr>
+                    <td>
+                        <a href="{% url 'sessions:info' session.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if session.description %} {{session.description}} {%else%} None. {%endif%}">{{ session.title }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div><!-- end for created by you section-->
+
+    <div name="participated" class="panel panel-default">
+		<div class="panel-body">
+        <table style = "width:100%;" class="table" name="created">
+            <thead>
+                <tr>
+                    <th>
+		                  Sessions you participated in ({{ sessions_participated|length }})
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            {% for session in sessions_participated %}
+                <tr>
+                    <td>
+                        <a href="{% url 'sessions:info' session.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if session.description %} {{session.description}} {%else%} None. {%endif%}">{{ session.title }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

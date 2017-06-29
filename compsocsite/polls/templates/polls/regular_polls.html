@@ -4,6 +4,74 @@
 {% block content %}
 
 <!-- polls created by you is included in index2 -->
+<!-- move this section to external js -->
+<script>
+    function add_buttons(item){
+        $('#hidden-table').css('display', 'block');
+        $('#search-results').html("");
+        var va_mid = "<td style=\"vertical-align:middle\">";
+        var title = "<td><a href=\"/polls/" + item.id + "/pollinfo/\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Description: " + item.desc + "\">" + item.value + "</a></td>" + va_mid;
+        if(item.status == 2 && item.voter){
+            title +="<a href=\"/polls/" + item.id + "/\" class =\"btn btn-dark\" role=\"button\">Vote</a>";
+        }
+        if(item.curr_win){
+            title += "<a href=\"/polls/" + item.id + "/vote/results/\" class =\"btn btn-dark\" role=\"button\" target=\"_blank\" >Current Winners</a>";
+        }
+        title += "</td>";
+        if(item.status == 1 && item.created){
+            title += va_mid + "<div class=\"start-icon\"><i class=\"fa fa-play\" aria-hidden=\"true\" data-toggle=\"modal\" data-target=\"#confirm-start" + item.id + "\"></i></div></td>"
+            title +="<div class=\"modal fade\" id=\"confirm-start" + item.id + "\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">"
+            title += "<div class=\"modal-dialog\"><div class=\"modal-content\"><div class=\"modal-header\">Confirm Start Poll " + item.value + "</div>"
+            title += "<div class=\"modal-body\">Are you sure you want to start poll " + item.value + "? Once a poll is started, you cannot modify the settings or remove voters.</div>"
+            title += "<div class=\"modal-footer\"><a href=\"/polls/" + item.id + "/start/\"><button type=\"button\" class=\"btn-large btn-success btn-ok\">Yes</button></a><button type=\"button\" class=\"btn-large btn-default\" data-dismiss=\"modal\">Cancel</button></div></div></div></div>";
+        }else if(item.status == 2 && item.created){
+            title += "<td style=\"vertical-align:middle\"><div class=\"stop-icon pull-right\"><i class=\"fa fa-stop\" aria-hidden=\"true\" data-toggle=\"modal\" data-target=\"#confirm-stop" + item.id + "\"></i></div><div class=\"pause-icon pull-right\" style=\"position:relative; right:10%;\"><a href=\"/polls/" + item.id + "/pause/\"><i class=\"fa fa-pause\" aria-hidden=\"true\"></i></a></div></td>"
+            title += "<div class=\"modal fade\" id=\"confirm-stop" + item.id + "\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\"><div class=\"modal-dialog\"><div class=\"modal-content\"><div class=\"modal-header\">Confirm Stop Poll</div><div class=\"modal-body\">Are you sure you want to stop this poll? Once a poll is stopped, no more votes can be changed.</div>";
+            title += "<div class=\"modal-footer\"><a href=\"/polls/" + item.id + "/stop/\"><button type=\"button\" class=\"btn-large  btn-ok btn-danger\" style=\"font-size:100%;\">Yes</button></a><button type=\"button\" class=\"btn-large btn-default\" data-dismiss=\"modal\">Cancel</button></div></div></div></div>";
+        }else if(item.status == 3 && item.created){
+            title += "<td>";
+            if(item.type == 1){
+                title += "<a style=\"float:right;margin:10px\" href=\"/polls/" + item.id + "/vote/results/\" class=\"overflow\">" + item.winner + " wins</a>"
+            }else if(item.type == 2){
+                //cannot search for allocations yet
+            }
+            title += "</td>";
+        }
+        $('#search-results').html(title);
+    }
+
+    $(function() {
+        $("#poll-search").autocomplete({
+            source: "/polls/api/get_polls/",
+            minLength: 2,
+            select: function( event, ui ) {
+                add_buttons(ui.item);
+            }
+        });
+    });
+</script>
+<!-- for search bar -->
+<div class="container" >
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <label for="poll-search">Search: </label>
+            <input type="text" class="form-control" id="poll-search">
+            <div id="hidden-table" style="display:none;">
+                <table style="width:100%" class="table" name="created">
+                    <thead>
+                        <tr>
+                            <th colspan=2>Search results</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="search-results">
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- for created by you section -->
 <div class="container" >
     <div name="created" class="panel panel-default">
@@ -93,26 +161,26 @@
                             </div>
                         </div>
                     {% elif question.status == 3 %}
-                            <td>
-                                {% if question.question_type == 1 %}
-                                    <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" class="overflow">
-                                        {{question.winner}} wins
-                                    </a>
-                                {% elif question.question_type == 2 %}
-                                    Allocation Complete: <br />
+                        <td>
+                            {% if question.question_type == 1 %}
+                                <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" class="overflow">
+                                    {{question.winner}} wins
+                                </a>
+                            {% elif question.question_type == 2 %}
+                                Allocation Complete: <br />
 
-                                    {% for order_item in question.allocationvoter_set.all %}
-                                        {% if order_item.response.allocation %}
-                                            {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }}
-                                            <br />
-                                        {% endif %}
-                                    {% endfor %}
+                                {% for order_item in question.allocationvoter_set.all %}
+                                    {% if order_item.response.allocation %}
+                                        {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }}
+                                        <br />
+                                    {% endif %}
+                                {% endfor %}
 
-                                    <a href="{% url 'polls:allocate_results' question.id %}" >
-                                        <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
-                                    </a>
-                                {% endif %}
-                            </td>
+                                <a href="{% url 'polls:allocate_results' question.id %}" >
+                                    <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                </a>
+                            {% endif %}
+                        </td>
 					{% else %}
 					<td style="vertical-align:middle">
                         <div class="start-icon">

@@ -76,6 +76,7 @@ urlpatterns = [
 
     # API
     url(r'^API/mixtures/$', views.mixtureAPI, name='mixture_api'),
+    url(r'^api/get_polls/', views.get_polls, name='get_polls'),
 
     # API test
     url(r'^API/mixtures_test/$', views.mixtureAPI_test, name='mixture_api_test'),

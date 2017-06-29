@@ -1131,7 +1131,6 @@ def getVoteResults(latest_responses, cand_map):
     rankings = pollProfile.getOrderVectorsEGMM()
     m = len(rankings[0])
     #print("test2")
-    print("rankings", rankings)
     mixtures_pl1 = egmm_mixpl(rankings, m, k=1, itr=10)[0].tolist()
     #print("test3")
     mixtures_pl2 = egmm_mixpl(rankings, m, k=2, itr=10).tolist()
@@ -1929,3 +1928,40 @@ def mixtureAPI(request):
 def mixtureAPI_test(request):
     context = RequestContext(request)
     return render_to_response('polls/api_test.html')
+
+#Poll search API
+def get_polls(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        polls = list(Question.objects.filter(question_owner=request.user,
+                                                       m_poll=False,
+                                                       question_text__icontains = q).order_by('-pub_date'))
+        polls += list(request.user.poll_participated.filter(m_poll=False, question_text__icontains = q ).exclude(question_owner=request.user).order_by('-pub_date'))
+        polls = polls[:20]
+        results = []
+        for poll in polls:
+            poll_json = {}
+            poll_json['id'] = poll.id
+            poll_json['label'] = poll.question_text
+            poll_json['value'] = poll.question_text
+            if poll.question_desc:
+                poll_json['desc'] = poll.question_text
+            else:
+                poll_json['desc'] = "None"
+            poll_json['status'] = poll.status
+            poll_json['curr_win'] = (poll.question_type == 1 and
+                                    poll.status != 1 and poll.status != 3 and
+                                    len(poll.response_set.all()) > 0)
+            poll_json['type'] = poll.question_type
+            if poll.question_type == 1 and poll.status == 3:
+                poll_json['winner'] = poll.winner
+            elif poll.question_type == 2 and poll.status == 3:
+                poll_json['winner'] = ""
+            poll_json['created'] = request.user == poll.question_owner
+            poll_json['voter'] = request.user in poll.question_voters.all()
+            results.append(poll_json)
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)

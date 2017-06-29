@@ -13,82 +13,6 @@
 <script src='/static/js/colorPicker.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
 <script>
-    function createGraphK1 (height, breadth, length, safeDist, left1, down1, nums, names, colors, font_size) {
-        var l1 = left1;
-        ctx.font=font_size.toString().concat("px Arial");
-        for (var i = 0; i < colors.length; i++) {
-            ctx.fillStyle=colors[i];
-            ctx.fillRect(left1,down1,(nums[i + 1] * length),height * (nums[0]));
-            left1 += (nums[i + 1] * length) + (15 / (colors.length - 1));
-            console.log("len " + length);
-
-            ctx.fillRect(safeDist + 2,down1 * (i + 1) + breadth,breadth,breadth);
-            ctx.fillStyle="#000000";
-            ctx.fillText(names[i],safeDist + breadth + 5,down1 * (i + 1) + 2 *breadth);
-        };
-        ctx.fillStyle="#000000";
-        // ctx.rect(l1 - 1,down1 - 1,length + 15,(height * nums[0]) + 2);
-        // ctx.rect(l1 - 1,(height * nums[0]) + down1 + breadth - 1,length + 15,(height * (1 - nums[0])) + 2);
-        ctx.stroke();
-        ctx.fillText("Mixture 1: ".concat((Math.round(100 * nums[0])).toString()).concat("%"),length + 45,((height * nums[0])/ 2) + 15);
-    }
-
-    function createGraphK2 (height, breadth, length, safeDist, left1, down1, left2, down2, nums, names, colors, font_size) {
-        var l1 = left1;
-        len = (nums.length - 2) / 2;
-        ctx.font=font_size.toString().concat("px Arial");
-        console.log("nums " + nums)
-        for (var i = 0; i < colors.length; i++) {
-            ctx.fillStyle=colors[i];
-            ctx.fillRect(left1,down1,(nums[i + 1] * length),height * (nums[0]));
-            left1 += (nums[i + 1] * length) + (15 / (len - 1));
-
-            ctx.fillRect(left2,down2,(nums[i + len + 2] * length),height * (1 - nums[0]));
-            left2 += (nums[i + len + 2] * length) + (15 / (len - 1));
-
-            ctx.fillRect(safeDist + 2,down1 * (i + 1) + breadth,breadth,breadth);
-            ctx.fillStyle="#000000";
-            ctx.fillText(names[i],safeDist + breadth + 5,down1 * (i + 1) + 2 *breadth);
-        };
-        ctx.fillStyle="#000000";
-        // ctx.rect(l1 - 1,down1 - 1,length + 15,(height * nums[0]) + 2);
-        // ctx.rect(l1 - 1,(height * nums[0]) + down1 + breadth - 1,length + 15,(height * (1 - nums[0])) + 2);
-        ctx.stroke();
-        ctx.fillText("Mixture 1: ".concat((Math.round(100 * nums[0])).toString()).concat("%"),length + 45,((height * nums[0])/ 2) + 15);
-        ctx.fillText("Mixture 2: ".concat((Math.round(100 * (1 - nums[0]))).toString()).concat("%"),length + 45,(height * nums[0]) + 40 + ((height * (1 - nums[0])) / 2));
-    }
-
-    function createGraphK3 (height, breadth, length, safeDist, left1, down1, left2, down2, left3, down3, nums, names, colors, font_size) {
-        var l1 = left1;
-        len = (nums.length - 3) / 3;
-        var alpha1 = nums[0];
-        var alpha2 = nums[len + 1];
-        var alpha3 = nums[2*(len + 1)];
-        ctx.font=font_size.toString().concat("px Arial");
-        for (var i = 0; i < colors.length; i++) {
-            ctx.fillStyle=colors[i];
-            ctx.fillRect(left1,down1,(nums[i + 1] * length),height * alpha1);
-            left1 += (nums[i + 1] * length) + (15 / (len - 1));
-
-            ctx.fillRect(left2,down2,(nums[i + len + 2] * length),height * alpha2);
-            left2 += (nums[i + len + 2] * length) + (15 / (len - 1));
-            console.log("this " + nums[i + len + 2])
-
-            ctx.fillRect(left3,down3,(nums[i + (2 * len) + 3] * length),height * alpha3);
-            left3 += (nums[i + (2*len) + 3] * length) + (15 / (len - 1));
-
-            ctx.fillRect(safeDist + 2,down1 * (i + 1) + breadth,breadth,breadth);
-            ctx.fillStyle="#000000";
-            ctx.fillText(names[i],safeDist + breadth + 5,down1 * (i + 1) + 2 *breadth);
-        };
-        ctx.fillStyle="#000000";
-        // ctx.rect(l1 - 1,down1 - 1,length + 15,(height * nums[0]) + 2);
-        // ctx.rect(l1 - 1,(height * nums[0]) + down1 + breadth - 1,length + 15,(height * (1 - nums[0])) + 2);
-        ctx.stroke();
-        ctx.fillText("Mixture 1: ".concat((Math.round(100 * alpha1)).toString()).concat("%"),length + 45,((height * alpha1)/ 2) + 15);
-        ctx.fillText("Mixture 2: ".concat((Math.round(100 * alpha2)).toString()).concat("%"),length + 45,(height * alpha1) + 40 + ((height * (alpha2)) / 2));
-        ctx.fillText("Mixture 3: ".concat((Math.round(100 * alpha3)).toString()).concat("%"),length + 45,(height * (alpha1 + alpha2) + 40 + ((height * alpha3) / 2)));
-    }
 
     //Uncomment for WMG
     /*var cy = cytoscape({
@@ -146,174 +70,79 @@
         ]
       },
     });*/
-    var k = 1;
-    var canvas;
-    var ctx;
-    var nums1;
-    var nums2;
-    var nums3;
-    var names;
-    var colors;
-    var len;
-    var height = 125; //total height of the bars
-    var breadth = 10; //distance between bars
-    var length = 215;
-    var safeDist = 350;
-    var left1 = 20;
-    var down1 = 20;
-    var left2 = 20;
-    var down2;
-    var left3 = 20;
-    var down3;
-    var font_size = 10;
-    function createMixturesK1(){
-        //uncomment for mixtures
-        var width_str = $('#collapse_mix').css('width');
-        width_int = parseInt(width_str.substring(0,width_str.length - 2)) - 100;
-        width_str = width_int.toString() + "px";
-        $('#mixtures').css('width', width_str);
-        k = 1;
-        canvas = document.getElementById("mixtures");
-        ctx = canvas.getContext("2d");
-        nums1 = [];
-        names = [];
-        colors = [];
+    function showK(num){
+        $('#k1').css('display', 'none');
+        $('#k2').css('display', 'none');
+        $('#k3').css('display', 'none');
+        $('#k' + num).css('display', 'block');
+    }
+    function createMixtures(){
+        var nums1 = [];
+        var names = [];
+        var colors = [];
+        var count = 0;
+        {% for option in cand_map.values %}
+            names.push("{{ option }}");
+            colors.push(randomColor());
+        {% endfor %}
         {% for num in mixtures_pl1 %}
-            nums1.push({{num}});
+            if(count > 0){
+                $('#k1').html($('#k1').html() + "<div style=\"display:inline-block;height:200px;background-color:" + colors[count - 1] + ";width:" + {{num}} * $('#k1').width() + "px;\" height=\"200px\" data-toggle=\"tooltip\" title=\"" + names[count - 1] + "\"></div>");
+            }
+            count = count + 1;
         {% endfor %}
-        {% for option in cand_map.values %}
-            names.push("{{ option }}");
-        {% endfor %}
-        // draw bar chart
-        len = nums1.length - 1;
-        for (var i = 0; i < len; i++) {
-            colors.push(randomColor());
-        };
-        height = 125; //total height of the bars
-        breadth = 10; //distance between bars
-        length = 215;
-        safeDist = 350;
-        left1 = 20;
-        down1 = 20;
-        left2 = 20;
-        down2 = 30 + (height * nums1[0]);
-        font_size = 10;
-        ctx.fillStyle="#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        createGraphK1(height, breadth, length, safeDist, left1, down1, nums1, names, colors, font_size);
-    }
 
-
-    function createMixturesK2(){
-        k = 2;
-        //uncomment for mixtures
-        canvas = document.getElementById("mixtures");
-        ctx = canvas.getContext("2d");
-        nums2 = [];
-        names = [];
-        colors = [];
+        var height;
         {% for arr in mixtures_pl2 %}
+            count = 0;
             {% for num in arr %}
-                nums2.push({{num}});
+                if(count == 0){
+                    height = {{num}} * 180;
+                    $('#k2').html($('#k2').html() + "<div style=\"display:inline-block;width:30px;vertical-align:top;margin-top:10px;padding:0\">" + Math.round(100 * {{num}}) + "%</div>");
+                }else if(count > 0){
+                    $('#k2').html($('#k2').html() + "<div style=\"display:inline-block;height:" + height + "px;background-color:" + colors[count - 1] + ";width:" + {{num}} * ($('#k1').width() - 30) + "px;margin-top:10px;\" height=\"200px\" data-toggle=\"tooltip\" title=\"" + names[count - 1] + "\"></div>");
+                }
+                count = count + 1;
             {% endfor %}
         {% endfor %}
-        {% for option in cand_map.values %}
-            names.push("{{ option }}");
-        {% endfor %}
-        // draw bar chart
-        len = (nums2.length - 2) / 2;
-        for (var i = 0; i < len; i++) {
-            colors.push(randomColor());
-        };
-        height = 125; //total height of the bars
-        breadth = 10; //distance between bars
-        length = 215;
-        safeDist = 350;
-        left1 = 20;
-        down1 = 20;
-        left2 = 20;
-        down2 = 30 + (height * nums2[0]);
-        font_size = 10;
-        ctx.fillStyle="#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        createGraphK2(height, breadth, length, safeDist, left1, down1, left2, down2, nums2, names, colors, font_size);
-    }
 
-
-    function createMixturesK3(){
-        k = 3;
-        //uncomment for mixtures
-        canvas = document.getElementById("mixtures");
-        ctx = canvas.getContext("2d");
-        nums3 = [];
-        names = [];
-        colors = [];
         {% for arr in mixtures_pl3 %}
+            count = 0;
             {% for num in arr %}
-                nums3.push({{num}});
+                if(count == 0){
+                    height = {{num}} * 160;
+                    $('#k3').html($('#k3').html() + "<div style=\"display:inline-block;width:30px;vertical-align:top;margin-top:10px;padding:0\">" + Math.round(100 * {{num}}) + "%</div>");
+                }else if(count > 0){
+                    $('#k3').html($('#k3').html() + "<div style=\"display:inline-block;height:" + height + "px;background-color:" + colors[count - 1] + ";width:" + {{num}} * ($('#k1').width() - 30) + "px;margin-top:10px;\" data-toggle=\"tooltip\" title=\"" + names[count - 1] + "\"></div>");
+                }
+                count = count + 1;
             {% endfor %}
         {% endfor %}
-        {% for option in cand_map.values %}
-            names.push("{{ option }}");
-        {% endfor %}
-        // draw bar chart
-        len = (nums3.length - 3) / 3;
-        for (var i = 0; i < len; i++) {
-            colors.push(randomColor());
-        };
-        height = 125; //total height of the bars
-        breadth = 10; //distance between bars
-        length = 215;
-        safeDist = 350;
-        left1 = 20;
-        down1 = 20;
-        left2 = 20;
-        down2 = 30 + (height * nums3[0]);
-        left3 = 20;
-        down3 = 60 + (height * (nums3[0] + nums3[1 + colors.length]));
-        font_size = 10;
-        ctx.fillStyle="#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        createGraphK3(height, breadth, length, safeDist, left1, down1, left2, down2, left3, down3, nums3, names, colors, font_size);
     }
     
     function enlarge () {
-        height += 5; //total height of the bars
-        //breadth += 5; //distance between bars
-        length += 5;
-        safeDist += 19;
-        font_size += 1;
-        ctx.fillStyle="#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        if(k == 1){
-            createGraphK1(height, breadth, length, safeDist, left1, down1, nums1, names, colors, font_size);
-        }else if(k == 2){
-            down2 = 30 + (height * nums2[0]);
-            createGraphK2(height, breadth, length, safeDist, left1, down1, left2, down2, nums2, names, colors, font_size);
-        }else if(k == 3){
-            down2 = 30 + (height * nums3[0]);
-            down3 = 45 + (height * nums3[0]) + (height * nums3[len + 1]);
-            createGraphK3(height, breadth, length, safeDist, left1, down1, left2, down2, left3, down3, nums3, names, colors, font_size);
-        }
+        var count = 0;
+        $('#mixtures').children().each(function(){
+            if(count < 3){
+                var count2 = 0;
+                $(this).children().each(function(){
+                    $(this).css("height", $(this).height() * 1.25 + "px");
+                });
+            }
+            count = count + 1;
+        });
     }
     function smaller () {
-        height -= 5; //total height of the bars
-        //breadth += 5; //distance between bars
-        length -= 5;
-        safeDist -= 19;
-        font_size -= 1;
-        ctx.fillStyle="#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        if(k == 1){
-            createGraphK1(height, breadth, length, safeDist, left1, down1, nums1, names, colors, font_size);
-        }else if(k == 2){
-            down2 = 30 + (height * nums2[0]);
-            createGraphK2(height, breadth, length, safeDist, left1, down1, left2, down2, nums2, names, colors, font_size);
-        }else if(k == 3){
-            down2 = 30 + (height * nums3[0]);
-            down3 = 45 + (height * nums3[0]) + (height * nums3[len + 1]);
-            createGraphK3(height, breadth, length, safeDist, left1, down1, left2, down2, left3, down3, nums3, names, colors, font_size);
-        }
+        var count = 0;
+        $('#mixtures').children().each(function(){
+            if(count < 3){
+                var count2 = 0;
+                $(this).children().each(function(){
+                    $(this).css("height", $(this).height() / 1.25 + "px");
+                });
+            }
+            count = count + 1;
+        });
     }
     function download () {
         var imgData = canvas.toDataURL("image/jpeg", 1.0);
@@ -478,19 +307,32 @@
                 </h4>
             </div>
             <div id="collapse_mix" class="panel-body">
-                <div class="table-responsive">
-                    <canvas id="mixtures" width="700" height="200" style="display: block"></canvas>
+                <div id="mixtures" class="table-responsive">
+                    <!-- <canvas id="mixtures" width="700" height="200" style="display: block"></canvas>
                     <button id="bigger" onclick="enlarge()">Make Larger</button>
                     <button id="smaller" onclick="smaller()">Make Smaller</button>
                     <button id="download" onclick="download()">Download</button>
                     <button id="load" onclick="createMixturesK1()">Load K = 1</button>
                     <button id="load" onclick="createMixturesK2()">Load K = 2</button>
-                    <button id="load" onclick="createMixturesK3()">Load K = 3</button>
+                    <button id="load" onclick="createMixturesK3()">Load K = 3</button> -->
+                    <div id="k1">
+                    </div>
+                    <div id="k2" style="display:none">
+                    </div>
+                    <div id="k3" style="display:none">
+                    </div>
+                    <div style="margin-top:10px">
+                        <button id="bigger" onclick="enlarge()">Make Larger</button>
+                        <button id="smaller" onclick="smaller()">Make Smaller</button>
+                        <button id="load" onclick="showK(1)">Load K = 1</button>
+                        <button id="load" onclick="showK(2)">Load K = 2</button>
+                        <button id="load" onclick="showK(3)">Load K = 3</button>
+                    </div>
                 </div>
             </div>
         </div>
 
         {% endif %}
     </div>
-<script>createMixturesK1();</script>
+<script>createMixtures();</script>
 {% endblock %}

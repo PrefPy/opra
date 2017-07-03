@@ -76,48 +76,243 @@
         $('#k3').css('display', 'none');
         $('#k' + num).css('display', 'block');
     }
-    function createMixtures(){
-        var nums1 = [];
-        var names = [];
-        var colors = [];
-        var count = 0;
-        {% for option in cand_map.values %}
-            names.push("{{ option }}");
-            colors.push(randomColor());
+    var abridged = false;
+    var nums_pl1 = [];
+    {% for num in mixtures_pl1 %}
+        nums_pl1.push({{num}});
+    {% endfor %}
+    var nums_pl2 = [];
+    var tmp = [];
+    {% for arr in mixtures_pl2 %}
+        tmp = [];
+        {% for num in arr %}
+            tmp.push({{num}});
         {% endfor %}
-        {% for num in mixtures_pl1 %}
-            if(count > 0){
-                $('#k1').html($('#k1').html() + "<div style=\"display:inline-block;height:200px;background-color:" + colors[count - 1] + ";width:" + {{num}} * $('#k1').width() + "px;\" height=\"200px\" data-toggle=\"tooltip\" title=\"" + names[count - 1] + "\"></div>");
+        nums_pl2.push(tmp);
+    {% endfor %}
+    var nums_pl3 = [];
+    {% for arr in mixtures_pl3 %}
+        tmp = [];
+        {% for num in arr %}
+            tmp.push({{num}});
+        {% endfor %}
+        nums_pl3.push(tmp);
+    {% endfor %}
+    var uabr_names = [];
+    var uabr_colors = [];
+    var abr_names1 = [];
+    var abr_names2 = [];
+    var abr_names3 = [];
+    var abr_colors1 = [];
+    var abr_colors2 = [];
+    var abr_colors3 = [];
+    {% for option in cand_map.values %}
+        uabr_names.push("{{ option }}");
+        uabr_colors.push(randomColor());
+    {% endfor %}
+
+    function sorter_function(nums, cols, names){
+        var n1, c1, na1, n2, c2, na2, ret;
+        if(nums.length > 1){
+            ret = sorter_function(nums.slice(0, nums.length / 2), cols.slice(0, nums.length / 2), names.slice(0, nums.length / 2));
+            n1 = ret[0];
+            c1 = ret[1];
+            na1 = ret[2];
+            ret = sorter_function(nums.slice(nums.length / 2, nums.length), cols.slice(nums.length / 2, nums.length), names.slice(nums.length / 2, nums.length));
+            n2 = ret[0];
+            c2 = ret[1];
+            na2 = ret[2];
+        }else{
+            ret = [];
+            ret.push(nums);
+            ret.push(cols);
+            ret.push(names);
+            return ret;
+        }
+        var n = [], c = [], na = [], i = 0, j = 0;
+        while(i + j < n1.length + n2.length){
+            if(i == n1.length || n1[i] < n2[j]){
+                n.push(n2[j]);
+                c.push(c2[j]);
+                na.push(na2[j]);
+                j = j + 1;
+            }else{
+                n.push(n1[i]);
+                c.push(c1[i]);
+                na.push(na1[i]);
+                i = i + 1;
             }
+        }
+        ret = [];
+        ret.push(n);
+        ret.push(c);
+        ret.push(na);
+        return ret;
+    }
+    //for abridged numbers
+    var tmp_nums, tmp_colors, tmp_names, tmp_nums2, tmp_colors2, tmp_names2, tmp_nums3, tmp_colors3, tmp_names3, temp;
+    temp = sorter_function(nums_pl1.slice(1, nums_pl1.length), uabr_colors, uabr_names);
+    tmp_nums = temp[0]; tmp_colors = temp[1]; tmp_names = temp[2];
+    var abr_nums_pl1 = [nums_pl1[0]];
+    for(var i = 0; i < 6; ++i){
+        abr_nums_pl1.push(tmp_nums[i]);
+        abr_colors1.push(tmp_colors[i]);
+        abr_names1.push(tmp_names[i]);
+    }
+    abr_nums_pl1.push(0);
+    abr_colors1.push(randomColor());
+    abr_names1.push("Other");
+    for(var i = 6; i < tmp_nums.length; ++i){ abr_nums_pl1[7] += tmp_nums[i]; }
+
+
+    temp = sorter_function(nums_pl2[0].slice(1, nums_pl2[0].length), uabr_colors, uabr_names);
+    tmp_nums = temp[0]; tmp_colors = temp[1]; tmp_names = temp[2];
+    temp = sorter_function(nums_pl2[1].slice(1, nums_pl2[1].length), uabr_colors, uabr_names);
+    tmp_nums2 = temp[0]; tmp_colors2 = temp[1]; tmp_names2 = temp[2];
+    var abr_nums_pl2 = [[nums_pl2[0][0]], [nums_pl2[1][0]]];
+    for(var i = 0; i < 3; ++i){
+        abr_nums_pl2[0].push(tmp_nums[i]);
+        abr_nums_pl2[1].push(tmp_nums2[tmp_names2.indexOf(tmp_names[i])]);
+        abr_colors2.push(tmp_colors[i]);
+        abr_names2.push(tmp_names[i]);
+    }
+    var count = 0;
+    for(var i = 0; i < tmp_nums2.length; ++i){
+        if(count > 2){ break; }
+        if(abr_names2.indexOf(tmp_names2[i]) == -1){
+            abr_nums_pl2[1].push(tmp_nums2[i]);
+            abr_nums_pl2[0].push(tmp_nums[tmp_names.indexOf(tmp_names2[i])]);
+            abr_colors2.push(tmp_colors2[i]);
+            abr_names2.push(tmp_names2[i]);
             count = count + 1;
-        {% endfor %}
+        }
+    }
+    abr_nums_pl2[0].push(0);
+    abr_nums_pl2[1].push(0);
+    abr_colors2.push(randomColor());
+    abr_names2.push("Other");
+    for(var i = 0; i < tmp_nums.length; ++i){
+        if(abr_names2.indexOf(tmp_names[i]) == -1){
+            abr_nums_pl2[0][7] += tmp_nums[i];
+        }
+        if(abr_names2.indexOf(tmp_names2[i]) == -1){
+            abr_nums_pl2[1][7] += tmp_nums2[i];
+        }
+    }
+
+
+    temp = sorter_function(nums_pl3[0].slice(1, nums_pl3[0].length), uabr_colors, uabr_names);
+    tmp_nums = temp[0]; tmp_colors = temp[1]; tmp_names = temp[2];
+    temp = sorter_function(nums_pl3[1].slice(1, nums_pl3[1].length), uabr_colors, uabr_names);
+    tmp_nums2 = temp[0]; tmp_colors2 = temp[1]; tmp_names2 = temp[2];
+    temp = sorter_function(nums_pl3[2].slice(1, nums_pl3[2].length), uabr_colors, uabr_names);
+    tmp_nums3 = temp[0]; tmp_colors3 = temp[1]; tmp_names3 = temp[2];
+    var abr_nums_pl3 = [[nums_pl3[0][0]], [nums_pl3[1][0]], [nums_pl3[2][0]]];
+    for(var i = 0; i < 2; ++i){
+        abr_nums_pl3[0].push(tmp_nums[i]);
+        abr_nums_pl3[1].push(tmp_nums2[tmp_names2.indexOf(tmp_names[i])]);
+        abr_nums_pl3[2].push(tmp_nums3[tmp_names3.indexOf(tmp_names[i])]);
+        abr_colors3.push(tmp_colors[i]);
+        abr_names3.push(tmp_names[i]);
+    }
+    count = 0;
+    for(var i = 0; i < tmp_nums2.length; ++i){
+        if(count > 1){ break; }
+        if(abr_names3.indexOf(tmp_names2[i]) == -1){
+            abr_nums_pl3[1].push(tmp_nums2[i]);
+            abr_nums_pl3[0].push(tmp_nums[tmp_names.indexOf(tmp_names2[i])]);
+            abr_nums_pl3[2].push(tmp_nums3[tmp_names3.indexOf(tmp_names2[i])]);
+            abr_colors3.push(tmp_colors2[i]);
+            abr_names3.push(tmp_names2[i]);
+            count = count + 1;
+        }
+    }
+    count = 0;
+    for(var i = 0; i < tmp_nums3.length; ++i){
+        if(count > 1){ break; }
+        if(abr_names3.indexOf(tmp_names3[i]) == -1){
+            abr_nums_pl3[2].push(tmp_nums3[i]);
+            abr_nums_pl3[0].push(tmp_nums[tmp_names.indexOf(tmp_names3[i])]);
+            abr_nums_pl3[1].push(tmp_nums2[tmp_names2.indexOf(tmp_names3[i])]);
+            abr_colors3.push(tmp_colors3[i]);
+            abr_names3.push(tmp_names3[i]);
+            count = count + 1;
+        }
+    }
+    abr_nums_pl3[0].push(0);
+    abr_nums_pl3[1].push(0);
+    abr_nums_pl3[2].push(0);
+    abr_colors3.push(randomColor());
+    abr_names3.push("Other");
+    for(var i = 0; i < tmp_nums.length; ++i){
+        if(abr_names3.indexOf(tmp_names[i]) == -1){
+            abr_nums_pl3[0][7] += tmp_nums[i];
+        }
+        if(abr_names3.indexOf(tmp_names2[i]) == -1){
+            abr_nums_pl3[1][7] += tmp_nums2[i];
+        }
+        if(abr_names3.indexOf(tmp_names3[i]) == -1){
+            abr_nums_pl3[2][7] += tmp_nums3[i];
+        }
+    }
+
+    function createMixtures(){
+        var n1, n2, n3, colors1, colors2, colors3, names1, names2, names3;
+        if(!abridged){
+            n1 = nums_pl1;
+            n2 = nums_pl2;
+            n3 = nums_pl3;
+            names1 = uabr_names;
+            names2 = uabr_names;
+            names3 = uabr_names;
+            colors1 = uabr_colors;
+            colors2 = uabr_colors;
+            colors3 = uabr_colors;
+        }else{
+            n1 = abr_nums_pl1;
+            n2 = abr_nums_pl2;
+            n3 = abr_nums_pl3;
+            names1 = abr_names1;
+            names2 = abr_names2;
+            names3 = abr_names3;
+            colors1 = abr_colors1;
+            colors2 = abr_colors2;
+            colors3 = abr_colors3;
+        }
+        var count = 0;
+        $('#k1').html('');
+        $('#k2').html('');
+        $('#k3').html('');
+        for(var i = 1; i < n1.length; ++i){
+            $('#k1').html($('#k1').html() + "<div style=\"display:inline-block;height:200px;background-color:" + colors1[i - 1] + ";width:" + n1[i] * Math.max($('#k1').width(), $('#k2').width(), $('#k3').width()) + "px;\" height=\"200px\" data-toggle=\"tooltip\" title=\"" + names1[i - 1] + ": " + Math.round(100 * n1[i]) + "%\"></div>");
+        }
 
         var height;
-        {% for arr in mixtures_pl2 %}
-            count = 0;
-            {% for num in arr %}
-                if(count == 0){
-                    height = {{num}} * 180;
-                    $('#k2').html($('#k2').html() + "<div style=\"display:inline-block;width:30px;vertical-align:top;margin-top:10px;padding:0\">" + Math.round(100 * {{num}}) + "%</div>");
-                }else if(count > 0){
-                    $('#k2').html($('#k2').html() + "<div style=\"display:inline-block;height:" + height + "px;background-color:" + colors[count - 1] + ";width:" + {{num}} * ($('#k1').width() - 30) + "px;margin-top:10px;\" height=\"200px\" data-toggle=\"tooltip\" title=\"" + names[count - 1] + "\"></div>");
+        for(var i = 0; i < n2.length; ++i){
+            for(var j = 0; j < n2[i].length; ++j){
+                if(j == 0){
+                    height = n2[i][j] * 180;
+                    $('#k2').html($('#k2').html() + "<br/><div style=\"display:inline-block;width:30px;vertical-align:top;margin-top:10px;padding:0\">" + Math.round(100 * n2[i][j]) + "%</div>");
+                }else if(j > 0){
+                    $('#k2').html($('#k2').html() + "<div style=\"display:inline-block;height:" + height + "px;background-color:" + colors2[j - 1] + ";width:" + n2[i][j] * (Math.max($('#k1').width(), $('#k2').width(), $('#k3').width())- 30) + "px;margin-top:10px;\" height=\"200px\" data-toggle=\"tooltip\" title=\"" + names2[j - 1] + ": " + Math.round(100 * n2[i][j]) + "%\"></div>");
                 }
-                count = count + 1;
-            {% endfor %}
-        {% endfor %}
+            }
+        }
 
-        {% for arr in mixtures_pl3 %}
-            count = 0;
-            {% for num in arr %}
-                if(count == 0){
-                    height = {{num}} * 160;
-                    $('#k3').html($('#k3').html() + "<div style=\"display:inline-block;width:30px;vertical-align:top;margin-top:10px;padding:0\">" + Math.round(100 * {{num}}) + "%</div>");
-                }else if(count > 0){
-                    $('#k3').html($('#k3').html() + "<div style=\"display:inline-block;height:" + height + "px;background-color:" + colors[count - 1] + ";width:" + {{num}} * ($('#k1').width() - 30) + "px;margin-top:10px;\" data-toggle=\"tooltip\" title=\"" + names[count - 1] + "\"></div>");
+        for(var i = 0; i < n3.length; ++i){
+            for(var j = 0; j < n3[i].length; ++j){
+                if(j == 0){
+                    height = n3[i][j] * 160;
+                    $('#k3').html($('#k3').html() + "</br><div style=\"display:inline-block;width:30px;vertical-align:top;margin-top:10px;padding:0\">" + Math.round(100 * n3[i][j]) + "%</div>");
+                }else if(j > 0){
+                    $('#k3').html($('#k3').html() + "<div style=\"display:inline-block;height:" + height + "px;background-color:" + colors3[j - 1] + ";width:" + n3[i][j] * (Math.max($('#k1').width(), $('#k2').width(), $('#k3').width()) - 30) + "px;margin-top:10px;\" data-toggle=\"tooltip\" title=\"" + names3[j - 1] + ": " + Math.round(100 * n3[i][j]) + "%\"></div>");
                 }
-                count = count + 1;
-            {% endfor %}
-        {% endfor %}
+            }
+        }
+    }
+    function abridge(){
+        abridged = !abridged;
+        createMixtures();
     }
     
     function enlarge () {
@@ -322,11 +517,12 @@
                     <div id="k3" style="display:none">
                     </div>
                     <div style="margin-top:10px">
-                        <button id="bigger" onclick="enlarge()">Make Larger</button>
-                        <button id="smaller" onclick="smaller()">Make Smaller</button>
+                        <button id="bigger" onclick="enlarge()">+</button>
+                        <button id="smaller" onclick="smaller()">-</button>
                         <button id="load" onclick="showK(1)">Load K = 1</button>
                         <button id="load" onclick="showK(2)">Load K = 2</button>
                         <button id="load" onclick="showK(3)">Load K = 3</button>
+                        <button id="load" onclick="abridge()">Abridge</button>
                     </div>
                 </div>
             </div>

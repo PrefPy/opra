@@ -167,6 +167,7 @@
 						<li><a href="{% url 'polls:regular_polls' %}"><span class="fa fa-object-ungroup"></span>Polls</a></li>
 						<li><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span> Multi-Polls</a></li>
 						<li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span>Groups</a></li>
+						<li><a href="{% url 'sessions_local:sessions_main' %}"><span class="glyphicon glyphicon-book"></span>Sessions</a></li>
 						{% if not request.flavour == "mobile" %}
 						<li>
 						

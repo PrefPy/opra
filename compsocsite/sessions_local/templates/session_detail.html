@@ -1,0 +1,64 @@
+{% extends 'polls/base.html' %}
+{% load mathfilters %}
+{% load staticfiles %}
+{% block extra_head %}
+
+{% if request.flavour == "mobile" %}
+<script src='/static/js/mobile.js'></script>
+<script>var deviceFlavor = "mobile";</script>
+{% else %}
+<script src='/static/js/desktop.js'></script>
+<script>var deviceFlavor = "desktop";</script>
+{% endif %}
+
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Title panel -->
+    <div class="panel panel-default">
+        <!-- Panel header contains image and title -->
+        <div class="panel-heading">
+            <a class="panel-title" data-toggle="collapse" href="#collapse_des" style="font-size:110%;">
+            <div class="row">
+                <div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>
+                    <h4 {% if request.flavour == "mobile" %} style="width:70%;display:inline;" {% endif %}><span class="caret" style="color:#377BB5;"></span> 
+                    	{{ session.title }} 
+					</h4>
+					
+                </div>
+            </div> </a>
+        </div>
+
+        <!-- Display the description in the panel body (initially hidden) -->
+        <div id="collapse_des" class="panel-collapse collapse">
+        	<div class ="panel-body">
+        		<p>Created by {{ session.creator }}.</p>
+				<p>Administrators:</p>
+				{% for admin in admins %}
+					<p>{{admin}}</p>
+				{% endfor %}
+        		<br>
+            Description: {% if session.description %}
+            <span {% if request.flavour == "mobile" %} style="width:70%" {% endif %}> {{ session.question_desc }} </span>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+	
+	<div class="panel panel-default">
+        <!-- Panel header contains image and title -->
+        <div class="panel-heading">
+		<h4>Participants </h4>
+        </div>
+
+        <!-- Display the description in the panel body (initially hidden) -->
+        	<div class ="panel-body">
+			{% for participant in participants %}
+			<p>{{participant}}</p>
+			{% endfor %}
+            </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'polls/base.html' %}
+{% block extra_head %}
+<script>
+function validateForm() {
+    var x = document.forms["create_session"]["title"].value;
+    if (x == null || x == "") {
+        alert("The session title must be filled out");
+        return false;
+    }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<style>
+    p.sameline{
+        display:inline-block;
+    }
+</style>
+
+<div class="col-md-10 col-md-offset-1">
+    <h2  align="center">Create a New Session</h2>
+    <br/>
+     <form id="create_session" method="post" action="/sessions/createsession/" name="create_session" onsubmit="return validateForm() " style="font-size:100%" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="title">Title:</label> <small class="text-muted"> * </small> <br />
+        <input type="text" class="form-control" id="title" name="title" value="" maxlength="40" size="50" autofocus/>
+        <small class="text-muted">Required (at most 40 characters) </small> <br/><br/>
+
+        <label for="description">Session Description:</label> <br />
+        <textarea type="text" class="form-control" id="description" name="description" value="" maxlength="500"></textarea> <br />
+
+        <br /><br />
+      <div class="col-md-6 col-md-offset-3" align="center" style='font-size:100%'>
+            <input type="submit" value="Next" class="btn btn-primary"/>
+        </div>
+    </form>
+</div>
+{% endblock %}

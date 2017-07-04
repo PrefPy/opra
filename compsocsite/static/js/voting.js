@@ -177,33 +177,31 @@ function yesNoSort( order ){
 
 function changeMethod (value){
 	var order;
+	var d = Date.now() - startTime;
 	if(method == 1){ 
-		var d = Date.now() - startTime;
-		swit += d + ";1;;";
+		swit += d + ";1";
 		order = orderCol(method);
+		
 	}else if(method == 2){
-		var d = Date.now() - startTime;
-		swit += d + ";2;;";
+		swit += d + ";2";
 		order = orderCol(method);
 	}
 	else if(method == 3){
-		var d = Date.now() - startTime;
-		swit += d + ";3;;";
+		swit += d + ";3";
 		order = orderSlideStar('slide');
 	}
 	else if(method == 4){
-		var d = Date.now() - startTime;
-		swit += d + ";4;;";
+		swit += d + ";4";
 		order = orderSlideStar('star');
 	}
 	else if(method == 5){
 		order = orderYesNo();
 	}
 	method = value;
-	if(method == 1){ methodIndicator = "two_column"; twoColSort(order); }
-	else if(method == 2){ methodIndicator = "one_column"; oneColSort(order); }
-	else if(method == 3){ methodIndicator = "slider"; sliderSort(order); }
-	else if(method == 4){ methodIndicator = "star"; starSort(order); }
+	if(method == 1){ swit += ";1;;"; methodIndicator = "two_column"; twoColSort(order); }
+	else if(method == 2){ swit += ";2;;"; methodIndicator = "one_column"; oneColSort(order); }
+	else if(method == 3){ swit += ";3;;"; methodIndicator = "slider"; sliderSort(order); }
+	else if(method == 4){ swit += ";4;;"; methodIndicator = "star"; starSort(order); }
 	else if(method == 5){ yesNoSort(order); }
 
 	VoteUtil.checkStyle();

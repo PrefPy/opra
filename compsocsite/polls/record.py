@@ -190,6 +190,7 @@ def interpretRecord(record):
         record_arr.append(record.slider)
         record_arr.append(record.star)
         record_arr.append(record.swit)
+        print(record.swit)
     return record_arr
     
 def interpretRecord1(record):
@@ -227,7 +228,7 @@ def downloadRecord(request, question_id):
     response['Content-Disposition'] = 'attachment; filename="record.csv"'
     writer = csv.writer(response)
     for r in records:
-        writer.writerow(interpretRecord(r))
+        writer.writerow(interpretRecordForLearning(r))
     return response
 
 def downloadAllRecord(request, user_id):
@@ -273,3 +274,44 @@ class RecordView(generic.DetailView):
             interpreted_records.append(interpretRecord(r))
         ctx['user_records'] = interpreted_records
         return ctx
+
+def interpretRecordForLearning(record):
+    record_time = record.timestamp
+    record_user = record.user
+    record_device = record.device
+    col_dict = json.loads(record.col)
+    slider_dict = json.loads(record.slider)
+    star_dict = json.loads(record.star)
+    submit_time = "0"
+    for item in col_dict["column"]:
+        if item["action"] == "submit":
+            submit_time = item["time"]
+    switch_list = []
+    if record.swit != "":
+        temp_switch_list = record.swit.split(";;")
+        for item in temp_switch_list:
+            if item != "":
+                each_list = item.split(";")
+                temp_dict = {}
+                temp_dict["action"] = "switch"
+                if len(each_list) > 2:
+                    temp_dict["time"] = each_list[0]
+                    temp_dict["from"] = each_list[1]
+                    temp_dict["to"] = each_list[2]
+                else:
+                    temp_dict["time"] = each_list[0]
+                    temp_dict["to"] = each_list[1]
+                switch_list.append(temp_dict)
+    total_order = []
+    total_order.extend(col_dict["column"])
+    total_order.extend(slider_dict["slider"])
+    total_order.extend(star_dict["star"])
+    total_order.extend(switch_list)
+    sorted_order = sorted(total_order, key=lambda k: k["time"])
+    final_list = []
+    final_list.append(record_user)
+    final_list.append(record_device)
+    final_list.append(record_time)
+    final_list.append(submit_time)
+    final_list.extend(total_order)
+    return final_list

@@ -45,12 +45,30 @@ class RegularPollsView(views.generic.ListView):
         return Question.objects.all()
     def get_context_data(self, **kwargs):
         ctx = super(RegularPollsView, self).get_context_data(**kwargs)
+        ctx['folders'] = Folder.objects.filter(user=self.request.user).all()
+        unshown = []
+        for folder in ctx['folders']:
+            unshown += folder.questions.all()
         # sort the lists by date (most recent should be at the top)
-        ctx['polls_created'] = Question.objects.filter(question_owner=self.request.user,
-                                                       m_poll=False).order_by('-pub_date')
+        ctx['polls_created'] = list(Question.objects.filter(question_owner=self.request.user,
+                                                       m_poll=False).order_by('-pub_date'))
         polls = self.request.user.poll_participated.filter(m_poll=False)
         polls = polls.exclude(question_owner=self.request.user).order_by('-pub_date')
-        ctx['polls_participated'] = polls
+        ctx['polls_participated'] = list(polls)
+        for poll in unshown:
+            if poll in ctx['polls_created']:
+                ctx['polls_created'].remove(poll)
+            elif poll in ctx['polls_participated']:
+                ctx['polls_participated'].remove(poll)
+        return ctx
+
+class RegularPollsFolderView(views.generic.DetailView):
+    template_name = 'polls/regular_polls_folder.html'
+    model = Folder
+    def get_context_data(self, **kwargs):
+        ctx = super(RegularPollsFolderView, self).get_context_data(**kwargs)
+        # sort the lists by date (most recent should be at the top)
+        ctx['polls_folder'] = self.object.questions.all()
         return ctx
 
 # the original query will return data from earliest to latest
@@ -859,7 +877,8 @@ class VoteResultsView(views.generic.DetailView):
 # return List<String>
 def getListPollAlgorithms():
     return ["Plurality", "Borda", "Veto", "K-approval (k = 3)", "Simplified Bucklin",
-            "Copeland", "Maximin", "STV", "Baldwin", "Coombs", "Black", "Ranked Pairs", "Plurality With Runoff", "Borda Mean"]
+            "Copeland", "Maximin", "STV", "Baldwin", "Coombs", "Black", "Ranked Pairs",
+            "Plurality With Runoff", "Borda Mean"]
 
 def getListAlgorithmLinks():
     return ["https://en.wikipedia.org/wiki/Plurality_voting_method",
@@ -1948,7 +1967,8 @@ def get_polls(request):
         polls = list(Question.objects.filter(question_owner=request.user,
                                                        m_poll=False,
                                                        question_text__icontains = q).order_by('-pub_date'))
-        polls += list(request.user.poll_participated.filter(m_poll=False, question_text__icontains = q ).exclude(question_owner=request.user).order_by('-pub_date'))
+        polls += list(request.user.poll_participated.filter(m_poll=False,
+            question_text__icontains = q ).exclude(question_owner=request.user).order_by('-pub_date'))
         polls = polls[:20]
         results = []
         for poll in polls:
@@ -1977,3 +1997,21 @@ def get_polls(request):
         data = 'fail'
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+# Add function
+def addFolder(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        fold = Folder(user=request.user, title=title, edit_date=timezone.now())
+        fold.save()
+        for poll in request.POST.getlist('polls'):
+            try:
+                q = Question.objects.filter(id=int(poll)).all()[0]
+                fold.questions.add(q)
+            except:
+                print("Error: poll not working")
+        fold.save()
+        print(fold.questions)
+        return HttpResponseRedirect(reverse('polls:regular_polls'))
+    else:
+        print("Error: not post in addFolder function line 1993")

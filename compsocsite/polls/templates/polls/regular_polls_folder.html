@@ -67,71 +67,15 @@
         });
     });
 </script>
-<!-- for search bar -->
-<div class="container" >
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <label for="poll-search">Search: </label>
-            <input type="text" class="form-control" id="poll-search">
-            <div id="hidden-table" style="display:none;">
-                <table style="width:100%" class="table" name="created">
-                    <thead>
-                        <tr>
-                            <th colspan=2>Search results</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr id="search-results">
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- for folders -->
 <div class="container">
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <a href="#" data-toggle="modal" data-target="#add_folder">
-            <span class="glyphicon glyphicon-plus"></span>Add folder</a>
-        </div>
-        <div class="panel-body">
-            {% for folder in folders %}
-            <a href="/polls/regular_polls/{{folder.id}}/folder">
-                <div class="" style="border:solid 1px black;border-radius:1px;margin:1px;width:24%;display:inline-block;text-align:center">{{ folder.title }}</div>
-            </a>
-            {% endfor %}
-        </div>
-        <div class="modal fade" id="add_folder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        Create new folder
-                    </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <form action="add_folder/" method="post">
-                                    {% csrf_token %}
-                                    <label for="title">Folder Title:</label>
-                                    <input name="title" type="text" class="form-control" id="title" value="">
-
-                                    <div id="folder-add">
-                                    </div>
-                                    <label for="poll-search">Search: </label>
-                                    <input type="text" class="form-control" id="folder-search">
-
-                                    <button type="submit" class="btn-large btn-success btn-ok" onclick="add_folder()">Add</button>
-                                    <button role="button" type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                        </div>
-                </div>
+        <a href="/polls/regular_polls">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+                Back to all folders
             </div>
-        </div>
+        </a>
     </div>
 </div>
 
@@ -143,7 +87,7 @@
             <thead>
                 <tr>
                     <th colspan=2>
-		                  Regular polls created by you ({{ polls_created|length }})
+		                  Regular polls created by you ({{ polls_folder|length }})
                     </th>
                     <th>
                         <a href="{% url 'polls:AddStep1' %}" style='font-size:60%; float:right;' class="btn btn-yellow">
@@ -153,7 +97,7 @@
                 </tr>
             </thead>
 
-            {% for question in polls_created %}
+            {% for question in polls_folder %}
                 <tr>
                     <td>
                         <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if question.question_desc %} {{question.question_desc}} {%else%} None. {%endif%}">{{ question.question_text }}</a>

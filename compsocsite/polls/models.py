@@ -56,6 +56,16 @@ class Question(models.Model):
 
 # email to be sent
 @python_2_unicode_compatible
+class Folder(models.Model):
+    questions = models.ManyToManyField(Question)
+    user      = models.ForeignKey(User, on_delete=models.CASCADE)
+    title     = models.CharField(max_length=500)
+    edit_date = models.DateTimeField()
+    def __str__(self):
+        return self.title
+
+# email to be sent
+@python_2_unicode_compatible
 class Email(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     type     = models.IntegerField()

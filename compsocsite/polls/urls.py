@@ -12,6 +12,7 @@ urlpatterns = [
 
     #Two main types of polls
     url(r'^regular_polls$', login_required(views.RegularPollsView.as_view()), name='regular_polls'),
+    url(r'^regular_polls/(?P<pk>[0-9]+)/folder$', login_required(views.RegularPollsFolderView.as_view()), name='regular_polls_folder'),
     url(r'^m_polls$', login_required(views.MultiPollsView.as_view()), name='m_polls'),
     url(r'^(?P<pk>[0-9]+)/demo$', views.DemoView.as_view(), name='voting_demo'),
    
@@ -20,6 +21,9 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/add_step2/$', views.AddStep2View.as_view(), name='AddStep2'), 
     url(r'^(?P<pk>[0-9]+)/add_step3/$', views.AddStep3View.as_view(), name='AddStep3'),
     url(r'^(?P<pk>[0-9]+)/add_step4/$', views.AddStep4View.as_view(), name='AddStep4'),
+
+    # Create a new folder
+    url(r'^add_folder/$', views.addFolder, name='addFolder'),
         
     # choices
     url(r'^(?P<question_id>[0-9]+)/choice/add/$', views.addChoice, name='addchoice'),

@@ -190,7 +190,6 @@ def interpretRecord(record):
         record_arr.append(record.slider)
         record_arr.append(record.star)
         record_arr.append(record.swit)
-        print(record.swit)
     return record_arr
     
 def interpretRecord1(record):

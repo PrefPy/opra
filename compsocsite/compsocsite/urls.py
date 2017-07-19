@@ -32,7 +32,6 @@ urlpatterns = [
     url(r'^sessions/', include('sessions_local.urls')),
     url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT, 'show_indexes':True}),
     url(r'^multipolls/', include('multipolls.urls')),
-    url(r'^django-rq/', include('django_rq.urls')),
     url(r'^GM2017$', GMView.as_view(), name='voting_demo'),
     url(r'^message$', sendMessage, name='message'),
     url(r'^GM2017$', GMView.as_view(), name='GM_2017'),

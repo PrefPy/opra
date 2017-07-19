@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'multipolls',
     'django_mobile',
     'mathfilters',
-    'django_rq',
     'cas',
     'sessions_local',
 ]
@@ -68,8 +67,6 @@ ROOT_URLCONF = 'compsocsite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -78,6 +75,14 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django_mobile.context_processors.flavour',
             ],
+            'loaders':(
+                ('django_mobile.loader.CachedLoader', (
+                    'django_mobile.loader.Loader',
+                    'django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                    'django.template.loaders.app_directories.Loader',
+                )),
+            )
         },
     },
 ]
@@ -99,25 +104,6 @@ CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'my_cache_table',
-    }
-}
-
-RQ_QUEUES = {
-    'default': {
-        'HOST': 'localhost',
-        'PORT': 8000,
-        'DB': 0,
-        'PASSWORD': 'some-password',
-        'DEFAULT_TIMEOUT': 360,
-    },
-    'high': {
-        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:8000/0'), # If you're on Heroku
-        'DEFAULT_TIMEOUT': 500,
-    },
-    'low': {
-        'HOST': 'localhost',
-        'PORT': 8000,
-        'DB': 0,
     }
 }
 
@@ -170,7 +156,7 @@ CAS_LOGOUT_COMPLETELY = True
 CAS_PROVIDE_URL_TO_LOGOUT = True
 CAS_AUTO_CREATE_USERS = True
 CAS_IGNORE_REFERER = True
-CAS_REDIRECT_URL = 'https://opra.cs.rpi.edu/GM2017'
+CAS_REDIRECT_URL = '/polls/regular_polls'
 #'https://opra.cs.rpi.edu'
 # CAS_FORCE_SSL_SERVICE_URL = True
 
@@ -202,4 +188,3 @@ STATICFILES_DIRS = (
 # CSRF_COOKIE_SECURE = True
 # SECURE_HSTS_SECONDS = 3600
 # SECURE_SSL_REDIRECT = False
-

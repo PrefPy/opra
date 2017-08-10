@@ -3,9 +3,11 @@
 <script src="/static/js/cytoscape.min.js"></script>
 <script src='/static/js/voting.js'></script>
 {% if request.flavour == "mobile" %}
+<script>var deviceFlavor = "mobile";</script>
 <script src='/static/js/mobile.js'></script>
 {% else %}
 <script src='/static/js/desktop.js'></script>
+<script>var deviceFlavor = "desktop";</script>
 {% endif %}
 
 
@@ -139,6 +141,7 @@ $(function(){
 {% include 'multipolls/dependencydetail.html' %}
 
 <script>
+	submissionURL="{% url 'polls:record' question.id%}";
     var cy = cytoscape({
         container: document.getElementById('cy'),
         layout: {

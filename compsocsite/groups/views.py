@@ -47,7 +47,7 @@ def addgroup(request):
             memberObj = User.objects.get(username=member)
             group.members.add(memberObj.id)
         return HttpResponseRedirect(reverse('groups:members', args=(group.id,)))
-    return render_to_response('groups/addgroup.html', {}, context)
+    return render(request,'groups/addgroup.html', {})
 
 def addmember(request, group_id):
     context = RequestContext(request)
@@ -58,7 +58,7 @@ def addmember(request, group_id):
             memberObj = User.objects.get(username=member)
             group.members.add(memberObj.id)
         return HttpResponseRedirect(reverse('groups:members', args=(group.id,)))
-    return render_to_response('members.html', {}, context)  
+    return render(request, 'members.html', {})  
 
     
     

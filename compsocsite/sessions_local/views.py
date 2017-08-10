@@ -46,7 +46,7 @@ def createSession(request):
         session.link = link
         session.save()
         return HttpResponseRedirect(reverse("sessions_local:sessions_main"))
-    return render(request, 'create_session.html', {}, context)
+    return render(request, 'create_session.html', {})
     
 @login_required
 def joinSession(request,key):
@@ -55,4 +55,4 @@ def joinSession(request,key):
     session = get_object_or_404(Session, pk=id)
     if request.user not in session.participants.all():
         session.participants.add(request.user.id)
-    return render(request, 'success.html', {}, context)
+    return render(request, 'success.html', {})

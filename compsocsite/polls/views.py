@@ -188,7 +188,7 @@ def AddStep1View(request):
         question.save()
         setupEmail(question)
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
-    return render_to_response('polls/add_step1.html', {}, context)
+    return render(request,'polls/add_step1.html', {})
 
 # step 2: the owner adds choices to a poll
 class AddStep2View(views.generic.DetailView):

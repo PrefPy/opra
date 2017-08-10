@@ -38,7 +38,7 @@ def AddStep1(request):
             m.save()
         multipoll.save()
         return HttpResponseRedirect('/multipolls/%s/add_step2' % multipoll.id)
-    return render_to_response('multipolls/add_step1.html', {}, context)
+    return render(request,'multipolls/add_step1.html', {})
     
 class AddStep2View(views.generic.DetailView):
     model = MultiPoll
@@ -490,6 +490,7 @@ def assignPreference(request, combination_id):
 
     # get the preference order for this particular combination
     orderStr = request.POST["pref_order"]
+    print(orderStr)
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:
         # the user must rank all preferences

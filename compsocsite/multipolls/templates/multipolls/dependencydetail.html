@@ -172,21 +172,18 @@ $(function() {
             <div class="panel-heading" >
                 Your preferences:
                 {% if request.flavour == "mobile" %}
-                    <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="submit-button-mobile" >
+                    <button id="submitbutton-twocol" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton submit-button-mobile" >
                         <span class="glyphicon glyphicon-upload" style="font-size:80%;color:white;">Submit</span>
-                    </button>
-                    <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="btn btn-success" style ="float: right;">
-                        Submit
                     </button>
                 {% else %}
                     <a onclick="VoteUtil.clearAll()" class="btn btn-danger reset-button" style="background">
                         Clear
                     </a>
-                    <button id="submitbutton" type="submit" onclick="VoteUtil.submitPref();" class="btn btn-success" disabled>
+                    <button id="submitbutton-twocol" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton btn btn-success" disabled>
                         Submit
                     </button>
                 {% endif %}
-                <input type="hidden" id="pref_order" name="pref_order" value=""/>
+                <input type="hidden" id="pref_order" class="pref_order" name="pref_order" value=""/>
                 <div class="pull-right">
                 {% if messages %}
                         {% for message in messages %}
@@ -210,7 +207,7 @@ $(function() {
                                 <ul class="choice1">
                                     <div class="tier">{{ forloop.counter }}</div>
                                     {% for selection in s %}
-                                        <li class="li_item" id="item{{ selection.item_text }}">
+                                        <li class="li_item" id="item{{ selection.item_text }}" >
                                             {% if selection.image %}
                                                 <img class="item" src='/{{ selection.image.url }}'/>
                                             {% endif %}
@@ -266,7 +263,7 @@ $(function() {
                             <ul class="choice1 empty"></ul>
                             <div class="tier">{{ forloop.counter }}</div>
                             <ul class="choice1" onclick = "VoteUtil.moveToPref(this)">
-                                <li class="" id="item{{ item.item_text }}">
+                                <li class="li_item" id="item{{ item.item_text }}" type="{{ forloop.counter }}">
                                     {% if item.image %}
                                         <img class="item" src='/{{ item.image.url }}'/>
                                     {% endif %}
@@ -295,8 +292,6 @@ $(function() {
     } else {
         $('#left-sortable').css("height", wholeHeight2);
     }
-    $('#left-sortable').sortable('refresh');
-    $('#right-sortable').sortable('refresh');
 
 </script>
 

@@ -61,8 +61,7 @@ def register(request):
 
     return render(request,
                               'register.html',
-                              {'user_form': user_form, 'registered': registered},
-                              context)
+                              {'user_form': user_form, 'registered': registered})
 
 							  
 def confirm(request, key):
@@ -73,7 +72,7 @@ def confirm(request, key):
     user.save()
     user.backend = 'django.contrib.auth.backends.ModelBackend'
     login(request,user)
-    return render(request, 'activation.html', {'quick':False}, context)
+    return render(request, 'activation.html', {'quick':False})
 
 def quickRegister(request, question_id):
     context = RequestContext(request)
@@ -104,8 +103,7 @@ def quickRegister(request, question_id):
             return HttpResponse("This user name already exists. Please try a different one. <a href='/polls/"+str(question_id)+"'>Return to registration</a>")
     return render(request,
                               'register.html',
-                              {'user_form': user_form, 'registered': registered},
-                              context)
+                              {'user_form': user_form, 'registered': registered})
 
 def quickConfirm(request,question_id,key):
     user_id = opra_crypto.decrypt(key)
@@ -114,7 +112,7 @@ def quickConfirm(request,question_id,key):
     user.save()
     context = RequestContext(request)
     link = "/polls/"+ str(question_id)+"/"
-    return render(request, 'activation.html', {'quick':True, 'link':link, 'loginkey':key, 'qid':question_id}, context)
+    return render(request, 'activation.html', {'quick':True, 'link':link, 'loginkey':key, 'qid':question_id})
     
 def quickLogin(request, key, question_id):
     user_id = opra_crypto.decrypt(key)
@@ -148,23 +146,23 @@ def user_login(request):
 	
 # Display the login form.
     else:
-        return render(request,'login.html', {}, context)
+        return render(request,'login.html', {})
 
 
 @login_required
 def displaySettings(request):
     context = RequestContext(request)
-    return render(request,'settings.html', {}, context)
+    return render(request,'settings.html', {})
 
 @login_required
 def changePasswordView(request):
     context = RequestContext(request)
-    return render(request,'changepassword.html', {}, context)
+    return render(request,'changepassword.html', {})
 
 @login_required
 def globalSettings(request):
     context = RequestContext(request)
-    return render(request,'globalSettings.html', {}, context)
+    return render(request,'globalSettings.html', {})
 
 @login_required
 def updateSettings(request):
@@ -235,11 +233,11 @@ def user_logout(request):
     
 def forgetPasswordView(request):
     context = RequestContext(request)
-    return render(request,'forgetpassword.html', {}, context)
+    return render(request,'forgetpassword.html', {})
     
 def resetPage(request, key):
     context = RequestContext(request)
-    return render(request,'resetpassword.html',{'key':key},context)
+    return render(request,'resetpassword.html',{'key':key})
     
 
 def forgetPassword(request):
@@ -261,9 +259,9 @@ def resetPassword(request, key):
     if new != "" and new == con:
         user.set_password(new)
         user.save()
-        return render(request,'success.html', {}, context)
+        return render(request,'success.html', {})
     else:
-        return render(request,'resetpassword.html',{'key':key},context)
+        return render(request,'resetpassword.html',{'key':key})
 
 @login_required
 def changepassword(request):

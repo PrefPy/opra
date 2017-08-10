@@ -318,12 +318,12 @@ var VoteUtil = (function () {
 		var order = "";
 		var order_list;
 		var item_type = ".li_item";
-		if(method == 1){ order_list = orderCol(0); }
+		if(method == 1){order_list = orderCol(0); }
 		else if(method == 2){ order_list = orderCol(method); }
 		else if(method == 3){ order_list = orderSlideStar('slide'); item_type = ".slider_item"; }
 		else if(method == 4){ order_list = orderSlideStar('star'); item_type= ".star_item";}
 		else if(method == 5){ order_list = orderYesNo(); item_type= ".checkbox";}
-		else{ location.reload(); }
+		else{location.reload(); }
 		for (var i = 0; i < order_list.length; i++) {
 			for (var j = 0; j < order_list[i].length; j++) {
 				order = order + $(item_type + "[type='" + order_list[i][j].toString() + "']").attr('id') + ";;";

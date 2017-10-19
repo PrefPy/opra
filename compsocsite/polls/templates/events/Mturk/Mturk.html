@@ -1,0 +1,256 @@
+{% extends 'polls/base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+<style>
+    h3{
+        font-size: 35px;
+    }
+
+</style>
+<!-- Sidebar/menu 
+<nav class="w3-sidebar rpi-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:270px;font-weight:bold;" id="mySidebar"><br>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px;margin-top:75px">Close Menu<hr/></a>
+  <div class="w3-container">
+    <h2 class="w3-padding" style="{%if request.flavour == 'mobile'%} margin-top:40px; color: transparent;{%endif%}"><br/><b>Rank Your Polls</b></h2>
+  </div>
+    <br/>
+  <div class="w3-bar-block">
+    <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white w3-hide-small">Introduction</a> 
+    <a href="#p1" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Part 1: All UI Polls</a> 
+    <a href="#p2" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white"> Part 2: Injection Polls</a> 
+    <a href="#p3" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white"> Part 3: Subjective polls</a>
+    <a href="#p4" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white"> Part 4: Survey</a>
+  </div>
+</nav>
+-->
+
+<!-- Top menu on small screens
+<header class="w3-container w3-top w3-hide-large rpi-red w3-xlarge w3-padding" style="margin-top:75px">
+  <a href="javascript:void(0)" class="w3-button rpi-red w3-margin-right" onclick="w3_open()">☰</a>
+  <span>OPRA</span>
+</header>-->
+
+<!-- Overlay effect when opening sidebar on small screens
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>-->
+
+
+
+<!-- !PAGE CONTENT! -->
+<div class="container">
+    
+    <!--Tutorial -->
+  <div class="w3-container" style="margin-top: 30px" id="about">
+      <h1 class="w3-xxxlarge"><b>Institutional Review Board Experiment</b>
+          
+        
+          <button type="button" class="btn btn-default btn-lg rpi-red" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start
+          </button>
+     
+
+            <!-- Modal for enter WorkerID -->
+            <div id="myModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                      
+            
+                      
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Please Enter Your Mturk Worker ID</h4>
+                      
+                  </div>
+                  <div class="modal-body">
+                    <form action="anonymousJoin">
+                        {% csrf_token %} 
+                     <div class="form-group">
+                        <input class="form-control" id="exampleInputEmail1" placeholder="WorkerID" name = "anonymousname">
+                      </div>
+                    
+                    </form>
+                  </div>
+                   
+                  <div class="modal-footer">
+                      <a href="{% url 'polls:IRBdetail' IRB_polls.0.id  %}">
+                        <button type="button" class="btn btn-default">Next</button>
+                      </a>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+      </h1>
+      <h1 class= "w3-xlarge"> 
+          This is for data collection and analysis for Online Preference Reporting and Aggregation System.
+
+          <span class="glyphicon glyphicon-info-sign rpi-text-red w3-hover-white" data-toggle="modal" data-target="#More"></span>
+
+            <div class="modal fade" id = "More" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">More Information</h4>
+                  </div>
+                  <div class="modal-body">
+                    <h4> 
+                    	<div>Only a minimal amount of private information about participants will be collected for research purposes. The identity of participants will be fully protected and the user behavior data recorded are not identifiable.</div>
+                        </h4>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div>
+            </div>
+          
+      </h1>
+      
+      <br/>
+      <h1 class="w3-xxlarge rpi-text-red"><b>Introduction</b></h1>
+      <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+      <br/>
+      
+      <!-- Intro -->
+      <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table" >
+            <h4 class= "w3-center" style="height:150px;">Intruduction about our experimentXXXXXXX</h4>  
+            </table>
+          </div>
+      </div>
+        
+  </div>
+  
+
+
+  <!-- P1 >
+  <div class="w3-container" id="p1" style="margin-top:50px">
+    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Part 1:All-interface Polls</b></h1>
+    <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+    <br/>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th> 
+                        Participated in	({{ all_ui_polls|length }})
+                    </th>
+                
+                    <th></th>
+                    <th></th>
+                </tr>
+                 <a href="/polls/967">
+             <h1> 976</h1>
+                       </a>
+            </thead>
+            
+             {% for question in all_ui_polls %}
+            {% if question.open != 3 %}
+            <tr>
+                <td>
+                     <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if question.question_desc %} {{question.question_desc}} {%else%} None. {%endif%}">
+                    {{ question.question_text }}
+                    </a>
+                  
+                    
+                </td>
+                <td>
+                    {% if question.status == 2 %}
+                        <a href="{% url 'polls:IRBdetail' question.id %}" class ="btn btn-dark" role="button">Vote</a>
+                    {% endif %}
+					{% if question.question_type == 1 and question.status != 1 and question.status != 3 and question.response_set.all.count > 0%}
+                            <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" target="_blank" >Current Winners</a>
+                    {% endif %}
+                </td>
+                {% if question.status == 1 %}
+                    <td>Poll not started</td>
+                {% elif question.status == 2 %}
+                    <td>In session</td>
+                {% elif question.status == 3 %}
+                    <td>
+                        {% if question.question_type == 1 %}
+                            <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
+                            {{question.winner}} wins
+                        </a>
+                        {% elif question.question_type == 2 %}
+                            Allocation Complete: <br />
+                            {% for order_item in question.allocationvoter_set.all %}
+                                {% if order_item.response.allocation %}
+                                    {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }}
+                                    <br />
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                {% endif %}
+                </tr>
+            {% endif %}
+            {% endfor %}
+
+        </table>
+        </div>
+    </div>
+  </div>
+  -->
+
+    
+        
+      <!-- Comments -->
+  <div class="w3-container" id="comments" style="margin-top:50px">
+    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Comments.</b></h1>
+    <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+    <br/>
+     <p>We need your comments.</p>
+    <form action="/message" method="post">
+	  {% csrf_token %}
+      <div class="w3-section">
+        <label>Name</label>
+        <input class="w3-input w3-border" type="text" name="name" required>
+      </div>
+      <div class="w3-section">
+        <label>Email</label>
+        <input class="w3-input w3-border" type="text" name="email" required>
+      </div>
+      <div class="w3-section">
+        <label>Message</label>
+        <input class="w3-input w3-border" type="text" name="message" required>
+      </div>
+      <button type="submit" class="w3-button w3-block w3-padding-large rpi-red w3-margin-bottom">Send Message</button>
+    </form>  
+      <br/><br/>
+  </div> 
+    
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+
+<!-- End page content -->
+</div>
+
+<script>
+// Script to open and close sidebar
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("myOverlay").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("myOverlay").style.display = "none";
+}
+
+// Modal Image Gallery
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  var captionText = document.getElementById("caption");
+  captionText.innerHTML = element.alt;
+}
+ 
+</script>
+{% endblock %}

@@ -9,6 +9,10 @@ app_name = 'polls'
 urlpatterns = [
     url(r'^$', login_required(views.IndexView.as_view()), name='index'),
     url(r'^main$', views.MainView.as_view(), name='index_guest'),
+    
+    #for IRB experiment
+    url(r'^IRB/(?P<pk>[0-9]+)/$', views.IRBDetailView.as_view(), name='IRBdetail'),
+    url(r'^IRB/(?P<question_id>[0-9]+)/MTurkvote/$', views.MturkVote, name='Mturkvote'),
 
     #Two main types of polls
     url(r'^regular_polls$', login_required(views.RegularPollsView.as_view()), name='regular_polls'),

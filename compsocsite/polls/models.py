@@ -36,6 +36,8 @@ class Question(models.Model):
     mixtures_pl2 = models.CharField(max_length=500, default="")
     mixtures_pl3 = models.CharField(max_length=500, default="")
     m_poll = models.BooleanField(default=False)
+    next = models.IntegerField(default=-1)
+    first = models.IntegerField(default=-1)
     open = models.IntegerField(default=0)
     new_vote = models.BooleanField(default=False)
     twocol_enabled = models.BooleanField(default=True)

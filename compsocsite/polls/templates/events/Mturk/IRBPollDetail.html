@@ -1,0 +1,258 @@
+{% extends 'polls/base.html' %}
+{% load mathfilters %}
+{% load staticfiles %}
+{% block extra_head %}
+<!-- Google Tag Manager -->
+<noscript>
+    <iframe src="//www.googletagmanager.com/ns.html?id=GTM-59SLDM" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager -->
+
+{% if request.flavour == "mobile" %}
+<script src='/static/js/mobile.js'></script>
+<script>var deviceFlavor = "mobile";</script>
+{% else %}
+<script src='/static/js/desktop.js'></script>
+<script>var deviceFlavor = "desktop";</script>
+{% endif %}
+{% if currentSelection %}
+<script>var firstTime = false;</script>
+{% else %}
+<script>var firstTime = true;</script>
+{% endif %}
+<script src='/static/js/voting.js?1500'></script>
+<link rel="stylesheet" href="/static/css/jquery.rateyo.min.css">
+<script src="/static/js/jquery.rateyo.min.js"></script>
+<script>
+    function register(){
+        if($('#reg_email').val() == ''){ $('#error').html("Please enter an email."); $('#reg_email').focus(); }
+        else if($('#reg_username').val() == ''){ $('#error').html("Please enter a username."); $('#reg_username').focus(); }
+        else if($('#reg_username').val().indexOf('@') > -1){ $('#error').html("Username should not include @ character."); $('#reg_username').focus(); }
+        else if($('#reg_password').val() == ''){ $('#error').html("Please enter a password."); $('#reg_password').focus(); }
+        else{ $('#user_form').submit(); }
+    }
+</script>
+
+
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container-fluid" style="margin-top:20px;">
+    {% if error_message %}
+    <p>
+        <strong>{{ error_message }}</strong>
+    </p>
+    {% endif %}
+
+{% if question.status == 2 %}
+    <div class = "row">
+        <div class = "text-center">
+            <nav aria-label="...">
+              <ul class="pagination">
+                <li class="disabled" >
+                  <span>
+                    <span aria-hidden="true">&laquo;</span>
+                  </span>
+                </li>
+               
+                {%for n in seq%}
+                     {%if question_id == n%}
+                        <li class="active">
+                          <span> {{n}} <span class="sr-only">(current)</span></span>
+                        </li>
+                     {%else%}
+                        <li class="disabled">
+                          <span> {{n}} </span>
+                        </li>
+                     {%endif%}
+                {%endfor%}
+       
+                     {%if next == -1%}
+                        <li>
+                            <a href=  "{% url 'Mturk' %}"  aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                     {%else%}
+                       <li>
+                           <a href= "{% url 'polls:IRBdetail' next %}"  aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                           </a>
+                       </li>
+                     {%endif%}
+                    
+
+              </ul>
+            </nav>
+        </div>
+    </div>  
+    
+     <div class = "row">
+         <div id="tabs" class="col-md-10 col-md-offset-1">
+              {% for n in IRB_polls%} {{n.id}} {%endfor%}
+             <!--
+             <div id="countdown">60</div>-->
+             
+            {% if not question.ui_number == 1%}
+            <ul>
+                {% if question.twocol_enabled %}<li><a href="#twoColSection" onclick="changeMethod(1);">Two Columns</a></li> {% endif %}
+                {% if question.onecol_enabled %}<li><a href="#oneColSection" onclick="changeMethod(2);">One Column</a></li> {% endif %}
+                {% if question.slider_enabled %}<li><a href="#sliderSection" onclick="changeMethod(3);">Sliders</a></li> {% endif %}
+                {% if question.star_enabled %}<li><a href="#starsSection" onclick="changeMethod(4);">Stars</a></li> {% endif %}
+                {% if question.yesno_enabled %}<li><a href="#yesNoSection" onclick="changeMethod(5);">Yes/No</a></li> {% endif %}
+            </ul>
+            {% endif %}
+                {% if question.twocol_enabled %}{% include "events/Mturk/voteOptions/twoCol.html" %}{% endif %}
+                {% if question.onecol_enabled %}{% include "events/Mturk/voteOptions/oneCol.html" %}{% endif %}
+                {% if question.slider_enabled %}{% include "events/Mturk/voteOptions/slider.html" %}{% endif %}
+                {% if question.star_enabled %}{% include "events/Mturk/voteOptions/stars.html" %}{% endif %}
+                {% if question.yesno_enabled %}{% include "events/Mturk/voteOptions/yesNo.html" %}{% endif %}
+         </div>  
+    </div>
+    
+
+    {% elif question.status == 1 %}
+    <p>
+        This poll has not started yet.
+    </p>
+	{% elif question.status == 4 %}
+    <p>
+        This poll is paused.
+    </p>
+    {% else %}
+    <p>
+        This poll has ended.
+    </p>
+    {% endif %}
+</div>
+
+
+
+
+<script>
+    
+    //display confirmation message for 2 seconds and then fade away slowly
+    $(function() {
+        $("#successMessage").delay(2000).fadeOut('slow');
+    });
+    //set the webpage for ajax to report user behavior
+    submissionURL="{% url 'polls:record' question.id%}";
+	
+
+    $(function(){
+        $(document).ready(function() {
+			$(".dropdown-toggle").dropdown();
+
+			$('[data-toggle="tooltip"]').tooltip();
+
+			$('[data-toggle="popover"]').popover({
+				title : '<span class="text-info"><strong>Hint</strong></span>',
+				html: 'true',
+			});
+            if(document.getElementById("yesNoSection") != null){ method = 5; }
+            if(document.getElementById("starsSection") != null){ method = 4; }
+            if(document.getElementById("sliderSection") != null){ method = 3; }
+            if(document.getElementById("oneColSection") != null){ method = 2; }
+            if(document.getElementById("twoColSection") != null){ method = 1; }
+
+			{% if not question.ui_number == 1 %}
+				$( "#tabs" ).tabs();
+			{% endif %}
+
+			{% if request.flavour == "mobile" %}
+				flavor = "Mobile";
+				if(document.getElementById("twoColSection") != null && document.getElementById("oneColSection") != null){
+					$( "#tabs" ).tabs("option","active",1);
+					method = 2;
+				}
+			{% else %}
+				flavor = "PC";
+			{% endif %}
+			VoteUtil.checkStyle();
+			startTime = Date.now();
+			
+			$( "#right-sortable" ).children().each(function() {
+			if($(this).children().size()>0){
+				order1 += $(this).children().first().attr("id") + ";;|;;";
+			}
+
+		});
+			$( "#left-sortable" ).children().each(function() {
+			if($(this).children().size()>0){
+				$( this ).children().each(function(){
+					order2 += $( this ).attr('id');
+					order2 += ";;";
+				});
+				order2 += "|;;";
+			}
+			
+		});
+});
+
+
+
+
+
+    // tooltip toggle (Popover function for hints)
+    $(document).on('click',"#toggle-button",function () {
+     toggle(document.querySelectorAll('.hint'));
+   });
+
+//Toggle: hide/show hints
+function toggle (elements, specifiedDisplay) {
+  var element, index;
+  elements = elements.length ? elements : [elements];
+  for (index = 0; index < elements.length; index++) {
+    element = elements[index];
+
+    if (isElementHidden(element)) {
+      element.style.visibility = '';
+
+      // If the element is still hidden after removing the inline display
+      if (isElementHidden(element)) {
+        element.style.visibility = specifiedDisplay || 'visible';
+      }
+    } else {
+      element.style.visibility = 'hidden';
+    }
+  }
+  function isElementHidden (element) {
+    return window.getComputedStyle(element, null).getPropertyValue('visibility') === 'hidden';
+  }
+}
+});
+
+</script>
+
+<script type="text/javascript">
+  var seconds;
+  var temp;
+ 
+  function countdown() {
+    seconds = document.getElementById('countdown').innerHTML;
+    seconds = parseInt(seconds, 10);
+ 
+    if (seconds == 1) {
+      temp = document.getElementById('countdown');
+      temp.innerHTML = "TIME OUT";
+      var timer = setTimeout(function() {
+            window.location='https://opra.cs.rpi.edu/polls/main'
+        }, 1000);
+      return;
+    }
+ 
+    seconds--;
+    temp = document.getElementById('countdown');
+    temp.innerHTML = seconds;
+    timeoutMyOswego = setTimeout(countdown, 1000);
+  } 
+ 
+  countdown();
+
+   
+</script>
+
+
+{% endblock %}

@@ -2016,3 +2016,173 @@ def addFolder(request):
         return HttpResponseRedirect(reverse('polls:regular_polls'))
     else:
         print("Error: not post in addFolder function line 1993")
+
+def getIRBPollList():
+    # get all IRB polls from database
+    polls= list(Question.objects.filter(id__in = range(265,299)))
+    # polls= random.sample(polls,k=10)
+    i=0
+    for p in polls:
+        if i<len(polls)-1:
+            #link the next
+            p.next = polls[i+1].id
+            #available for all users
+            p.open = 1
+            # open all polls
+            p.status = 2
+            p.save()
+            i=i+1
+        else:
+            p.next = -1
+            p.open = 1
+            p.status =2
+            p.save()
+    return polls
+
+
+# submit a vote without logging in from Mturk
+def MturkVote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    voter = "Anonymous"
+    id = 0
+    # check if the anonymous voter has voted before
+    if 'anonymousname' in request.POST:
+        voter = request.POST['anonymousname']
+    if 'anonymousid' not in request.session:
+        request.session['anonymousvoter'] = voter
+        id = question.response_set.all().count() + 1
+        request.session['anonymousid'] = id
+    else:
+        voter = request.session['anonymousvoter']
+        id = request.session['anonymousid']
+    # get the preference order
+    orderStr = request.POST["pref_order"]
+    prefOrder = getPrefOrder(orderStr, question)
+    if prefOrder == None:
+        # the user must rank all preferences
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    # make Response object to store data
+    comment = request.POST['comment']
+    response = Response(question=question, timestamp=timezone.now(),
+                        anonymous_voter=voter, anonymous_id=id, resp_str=orderStr)
+    if comment != "":
+        response.comment = comment
+    response.save()
+
+    # find ranking student gave for each item under the question
+
+    #get current winner
+    old_winner = OldWinner(question=question, response=response)
+    old_winner.save()
+    if not question.new_vote:
+        question.new_vote = True
+        question.save()
+    # notify the user that the vote has been updated
+    messages.success(request, 'Saved!')
+    return HttpResponseRedirect(reverse('polls:IRBdetail', args=(question.id,)))
+
+
+
+class MturkView(views.generic.ListView):
+    template_name = 'events/Mturk/Mturk.html'
+    context_object_name = 'question_list'
+    def __init__(self):
+        self.polls = getIRBPollList()
+    def get_queryset(self):
+        return Question.objects.all()
+    def get_context_data(self,**kwargs):
+        ctx = super(MturkView, self).get_context_data(**kwargs)
+        ctx['IRB_polls'] = self.polls
+        return ctx
+
+#   return MturkView.as_view()(self.request)
+
+# view for question detail
+class IRBDetailView(views.generic.DetailView):
+    model = Question
+    template_name = 'events/Mturk/IRBPollDetail.html'
+    
+    def get_order(self, ctx):
+        other_user_responses = self.object.response_set.reverse()
+        default_order = list(ctx['object'].item_set.all())
+        random.shuffle(default_order)
+        return default_order
+    #commented out to improve performance
+    #return getRecommendedOrder(other_user_responses, self.request, default_order)
+    
+    def get_context_data(self, **kwargs):
+        ctx = super(IRBDetailView, self).get_context_data(**kwargs)
+        ctx['lastcomment'] = ""
+        ctx['seq']=range(1,len(getIRBPollList())+1)
+        ctx['q']= self.object
+        ctx['question_id'] = self.object.id - 264
+        ctx['next'] = self.object.next
+        
+        #Case for anonymous user
+        if self.request.user.get_username() == "":
+            if isPrefReset(self.request):
+                ctx['items'] = self.object.item_set.all()
+                return ctx
+            # check the anonymous voter
+            if 'anonymousvoter' in self.request.session and 'anonymousid' in self.request.session:
+                # sort the responses from latest to earliest
+                anon_id = self.request.session['anonymousid']
+                curr_anon_resps = self.object.response_set.filter(anonymous_id=anon_id).reverse()
+                if len(curr_anon_resps) > 0:
+                    # get the voter's most recent selection
+                    mostRecentAnonymousResponse = curr_anon_resps[0]
+                    if mostRecentAnonymousResponse.comment:
+                        ctx['lastcomment'] = mostRecentAnonymousResponse.comment
+                    ctx['currentSelection'] = getCurrentSelection(curr_anon_resps[0])
+                    ctx['unrankedCandidates'] = getUnrankedCandidates(curr_anon_resps[0])
+                    ctx['itr'] = itertools.count(1, 1)
+                    items_ano = []
+                    for item in ctx['currentSelection']:
+                        for i in item:
+                            items_ano.append(i)
+                    if not ctx['unrankedCandidates'] == None:
+                        for item in ctx['unrankedCandidates']:
+                            items_ano.append(item)
+                    ctx['items'] = items_ano
+            else:
+                # load choices in the default order
+                ctx['items'] = self.object.item_set.all()
+            return ctx
+        
+        # Get the responses for the current logged-in user from latest to earliest
+        if self.object.open == 3:
+            currentUserResponses = self.object.response_set.filter(rin=self.request.session["RIN"]).reverse()
+        else:
+            currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        
+        if len(currentUserResponses) > 0:
+            if currentUserResponses[0].comment:
+                ctx['lastcomment'] = currentUserResponses[0].comment
+    
+        # reset button
+        if isPrefReset(self.request):
+            ctx['items'] = self.get_order(ctx)
+            return ctx
+
+        # check if the user submitted a vote earlier and display that for modification
+        if len(currentUserResponses) > 0 and self.request.user.get_username() != "":
+            ctx['currentSelection'] = getCurrentSelection(currentUserResponses[0])
+            ctx['itr'] = itertools.count(1, 1)
+            ctx['unrankedCandidates'] = getUnrankedCandidates(currentUserResponses[0])
+            items = []
+            for item in ctx['currentSelection']:
+                for i in item:
+                    items.append(i)
+            if not ctx['unrankedCandidates'] == None:
+                for item in ctx['unrankedCandidates']:
+                    items.append(item)
+            ctx['items'] = items
+        else:
+            # no history so display the list of choices
+            ctx['items'] = self.get_order(ctx)
+        return ctx
+    def get_queryset(self):
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
+

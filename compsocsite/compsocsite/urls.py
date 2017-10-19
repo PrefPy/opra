@@ -22,6 +22,7 @@ from polls.views import GMView
 from polls.views import GMResultsView
 from polls.views import sendMessage
 from polls.views import CSPosterView
+from polls.views import MturkView
 
 urlpatterns = [
     url(r'^$', RedirectView.as_view(url='/polls/main')),
@@ -40,4 +41,5 @@ urlpatterns = [
     url(r'^gm2017$', GMView.as_view(), name='gm_2017'),
     url(r'^CSposter$', CSPosterView.as_view(), name='CS_poster'),
     url(r'^csposter$', CSPosterView.as_view(), name='cs_poster'),
+    url(r'^IRB$', MturkView.as_view(), name='Mturk'),
 ]

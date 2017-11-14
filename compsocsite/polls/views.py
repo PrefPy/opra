@@ -2019,7 +2019,8 @@ def addFolder(request):
 
 def getIRBPollList():
     # get all IRB polls from database
-    polls= list(Question.objects.filter(id__in = range(265,299)))
+    exp = get_object_or_404(User, username="opraexp")
+    polls= list(Question.objects.filter(question_owner = exp))
     # polls= random.sample(polls,k=10)
     i=0
     for p in polls:
@@ -2097,6 +2098,14 @@ class MturkView(views.generic.ListView):
         return ctx
 
 #   return MturkView.as_view()(self.request)
+def index_id(polls_list,q):
+    n=0
+    d=0
+    for p in polls_list:
+        n=n+1
+        if p.id == q.id:
+            d=n
+    return d
 
 # view for question detail
 class IRBDetailView(views.generic.DetailView):
@@ -2113,10 +2122,10 @@ class IRBDetailView(views.generic.DetailView):
     
     def get_context_data(self, **kwargs):
         ctx = super(IRBDetailView, self).get_context_data(**kwargs)
+        polls_list = getIRBPollList()
+        ctx['index']= index_id(polls_list,self.object)
         ctx['lastcomment'] = ""
         ctx['seq']=range(1,len(getIRBPollList())+1)
-        ctx['q']= self.object
-        ctx['question_id'] = self.object.id - 264
         ctx['next'] = self.object.next
         
         #Case for anonymous user

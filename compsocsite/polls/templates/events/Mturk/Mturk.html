@@ -43,47 +43,6 @@
     <!--Tutorial -->
   <div class="w3-container" style="margin-top: 30px" id="about">
       <h1 class="w3-xxxlarge"><b>Institutional Review Board Experiment</b>
-          
-        
-          <button type="button" class="btn btn-default btn-lg rpi-red" data-toggle="modal" data-target="#myModal">
-            <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start
-          </button>
-     
-
-            <!-- Modal for enter WorkerID -->
-            <div id="myModal" class="modal fade" role="dialog">
-              <div class="modal-dialog">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                  <div class="modal-header">
-                      
-            
-                      
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Please Enter Your Mturk Worker ID</h4>
-                      
-                  </div>
-                  <div class="modal-body">
-                    <form action="anonymousJoin">
-                        {% csrf_token %} 
-                     <div class="form-group">
-                        <input class="form-control" id="exampleInputEmail1" placeholder="WorkerID" name = "anonymousname">
-                      </div>
-                    
-                    </form>
-                  </div>
-                   
-                  <div class="modal-footer">
-                      <a href="{% url 'polls:IRBdetail' IRB_polls.0.id  %}">
-                        <button type="button" class="btn btn-default">Next</button>
-                      </a>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
       </h1>
       <h1 class= "w3-xlarge"> 
           This is for data collection and analysis for Online Preference Reporting and Aggregation System.
@@ -117,11 +76,48 @@
       <div class="panel panel-default">
         <div class="panel-body">
             <table class="table" >
-            <h4 class= "w3-center" style="height:150px;">Intruduction about our experimentXXXXXXX</h4>  
+            <h4 class= "w3-center" style="height:150px;"> The Experiment has 3  types of questions. The first five polls are used for same-topic polls but with 5 different UIs. Question 6 to 26 are polls with different topics. And you would vote them in 2 different UIs. The last questions are xxxxx.
+                <br/>
+                Each poll could only be voted by once. And you need to do all polls by sequence. 
+                
+            </h4>  
             </table>
           </div>
       </div>
-        
+        <button type="button" class="btn btn-lg rpi-red" data-toggle="modal" data-target="#myModal">
+            <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start
+        </button>
+       <button id="start" onClick="startIt()">CLICK ME</button>
+
+            <!-- Modal for enter WorkerID -->
+            <div id="myModal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Please Enter Your Mturk Worker ID</h4>
+                      
+                  </div>
+                  <div class="modal-body">
+                    <form action="anonymousJoin">
+                        {% csrf_token %} 
+                     <div class="form-group">
+                        <input class="form-control" id="exampleInputEmail1" placeholder="WorkerID" name = "anonymousname">
+                      </div>
+                    
+                    </form>
+                  </div>
+                   
+                  <div class="modal-footer">
+                      <a href="{% url 'polls:IRBdetail' IRB_polls.0.id  %}">
+                        <button type="button" class="btn btn-default">Next</button>
+                      </a>
+                  </div>
+                </div>
+              </div>
+            </div>
   </div>
   
 

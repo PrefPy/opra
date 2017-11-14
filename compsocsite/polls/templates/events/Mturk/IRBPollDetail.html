@@ -1,13 +1,92 @@
-{% extends 'polls/base.html' %}
 {% load mathfilters %}
 {% load staticfiles %}
-{% block extra_head %}
+<link rel="shortcut icon" href="{% static 'img/oprasmalllogowhite.png' %}"/>
+<html>
+	<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>OPRA</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" integrity="" crossorigin="anonymous" >
+        
+    <!-- jQuery UI CSS (base theme) -->
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/stylish-portfolio.css" />
+  	<link rel="stylesheet" type="text/css" href="/static/css/shared.css"/>
+  	<link rel="stylesheet" type="text/css" href="/static/css/introjs.css"/>
+  	<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/>
+    <!-- Custom Fonts -->
+    <link href="/static/fonts/sanc.css" rel="stylesheet" type="text/css" />     
+    <link rel="stylesheet" href="/static/fonts/lato.css">
+    <!-- W3 -->
+    <link rel="stylesheet" href="/static/css/w3.css">
+
+    <!-- Select2 -->
+    <link href="/static/css/select2.min.css" rel="stylesheet" />
+		{% if request.flavour == "mobile" %}
+		<link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
+		{% else %}
+		<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
+		{% endif %}
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script
+        src="/static/js/jquery-2.2.4.min.js"
+        integrity=""
+        crossorigin="anonymous"></script>
+    <script
+      src="/static/js/jquery-ui.min.js"
+      integrity=""
+      crossorigin="anonymous"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- <script src="/static/js/5f5c1e4fb0.js"></script> -->
+    <script src="/static/js/select2.min.js"></script>
+    <script src='/static/js/intro.js'></script>
+    <script src='/static/js/base.js'></script>
+    <script src='/static/js/shared.js'></script>
+
+    <style>
+	    .btn{
+	    	border-radius:0;
+	    }
+	    body { padding-top: 60px; }
+        body,h1,h2,h3,h4,h5 {font-family:"Lato", sans-serif}
+
+       .rpi-red{
+            background-color:rgb(191,7,17);
+            color: #fff
+        }
+       .rpi-text-red{
+            color:rgb(191,7,17)
+        }
+         .bgimg-1 {
+            background-position: center;
+            background-size: cover;
+            background-image: url({% static 'img/rpi-empac.png' %});
+
+            min-height: 100%;
+        }
+    </style>
 <!-- Google Tag Manager -->
 <noscript>
     <iframe src="//www.googletagmanager.com/ns.html?id=GTM-59SLDM" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager -->
-
 {% if request.flavour == "mobile" %}
 <script src='/static/js/mobile.js'></script>
 <script>var deviceFlavor = "mobile";</script>
@@ -32,33 +111,24 @@
         else{ $('#user_form').submit(); }
     }
 </script>
-
-
-{% endblock %}
-
+	</head>
 {% block content %}
 
 
-<div class="container-fluid" style="margin-top:20px;">
-    {% if error_message %}
-    <p>
-        <strong>{{ error_message }}</strong>
-    </p>
-    {% endif %}
+
 
 {% if question.status == 2 %}
-    <div class = "row">
         <div class = "text-center">
-            <nav aria-label="...">
+            <nav class="navbar navbar-fixed-top">
               <ul class="pagination">
                 <li class="disabled" >
                   <span>
                     <span aria-hidden="true">&laquo;</span>
                   </span>
                 </li>
-               
-                {%for n in seq%}
-                     {%if question_id == n%}
+                  
+                  {%for n in seq%}
+                     {% if n == index %}
                         <li class="active">
                           <span> {{n}} <span class="sr-only">(current)</span></span>
                         </li>
@@ -67,31 +137,77 @@
                           <span> {{n}} </span>
                         </li>
                      {%endif%}
-                {%endfor%}
-       
-                     {%if next == -1%}
-                        <li>
-                            <a href=  "{% url 'Mturk' %}"  aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                     {%else%}
-                       <li>
-                           <a href= "{% url 'polls:IRBdetail' next %}"  aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                           </a>
-                       </li>
-                     {%endif%}
+                  {%endfor%}
                     
+       
+                         {%if next == -1%}
+                            <li>
+                                <a href=  "{% url 'Mturk' %}"  aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                         {%else%}
+                           <li>
+                               <a href= "{% url 'polls:IRBdetail' next %}"  aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                               </a>
+                           </li>
+                         {%endif%}
+    
 
               </ul>
             </nav>
         </div>
-    </div>  
+    
+    <div class="container-fluid" style="margin-top:20px;">
+    {% if error_message %}
+    <p>
+        <strong>{{ error_message }}</strong>
+    </p>
+    {% endif %}
+    <!-- Title panel -->
+    <div class="panel panel-default">
+        <!-- Panel header contains image and title -->
+        <div class="panel-heading">
+            <a class="panel-title" data-toggle="collapse" href="#collapse_des" style="font-size:110%;">
+            <div class="row">
+                <!-- Display poll image (from external url) -->
+                {% if question.imageURL != Null and question.imageURL != '' %}
+                <div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+                    <a href="{{ question.imageURL }}"><img src="{{ question.imageURL }}" width="150" ></a>
+                </div>
+                <!-- Display poll image (uploaded to the server) -->
+                {% elif question.image %}
+                <div class="col-md-2" {% if request.flavour == "mobile" %} style="width:20%;display:inline" {% endif %}>
+                    <a href="/{{ question.image.url }}"><img src="/{{ question.image.url }}" width="150" ></a>
+                </div>
+                {% endif %}
+
+                <!-- Display title and creator in the header -->
+                <div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>
+                    <h4 {% if request.flavour == "mobile" %} style="width:70%;display:inline;" {% endif %}><span class="caret" style="color:#377BB5;"></span> 
+                    	{{ question.question_text }} 
+					</h4>
+                </div>
+            </div> </a>
+        </div>
+
+        <!-- Display the description in the panel body (initially hidden) -->
+        <div id="collapse_des" class="panel-collapse">
+        	<div class ="panel-body">
+        		Created by {{ question.question_owner }}.
+        		<br>
+                {%if question.question_desc|length > 0 %}
+                    Description:
+                    {% autoescape off %} {{question.question_desc}}  {% endautoescape %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
     
      <div class = "row">
          <div id="tabs" class="col-md-10 col-md-offset-1">
-              {% for n in IRB_polls%} {{n.id}} {%endfor%}
+            {% for n in IRB_polls%} {{n.id}} {%endfor%}
              <!--
              <div id="countdown">60</div>-->
              

@@ -16,6 +16,8 @@ class UserProfile(models.Model):
     emailStart = models.BooleanField(default=False)
     emailStop = models.BooleanField(default=False)
     showHint = models.BooleanField(default=True)
+    mturk = models.IntegerField(default=0)
+    age = models.IntegerField(default=0)
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
         return self.user.username

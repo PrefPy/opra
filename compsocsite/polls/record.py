@@ -3,11 +3,12 @@ import os
 import csv
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
+from django.http import HttpResponseRedirect, HttpResponse, HttpRequest, JsonResponse
 from django.core.urlresolvers import reverse
 from django.views import generic
 from django.core.files import File
 from .models import *
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
 from django.template import RequestContext
@@ -29,6 +30,7 @@ def writeUserAction(request, question_id):
         #f = open(str, 'w+')
         type = 0
         data = request.POST['data']
+        one_col_record = request.POST['one']
         order1 = request.POST['order1']
         order2 = request.POST['order2']
         device = request.POST['device']
@@ -47,10 +49,10 @@ def writeUserAction(request, question_id):
         if request.user.username == "":
             anonymous_name = ""
             new_name = "(Anonymous)" + anonymous_name
-            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,col=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
+            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,col=data,one_col=one_col_record,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
             r.save()
         else:
-            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,col=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
+            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,col=data,one_col=one_col_record,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
             r.save()
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -187,6 +189,7 @@ def interpretRecord(record):
         record_arr.append(record.device)
         record_arr.append(record.col)
     if record.slider != "":
+        record_arr.append(record.one_col)
         record_arr.append(record.slider)
         record_arr.append(record.star)
         record_arr.append(record.swit)
@@ -227,7 +230,8 @@ def downloadRecord(request, question_id):
     response['Content-Disposition'] = 'attachment; filename="record.csv"'
     writer = csv.writer(response)
     for r in records:
-        writer.writerow(interpretRecordForLearning(r))
+        (data,time) = interpretRecordForLearning(r)
+        writer.writerow(data)
     return response
 
 def downloadAllRecord(request, user_id):
@@ -279,10 +283,14 @@ def interpretRecordForLearning(record):
     record_user = record.user
     record_device = record.device
     col_dict = json.loads(record.col)
+    one_col_dict = json.loads(record.one_col)
     slider_dict = json.loads(record.slider)
     star_dict = json.loads(record.star)
     submit_time = "0"
-    for item in col_dict["column"]:
+    for item in col_dict["two_column"]:
+        if item["action"] == "submit":
+            submit_time = item["time"]
+    for item in one_col_dict["one_column"]:
         if item["action"] == "submit":
             submit_time = item["time"]
     switch_list = []
@@ -302,7 +310,8 @@ def interpretRecordForLearning(record):
                     temp_dict["to"] = each_list[1]
                 switch_list.append(temp_dict)
     total_order = []
-    total_order.extend(col_dict["column"])
+    total_order.extend(col_dict["two_column"])
+    total_order.extend(one_col_dict["one_column"])
     total_order.extend(slider_dict["slider"])
     total_order.extend(star_dict["star"])
     total_order.extend(switch_list)
@@ -313,4 +322,47 @@ def interpretRecordForLearning(record):
     final_list.append(record_time)
     final_list.append(submit_time)
     final_list.extend(total_order)
-    return final_list
+    return (final_list, submit_time)
+    
+def downloadParticipants(request):
+    all_par = User.objects.filter(mturk=1)
+    result = []
+    for par in all_par:
+        dic = {}
+        dic["id"] = par.id
+        dic["mturkid"] = par.username
+        dic["age"] = par.userprofile.age
+        result.append(dic)
+    return JsonResponse(result, safe=False)
+    
+def downloadPolls(request):
+    all_poll = User.objects.get(username="opraexp").question_set.all()
+    result = []
+    for poll in all_poll:
+        dic = {}
+        dic["id"] = poll.id
+        dic["title"] = poll.question_text
+        dic["alternatives"] = list(poll.item_set.all().values("item_text"))
+        result.append(dic)
+    return JsonResponse(result, safe=False)
+    
+def downloadRecords(request):
+    all_record = UserVoteRecord.objects.all()
+    result = []
+    for record in all_record:
+        dic = {}
+        dic["poll_id"] = record.question.id
+        dic["participant_id"] = 0
+        dic["participant_mturkid"] = ""
+        try:
+            user = User.objects.get(username=record.user)
+            dic["participant_id"] = user.id
+            dic["participant_mturkid"] = user.userprofile.username
+        except ObjectDoesNotExist:
+            pass
+        (data, time) = interpretRecordForLearning(record)
+        dic["data"] = data
+        dic["time"] = time
+        result.append(dic)
+    return JsonResponse(result)
+    

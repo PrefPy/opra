@@ -355,6 +355,8 @@ def downloadRecords(request):
             dic["poll_id"] = record.question.id
             dic["participant_id"] = 0
             dic["participant_mturkid"] = ""
+            dic["init"] = record.initial_order
+            dic["final"] = record.final_order
             try:
                 user = User.objects.get(username=record.user)
                 dic["participant_id"] = user.id

@@ -350,19 +350,20 @@ def downloadRecords(request):
     all_record = UserVoteRecord.objects.all()
     result = []
     for record in all_record:
-        dic = {}
-        dic["poll_id"] = record.question.id
-        dic["participant_id"] = 0
-        dic["participant_mturkid"] = ""
-        try:
-            user = User.objects.get(username=record.user)
-            dic["participant_id"] = user.id
-            dic["participant_mturkid"] = user.userprofile.username
-        except ObjectDoesNotExist:
-            pass
-        (data, time) = interpretRecordForLearning(record)
-        dic["data"] = data
-        dic["time"] = time
+        if record.one_col != "":
+            dic = {}
+            dic["poll_id"] = record.question.id
+            dic["participant_id"] = 0
+            dic["participant_mturkid"] = ""
+            try:
+                user = User.objects.get(username=record.user)
+                dic["participant_id"] = user.id
+                dic["participant_mturkid"] = user.userprofile.username
+            except ObjectDoesNotExist:
+                pass
+            (data, time) = interpretRecordForLearning(record)
+            dic["data"] = data
+            dic["time"] = time
         result.append(dic)
     return JsonResponse(result)
     

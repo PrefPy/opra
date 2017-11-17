@@ -364,6 +364,6 @@ def downloadRecords(request):
             (data, time) = interpretRecordForLearning(record)
             dic["data"] = data
             dic["time"] = time
-        result.append(dic)
+            result.append(dic)
     return JsonResponse(result)
     

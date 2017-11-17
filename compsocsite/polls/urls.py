@@ -81,6 +81,9 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9]+)/recordView/$', record.RecordView.as_view(), name='recordView'),
     url(r'^(?P<question_id>[0-9]+)/downloadrecord/$', record.downloadRecord, name='downloadrecord'),
     url(r'^(?P<user_id>[0-9]+)/downloadallrecord/$', record.downloadAllRecord, name='downloadallrecord'),
+    url(r'^downloadpolls/$', record.downloadPolls, name='downloadpolls'),
+    url(r'^downloadparticipants/$', record.downloadParticipants, name='downloadparticipants'),
+    url(r'^downloadallrecords/$', record.downloadRecords, name='downloadallrecords'),
 
     # API
     url(r'^API/mixtures/$', views.mixtureAPI, name='mixture_api'),

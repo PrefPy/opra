@@ -325,7 +325,7 @@ def interpretRecordForLearning(record):
     return (final_list, submit_time)
     
 def downloadParticipants(request):
-    all_par = User.objects.filter(mturk=1)
+    all_par = User.objects.filter(userprofile__mturk=1)
     result = []
     for par in all_par:
         dic = {}

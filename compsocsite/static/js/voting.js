@@ -345,7 +345,7 @@ var VoteUtil = (function () {
 		//record += "S" + d;
 		var d = (Date.now() - startTime).toString();
 		var temp = JSON.parse(record);
-		temp["column"].push({"method":methodIndicator,"time":d, "action":"submit" });
+		temp["two_column"].push({"method":"submit","time":d, "action":"submit" });
 		record = JSON.stringify(temp);
 
 		$('.pref_order').each(function(){

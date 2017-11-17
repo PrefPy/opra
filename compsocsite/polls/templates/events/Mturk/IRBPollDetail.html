@@ -111,6 +111,11 @@
         else{ $('#user_form').submit(); }
     }
 </script>
+<script>
+        function myFunction() {
+            document.getElementById("myProgress").style.width += 20%;
+        }
+</script>
 	</head>
 {% block content %}
 
@@ -120,7 +125,7 @@
 {% if question.status == 2 %}
         <div class = "text-center">
             <nav class="navbar navbar-fixed-top">
-              <ul class="pagination">
+            <ul class="pagination">
                 <li class="disabled" >
                   <span>
                     <span aria-hidden="true">&laquo;</span>

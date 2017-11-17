@@ -2105,6 +2105,7 @@ def index_id(polls_list,q):
         n=n+1
         if p.id == q.id:
             d=n
+                #d= round(d/len(polls_list)*100,2)
     return d
 
 # view for question detail

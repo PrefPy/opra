@@ -5,13 +5,7 @@
 
         <div class="row">
             {% csrf_token %}
-            <!-- If this user isn't logged in and hasn't voted before -->
-            {% if request.user.username == "" and 'anonymousid' not in request.session %}
-            <div class="col-md-12" style="clear:right; ">
-                <h4>Your WorkderId (required)</h4>
-                <input type="text" size="50" class="form-control" style="width=50%; clear:right;" name="anonymousname"/>
-            </div>
-            {% endif %}
+    
 
                 {% if request.flavour == "mobile" %}
                

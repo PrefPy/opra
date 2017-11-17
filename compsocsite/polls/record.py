@@ -365,5 +365,5 @@ def downloadRecords(request):
             dic["data"] = data
             dic["time"] = time
             result.append(dic)
-    return JsonResponse(result)
+    return JsonResponse(result, safe=False)
     

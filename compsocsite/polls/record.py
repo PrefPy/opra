@@ -358,7 +358,7 @@ def downloadRecords(request):
             try:
                 user = User.objects.get(username=record.user)
                 dic["participant_id"] = user.id
-                dic["participant_mturkid"] = user.userprofile.username
+                dic["participant_mturkid"] = user.username
             except ObjectDoesNotExist:
                 pass
             (data, time) = interpretRecordForLearning(record)

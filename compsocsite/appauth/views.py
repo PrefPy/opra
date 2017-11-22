@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
-from polls.models import Message
+from polls.models import Message, Question
 from polls import opra_crypto
 import cas.middleware
 
@@ -274,7 +274,27 @@ def changepassword(request):
         return HttpResponseRedirect(reverse('polls:index'))
     else:
         return HttpResponse("The password you entered is wrong.")
+
+def createMturkUser(request):
+    if request.method == "POST":
+        name = request.POST["name"]
+        if name != "" and request.user.username == "":
+            age = 0
+            try:
+                age = int(request.POST["age"])
+            except ValueError:
+                pass
+            user = User.objects.create_user(username=name, password=name)
+            user.save()
+            profile = UserProfile(user=user,mturk=1,age=age)
+            profile.save
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request,user)
+        poll_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))
+        return HttpResponseRedirect(reverse('polls:IRBdetail', args=(poll_list[0].id,)))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         
+
 def getRPIUsers():
     users = User.objects.filter(username__contains='@rpi.edu')
     return users

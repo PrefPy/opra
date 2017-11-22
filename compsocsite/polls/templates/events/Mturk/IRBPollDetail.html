@@ -111,11 +111,6 @@
         else{ $('#user_form').submit(); }
     }
 </script>
-<script>
-        function myFunction() {
-            document.getElementById("myProgress").style.width += 20%;
-        }
-</script>
 	</head>
 {% block content %}
 
@@ -139,12 +134,11 @@
                         </li>
                      {%else%}
                         <li class="disabled">
-                          <span> {{n}} </span>
+                          <span style="background-color: rgb(221, 221, 221); color:rgb(221, 221, 221);"> . </span>
                         </li>
                      {%endif%}
                   {%endfor%}
                     
-       
                          {%if next == -1%}
                             <li>
                                 <a href=  "{% url 'Mturk' %}"  aria-label="Next">
@@ -196,17 +190,31 @@
                 </div>
             </div> </a>
         </div>
+        
 
         <!-- Display the description in the panel body (initially hidden) -->
         <div id="collapse_des" class="panel-collapse">
         	<div class ="panel-body">
-        		Created by {{ question.question_owner }}.
-        		<br>
                 {%if question.question_desc|length > 0 %}
-                    Description:
-                    {% autoescape off %} {{question.question_desc}}  {% endautoescape %}
+                   {% autoescape off %} {{question.question_desc}}  {% endautoescape %}
                 {% endif %}
             </div>
+    <table  align="center">
+       <tr>
+            <th>Lentil tabbouleh</th>
+            <th>Jumbo fish fingers</th>
+            <th>Wild rice salad</th>
+            <th>Chicken fajitas</th>
+            <th>Asparagus sushi</th>
+        </tr>
+        <tr> 
+            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/DJQZvZOuKerAfB3t-lTl9N.jpg' height=200 width=200 ></img></td>
+            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/51137579.jpg' height=200 width=200></img></td>
+            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/46264266.jpg' height=200 width=200></img></td>
+            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/51137558.jpg'  height=200 width=200></img></td>
+            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/46414697.jpg'  height=200 width=200></img></td>
+        </tr>
+    </table>
         </div>
     </div>
     
@@ -232,6 +240,9 @@
                 {% if question.yesno_enabled %}{% include "events/Mturk/voteOptions/yesNo.html" %}{% endif %}
          </div>  
     </div>
+        <br/>
+        <br/>
+        <br/>
     
 
     {% elif question.status == 1 %}

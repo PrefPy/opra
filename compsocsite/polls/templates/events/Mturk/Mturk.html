@@ -101,20 +101,19 @@
                       
                   </div>
                   <div class="modal-body">
-                    <form action="anonymousJoin">
+                    <form action="{% url 'appauth:createmturk' %}" method="POST">
                         {% csrf_token %} 
                      <div class="form-group">
-                        <input class="form-control" id="exampleInputEmail1" placeholder="WorkerID" name = "anonymousname">
+                         <input class="form-control" id="name" placeholder="WorkerID" name = "name">
+                         <input class="form-control" id="age" placeholder="Age" name ="age" maxlength="3">
                       </div>
                     
                     </form>
                   </div>
                    
                   <div class="modal-footer">
-                      <a href="{% url 'polls:IRBdetail' IRB_polls.0.id  %}">
-                        <button type="button" class="btn btn-default">Next</button>
-                      </a>
-                  </div>
+                        <input type="submit" class="btn btn-default" value="Next">
+                  </div> 
                 </div>
               </div>
             </div>

@@ -2017,7 +2017,7 @@ def addFolder(request):
     else:
         print("Error: not post in addFolder function line 1993")
 
-def getIRBPollList():
+def getMturkPollList(request):
     # get all IRB polls from database
     exp = get_object_or_404(User, username="opraexp")
     polls= list(Question.objects.filter(question_owner = exp))
@@ -2088,13 +2088,11 @@ def MturkVote(request, question_id):
 class MturkView(views.generic.ListView):
     template_name = 'events/Mturk/Mturk.html'
     context_object_name = 'question_list'
-    def __init__(self):
-        self.polls = getIRBPollList()
     def get_queryset(self):
         return Question.objects.all()
     def get_context_data(self,**kwargs):
         ctx = super(MturkView, self).get_context_data(**kwargs)
-        ctx['IRB_polls'] = self.polls
+        ctx['IRB_polls'] = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))
         return ctx
 
 #   return MturkView.as_view()(self.request)
@@ -2123,10 +2121,10 @@ class IRBDetailView(views.generic.DetailView):
     
     def get_context_data(self, **kwargs):
         ctx = super(IRBDetailView, self).get_context_data(**kwargs)
-        polls_list = getIRBPollList()
+        polls_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))
         ctx['index']= index_id(polls_list,self.object)
         ctx['lastcomment'] = ""
-        ctx['seq']=range(1,len(getIRBPollList())+1)
+        ctx['seq']=range(1,len(polls_list)+1)
         ctx['next'] = self.object.next
         
         #Case for anonymous user
@@ -2165,10 +2163,7 @@ class IRBDetailView(views.generic.DetailView):
             currentUserResponses = self.object.response_set.filter(rin=self.request.session["RIN"]).reverse()
         else:
             currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
-        
-        if len(currentUserResponses) > 0:
-            if currentUserResponses[0].comment:
-                ctx['lastcomment'] = currentUserResponses[0].comment
+
     
         # reset button
         if isPrefReset(self.request):
@@ -2195,4 +2190,13 @@ class IRBDetailView(views.generic.DetailView):
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+# join a poll without logging in
+def IRBJoin(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    name = request.POST['name']
+    user= User.objects.filter(user=self.request.user).all()
+    
+    
+    
+    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
 

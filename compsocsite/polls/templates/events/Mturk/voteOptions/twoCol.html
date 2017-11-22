@@ -157,11 +157,11 @@
                                         <li class="li_item" id="item{{ item.item_text }}" type="{{ item.id }}">
                                             <!-- Display image (uploaded) -->
                                             {% if item.image %}
-                                                <img class="item" src='/{{ item.image.url }}'/>
+                                                <img class="item" src='/{{ item.image.url }}'style='width: 150px; height:150px'/>
                                             {% endif %}
                                             <!-- Display image (external URL) -->
                                             {% if item.imageURL != Null %}
-                                                <img class="item" src='{{ item.imageURL }}'/>
+                                                <img class="item" src='{{ item.imageURL }}' style='width: 150px; height:150px'/>
                                             {% endif %}
                                             <!-- Display option text -->
                                             {{ item.item_text }}
@@ -185,11 +185,11 @@
     										<li class="li_item" id="item{{ item.item_text }}" type="{{ forloop.counter }}">
     											<!-- Display image (uploaded) -->
     											{% if item.image %}
-    												<img class="item" src='/{{ item.image.url }}'/>
+    												<img class="item" src='/{{ item.image.url }}' style='width: 150px; height:150px'/>
     											{% endif %}
     											<!-- Display image (external URL) -->
     											{% if item.imageURL != Null %}
-    												<img class="item" src='{{ item.imageURL }}'/>
+    												<img class="item" src='{{ item.imageURL }}' style='width: 90px; height:90px'/>
     											{% endif %}
     											<!-- Display option text -->
     											{{ item.item_text }}

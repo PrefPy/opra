@@ -2040,24 +2040,12 @@ def getMturkPollList(request):
             p.open = 1
             p.status =2
             p.save()
-    return polls
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 # submit a vote without logging in from Mturk
 def MturkVote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    voter = "Anonymous"
-    id = 0
-    # check if the anonymous voter has voted before
-    if 'anonymousname' in request.POST:
-        voter = request.POST['anonymousname']
-    if 'anonymousid' not in request.session:
-        request.session['anonymousvoter'] = voter
-        id = question.response_set.all().count() + 1
-        request.session['anonymousid'] = id
-    else:
-        voter = request.session['anonymousvoter']
-        id = request.session['anonymousid']
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
@@ -2066,11 +2054,8 @@ def MturkVote(request, question_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     # make Response object to store data
-    comment = request.POST['comment']
-    response = Response(question=question, timestamp=timezone.now(),
-                        anonymous_voter=voter, anonymous_id=id, resp_str=orderStr)
-    if comment != "":
-        response.comment = comment
+    response = Response(question=question, user=request.user, timestamp=timezone.now(),
+                        resp_str=orderStr)
     response.save()
 
     # find ranking student gave for each item under the question
@@ -2094,7 +2079,8 @@ class MturkView(views.generic.ListView):
         return Question.objects.all()
     def get_context_data(self,**kwargs):
         ctx = super(MturkView, self).get_context_data(**kwargs)
-        ctx['IRB_polls'] = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))
+        exp = get_object_or_404(User, username="opraexp")
+        ctx['IRB_polls'] = list(Question.objects.filter(question_owner = exp))
         return ctx
 
 #   return MturkView.as_view()(self.request)
@@ -2123,48 +2109,17 @@ class IRBDetailView(views.generic.DetailView):
     
     def get_context_data(self, **kwargs):
         ctx = super(IRBDetailView, self).get_context_data(**kwargs)
-        polls_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))
+        exp = get_object_or_404(User, username="opraexp")
+        polls_list = list(Question.objects.filter(question_owner = exp))
         ctx['index']= index_id(polls_list,self.object)
         ctx['lastcomment'] = ""
         ctx['seq']=range(1,len(polls_list)+1)
         ctx['next'] = self.object.next
         
         #Case for anonymous user
-        if self.request.user.get_username() == "":
-            if isPrefReset(self.request):
-                ctx['items'] = self.object.item_set.all()
-                return ctx
-            # check the anonymous voter
-            if 'anonymousvoter' in self.request.session and 'anonymousid' in self.request.session:
-                # sort the responses from latest to earliest
-                anon_id = self.request.session['anonymousid']
-                curr_anon_resps = self.object.response_set.filter(anonymous_id=anon_id).reverse()
-                if len(curr_anon_resps) > 0:
-                    # get the voter's most recent selection
-                    mostRecentAnonymousResponse = curr_anon_resps[0]
-                    if mostRecentAnonymousResponse.comment:
-                        ctx['lastcomment'] = mostRecentAnonymousResponse.comment
-                    ctx['currentSelection'] = getCurrentSelection(curr_anon_resps[0])
-                    ctx['unrankedCandidates'] = getUnrankedCandidates(curr_anon_resps[0])
-                    ctx['itr'] = itertools.count(1, 1)
-                    items_ano = []
-                    for item in ctx['currentSelection']:
-                        for i in item:
-                            items_ano.append(i)
-                    if not ctx['unrankedCandidates'] == None:
-                        for item in ctx['unrankedCandidates']:
-                            items_ano.append(item)
-                    ctx['items'] = items_ano
-            else:
-                # load choices in the default order
-                ctx['items'] = self.object.item_set.all()
-            return ctx
         
         # Get the responses for the current logged-in user from latest to earliest
-        if self.object.open == 3:
-            currentUserResponses = self.object.response_set.filter(rin=self.request.session["RIN"]).reverse()
-        else:
-            currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
+        currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
 
     
         # reset button

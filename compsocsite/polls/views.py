@@ -1798,6 +1798,7 @@ def vote(request, question_id):
 
     prevResponseCount = question.response_set.filter(user=request.user).count()
     # get the preference order
+
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:
@@ -1902,6 +1903,7 @@ def anonymousVote(request, question_id):
         voter = request.session['anonymousvoter']
         id = request.session['anonymousid']
     # get the preference order
+    print(orderStr)
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:

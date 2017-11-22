@@ -86,8 +86,12 @@ class ResponseAdmin(admin.ModelAdmin):
 class MessageAdmin(admin.ModelAdmin):
     list_display = ('user','text','timestamp')
     list_filter = ['user','text','timestamp']
-
+    
+class RecordAdmin(admin.ModelAdmin):
+    list_display = ('user', 'timestamp')
+    list_display = ['user', 'timestamp']
 # register models
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Response, ResponseAdmin)
 admin.site.register(Message, MessageAdmin)
+admin.site.register(UserVoteRecord, RecordAdmin)

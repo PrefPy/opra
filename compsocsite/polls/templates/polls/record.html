@@ -8,8 +8,10 @@
 {% block content %}
 <br/>
 
-<a href="{% url 'polls:downloadrecord' question.id %}" class= "btn btn-primary" download>Download as csv</a>
-<a href="{% url 'polls:downloadallrecord' request.user.id %}" class= "btn btn-primary" download>Download all records as csv</a>
+<a href="{% url 'polls:downloadrecord' question.id %}" class= "btn btn-primary">Download as csv</a>
+<a href="{% url 'polls:downloadpolls' %}" class= "btn btn-primary">Download polls</a>
+<a href="{% url 'polls:downloadparticipants' %}" class= "btn btn-primary">Download participants</a>
+<a href="{% url 'polls:downloadallrecords' %}" class= "btn btn-primary">Download all vote records</a>
 
 <ul>
 	{% for record in user_records%}

@@ -327,6 +327,7 @@ class UserVoteRecord(models.Model):
     question = models.ForeignKey(Question,default=None)
     record = models.CharField(max_length=10000,default="")
     col = models.TextField(default="")
+    one_col = models.TextField(default="")
     slider = models.TextField(default="")
     star = models.TextField(default="")
     swit = models.TextField(default="")

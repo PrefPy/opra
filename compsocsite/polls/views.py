@@ -2112,11 +2112,13 @@ class IRBDetailView(views.generic.DetailView):
         exp = get_object_or_404(User, username="opraexp")
         polls_list = list(Question.objects.filter(question_owner = exp))
         ctx['index']= index_id(polls_list,self.object)
-        ctx['lastcomment'] = ""
         ctx['seq']=range(1,len(polls_list)+1)
         ctx['next'] = self.object.next
         
-        #Case for anonymous user
+        #get surveycode
+        code= self.request.user.userprofile.code
+        #profile = UserProfile(user=user,mturk=1,age=age,code=code)
+        ctx['code']= code
         
         # Get the responses for the current logged-in user from latest to earliest
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
@@ -2146,14 +2148,4 @@ class IRBDetailView(views.generic.DetailView):
         return ctx
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now())
-
-# join a poll without logging in
-def IRBJoin(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    name = request.POST['name']
-    user= User.objects.filter(user=self.request.user).all()
-    
-    
-    
-    return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
-
+ 

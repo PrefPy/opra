@@ -119,8 +119,11 @@
 
 {% if question.status == 2 %}
         <div class = "text-center">
+           
+
             <nav class="navbar navbar-fixed-top">
             <ul class="pagination">
+
                 <li class="disabled" >
                   <span>
                     <span aria-hidden="true">&laquo;</span>
@@ -141,9 +144,9 @@
                     
                          {%if next == -1%}
                             <li>
-                                <a href=  "{% url 'Mturk' %}"  aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
+                                
+                             <span data-toggle="modal" data-target="#myModal" aria-hidden="true" data-backdrop="static">&raquo;</span>
+
                             </li>
                          {%else%}
                            <li>
@@ -156,6 +159,24 @@
 
               </ul>
             </nav>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">Congratulation!</h3>
+                  </div>
+                  <div class="modal-body">
+                     Thanks for your time and patience. 
+                      <br/>
+                      Your comfirmation code of the survey is followed:
+                      <br/>
+                      <h4><b> {{code}}</b></h4>
+                  </div>
+                 
+                </div>
+              </div>
+            </div>
         </div>
     
     <div class="container-fluid" style="margin-top:20px;">
@@ -199,22 +220,6 @@
                    {% autoescape off %} {{question.question_desc}}  {% endautoescape %}
                 {% endif %}
             </div>
-    <table  align="center">
-       <tr>
-            <th>Lentil tabbouleh</th>
-            <th>Jumbo fish fingers</th>
-            <th>Wild rice salad</th>
-            <th>Chicken fajitas</th>
-            <th>Asparagus sushi</th>
-        </tr>
-        <tr> 
-            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/DJQZvZOuKerAfB3t-lTl9N.jpg' height=200 width=200 ></img></td>
-            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/51137579.jpg' height=200 width=200></img></td>
-            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/46264266.jpg' height=200 width=200></img></td>
-            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/51137558.jpg'  height=200 width=200></img></td>
-            <td style="padding-right:10px"><img src='https://cdn.jamieoliver.com/recipe-database/xtra_med/46414697.jpg'  height=200 width=200></img></td>
-        </tr>
-    </table>
         </div>
     </div>
     

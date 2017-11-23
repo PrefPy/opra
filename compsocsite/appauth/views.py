@@ -1,5 +1,6 @@
 import datetime
 import time
+import random
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
@@ -276,6 +277,7 @@ def changepassword(request):
         return HttpResponse("The password you entered is wrong.")
 
 def createMturkUser(request):
+    code= random.randint(111111,999999)
     if request.method == "POST":
         name = request.POST["name"]
         if name != "" and request.user.username == "":
@@ -286,8 +288,8 @@ def createMturkUser(request):
                 pass
             user = User.objects.create_user(username=name, password=name)
             user.save()
-            profile = UserProfile(user=user,mturk=1,age=age)
-            profile.save
+            profile = UserProfile(user=user,mturk=1,age=age,code=code)
+            profile.save()
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request,user)
         poll_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))

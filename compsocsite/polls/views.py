@@ -2024,6 +2024,7 @@ def getMturkPollList(request):
     exp = get_object_or_404(User, username="opraexp")
     polls= list(Question.objects.filter(question_owner = exp))
     # polls= random.sample(polls,k=10)
+    #329-342
     i=0
     for p in polls:
         if i<len(polls)-1:
@@ -2080,7 +2081,27 @@ class MturkView(views.generic.ListView):
     def get_context_data(self,**kwargs):
         ctx = super(MturkView, self).get_context_data(**kwargs)
         exp = get_object_or_404(User, username="opraexp")
-        ctx['IRB_polls'] = list(Question.objects.filter(question_owner = exp))
+        polls= list(Question.objects.filter(question_owner = exp))
+        # polls= random.sample(polls,k=10)
+        #329-342
+        i=0
+        for p in polls:
+            if i<len(polls)-1:
+                #link the next
+                p.next = polls[i+1].id
+                #available for all users
+                p.open = 1
+                # open all polls
+                p.status = 2
+                p.save()
+                i=i+1
+            else:
+                p.next = -1
+                p.open = 1
+                p.status =2
+                p.save()
+       # ctx['IRB_polls'] = list(Question.objects.filter(question_owner = exp))
+        ctx['IRB_polls'] = polls
         return ctx
 
 #   return MturkView.as_view()(self.request)

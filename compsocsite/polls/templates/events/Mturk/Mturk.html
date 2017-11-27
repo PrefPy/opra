@@ -42,14 +42,13 @@
     
     <!--Tutorial -->
   <div class="w3-container" style="margin-top: 30px" id="about">
-      <h1 class="w3-xxxlarge"><b>Survey of Perfernce for Foods and Dishes</b>
+      <h1 class="w3-xxxlarge"><b>A Survey of Preference for Foods and Dishes</b>
       </h1>
-      <h7> 
-          Only a minimal amount of private information about participants will be collected for research purposes. The identity of participants will be fully protected and the user behavior data recorded are not identifiable.       
-      </h7>
+
       
       <br/>
-      <h1 class="w3-xxlarge rpi-text-red"><b>Introduction</b></h1>
+      <br/>
+      <h1 class="w3-xxlarge rpi-text-red"><b>Instruction</b></h1>
       <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
       <br/>
       
@@ -57,7 +56,7 @@
       <div class="panel panel-default">
         <div class="panel-body">
             <table class="table" >
-            <h4 style="height:150px;"> We are interested in your preference of foods and dishes. You will be be given sets of pictures of foods and be asked to rank-order them. Each rank must be submitted ONLY once. And each submitted rank must be fully ranked. We appreciate your time and patience.     
+            <h4 style="height:auto;"> We are interested in your preference of foods and dishes. You will be be given sets of pictures of foods and be asked to rank-order them. 
             </h4>  
             </table>
           </div>
@@ -83,8 +82,8 @@
                     
                         {% csrf_token %} 
                      <div class="form-group">
-                         <input class="form-control" id="name" placeholder="WorkerID" name = "name">
-                         <input class="form-control" id="age" placeholder="Age" name ="age" maxlength="3">
+                         <input class="form-control" id="name" placeholder="WorkerID" name = "name" pattern=".{3,}" required title="Please enter your workerID">
+                         <input class="form-control" id="age" placeholder="Age" name ="age" maxlength="3" pattern=".{1,}" required title="Please enter your age (1 character minimum)">
                       </div>                   
                   </div>
                    
@@ -173,9 +172,9 @@
 
     
         
-      <!-- Comments -->
-  <div class="w3-container" id="comments" style="margin-top:50px">
-    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Comments.</b></h1>
+      <!-- Comments 
+  <div class="w3-container" id="comments" style="margin-top:30px">
+    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:50px"><b>Comments.</b></h1>
     <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
     <br/>
      <p>We need your comments.</p>
@@ -200,7 +199,7 @@
     
     <br/><br/>
     <br/><br/>
-    <br/><br/>
+    <br/><br/>-->
 
 <!-- End page content -->
 </div>

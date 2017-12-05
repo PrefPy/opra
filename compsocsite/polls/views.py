@@ -2076,14 +2076,19 @@ def MturkVote(request, question_id):
 class MturkView(views.generic.ListView):
     template_name = 'events/Mturk/Mturk.html'
     context_object_name = 'question_list'
+    model = Question
+    
     def get_queryset(self):
-        return Question.objects.all()
+        return Question.objects.filter(pub_date__lte=timezone.now())
+    
+    
     def get_context_data(self,**kwargs):
         ctx = super(MturkView, self).get_context_data(**kwargs)
         exp = get_object_or_404(User, username="opraexp")
         polls= list(Question.objects.filter(question_owner = exp))
         ctx['IRB_polls'] = polls
-        return ctx
+
+
 
 #   return MturkView.as_view()(self.request)
 def index_id(polls_list,q):
@@ -2150,4 +2155,13 @@ class IRBDetailView(views.generic.DetailView):
         return ctx
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now())
- 
+
+# function to process student submission
+def ExpAddComment(request):
+    if request.method == "POST":
+    # make Response object to store data
+        comment = request.POST['comment']
+        request.user.userprofile.comments = comment
+        request.user.userprofile.save()
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(reverse('Mturk'))

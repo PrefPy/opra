@@ -13,6 +13,8 @@ urlpatterns = [
     #for IRB experiment
     url(r'^IRB/(?P<pk>[0-9]+)/$', views.IRBDetailView.as_view(), name='IRBdetail'),
     url(r'^IRB/(?P<question_id>[0-9]+)/MTurkvote/$', views.MturkVote, name='Mturkvote'),
+    url(r'^IRB/addComments/$', views.ExpAddComment, name='ExpAddComment'),
+
 
     #Two main types of polls
     url(r'^regular_polls$', login_required(views.RegularPollsView.as_view()), name='regular_polls'),

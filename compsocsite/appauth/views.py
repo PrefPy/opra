@@ -1,6 +1,7 @@
 import datetime
 import time
 import random
+import uuid
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
@@ -277,7 +278,7 @@ def changepassword(request):
         return HttpResponse("The password you entered is wrong.")
 
 def createMturkUser(request):
-    code= random.randint(111111,999999)
+    code= uuid.uuid1()
     if request.method == "POST":
         name = request.POST["name"]
         if name != "" and request.user.username == "":

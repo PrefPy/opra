@@ -18,7 +18,8 @@ class UserProfile(models.Model):
     showHint = models.BooleanField(default=True)
     mturk = models.IntegerField(default=0)
     age = models.IntegerField(default=0)
-    code = models.IntegerField(default=0)
+    code = models.CharField(max_length=100, blank=True, null=True)
+    comments = models.CharField(max_length=1000, blank=True, null=True)
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
         return self.user.username

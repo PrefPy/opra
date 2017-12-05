@@ -58,12 +58,11 @@
             <table class="table" >
             <h4 style="height:auto;"> We are interested in your preference of foods and dishes. You will be be given sets of pictures of foods and be asked to rank-order them. 
             </h4>  
-                
-                <!-- Tutorial-->
- 
             </table>
           </div>
       </div>
+      
+      
         <button type="button" class="btn btn-lg rpi-red" data-toggle="modal" data-target="#myModal">
             <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start
         </button>
@@ -78,14 +77,14 @@
                  <form action="{% url 'appauth:createmturk' %}" method="POST">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Please Enter Your Mturk Worker ID</h4>
+                    <h4 class="modal-title">Please Enter Your Mturk Worker ID/ RCS ID</h4>
                       
                   </div>
                   <div class="modal-body">
                     
                         {% csrf_token %} 
                      <div class="form-group">
-                         <input class="form-control" id="name" placeholder="WorkerID" name = "name" pattern=".{3,}" required title="Please enter your workerID">
+                         <input class="form-control" id="name" placeholder="WorkerID/RCS ID" name = "name" pattern=".{3,}" required title="Please enter your workerID">
                          <input class="form-control" id="age" placeholder="Age" name ="age" maxlength="3" pattern=".{1,}" required title="Please enter your age (1 character minimum)">
                       </div>                   
                   </div>
@@ -93,85 +92,12 @@
                   <div class="modal-footer">
                         <input type="submit" class="btn btn-default" value="Next">
                   </div> 
-                         </form>
+                </form>
                 </div>
               </div>
             </div>
   </div>
   
-
-
-  <!-- P1 >
-  <div class="w3-container" id="p1" style="margin-top:50px">
-    <h1 class="w3-xxlarge rpi-text-red" style="margin-top:80px"><b>Part 1:All-interface Polls</b></h1>
-    <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
-    <br/>
-
-    <div class="panel panel-default">
-        <div class="panel-body">
-        <table class="table" >
-            <thead>
-                <tr>
-                    <th> 
-                        Participated in	({{ all_ui_polls|length }})
-                    </th>
-                
-                    <th></th>
-                    <th></th>
-                </tr>
-                 <a href="/polls/967">
-             <h1> 976</h1>
-                       </a>
-            </thead>
-            
-             {% for question in all_ui_polls %}
-            {% if question.open != 3 %}
-            <tr>
-                <td>
-                     <a href="{% url 'polls:pollinfo' question.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if question.question_desc %} {{question.question_desc}} {%else%} None. {%endif%}">
-                    {{ question.question_text }}
-                    </a>
-                  
-                    
-                </td>
-                <td>
-                    {% if question.status == 2 %}
-                        <a href="{% url 'polls:IRBdetail' question.id %}" class ="btn btn-dark" role="button">Vote</a>
-                    {% endif %}
-					{% if question.question_type == 1 and question.status != 1 and question.status != 3 and question.response_set.all.count > 0%}
-                            <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" target="_blank" >Current Winners</a>
-                    {% endif %}
-                </td>
-                {% if question.status == 1 %}
-                    <td>Poll not started</td>
-                {% elif question.status == 2 %}
-                    <td>In session</td>
-                {% elif question.status == 3 %}
-                    <td>
-                        {% if question.question_type == 1 %}
-                            <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" >
-                            {{question.winner}} wins
-                        </a>
-                        {% elif question.question_type == 2 %}
-                            Allocation Complete: <br />
-                            {% for order_item in question.allocationvoter_set.all %}
-                                {% if order_item.response.allocation %}
-                                    {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }}
-                                    <br />
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    </td>
-                {% endif %}
-                </tr>
-            {% endif %}
-            {% endfor %}
-
-        </table>
-        </div>
-    </div>
-  </div>
-  -->
 
     
         
@@ -226,6 +152,7 @@ function onClick(element) {
   var captionText = document.getElementById("caption");
   captionText.innerHTML = element.alt;
 }
+    
  
 </script>
 {% endblock %}

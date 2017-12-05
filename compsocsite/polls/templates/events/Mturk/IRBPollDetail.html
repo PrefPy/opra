@@ -81,6 +81,16 @@
 
             min-height: 100%;
         }
+ 
+       .li_item img:hover {
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                -webkit-transform:translateZ(0) scale(5); 
+                -moz-transform:scale(5); 
+                -ms-transform:scale(5); 
+                -o-transform:translatZ(0) scale(5); /* Opera */
+                transform:translatZ(0) scale(5);
+        }
     </style>
 <!-- Google Tag Manager -->
 <noscript>
@@ -123,12 +133,12 @@
 
             <nav class="navbar navbar-fixed-top">
             <ul class="pagination">
-
+                <!--
                 <li class="disabled" >
                   <span>
                     <span aria-hidden="true">&laquo;</span>
                   </span>
-                </li>
+                </li> -->
                   
                   {%for n in seq%}
                      {% if n == index %}
@@ -141,7 +151,7 @@
                         </li>
                      {%endif%}
                   {%endfor%}
-                    
+                    <!--
                          {%if next == -1%}
                             <li>
                                 
@@ -154,12 +164,12 @@
                                     <span aria-hidden="true">&raquo;</span>
                                </a>
                            </li>
-                         {%endif%}
+                         {%endif%}-->
     
 
               </ul>
             </nav>
-            <!-- Modal -->
+            <!-- Modal
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -170,14 +180,26 @@
                       Your survey code is:
                       <br/>
                       <h4><b> {{code}}</b></h4>
-                  </div>
-                 
+                       <hr/> 
+                    <form action="{% url 'polls:ExpAddComment' %}" method="POST">
+                        {% csrf_token %} 
+                        <div>
+                        Leave your comments Here:
+                            <textarea id="comment" class="form-control" name="comment" rows="2" cols="50" maxlength="1000" placeholder="Enter your comments here"  style="font-size:100%;"></textarea>
+                          <br/> 
+                            <input type="submit" class="btn btn-primary" value="Submit Comments" />
+                        </div>
+                    </form>
+                      
+                    </div>
                 </div>
               </div>
-            </div>
+            </div> -->
+            
+            
         </div>
     
-    <div class="container-fluid" style="margin-top:20px;">
+    <div class="container" style="margin-top:20px;">
     {% if error_message %}
     <p>
         <strong>{{ error_message }}</strong>
@@ -224,8 +246,7 @@
      <div class = "row">
          <div id="tabs" class="col-md-10 col-md-offset-1">
             {% for n in IRB_polls%} {{n.id}} {%endfor%}
-             <!--
-             <div id="countdown">60</div>-->
+             <!--<div id="countdown">60</div>-->
              
             {% if not question.ui_number == 1%}
             <ul>
@@ -323,11 +344,8 @@
 				order2 += "|;;";
 			}
 			
-		});
-});
-
-
-
+		  });
+        });
 
 
     // tooltip toggle (Popover function for hints)
@@ -335,28 +353,28 @@
      toggle(document.querySelectorAll('.hint'));
    });
 
-//Toggle: hide/show hints
-function toggle (elements, specifiedDisplay) {
-  var element, index;
-  elements = elements.length ? elements : [elements];
-  for (index = 0; index < elements.length; index++) {
-    element = elements[index];
+    //Toggle: hide/show hints
+    function toggle (elements, specifiedDisplay) {
+      var element, index;
+      elements = elements.length ? elements : [elements];
+      for (index = 0; index < elements.length; index++) {
+        element = elements[index];
 
-    if (isElementHidden(element)) {
-      element.style.visibility = '';
+        if (isElementHidden(element)) {
+          element.style.visibility = '';
 
-      // If the element is still hidden after removing the inline display
-      if (isElementHidden(element)) {
-        element.style.visibility = specifiedDisplay || 'visible';
+          // If the element is still hidden after removing the inline display
+          if (isElementHidden(element)) {
+            element.style.visibility = specifiedDisplay || 'visible';
+          }
+        } else {
+          element.style.visibility = 'hidden';
+        }
       }
-    } else {
-      element.style.visibility = 'hidden';
+      function isElementHidden (element) {
+        return window.getComputedStyle(element, null).getPropertyValue('visibility') === 'hidden';
+      }
     }
-  }
-  function isElementHidden (element) {
-    return window.getComputedStyle(element, null).getPropertyValue('visibility') === 'hidden';
-  }
-}
 });
 
 </script>
@@ -385,8 +403,22 @@ function toggle (elements, specifiedDisplay) {
   } 
  
   countdown();
-
    
+</script>
+    
+<script>
+    $(document).ready(function() {
+        $('input[type="submit"]').attr('disabled', true);
+        $('input[type="text"],textarea').on('keyup',function() {
+            var textarea_value = $("#texta").val();
+            if(textarea_value != '') {
+                $('input[type="submit"]').attr('disabled' , false);
+            }else{
+                $('input[type="submit"]').attr('disabled' , true);
+            }
+        });
+        
+    });
 </script>
 
 

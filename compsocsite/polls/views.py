@@ -2068,8 +2068,11 @@ def MturkVote(request, question_id):
         question.new_vote = True
         question.save()
     # notify the user that the vote has been updated
-    messages.success(request, 'Saved!')
-    return HttpResponseRedirect(reverse('polls:IRBdetail', args=(question.id,)))
+    #messages.success(request, 'Saved!')
+    if question.next == -1:
+        return HttpResponseRedirect(reverse('polls:SurveyCode'))
+    else:
+        return HttpResponseRedirect(reverse('polls:IRBdetail', args=(question.next,)))
 
 
 
@@ -2087,6 +2090,20 @@ class MturkView(views.generic.ListView):
         exp = get_object_or_404(User, username="opraexp")
         polls= list(Question.objects.filter(question_owner = exp))
         ctx['IRB_polls'] = polls
+
+class SurveyFinalView(views.generic.ListView):
+    template_name = 'events/Mturk/SurveyCode.html'
+    model = Question
+    
+    def get_queryset(self):
+        return Question.objects.filter(pub_date__lte=timezone.now())
+    
+    def get_context_data(self,**kwargs):
+        ctx = super(SurveyFinalView, self).get_context_data(**kwargs)
+        #get surveycode
+        code= self.request.user.userprofile.code
+        ctx['code']= code
+        return ctx
 
 
 
@@ -2123,9 +2140,8 @@ class IRBDetailView(views.generic.DetailView):
         ctx['next'] = self.object.next
         
         #get surveycode
-        code= self.request.user.userprofile.code
-        #profile = UserProfile(user=user,mturk=1,age=age,code=code)
-        ctx['code']= code
+        #code= self.request.user.userprofile.code
+        #ctx['code']= code
         
         # Get the responses for the current logged-in user from latest to earliest
         currentUserResponses = self.object.response_set.filter(user=self.request.user).reverse()
@@ -2163,5 +2179,4 @@ def ExpAddComment(request):
         comment = request.POST['comment']
         request.user.userprofile.comments = comment
         request.user.userprofile.save()
-    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return HttpResponseRedirect(reverse('Mturk'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -3,8 +3,9 @@
     <!-- This is the voting form. Submit results through a voting function -->
     <form id="twoCol" action="{% url 'polls:Mturkvote' question.id %}" method="post">
 
-        <div class="row">
+        <div>
             {% csrf_token %}
+            
     
 
                 {% if request.flavour == "mobile" %}
@@ -27,26 +28,21 @@
                 </div>
                   </div>
                   {% else %}
-                  <div class ="col-sm-6"  {% if question.id == 979 %}data-step="2" data-intro="Drag choices below to change the order of your preference (Tie Allowed)"{% endif %} >
+                  <div class ="col-md-6">
                 <!-- Panel for your preferences -->
                 <div class="panel panel-default">
                   {% endif %}
                     <!-- Your preferences header -->
                     <div class="panel-heading">
                     	
-                        <h4>Your preferences:
+                        <h4>Rank the options, then 
                             {% if not request.flavour == "mobile" %}
-                            <button onclick="VoteUtil.clearAll(); return false;" class="btn btn-danger reset-button" style="background"> Clear </button>
-                            
-                            <button id="submitbutton-twocol" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton btn btn-success" style="position:absolute;" disabled>
-                            
-                            {%if next == -1%}
-                               <a data-toggle="modal" data-target="#myModal" aria-hidden="true" data-backdrop="static"> Submit </a> 
-                           {%else%}
-                                <a href= "{% url 'polls:IRBdetail' next %}"  aria-label="Next"> Submit </a>
-                           {%endif%}
+                           <!-- <button onclick="VoteUtil.clearAll(); return false;" class="btn btn-danger reset-button" style="background"> Clear </button> -->
+                 
+                          
+                            <button id="submitbutton-twocol" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton btn btn-success"  disabled style="padding-left:10px;"> Submit</button>
                                 
-                            </button>
+                            
                             
                             <button id="submitting-twocol" type="button" class="submitting btn btn-default" style="visibility:hidden;position:absolute;z-index:1;">
                                 Submitting...
@@ -70,36 +66,10 @@
                         	
                         
                     </div> <!-- end of header -->
-            <!-- Modal -->      
-             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h3 class="modal-title" id="exampleModalLabel">Thank you!</h3>
-                  </div>
-                  <div class="modal-body">
-                      Your survey code is:
-                      <br/>
-                      <h4><b> {{code}}</b></h4>
-                       <hr/> 
-                    <form action="{% url 'polls:ExpAddComment' %}" method="POST">
-                        {% csrf_token %} 
-                        <div>
-                        Leave your comments Here:
-                        <!-- Textbox to enter comments -->
-                            <textarea id="comment" class="form-control" name="comment" rows="2" cols="50" maxlength="1000" placeholder="Enter your comments here"  style="font-size:100%;"></textarea>
-                          <br/> 
-                            <input type="submit" class="btn btn-primary" value="Submit Comments" />
-                        </div>
-                    </form>
-                      
-                    </div>
-                </div>
-              </div>
-            </div>
+      
 
                     <!-- Your preferences main panel -->
-                    <div class="panel-body" >
+                    <div class="panel-body" {% if question.id == 359 %}data-step="2" data-intro="Drag the options to rank (ties allowed)"{% endif %}>
                     
                         <ul id="left-sortable" >
                         	
@@ -143,7 +113,7 @@
 				{% if not request.flavour == "mobile"%}
             </div>
 			{% endif %}
-            <div class="col-xs-12 col-sm-6" style="padding:0%;margin:0%;" {% if question.id = 979 %}data-step="1" data-intro="Click each option to move it under Your Preference"{% endif %}>
+            <div class="col-xs-12 col-sm-6" style="padding:0%;margin:0%;">
             	
                 
                     <!-- Remaining options panel header -->
@@ -159,16 +129,12 @@
                             {% else %}
                     <div class="panel panel-default">
                          <div class="panel-heading">
-                            <h4>Unranked Options:
-                                <button onclick="VoteUtil.moveAll(); return false;" class="btn btn-primary move-all-button" >
-                                    Move All
-                                </button>
-                            </h4>
+                            <h4>Click the unranked options</h4>
 							</div>
 							 {% endif %}<!-- end of panel header -->
                             
                     <!-- Remaining options panel body -->
-                    <div class="panel-body">
+                    <div class="panel-body"  {% if question.id = 359 %}data-step="1" data-intro="Click the unranked options in order of your preference."{% endif %}>
                         <ul id="right-sortable" class="list-group">
                             {% if currentSelection == None %}
                                 <!-- The user hasn't voted on this poll yet -->
@@ -187,12 +153,12 @@
                                             <!-- Display image (uploaded) -->
                                             {% if item.image %}
                                  
-                                                <img class="item" src='/{{ item.image.url }}'style='width: 30px; height:30px'/>
+                                                <img class="item" src='/{{ item.image.url }}'/>
                                             {% endif %}
                                             <!-- Display image (external URL) -->
                                             {% if item.imageURL != Null %}
                               
-                                                <img class="item" src='{{ item.imageURL }}' style='width: 30px; height:30px;'/>
+                                                <img class="item" src='{{ item.imageURL }}'/>
                                   
                                             {% endif %}
                                             <!-- Display option text -->
@@ -217,11 +183,11 @@
     										<li class="li_item" id="item{{ item.item_text }}" type="{{ forloop.counter }}" >
     											<!-- Display image (uploaded) -->
     											{% if item.image %}
-    												<img class="item" src='/{{ item.image.url }}' style='width: 150px; height:150px'/>
+    												<img class="item" src='/{{ item.image.url }}'/>
     											{% endif %}
     											<!-- Display image (external URL) -->
     											{% if item.imageURL != Null %}
-    												<img class="item" src='{{ item.imageURL }}' style='width: 90px; height:90px'/>
+    												<img class="item" src='{{ item.imageURL }}'/>
     											{% endif %}
     											<!-- Display option text -->
     											{{ item.item_text }}
@@ -240,9 +206,9 @@
                 </div>
                 </div>
 
-
-
     </form>
+                        
+           
             </div>
         
 <script>

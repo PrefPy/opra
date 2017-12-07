@@ -2,32 +2,31 @@
 <div id="oneColSection" {% if request.flavour == "mobile" %}style="padding:0.4em;" {% endif %}>
     <!-- This is the voting form. Submit results through a voting function -->
     <form id="oneCol" action="{% url 'polls:Mturkvote' question.id %}"  method="post">
-        <div class="row">
+        <div>
             {% csrf_token %}
      
 
-            <div class="col-md-12" {% if question.id == 980 %}data-step="1" data-intro="Drag the choices to the order of your preference"{% endif %}> 
+            <div class="col-md-12"> 
 				
                 <!-- Panel for your preferences -->
                 <div class="panel panel-default" >
 				{% if request.flavour == "mobile" %}
 				<div class = "row col-xs-12" style="padding:0%;margin:0%;margin-bottom: 4%;">
 						<button id="submitbutton-onecol" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton reset-button-mobile" style = "height:2.7em;padding:0%;margin:0%;background:darkgreen;">
-                            <span class="glyphicon glyphicon-upload" style="font-size:140%;color:white;margin:0%;">Submit</span>
+                            Submit
                         </button> 
                 </div>
 				{% endif %}
                     <!-- Your preferences header -->
                     <div class="panel-heading" >
-                        <h4>Drag to Rank Your preferences:
+                        <h4>Rank the options, then
                             {% if not request.flavour == "mobile" %}
-                                <button id="submitbutton-onecol" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton btn btn-success" style="">
-                                     Submit 
-                                </button>
+                                <button id="submitbutton-onecol" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton btn btn-success">   Submit </button>
                                 <button id="submitting-onecol" type="button" class="submitting btn btn-default" style="visibility:hidden;position:absolute;z-index:1;">
                                     Submitting...
                                 </button>
                             {% endif %}
+                            
                             <input type="hidden" id="pref_order" class="pref_order" name="pref_order" value=""/>
 
                             <div class="pull-right">
@@ -45,7 +44,7 @@
                     </div> <!-- end of header -->
 
                     <!-- Your preferences main panel -->
-                    <div class="panel-body" >
+                    <div class="panel-body" {% if question.id == 355 %}data-step="1" data-intro="Drag the options to rank, ties allowed."{% endif %}>
                         <ul id="one-sortable" >
                             {% if currentSelection %}
                                 <!-- Display a previously submitted vote -->

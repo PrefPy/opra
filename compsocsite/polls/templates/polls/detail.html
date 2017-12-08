@@ -194,11 +194,13 @@
 				title : '<span class="text-info"><strong>Hint</strong></span>',
 				html: 'true',
 			});
-            if(document.getElementById("yesNoSection") != null){ method = 5; }
-            if(document.getElementById("starsSection") != null){ method = 4; }
-            if(document.getElementById("sliderSection") != null){ method = 3; }
-            if(document.getElementById("oneColSection") != null){ method = 2; }
-            if(document.getElementById("twoColSection") != null){ method = 1; }
+            if(document.getElementById("yesNoSection") != null){ method = 5;}
+            if(document.getElementById("starsSection") != null){ method = 4; methodIndicator = "star";}
+            if(document.getElementById("sliderSection") != null){ method = 3; methodIndicator = "slider";}
+            if(document.getElementById("oneColSection") != null){ method = 2; methodIndicator = "one_column";}
+            if(document.getElementById("twoColSection") != null){ method = 1; methodIndicator = "two_column";}
+
+            //alert(method);
 
 			{% if not question.ui_number == 1 %}
 				$( "#tabs" ).tabs();

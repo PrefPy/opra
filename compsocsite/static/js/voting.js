@@ -344,9 +344,30 @@ var VoteUtil = (function () {
 		//var d = Date.now() - startTime;
 		//record += "S" + d;
 		var d = (Date.now() - startTime).toString();
-		var temp = JSON.parse(record);
-		temp["two_column"].push({"method":"submit","time":d, "action":"submit" });
-		record = JSON.stringify(temp);
+		if(method == 1)
+		{
+			var temp = JSON.parse(record);
+			temp["two_column"].push({"method":"submit","time":d, "action":"submit" });
+			record = JSON.stringify(temp);
+		}
+		else if(method == 2)
+		{
+			var temp = JSON.parse(one_record);
+			temp["one_column"].push({"method":"submit","time":d, "action":"submit" });
+			one_record = JSON.stringify(temp);
+		}
+		else if (method == 3)
+		{
+			var temp = JSON.parse(slider_record);
+			temp["slider"].push({"method":"submit","time":d, "action":"submit" });
+			slider_record = JSON.stringify(temp);
+		}
+		else
+		{
+			var temp = JSON.parse(star_record);
+			temp["star"].push({"method":"submit","time":d, "action":"submit" });
+			star_record = JSON.stringify(temp);
+		}
 
 		$('.pref_order').each(function(){
 			$(this).val(order);
@@ -770,7 +791,7 @@ $( document ).ready(function() {
 				});
 				//var d = Date.now() - startTime;
 				//record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt") + "||" + itemsSameTier +";;;";
-				if(methodIndicator)
+				if(methodIndicator == "two_column")
 				{
 					var d = (Date.now() - startTime).toString();
 					var temp = JSON.parse(record);

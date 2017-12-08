@@ -134,7 +134,7 @@
 							 {% endif %}<!-- end of panel header -->
                             
                     <!-- Remaining options panel body -->
-                    <div class="panel-body"  {% if question.id = 369 %}data-step="1" data-intro="Click the unranked options in order of your preference."{% endif %}>
+                    <div class="panel-body"  {% if question.id == 369 %}data-step="1" data-intro="Click the unranked options in order of your preference."{% endif %}>
                         <ul id="right-sortable" class="list-group">
                             {% if currentSelection == None %}
                                 <!-- The user hasn't voted on this poll yet -->

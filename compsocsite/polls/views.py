@@ -2021,26 +2021,13 @@ def addFolder(request):
 
 def getMturkPollList(request):
     # get all IRB polls from database
-    exp = get_object_or_404(User, username="opraexp")
-    polls= list(Question.objects.filter(question_owner = exp))
+    list1 = [369, 371, 372, 373, 374, 378, 379, 380, 381, 382, 396]
+    list2 = [375, 376, 377, 383, 384, 385, 386, 387, 388]
+    ramdom.shuffle(list2)
+    polls = list1 + list2
     # polls= random.sample(polls,k=10)
     #329-342
-    i=0
-    for p in polls:
-        if i<len(polls)-1:
-            #link the next
-            p.next = polls[i+1].id
-            #available for all users
-            p.open = 1
-            # open all polls
-            p.status = 2
-            p.save()
-            i=i+1
-        else:
-            p.next = -1
-            p.open = 1
-            p.status =2
-            p.save()
+    
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -2069,10 +2056,20 @@ def MturkVote(request, question_id):
         question.save()
     # notify the user that the vote has been updated
     #messages.success(request, 'Saved!')
-    if question.next == -1:
+    polls = json.loads(request.user.userprofile.sequence)
+    current = request.user.userprofile.cur_poll
+    try:
+        idx = polls.index(current)
+        if idx == len(polls)-1:
+            return HttpResponseRedirect(reverse('polls:SurveyCode'))
+        else:
+            request.user.userprofile.cur_poll = polls[idx + 1]
+            request.user.userprofile.save()
+            return HttpResponseRedirect(reverse('polls:IRBdetail', args=(polls[idx+1],)))
+
+    except ValueError:
+        print("aiofdhaohgsod")
         return HttpResponseRedirect(reverse('polls:SurveyCode'))
-    else:
-        return HttpResponseRedirect(reverse('polls:IRBdetail', args=(question.next,)))
 
 
 

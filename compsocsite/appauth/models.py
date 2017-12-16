@@ -20,6 +20,8 @@ class UserProfile(models.Model):
     age = models.IntegerField(default=0)
     code = models.CharField(max_length=100, blank=True, null=True)
     comments = models.CharField(max_length=1000, blank=True, null=True)
+    sequence = models.TextField(default="")
+    cur_poll = models.IntegerField(default=369)
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
         return self.user.username

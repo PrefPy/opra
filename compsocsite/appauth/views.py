@@ -2,6 +2,7 @@ import datetime
 import time
 import random
 import uuid
+import json
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
@@ -287,14 +288,30 @@ def createMturkUser(request):
                 age = int(request.POST["age"])
             except ValueError:
                 pass
-            user = User.objects.create_user(username=name, password=name)
+            newname = name+"@mturk"
+            user = User.objects.create_user(username=newname, password=name)
             user.save()
-            profile = UserProfile(user=user,mturk=1,age=age,code=code)
+
+            list1 = [369, 371, 372, 373, 374, 378, 379, 380, 381, 382, 396]
+            list2 = [375, 376, 377, 383, 384, 385, 386, 387, 388, 397, 398]
+            random.shuffle(list2)
+            polls = list1 + list2
+            polls_str = json.dumps(polls)
+            profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=list1[0])
             profile.save()
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request,user)
-        poll_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))
-        return HttpResponseRedirect(reverse('polls:IRBdetail', args=(poll_list[0].id,)))
+        elif request.user.username != "":
+            list1 = [369, 371, 372, 373, 374, 378, 379, 380, 381, 382, 396]
+            list2 = [375, 376, 377, 383, 384, 385, 386, 387, 388, 397, 398]
+            random.shuffle(list2)
+            polls = list1 + list2
+            polls_str = json.dumps(polls)
+            request.user.userprofile.sequence = polls_str
+            request.user.userprofile.cur_poll = list1[0]
+            request.user.userprofile.save()
+        #poll_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))
+        return HttpResponseRedirect(reverse('polls:IRBdetail', args=(list1[0],)))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         
 

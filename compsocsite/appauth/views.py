@@ -292,7 +292,7 @@ def createMturkUser(request):
             user = User.objects.create_user(username=newname, password=name)
             user.save()
 
-            list1 = [369, 371, 372, 373, 374, 378, 379, 380, 381, 382, 396]
+            list1 = [369, 371, 372, 373, 374, 379, 378, 380, 381, 382, 396]
             list2 = [375, 376, 377, 383, 384, 385, 386, 387, 388, 397, 398]
             random.shuffle(list2)
             polls = list1 + list2
@@ -302,7 +302,7 @@ def createMturkUser(request):
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request,user)
         elif request.user.username != "":
-            list1 = [369, 371, 372, 373, 374, 378, 379, 380, 381, 382, 396]
+            list1 = [369, 371, 372, 373, 374, 379, 378, 380, 381, 382, 396]
             list2 = [375, 376, 377, 383, 384, 385, 386, 387, 388, 397, 398]
             random.shuffle(list2)
             polls = list1 + list2

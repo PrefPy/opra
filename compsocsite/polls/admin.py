@@ -70,8 +70,8 @@ class QuestionAdmin(admin.ModelAdmin):
         ('Voters', {'fields' : ['question_voters']}),
     ]
     inlines = [ItemInline]
-    list_display = ('question_text', 'pub_date', 'question_owner')
-    list_filter = ['pub_date']
+    list_display = ('id','question_text', 'pub_date', 'question_owner')
+    list_filter = ['pub_date', 'question_owner']
     search_fields = ['question_text']
 
 

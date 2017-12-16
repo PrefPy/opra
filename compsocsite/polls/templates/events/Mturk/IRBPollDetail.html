@@ -119,47 +119,28 @@
 
 
 {% if question.status == 2 %}
+    <!--
         <div class = "text-center">
            
 
             <nav class="navbar navbar-fixed-top">
-            <ul class="pagination">
-                <!--
-                <li class="disabled" >
-                  <span>
-                    <span aria-hidden="true">&laquo;</span>
-                  </span>
-                </li> -->
-                  
-                  {%for n in seq%}
-                     {% if n == index %}
-                        <li class="active">
-                          <span> {{n}} <span class="sr-only">(current)</span></span>
-                        </li>
-                     {%else%}
-                        <li class="disabled">
-                          <span style="background-color: rgb(221, 221, 221); color:rgb(221, 221, 221);"> . </span>
-                        </li>
-                     {%endif%}
-                  {%endfor%}
-                    <!--
-                         {%if next == -1%}
-                            <li>
-                                
-                             <span data-toggle="modal" data-target="#myModal" aria-hidden="true" data-backdrop="static">&raquo;</span>
+                <ul class="pagination">
 
+                      {%for n in seq%}
+                         {% if n == index %}
+                            <li class="active">
+                              <span> {{n}} <span class="sr-only">(current)</span></span>
                             </li>
                          {%else%}
-                           <li>
-                               <a href= "{% url 'polls:IRBdetail' next %}"  aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                               </a>
-                           </li>
-                         {%endif%}-->
-    
+                            <li class="disabled">
+                              <span style="background-color: rgb(221, 221, 221); color:rgb(221, 221, 221);"> . </span>
+                            </li>
+                         {%endif%}
+                      {%endfor%}
 
-              </ul>
-            </nav>
+
+                  </ul>
+            </nav>-->
             <!-- Modal
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -185,12 +166,12 @@
                     </div>
                 </div>
               </div>
-            </div> -->
+            </div> 
             
             
-        </div>
+        </div>-->
     
-    <div class="col-md-8 col-md-offset-2" style="margin-top:20px;">
+    <div class="col-md-8 col-md-offset-2">
     {% if error_message %}
     <p>
         <strong>{{ error_message }}</strong>
@@ -200,7 +181,7 @@
     <div class="panel panel-default">
         <!-- Panel header contains image and title -->
         <div class="panel-heading">
-            <a class="panel-title" data-toggle="collapse" href="#collapse_des" style="font-size:110%;">
+            
             <div class="row">
                 <!-- Display poll image (from external url) -->
                 {% if question.imageURL != Null and question.imageURL != '' %}
@@ -216,27 +197,20 @@
 
                 <!-- Display title and creator in the header -->
                 <div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>
-                    <h4 {% if request.flavour == "mobile" %} style="width:70%;display:inline;" {% endif %}><span class="caret" style="color:#377BB5;"></span> 
-                    	{{ question.question_text }} 
+                    <h4 {% if request.flavour == "mobile" %} style="width:70%;display:inline;" {% endif %}>
+                        {% if title_type %}
+                    	   {{ question.question_text }} {% if outof%} out of 17 {%endif%}
+                        {%else%}
+                            Question {{title_index}} out of 17 {%if question.id == 397 or question.id == 398 %} : {{ question.question_text }} {%endif%}
+                        {%endif%}
 					</h4>
                 </div>
-            </div> </a>
-        </div>
-        
-
-        <!-- Display the description in the panel body (initially hidden) -->
-        <div id="collapse_des" class="panel-collapse">
-        	<div class ="panel-body">
-                {%if question.question_desc|length > 0 %}
-                   {% autoescape off %} {{question.question_desc}}  {% endautoescape %}
-                {% endif %}
-            </div>
+            </div> 
         </div>
     </div>
     
      <div class = "row">
          <div id="tabs">
-            {% for n in IRB_polls%} {{n.id}} {%endfor%}
              <!--<div id="countdown">60</div>-->
              
             {% if not question.ui_number == 1%}

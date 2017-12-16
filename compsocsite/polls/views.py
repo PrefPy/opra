@@ -2022,7 +2022,7 @@ def addFolder(request):
 def getMturkPollList(request):
     # get all IRB polls from database
     list1 = [369, 371, 372, 373, 374, 378, 379, 380, 381, 382, 396]
-    list2 = [375, 376, 377, 383, 384, 385, 386, 387, 388]
+    list2 = [375, 376, 377, 383, 384, 385, 386, 387, 388, 398, 397]
     ramdom.shuffle(list2)
     polls = list1 + list2
     # polls= random.sample(polls,k=10)
@@ -2104,17 +2104,6 @@ class SurveyFinalView(views.generic.ListView):
 
 
 
-#   return MturkView.as_view()(self.request)
-def index_id(polls_list,q):
-    n=0
-    d=0
-    for p in polls_list:
-        n=n+1
-        if p.id == q.id:
-            d=n
-                #d= round(d/len(polls_list)*100,2)
-    return d
-
 # view for question detail
 class IRBDetailView(views.generic.DetailView):
     model = Question
@@ -2131,9 +2120,16 @@ class IRBDetailView(views.generic.DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(IRBDetailView, self).get_context_data(**kwargs)
         exp = get_object_or_404(User, username="opraexp")
-        polls_list = list(Question.objects.filter(question_owner = exp))
-        ctx['index']= index_id(polls_list,self.object)
-        ctx['seq']=range(1,len(polls_list)+1)
+            
+        polls = json.loads(self.request.user.userprofile.sequence)
+        current = self.request.user.userprofile.cur_poll
+        idx = polls.index(current)+1
+        
+        ctx['index']= idx
+        ctx['title_index']=idx-5
+        ctx['title_type']=idx<12
+        ctx['seq']=range(1,len(polls)+1)
+        ctx['outof']=idx>5
         ctx['next'] = self.object.next
         
         #get surveycode

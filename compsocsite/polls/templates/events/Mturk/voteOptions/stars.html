@@ -1,4 +1,5 @@
 {% load mathfilters %}
+
 <div id="starsSection" {% if request.flavour == "mobile" %}style="padding:0.4em;" {% endif %}>
     <!-- This is the voting form. Submit results through a voting function -->
     <form id="star" action="{% url 'polls:Mturkvote' question.id %}" method="post">
@@ -10,7 +11,7 @@
             <div class="col-md-12">
 
                 <!-- Panel for your preferences -->
-                <div class="panel panel-default">
+                <div class="panel panel-default"  {% if question.id == 373 %}data-step="1" data-intro="Rate the options."{% endif %}>
 				{% if request.flavour == "mobile" %}
 				<div class = "row col-xs-12" style="padding:0%;margin:0%;margin-bottom: 4%;">
 						<button id="submitbutton-star" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton reset-button-mobile" style = "height:2.7em;padding:0%;margin:0%;background:darkgreen;">
@@ -44,7 +45,7 @@
                     </div> <!-- end of header -->
 
                     <!-- Your preferences main panel -->
-                    <div class="panel-body" {% if question.id == 373 %}data-step="1" data-intro="Rate the options."{% endif %}>
+                    <div class="panel-body">
                         <ul id="stars" >
                         {% for item in items %}
                             <li class="star_item" id="item{{ item.item_text }}" type="{{ forloop.counter }}" style="list-style-type: none;">

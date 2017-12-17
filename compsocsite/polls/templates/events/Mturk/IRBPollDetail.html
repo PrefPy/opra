@@ -199,7 +199,7 @@
                 <div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>
                     <h4 {% if request.flavour == "mobile" %} style="width:70%;display:inline;" {% endif %}>
                         {% if title_type %}
-                    	   {{ question.question_text }} {% if outof%} of 17 {%endif%}
+                    	   {{ question.question_text }}
                         {%else%}
                             Question {{title_index}} of 17 {%if question.id == 397 or question.id == 398 %} : {{ question.question_text}}{%endif%}
                         {%endif%}

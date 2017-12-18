@@ -333,6 +333,7 @@ def downloadParticipants(request):
         dic["mturkid"] = par.username
         dic["age"] = par.userprofile.age
         dic["SurveyCode"]=par.userprofile.code
+        dic["PollsSeq"]=par.userprofile.sequence
         result.append(dic)
     return JsonResponse(result, safe=False)
     

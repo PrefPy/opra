@@ -4,3 +4,4 @@ __pycache__/
 compsocsite/db.sqlite3
 compsocsite/polls/.DS_Store
 compsocsite/polls/opra_crypto.py
+compsocsite/compsocsite/settings.py

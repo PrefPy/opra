@@ -53,108 +53,7 @@
 <div class="w3-padding-64 w3-center w3-white">
   
   <p class="w3-large">OPRA is the perfect place to host polls.</p>
-  <div class="w3-row-padding " style="margin-top:60px">
-    
-    <div class="w3-section">
-      <ul class="w3-ul w3-card-2">
-        <li class="rpi-red w3-xlarge w3-padding-32">Poll Tutorial</li>
-        <li class="w3-padding-16">   <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> Step 1 </a> 
-          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-                  <h3 class="text-center"> Step 1 </h3>
-                  <hr class="small"/>
-               {% include 'polls/_add_step1.html' %}
-                  </form>
-              </div>
-          </div>
-        </li>
-        <li class="w3-padding-16">
-          <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Step 2 </a>
-          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                  <div class="panel-body">
-                      <h3 class="text-center"> Step 2 </h3>
-                      <hr class="small"/>
-                      <div class="steps"  align="center">
-                                <p class="sameline" > 
-                                    1. General  
-                                </p> 
-                                <p class="sameline" style="color:grey;">
-                                    <span class="glyphicon glyphicon-chevron-right"> </span>  
-                                    2. Choices
-                                </p>
-                                <p class="sameline">
-                                    <span class="glyphicon glyphicon-chevron-right"> </span>
-                                    3. Invite <span class="glyphicon glyphicon-chevron-right"> </span>
-                                    4. Settings 
-                                </p>
-                     </div>
-
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 50%">
-                            <span class="sr-only">50% Complete</span>
-                        </div>
-                    </div>
-                    <br/>
-                    {% include 'polls/_add_choice.html' %}
-                  </div>
-                </div>
-        </li>
-      
-       <li class="w3-padding-16">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      Step 3
-            </a>
-           <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                  <div class="panel-body">
-                      <h3 class="text-center"> Step 3 </h3>
-                      <hr class="small"/>
-                    <div class="steps"  align="center">
-                        <p class="sameline" > 
-                            1. General   
-                            <span class="glyphicon glyphicon-chevron-right"> </span>  
-                            2. Choices 
-                        </p>
-
-                        <p class="sameline" style="color:grey;">
-                            <span class="glyphicon glyphicon-chevron-right"> </span>
-                            3. Invite 
-                        </p>
-
-                        <p class="sameline">
-                            <span class="glyphicon glyphicon-chevron-right"> </span>
-                            4. Settings 
-                        </p>
-                    </div>
-
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 75%">
-                            <span class="sr-only">75% Complete</span>
-                        </div>
-                    </div>
-                    <br/>
-
-                    <h3>Voters</h3>
-                    {% include 'polls/_invite_voters.html' %}
-                  </div>
-                </div>
-            
-       </li>
-      <li class="w3-padding-16">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
-                      Step 4
-        </a>
-        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-          <div class="panel-body">
-              <h3 class="text-center"> Step 4 </h3>
-              <hr class="small"/>
-            {% include 'polls/_add_step4.html' %}
-          </div>
-        </div>
-      </li>  
-      </ul>
-    </div>
-  </div>
-  <br>
+  
 </div>
 
 
@@ -180,9 +79,6 @@
     <div class="w3-col l8 m6">
       <h1 class="w3-xxlarge rpi-text-red"><b>Organized & Analyzed Results</b></h1>
       <p w3-large><span class="w3-xlarge">OPRA </span> helps you make better decisions. After a poll ends, OPRA will compute and analyze, using powerful voting algorithms, the results for you. </p>
-      <button class="w3-button w3-black w3-padding-large w3-section ">
-        <i class="fa fa-eye"></i><a href="{% url 'polls:voteresults' question.id %}"> See Results Demo</a>
-      </button>
     </div>
       
     <div class="w3-col l4 m6">

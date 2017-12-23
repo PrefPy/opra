@@ -100,8 +100,6 @@ class MainView(views.generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(MainView, self).get_context_data(**kwargs)
         # sort the list by date
-        ctx['question'] = Question.objects.first()
-        ctx['voting_question'] = Question.objects.filter(question_text="Demo").first()
         ctx['preference'] = 1
         ctx['poll_algorithms'] = getListPollAlgorithms()
         ctx['alloc_methods'] = getAllocMethods()

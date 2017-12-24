@@ -2019,8 +2019,8 @@ def addFolder(request):
 
 def getMturkPollList(request):
     # get all IRB polls from database
-    list1 = [369, 371, 372, 373, 374, 378, 379, 380, 381, 382, 396]
-    list2 = [375, 376, 377, 383, 384, 385, 386, 387, 388, 398, 397]
+    list1 = [1,2,3,4,5,6,7,8,9,10,11]
+    list2 = [12,13,14,15,16,17,18,19,20]
     ramdom.shuffle(list2)
     polls = list1 + list2
     # polls= random.sample(polls,k=10)

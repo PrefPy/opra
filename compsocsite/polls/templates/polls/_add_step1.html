@@ -24,8 +24,8 @@
     <form id="add_poll" method="post" action="/polls/add_step1/" name="add_step1" onsubmit="return validateForm() " style="font-size:100%" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="questionTitle">Title:</label> <small class="text-muted"> * </small> <br />
-        <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="40" size="50" autofocus/>
-        <small class="text-muted">Required (at most 40 characters) </small> <br/><br/>
+        <input type="text" class="form-control" id="questionTitle" name="questionTitle" value="" maxlength="80" size="50" autofocus/>
+        <small class="text-muted">Required (at most 80 characters) </small> <br/><br/>
 
         <label for="desc">Question description:</label> <br />
         <textarea type="text" class="form-control" id="desc" name="desc" value=""></textarea> <br />

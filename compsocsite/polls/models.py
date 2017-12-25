@@ -331,11 +331,13 @@ class UserVoteRecord(models.Model):
     slider = models.TextField(default="")
     star = models.TextField(default="")
     swit = models.TextField(default="")
-    initial_order = models.CharField(max_length=400,default="")
+    initial_order = models.TextField(default="")
     initial_type = models.IntegerField(default=0)
-    final_order = models.CharField(max_length=400,default="")
+    final_order = models.TextField(default="")
     device = models.CharField(default="",max_length=20)
     comment_time = models.CharField(max_length=100,default="")
+    submit_time = models.CharField(max_length=100,default="")
+    ui = models.CharField(max_length=100,default="")
     class Meta:
         ordering = ['timestamp']
 

@@ -1,5 +1,6 @@
 //  Helper JavaScript created for the voting page (detail.html)
-var record = '{"two_column":[]}'; //for recording two col behaviors
+var record = '[]'; //for recording two col behaviors
+var temp_data;
 var one_record = '{"one_column":[]}';
 var swit = ""; //for recording users' action on swritching between voting interfaces
 var slider_record = '{"slider":[]}';
@@ -103,6 +104,86 @@ function orderSlideStar(str){
 	return arr;
 }
 
+function dictSlideStar(str){
+	var arr = [];
+	var values = [];
+	var item_type = ".li_item";
+	$('.' + str).each(function(i, obj){
+		if(str == 'slide'){ 
+			var score = $( this ).slider("option", "value");
+			item_type = ".slider_item";
+		}
+		else if(str == 'star'){ 
+			var score = parseFloat($( this ).rateYo("option", "rating")); 
+			item_type = ".star_item";
+		}
+		else{ return false; }
+		var type = $( this ).attr('type');
+		var bool = 0;
+		console.log($(item_type + "[type='" + type + "']").attr('id'));
+		$.each(values, function( index, value ){
+			if(value < score){
+				var temp = {};
+				temp["name"] = $(item_type + "[type='" + type + "']").attr('id');
+				temp["score"] = score;
+				values.splice(index, 0, score);
+				arr.splice(index, 0, [temp]);
+				bool = 1;
+				return false;
+			}else if(value == score){
+				var temp = {};
+				temp["name"] = $(item_type + "[type='" + type + "']").attr('id');
+				temp["score"] = score;
+				arr[index].push(temp);
+				bool = 1;
+				return false;
+			}
+		});
+		if(bool == 0){ 
+			var temp = {};
+			temp["name"] = $(item_type + "[type='" + type + "']").attr('id');
+			temp["score"] = score;
+			values.push(score); 
+			arr.push([temp]); 
+		}
+	});
+	var i;
+	for(i = 0; i < arr.length; i++){
+		var j;
+		for(j = 0; j < arr[i].length; j++){
+			arr[i][j]["tier"] = i+1;
+		}
+	}
+	return arr;
+}
+
+function dictCol(num){
+	var arr;
+	if(num == 0){ arr = [$('#left-sortable')]; }
+	if(num == 1){ arr = [$('#left-sortable'), $('#right-sortable')]; }
+	else if(num == 2){ arr = [$('#one-sortable')]; }
+	var order = [];
+	var tier = 1;
+	var item_type = ".li_item";
+	$.each(arr, function( index, value ){
+		value.children().each(function( i1 ){
+			if( $( this ).children().size() > 0 ){
+				var inner = [];
+				$( this ).children().each(function( i2 ){
+					var temp = {};
+					temp["name"] = $(item_type + "[type='" + $( this ).attr('type') + "']").attr('id');
+					temp["tier"] = tier;
+					temp["ranked"] = index;
+					inner.push(temp);
+				});
+				order.push(inner);
+				tier++;
+			}
+		});
+	});
+	return order;
+}
+
 function twoColSort( order ){
 	var html = "<ul class=\"choice1 empty\"></ul>";
 	$.each(order, function(index, value){
@@ -142,12 +223,14 @@ function sliderSort( order ){
 }
 
 function starSort( order ){
+	init_star = true;
 	$.each(order, function(index, value){
 		$.each(value, function(i, v){
 			if(index >= 10){ $(".star[type='" + v.toString() + "']").rateYo("option", "rating", 0); }
 			else{ $(".star[type='" + v.toString() + "']").rateYo("option", "rating", Math.round(10 - (10 * index / Math.min(order.length, 10))) / 2); }
 		});
 	});
+	init_star = false;
 }
 
 function yesNoSort( order ){
@@ -247,13 +330,16 @@ var VoteUtil = (function () {
 			// add the clear action to the record
 			//var d = Date.now() - startTime;
 			//record += d + "||";
-			var order = "";
-			$( "#right-sortable" ).children().each(function( index ) {
-				if($(this).children().size()>0){
-					order += $(this).children().first().attr("id") + "||"
-				}
-			});
 			var d = (Date.now() - startTime).toString();
+			temp_data = {"item":""};
+			temp_data["time"] = [d];
+			temp_data["rank"] = [dictCol(1)];
+			var temp = JSON.parse(record);
+			temp.push(temp_data);
+			//temp["star"].push({"time":d, "action":"set", "value":rating.toString(), "item":$(this).parent().attr("id") });
+			record = JSON.stringify(temp);
+
+			/*
 			if(methodIndicator == "two_column")
 			{
 				var temp = JSON.parse(record);
@@ -266,6 +352,8 @@ var VoteUtil = (function () {
 				temp["one_column"].push({"method":methodIndicator,"time":d, "action":"clear", "rightOrder":order });
 				one_record = JSON.stringify(temp);
 			}
+			*/
+
 		}
 	}
 	
@@ -326,48 +414,29 @@ var VoteUtil = (function () {
 	
 	// submits the current left side preferences	
 	function submitPref() {
-		var order = "";
+		var order;
 		var order_list;
+		var final_list;
 		var item_type = ".li_item";
-		if(method == 1){order_list = orderCol(0); }
-		else if(method == 2){ order_list = orderCol(method); }
-		else if(method == 3){ order_list = orderSlideStar('slide'); item_type = ".slider_item"; }
-		else if(method == 4){ order_list = orderSlideStar('star'); item_type= ".star_item";}
+		if(method == 1){order_list = orderCol(0); final_list = dictCol(1);}
+		else if(method == 2){ order_list = orderCol(method); final_list = dictCol(2);}
+		else if(method == 3){ order_list = orderSlideStar('slide'); item_type = ".slider_item"; final_list = dictSlideStar('slide');}
+		else if(method == 4){ order_list = orderSlideStar('star'); item_type= ".star_item";final_list = dictSlideStar('star');}
 		else if(method == 5){ order_list = orderYesNo(); item_type= ".checkbox";}
 		else{location.reload(); }
+		var final_order = [];
 		for (var i = 0; i < order_list.length; i++) {
+			var sametier = [];
 			for (var j = 0; j < order_list[i].length; j++) {
-				order = order + $(item_type + "[type='" + order_list[i][j].toString() + "']").attr('id') + ";;";
-			};
-			order = order + "|;;";
+				sametier.push($(item_type + "[type='" + order_list[i][j].toString() + "']").attr('id'));
+			}
+			final_order.push(sametier);
 		}
+		order = JSON.stringify(final_order);
 		//var d = Date.now() - startTime;
 		//record += "S" + d;
+		var record_final = JSON.stringify(final_list);
 		var d = (Date.now() - startTime).toString();
-		if(method == 1)
-		{
-			var temp = JSON.parse(record);
-			temp["two_column"].push({"method":"submit","time":d, "action":"submit" });
-			record = JSON.stringify(temp);
-		}
-		else if(method == 2)
-		{
-			var temp = JSON.parse(one_record);
-			temp["one_column"].push({"method":"submit","time":d, "action":"submit" });
-			one_record = JSON.stringify(temp);
-		}
-		else if (method == 3)
-		{
-			var temp = JSON.parse(slider_record);
-			temp["slider"].push({"method":"submit","time":d, "action":"submit" });
-			slider_record = JSON.stringify(temp);
-		}
-		else
-		{
-			var temp = JSON.parse(star_record);
-			temp["star"].push({"method":"submit","time":d, "action":"submit" });
-			star_record = JSON.stringify(temp);
-		}
 
 		$('.pref_order').each(function(){
 			$(this).val(order);
@@ -375,7 +444,7 @@ var VoteUtil = (function () {
 		$.ajax({
 			url: submissionURL,
 			type: "POST",
-			data: {'data': record, 'one':one_record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'order2':order2,'final':order,'device':flavor,'commentTime':commentTime,'slider':slider_record,'star':star_record,'swit':swit},
+			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'final':record_final,'device':flavor,'commentTime':commentTime,'swit':swit,'submit_time':d,'ui':methodIndicator},
 			success: function(){}
 		});
 		$('.submitbutton').css( "visibility","hidden");
@@ -400,8 +469,16 @@ var VoteUtil = (function () {
 		$('#left-sortable').children().each(function(){
 			$(this).removeAttr('onclick');
 		});
+		var d = (Date.now() - startTime).toString();
+		temp_data = {"item":item};
+		temp_data["time"] = [d];
+		temp_data["rank"] = [dictCol(1)];
+		var temp = JSON.parse(record);
+		temp.push(temp_data);
+		record = JSON.stringify(temp);
 		//d = Date.now() - startTime;
 		//record += d+ "::clickTo::" + item + "::"+ tier+";;;";
+		/*
 		if(methodIndicator == "two_column")
 		{
 			var d = (Date.now() - startTime).toString();
@@ -416,6 +493,7 @@ var VoteUtil = (function () {
 			temp["one_column"].push({"method":methodIndicator,"time":d, "action":"click", "from":prev_tier,"to": tier, "item":item });
 			one_record = JSON.stringify(temp);
 		}
+		*/
 	};
 	
 	// moves all items from the right side to the bottom of the left, preserving order
@@ -429,6 +507,7 @@ var VoteUtil = (function () {
 		});
 		//var d = Date.now() - startTime;
 		//record += d + ";;;";
+		/*
 		if(methodIndicator == "two_column")
 		{
 			var d = (Date.now() - startTime).toString();
@@ -443,6 +522,14 @@ var VoteUtil = (function () {
 			temp["one_column"].push({"method":methodIndicator,"time":d, "action":"moveAll" });
 			one_record = JSON.stringify(temp);
 		}
+		*/
+		var d = (Date.now() - startTime).toString();
+		temp_data = {"item":""};
+		temp_data["time"] = [d];
+		temp_data["rank"] = [dictCol(1)];
+		var temp = JSON.parse(record);
+		temp.push(temp_data);
+		record = JSON.stringify(temp);
 	};
 	
 	// enables the submit button
@@ -688,6 +775,7 @@ $( document ).ready(function() {
 				//newList = oldList = oL = ui.item.parent();
 				//var d = Date.now() - startTime;
 				//record += d+ "::start::" + item.attr("id") + "::"+ item.attr("alt")+";;";
+				/*
 				if(methodIndicator == "two_column")
 				{
 					var d = (Date.now() - startTime).toString();
@@ -702,7 +790,7 @@ $( document ).ready(function() {
 					temp["one_column"].push({"method":methodIndicator,"time":d, "action":"start", "tier":item.attr("alt"), "item":item.attr("id") });
 					one_record = JSON.stringify(temp);
 				}
-				/*
+				
 				$.ajax({
 					url: "{% url 'polls:record' question.id%}",
 					type: "POST",
@@ -710,6 +798,10 @@ $( document ).ready(function() {
 					success: function(){}
 				});
 				*/
+				var d = (Date.now() - startTime).toString();
+				temp_data = {"item":item.attr("id")};
+				temp_data["time"] = [d];
+				temp_data["rank"] = [dictCol(method)];
 				
 				if (!allowTies) {
 					ui.placeholder.css("width", "84%");
@@ -791,6 +883,7 @@ $( document ).ready(function() {
 				});
 				//var d = Date.now() - startTime;
 				//record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt") + "||" + itemsSameTier +";;;";
+				/*
 				if(methodIndicator == "two_column")
 				{
 					var d = (Date.now() - startTime).toString();
@@ -805,6 +898,13 @@ $( document ).ready(function() {
 					temp["one_column"].push({"method":methodIndicator,"time":d, "action":"stop", "tier":item.attr("alt"), "item":item.attr("id"), "itemsSameTier":itemsSameTier });
 					one_record = JSON.stringify(temp);
 				}
+				*/
+				var d = (Date.now() - startTime).toString();
+				temp_data["time"].push(d);
+				temp_data["rank"].push(dictCol(method));
+				var temp = JSON.parse(record);
+				temp.push(temp_data);
+				record = JSON.stringify(temp);
 			},
 
 			change: function(event, ui) {
@@ -943,15 +1043,18 @@ $( document ).ready(function() {
 			},
 			start: function (event, ui){
 				var d = (Date.now() - startTime).toString();
-				var temp = JSON.parse(slider_record);
-				temp["slider"].push({"time":d, "action":"start", "value":ui.value.toString(), "item":$(this).parent().attr("id") });
-				slider_record = JSON.stringify(temp);
+				temp_data = {"item":$(this).parent().attr("id")};
+				temp_data["time"] = [d];
+				temp_data["rank"] = [dictSlideStar("slide")];
 			},
 			stop: function (event, ui){
 				var d = (Date.now() - startTime).toString();
-				var temp = JSON.parse(slider_record);
-				temp["slider"].push({"time":d, "action":"stop", "value":ui.value.toString(), "item":$(this).parent().attr("id") });
-				slider_record = JSON.stringify(temp);
+				temp_data["time"].push(d);
+				temp_data["rank"].push(dictSlideStar("slide"));
+				var temp = JSON.parse(record);
+				temp.push(temp_data);
+				//temp["slider"].push({"time":d, "action":"stop", "value":ui.value.toString(), "item":$(this).parent().attr("id") });
+				record = JSON.stringify(temp);
 			}
 		});
 	});
@@ -963,9 +1066,13 @@ $( document ).ready(function() {
 				if(init_star == false)
 				{
 					var d = (Date.now() - startTime).toString();
-					var temp = JSON.parse(star_record);
-					temp["star"].push({"time":d, "action":"set", "value":rating.toString(), "item":$(this).parent().attr("id") });
-					star_record = JSON.stringify(temp);
+					temp_data = {"item":$(this).parent().attr("id")};
+					temp_data["time"] = [d];
+					temp_data["rank"] = [dictSlideStar("star")];
+					var temp = JSON.parse(record);
+					temp.push(temp_data);
+					//temp["star"].push({"time":d, "action":"set", "value":rating.toString(), "item":$(this).parent().attr("id") });
+					record = JSON.stringify(temp);
 				}
 			}
 		});

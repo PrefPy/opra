@@ -1776,19 +1776,20 @@ def getPrefOrder(orderStr, question):
     # empty string
     if orderStr == "":
         return None
-    current_array = orderStr.split(";;|;;")
-    prefOrder = []
-    length = 0
-    for item in current_array:
-        if item != "":
-            curr = item.split(";;")
-            prefOrder.append(curr)
-            length += len(curr)
+    final_order = json.loads(orderStr)
+    #current_array = orderStr.split(";;|;;")
+    #prefOrder = []
+    #length = 0
+    #for item in current_array:
+    #    if item != "":
+    #        curr = item.split(";;")
+    #        prefOrder.append(curr)
+    #        length += len(curr)
     # the user hasn't ranked all the preferences yet
     #if length != len(question.item_set.all()):
      #   return None
 
-    return prefOrder
+    return final_order
 
 # function to process student submission
 def vote(request, question_id):

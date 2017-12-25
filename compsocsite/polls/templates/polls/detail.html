@@ -211,28 +211,23 @@
 				if(document.getElementById("twoColSection") != null && document.getElementById("oneColSection") != null){
 					$( "#tabs" ).tabs("option","active",1);
 					method = 2;
+                    methodIndicator = "one_column";
 				}
 			{% else %}
 				flavor = "PC";
 			{% endif %}
 			VoteUtil.checkStyle();
 			startTime = Date.now();
-			
-			$( "#right-sortable" ).children().each(function() {
-			if($(this).children().size()>0){
-				order1 += $(this).children().first().attr("id") + ";;|;;";
-			}
 
-		});
-			$( "#left-sortable" ).children().each(function() {
-			if($(this).children().size()>0){
-				$( this ).children().each(function(){
-					order2 += $( this ).attr('id');
-					order2 += ";;";
-				});
-				order2 += "|;;";
-			}
-			
+            {% if question.star_enabled %}
+                order1 = JSON.stringify(dictSlideStar('star'));
+            {% elif question.slider_enabled %}
+                order1 = JSON.stringify(dictSlideStar('slide'));
+            {% elif question.onecol_enabled %}
+                order1 = JSON.stringify(dictCol(2));
+            {% else %}
+			    order1 = JSON.stringify(dictCol(1));
+            {% endif %}
 		});
 });
 
@@ -267,7 +262,6 @@ function toggle (elements, specifiedDisplay) {
     return window.getComputedStyle(element, null).getPropertyValue('visibility') === 'hidden';
   }
 }
-});
 
 </script>
 

@@ -47,7 +47,7 @@ def register(request):
                 user.set_password(user.password)
                 user.is_active = False
                 user.save()
-                profile = UserProfile(user=user, displayPref = 1)
+                profile = UserProfile(user=user, displayPref = 1, time_creation=timezone.now())
                 profile.save()
                 # Update our variable to tell the template registration was successful.
                 registered = True
@@ -94,7 +94,7 @@ def quickRegister(request, question_id):
                 user.set_password(user.password)
                 user.is_active = False
                 user.save()
-                profile = UserProfile(user=user, displayPref = 1)
+                profile = UserProfile(user=user, displayPref = 1,time_creation=timezone.now())
                 profile.save()
                 # Update our variable to tell the template registration was successful.
                 registered = True
@@ -297,7 +297,7 @@ def createMturkUser(request):
             random.shuffle(list2)
             polls = list1 + list2
             polls_str = json.dumps(polls)
-            profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=list1[0])
+            profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=list1[0],time_creation=timezone.now())
             profile.save()
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request,user)

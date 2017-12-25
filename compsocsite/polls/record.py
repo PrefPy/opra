@@ -30,29 +30,22 @@ def writeUserAction(request, question_id):
         #f = open(str, 'w+')
         type = 0
         data = request.POST['data']
-        one_col_record = request.POST['one']
         order1 = request.POST['order1']
-        order2 = request.POST['order2']
         device = request.POST['device']
         final = request.POST['final']
-        slider_record = request.POST['slider']
-        star_record = request.POST['star']
         commentTime = request.POST['commentTime']
         swit = request.POST['swit']
-        init = ""
-        if order1 != "":
-            init = order1
-        else:
-            init = order2
-            type = 1
+        init = order1
+        UI = request.POST['ui']
+        submit_time = request.POST['submit_time']
         #print(slider_record)
         if request.user.username == "":
             anonymous_name = ""
             new_name = "(Anonymous)" + anonymous_name
-            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,col=data,one_col=one_col_record,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
+            r = UserVoteRecord(timestamp=timezone.now(),user=new_name,col=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,swit=swit,submit_time=submit_time,ui=UI)
             r.save()
         else:
-            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,col=data,one_col=one_col_record,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,slider=slider_record,star=star_record,swit=swit)
+            r = UserVoteRecord(timestamp=timezone.now(),user=request.user.username,col=data,question=question,initial_order=init,final_order=final,device=device,initial_type=type,comment_time=commentTime,swit=swit,submit_time=submit_time,ui=UI)
             r.save()
         #f.close()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -329,11 +322,13 @@ def downloadParticipants(request):
     result = []
     for par in all_par:
         dic = {}
-        dic["id"] = par.id
-        dic["mturkid"] = par.username
+        dic["user_id"] = par.id
+        dic["username"] = par.username
+        dic["time_creation"] = par.userprofile.time_creation
         dic["age"] = par.userprofile.age
-        dic["SurveyCode"]=par.userprofile.code
-        dic["PollsSeq"]=par.userprofile.sequence
+        dic["survey_code"]=par.userprofile.code
+        dic["poll_seq"]=par.userprofile.sequence
+        dic["current_poll"] = par.userprofile.cur_poll
         result.append(dic)
     return JsonResponse(result, safe=False)
     
@@ -344,7 +339,10 @@ def downloadPolls(request):
         dic = {}
         dic["id"] = poll.id
         dic["title"] = poll.question_text
-        dic["alternatives"] = list(poll.item_set.all().values("item_text"))
+        dic["time_creation"] = str(poll.pub_date)
+        dic["UI"] = getUIs(poll)
+        dic["description"] = poll.question_desc
+        dic["alternatives"] = list(poll.item_set.all().values_list("item_text",flat=True))
         result.append(dic)
     return JsonResponse(result, safe=False)
     
@@ -352,22 +350,38 @@ def downloadRecords(request):
     all_record = UserVoteRecord.objects.all()
     result = []
     for record in all_record:
-        if record.one_col != "":
-            dic = {}
-            dic["poll_id"] = record.question.id
-            dic["participant_id"] = 0
-            dic["participant_mturkid"] = ""
-            dic["init"] = record.initial_order
-            dic["final"] = record.final_order
-            try:
-                user = User.objects.get(username=record.user)
-                dic["participant_id"] = user.id
-                dic["participant_mturkid"] = user.username
-            except ObjectDoesNotExist:
-                pass
-            (data, time) = interpretRecordForLearning(record)
-            dic["data"] = data
-            dic["time"] = time
-            result.append(dic)
+        dic = {}
+        dic["vote_id"] = record.id
+        dic["poll_id"] = record.question.id
+        dic["user_id"] = 0
+        dic["init"] = record.initial_order
+        dic["final"] = record.final_order
+        try:
+            user = User.objects.get(username=record.user)
+            dic["user_id"] = user.id
+        except ObjectDoesNotExist:
+            pass
+        dic["data"] = record.col
+        dic["platform"] = record.device
+        dic["UI"] = record.ui
+        dic["initial_ranking"] = record.initial_order
+        dic["submitted_ranking"] = record.final_order
+        dic["timestamp_submission"] = str(record.timestamp)
+        dic["time_submission"] = record.submit_time
+        result.append(dic)
     return JsonResponse(result, safe=False)
+
+def getUIs(poll):
+    result = []
+    if poll.twocol_enabled:
+        result.append("two_column")
+    if poll.onecol_enabled:
+        result.append("one_column")
+    if poll.slider_enabled:
+        result.append("slider")
+    if poll.star_enabled:
+        result.append("star")
+    if poll.yesno_enabled:
+        result.append("yesno")
+    return result
     

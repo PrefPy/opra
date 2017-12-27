@@ -126,6 +126,7 @@ function dictSlideStar(str){
 				var temp = {};
 				temp["name"] = $(item_type + "[type='" + type + "']").attr('id');
 				temp["score"] = score;
+				temp["ranked"] = 0;
 				values.splice(index, 0, score);
 				arr.splice(index, 0, [temp]);
 				bool = 1;
@@ -134,6 +135,7 @@ function dictSlideStar(str){
 				var temp = {};
 				temp["name"] = $(item_type + "[type='" + type + "']").attr('id');
 				temp["score"] = score;
+				temp["ranked"] = 0;
 				arr[index].push(temp);
 				bool = 1;
 				return false;
@@ -143,6 +145,7 @@ function dictSlideStar(str){
 			var temp = {};
 			temp["name"] = $(item_type + "[type='" + type + "']").attr('id');
 			temp["score"] = score;
+			temp["ranked"] = 0;
 			values.push(score); 
 			arr.push([temp]); 
 		}
@@ -308,6 +311,10 @@ var VoteUtil = (function () {
 	
 	// clears all items from the left side and returns the right side to its default state
 	function clearAll () {
+		var d = (Date.now() - startTime).toString();
+		temp_data = {"item":""};
+		temp_data["time"] = [d];
+		temp_data["rank"] = [dictCol(1)];
 		if(method == 1){
 			// move the left items over to the right side
 			$("#left-sortable").children().each(function(index){
@@ -330,10 +337,9 @@ var VoteUtil = (function () {
 			// add the clear action to the record
 			//var d = Date.now() - startTime;
 			//record += d + "||";
-			var d = (Date.now() - startTime).toString();
-			temp_data = {"item":""};
-			temp_data["time"] = [d];
-			temp_data["rank"] = [dictCol(1)];
+			d = (Date.now() - startTime).toString();
+			temp_data["time"].push(d);
+			temp_data["rank"].push(dictCol(1));
 			var temp = JSON.parse(record);
 			temp.push(temp_data);
 			//temp["star"].push({"time":d, "action":"set", "value":rating.toString(), "item":$(this).parent().attr("id") });
@@ -454,12 +460,18 @@ var VoteUtil = (function () {
 	
 	// moves preference item obj from the right side to the bottom of the left side
 	function moveToPref(obj) {
+
 		var time = 100
 		var prefcolumn = $('#left-sortable');
 		var currentli = $(obj);
 		var tier = currentli.children().first().attr("alt");
-		var d = Date.now() - startTime;
 		var item = currentli.children().first().attr("id");
+
+		var d = (Date.now() - startTime).toString();
+		temp_data = {"item":item};
+		temp_data["time"] = [d];
+		temp_data["rank"] = [dictCol(1)];
+
 		prefcolumn.append(currentli);
 		//record += d+ "::clickFrom::" + item + "::"+ tier+";;";
 		var prev_tier = tier;
@@ -469,10 +481,9 @@ var VoteUtil = (function () {
 		$('#left-sortable').children().each(function(){
 			$(this).removeAttr('onclick');
 		});
-		var d = (Date.now() - startTime).toString();
-		temp_data = {"item":item};
-		temp_data["time"] = [d];
-		temp_data["rank"] = [dictCol(1)];
+		d = (Date.now() - startTime).toString();
+		temp_data["time"].push(d);
+		temp_data["rank"].push(dictCol(1));
 		var temp = JSON.parse(record);
 		temp.push(temp_data);
 		record = JSON.stringify(temp);
@@ -498,6 +509,10 @@ var VoteUtil = (function () {
 	
 	// moves all items from the right side to the bottom of the left, preserving order
 	function moveAll() {
+		var d = (Date.now() - startTime).toString();
+		temp_data = {"item":""};
+		temp_data["time"] = [d];
+		temp_data["rank"] = [dictCol(1)];
 		$( '#left-sortable' ).html( $( '#left-sortable' ).html() + $( '#right-sortable' ).html() );
 		$( '#right-sortable' ).html("");
 		VoteUtil.checkStyle();
@@ -523,10 +538,9 @@ var VoteUtil = (function () {
 			one_record = JSON.stringify(temp);
 		}
 		*/
-		var d = (Date.now() - startTime).toString();
-		temp_data = {"item":""};
-		temp_data["time"] = [d];
-		temp_data["rank"] = [dictCol(1)];
+		d = (Date.now() - startTime).toString();
+		temp_data["time"].push(d);
+		temp_data["rank"].push(dictCol(1));
 		var temp = JSON.parse(record);
 		temp.push(temp_data);
 		record = JSON.stringify(temp);

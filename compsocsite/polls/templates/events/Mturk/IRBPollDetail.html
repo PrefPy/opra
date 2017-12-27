@@ -294,22 +294,12 @@
 			VoteUtil.checkStyle();
 			startTime = Date.now();
 			
-			$( "#right-sortable" ).children().each(function() {
-			if($(this).children().size()>0){
-				order1 += $(this).children().first().attr("id") + ";;|;;";
-			}
-
-		});
-			$( "#left-sortable" ).children().each(function() {
-			if($(this).children().size()>0){
-				$( this ).children().each(function(){
-					order2 += $( this ).attr('id');
-					order2 += ";;";
-				});
-				order2 += "|;;";
-			}
-			
-		  });
+			{% if question.onecol_enabled %}
+                order1 = JSON.stringify(dictCol(2));
+            {% elif question.twocol_enabled %}
+          order1 = JSON.stringify(dictCol(1));
+            {% else %}
+            {% endif %}
         });
 
 

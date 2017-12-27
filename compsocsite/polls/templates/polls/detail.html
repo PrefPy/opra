@@ -219,14 +219,11 @@
 			VoteUtil.checkStyle();
 			startTime = Date.now();
 
-            {% if question.star_enabled %}
-                order1 = JSON.stringify(dictSlideStar('star'));
-            {% elif question.slider_enabled %}
-                order1 = JSON.stringify(dictSlideStar('slide'));
-            {% elif question.onecol_enabled %}
+            {% if question.onecol_enabled %}
                 order1 = JSON.stringify(dictCol(2));
-            {% else %}
+            {% elif question.twocol_enabled %}
 			    order1 = JSON.stringify(dictCol(1));
+            {% else %}
             {% endif %}
 		});
 });

@@ -354,8 +354,6 @@ def downloadRecords(request):
         dic["vote_id"] = record.id
         dic["poll_id"] = record.question.id
         dic["user_id"] = 0
-        dic["init"] = record.initial_order
-        dic["final"] = record.final_order
         try:
             user = User.objects.get(username=record.user)
             dic["user_id"] = user.id
@@ -364,8 +362,8 @@ def downloadRecords(request):
         dic["data"] = json.loads(record.col)
         dic["platform"] = record.device
         dic["UI"] = record.ui
-        dic["initial_ranking"] = record.initial_order
-        dic["submitted_ranking"] = record.final_order
+        dic["initial_ranking"] = json.loads(record.initial_order)
+        dic["submitted_ranking"] = json.loads(record.final_order)
         dic["timestamp_submission"] = str(record.timestamp)
         dic["time_submission"] = record.submit_time
         result.append(dic)

@@ -361,7 +361,7 @@ def downloadRecords(request):
             dic["user_id"] = user.id
         except ObjectDoesNotExist:
             pass
-        dic["data"] = record.col
+        dic["data"] = json.loads(record.col)
         dic["platform"] = record.device
         dic["UI"] = record.ui
         dic["initial_ranking"] = record.initial_order

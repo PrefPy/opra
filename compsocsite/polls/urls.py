@@ -95,6 +95,7 @@ urlpatterns = [
     # API test
     url(r'^API/mixtures_test/$', views.mixtureAPI_test, name='mixture_api_test'),
     url(r'^testServer/$', views.test_server, name='test_server'),
+    url(r'^delete_messages/$', views.delete_messages, name='delete_messages'),
     
     # Mturk
     url(r'^getmturklist/$', views.getMturkPollList, name='getmturklist'),

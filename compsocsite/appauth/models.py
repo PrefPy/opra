@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 class UserProfile(models.Model):
     # This line is required. Links UserProfile to a User model instance.
     user = models.OneToOneField(User,on_delete=models.CASCADE,)
-    time_creation = models.DateTimeField(django.utils.timezone.now())
+    time_creation = models.DateTimeField()
     displayPref = models.IntegerField(default=1)
     emailInvite = models.BooleanField(default=False)
     emailDelete = models.BooleanField(default=False)

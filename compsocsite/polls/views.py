@@ -2177,3 +2177,7 @@ def test_server(request):
     m = Message(timestamp=timezone.now(),text="test")
     m.save()
     return HttpResponse("success")
+
+def delete_messages(request):
+    Message.objects.all().delete()
+    return HttpResponse("success")

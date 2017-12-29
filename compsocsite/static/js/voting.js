@@ -17,6 +17,10 @@ var methodIndicator = "two_column";
 var init_star = false;
 
 function select(item){
+	var d = (Date.now() - startTime).toString();
+	temp_data = {"item":$(item).attr("id")};
+	temp_data["time"] = [d];
+	temp_data["rank"] = [dictYesNo()];
 	if($(item).children()[0].checked){
 		$(item).css('border-color', 'green');
 		$(item).css('border-width', '5px');
@@ -35,6 +39,13 @@ function select(item){
 		$($(item).children()[1]).addClass('glyphicon-unchecked');
 		$($(item).children()[1]).css('color', "grey");
 	}
+	d = (Date.now() - startTime).toString();
+	temp_data["time"].push(d);
+	temp_data["rank"].push(dictYesNo());
+	var temp = JSON.parse(record);
+	temp.push(temp_data);
+	record = JSON.stringify(temp);
+	console.log(record);
 }
 
 //Get order of one or two column
@@ -158,6 +169,25 @@ function dictSlideStar(str){
 		}
 	}
 	return arr;
+}
+
+function dictYesNo(){
+	var arr = $('#yesNoList').children();
+	var order = [];
+	var yes = [];
+	var no = [];
+	$.each(arr, function( index, value ){
+		if(!(typeof $(value).children()[0] === "undefined")){
+			temp = {};
+			temp["name"] = $(value).attr("id");
+			temp["ranked"] = 0;
+			if($(value).children()[0].checked){temp["tier"] = 1; yes.push(temp); }
+			else{temp["tier"] = 2; no.push(temp); }
+		}
+	});
+	if(yes.length != 0){ order.push(yes); }
+	if(no.length != 0){ order.push(no); }
+	return order;
 }
 
 function dictCol(num){

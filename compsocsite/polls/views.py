@@ -2172,3 +2172,8 @@ def ExpAddComment(request):
         request.user.userprofile.comments = comment
         request.user.userprofile.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def test_server(request):
+    m = Message(timestamp=timezone.now(),text="test")
+    m.save()
+    return HttpResponse("success")

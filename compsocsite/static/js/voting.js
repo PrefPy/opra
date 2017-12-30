@@ -39,9 +39,6 @@ function select(item){
 		$($(item).children()[1]).addClass('glyphicon-unchecked');
 		$($(item).children()[1]).css('color', "grey");
 	}
-	d = (Date.now() - startTime).toString();
-	temp_data["time"].push(d);
-	temp_data["rank"].push(dictYesNo());
 	var temp = JSON.parse(record);
 	temp.push(temp_data);
 	record = JSON.stringify(temp);
@@ -251,6 +248,15 @@ function sliderSort( order ){
 		$.each(value, function(i, v){
 			$(".slide[type='" + v.toString() + "']").slider("value", Math.round(100 - (100 * index / order.length)));
 			$("#score" + $(".slide[type='" + v.toString() + "']").attr("id")).text(Math.round(100 - (100 * index / order.length)));
+		});
+	});
+}
+
+function sliderZeroSort( order ){
+	$.each(order, function(index, value){
+		$.each(value, function(i, v){
+			$(".slide[type='" + v.toString() + "']").slider("value", 0);
+			$("#score" + $(".slide[type='" + v.toString() + "']").attr("id")).text(0);
 		});
 	});
 }

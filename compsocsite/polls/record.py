@@ -361,7 +361,7 @@ def downloadRecords(request):
             pass
         dic["data"] = json.loads(record.col)
         dic["platform"] = record.device
-        dic["UI"] = record.ui
+        dic["UI"] = getUIs(record.question)
         dic["initial_ranking"] = json.loads(record.initial_order)
         dic["submitted_ranking"] = json.loads(record.final_order)
         dic["timestamp_submission"] = str(record.timestamp)

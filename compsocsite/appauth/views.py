@@ -17,7 +17,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.validators import validate_email
 
 from polls.models import Message, Question
@@ -290,7 +290,8 @@ def createMturkUser(request):
             except ValueError:
                 pass
             newname = name+"@mturk"
-            user,created = User.objects.get_or_create(username=newname, password=name)
+            exist = User.objects.filter(username=newname).exists()
+            user = User.objects.create_user(username=newname, password=name)
             first_or_last = [42]
             list1 = [63,64]
             list2 = list(range(43, 63))
@@ -303,13 +304,15 @@ def createMturkUser(request):
                 polls = list1 + list2 + first_or_last
             polls_str = json.dumps(polls)
 
-            if created:
+            if not exist:
+                user = User.objects.create_user(username=newname, password=name)
                 profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=polls[0],time_creation=timezone.now())
                 profile.save()
                 redirect_page = polls[0]
                 user.backend = 'django.contrib.auth.backends.ModelBackend'
                 login(request,user)
             else:
+                user = get_object_or_404(User, username=newname)
                 user.backend = 'django.contrib.auth.backends.ModelBackend'
                 login(request,user)
                 if user.userprofile.finished:

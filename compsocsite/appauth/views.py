@@ -323,6 +323,7 @@ def createMturkUser(request):
                     user.userprofile.sequence = polls_str
                     user.userprofile.cur_poll = polls[0]
                     user.userprofile.save()
+                    redirect_page = polls[0]
         elif request.user.username != "":
             first_or_last = [42]
             list1 = [63,64]

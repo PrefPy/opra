@@ -65,6 +65,13 @@
                             <textarea id="comment" class="form-control" name="comment" rows="2" cols="50" maxlength="1000" placeholder="Did you encounter any technical difficulties during the survey? Anything confusing?" style="font-size:100%;"></textarea>
                           <br/> 
                             <input type="submit" class="btn btn-primary" value="Submit Comments" />
+            
+                            <div class="alert alert-success alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    Thanks! Your comments have been submitted.
+                            </div>
+
+
                         </div>
                     </form>
                       
@@ -84,8 +91,14 @@
                 $('input[type="submit"]').attr('disabled' , true);
             }
         });
-        
+
     });
+    
+    $(document).ready(function(){
+        $('input[type="submit"]').click(function(){
+            $('.alert').show()
+        }) 
+});
 </script>
          
 

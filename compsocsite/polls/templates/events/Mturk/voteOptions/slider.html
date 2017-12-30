@@ -45,7 +45,7 @@
                     </div> <!-- end of header -->
 
                     <!-- Your preferences main panel -->
-                    <div class="panel-body" {% if question.id == 372 %}data-step="1" data-intro="Use the sliders to rate the options from 0 to 100."{% endif %}>
+                    <div class="panel-body" {% if question.id == 63 %}data-step="1" data-intro="Use the sliders to rate the options from 0 to 100."{% endif %}>
                         <ul id="sliders" >
                             {% for item in items %}
                                 <li class="slider_item" id="item{{ item.item_text }}" alt="{{forloop.counter}}" type="{{ forloop.counter }}">

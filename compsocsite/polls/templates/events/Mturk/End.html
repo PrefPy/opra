@@ -49,53 +49,16 @@
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h3 class="modal-title" id="exampleModalLabel">Thank you!</h3>
+                    <h3 class="modal-title" id="exampleModalLabel">Thank you! </h3>
                   </div>
-                  <div class="modal-body">
-                      Your survey code is:
-                      <br/>
-                      <h4><b> {{code}}</b></h4>
-                       <hr/> 
-                    <form action="{% url 'polls:ExpAddComment' %}" method="POST">
-                        {% csrf_token %} 
-                        <div>
-                            <h5>Your opinions are valuable.</h5>
-                       
-                        <!-- Textbox to enter comments -->
-                            <textarea id="comment" class="form-control" name="comment" rows="2" cols="50" maxlength="1000" placeholder="Did you encounter any technical difficulties during the survey? Anything confusing?" style="font-size:100%;"></textarea>
-                          <br/> 
-                            <input type="submit" class="btn btn-primary" value="Submit Comments" id="alert1"/>
-                            
-                             <div class="alert alert-success alert-dismissable" id="alert2" style="display: none">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                    Thanks! Your comments have been submitted.
-                            </div>
-            
-                        </div>
-                    </form>
+                    <div class="modal-body">
+                      Your comments have been submitted.
                       
                     </div>
+            
                 </div>
               </div>
         
-
-<script>
-    $(document).ready(function() {
-        $('input[type="submit"]').attr('disabled', true);
-        $('input[type="text"],textarea').on('keyup',function() {
-            var textarea_value = $("#texta").val();
-            if(textarea_value != '') {
-                $('input[type="submit"]').attr('disabled' , false);
-            }else{
-                $('input[type="submit"]').attr('disabled' , true);
-            }
-        });
-
-    });
-    
-    
-    
-</script>
          
 
 {% endblock %}

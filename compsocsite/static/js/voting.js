@@ -495,8 +495,6 @@ var VoteUtil = (function () {
 		var record_final = JSON.stringify(final_list);
 		var d = (Date.now() - startTime).toString();
 
-		alert(record_final);
-
 		$('.pref_order').each(function(){
 			$(this).val(order);
 		});

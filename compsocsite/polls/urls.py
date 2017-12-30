@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^IRB/(?P<question_id>[0-9]+)/MTurkvote/$', views.MturkVote, name='Mturkvote'),
     url(r'^IRB/addComments/$', views.ExpAddComment, name='ExpAddComment'),
     url(r'^IRB/SurveyCode/$', views.SurveyFinalView.as_view(), name='SurveyCode'),
+    url(r'^IRB/End/$', views.SurveyEndView.as_view(), name='SurveyEnd'),
 
 
     #Two main types of polls

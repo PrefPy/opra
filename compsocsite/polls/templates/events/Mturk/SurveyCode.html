@@ -64,14 +64,8 @@
                         <!-- Textbox to enter comments -->
                             <textarea id="comment" class="form-control" name="comment" rows="2" cols="50" maxlength="1000" placeholder="Did you encounter any technical difficulties during the survey? Anything confusing?" style="font-size:100%;"></textarea>
                           <br/> 
-                            <input type="submit" class="btn btn-primary" value="Submit Comments" id="alert1"/>
+                            <input type="submit" class="btn btn-primary" value="Submit Comments"/>
             
-                            <div class="alert alert-success alert-dismissable" id="alert2" style="display: none">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                    Thanks! Your comments have been submitted.
-                            </div>
-
-
                         </div>
                     </form>
                       
@@ -94,11 +88,6 @@
 
     });
     
-    $(document).ready(function(){
-        $('#alert1').click(function(){
-            $('#alert2').show()
-        }) 
-});
 </script>
          
 

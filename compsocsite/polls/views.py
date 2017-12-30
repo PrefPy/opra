@@ -2067,7 +2067,6 @@ def MturkVote(request, question_id):
             return HttpResponseRedirect(reverse('polls:IRBdetail', args=(polls[idx+1],)))
 
     except ValueError:
-        print("aiofdhaohgsod")
         return HttpResponseRedirect(reverse('polls:SurveyCode'))
 
 
@@ -2122,13 +2121,17 @@ class IRBDetailView(views.generic.DetailView):
             
         polls = json.loads(self.request.user.userprofile.sequence)
         current = self.request.user.userprofile.cur_poll
-        idx = polls.index(current)+1
-        
-        ctx['index']= idx
-        ctx['title_index']=idx-5
-        ctx['title_type']=idx<12
+        try:
+            idx = polls.index(current)+1
+            ctx['poll_index'] = idx - 1
+        except ValueError:
+            pass
+        #ctx['index']= idx
+        #ctx['title_index']=idx-5
+        #ctx['title_type']=idx<12
+        ctx['tutorials'] = [63,64]
         ctx['seq']=range(1,len(polls)+1)
-        ctx['outof']=idx>5
+        #ctx['outof']=idx>5
         ctx['next'] = self.object.next
         
         #get surveycode

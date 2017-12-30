@@ -292,23 +292,35 @@ def createMturkUser(request):
             user = User.objects.create_user(username=newname, password=name)
             user.save()
 
-            list1 = [1,2,3,4,5,6,7,8,9,10,11]
-            list2 = [12,13,14,15,16,17,18,19,20]
+            first_or_last = [42]
+            list1 = [63,64]
+            list2 = list(range(43, 63))
             random.shuffle(list2)
-            polls = list1 + list2
+            flag = random.randrange(2)
+            polls = []
+            if flag == 1:
+                polls = first_or_last + list1 + list2
+            else:
+                polls = list1 + list2 + first_or_last
             polls_str = json.dumps(polls)
-            profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=list1[0],time_creation=timezone.now())
+            profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=polls[0],time_creation=timezone.now())
             profile.save()
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request,user)
         elif request.user.username != "":
-            list1 = [1,2,3,4,5,6,7,8,9,10,11]
-            list2 = [12,13,14,15,16,17,18,19,20]
+            first_or_last = [42]
+            list1 = [63,64]
+            list2 = list(range(43, 63))
             random.shuffle(list2)
-            polls = list1 + list2
+            flag = random.randrange(2)
+            polls = []
+            if flag == 1:
+                polls = first_or_last + list1 + list2
+            else:
+                polls = list1 + list2 + first_or_last
             polls_str = json.dumps(polls)
             request.user.userprofile.sequence = polls_str
-            request.user.userprofile.cur_poll = list1[0]
+            request.user.userprofile.cur_poll = polls[0]
             request.user.userprofile.save()
         #poll_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))
         return HttpResponseRedirect(reverse('polls:IRBdetail', args=(list1[0],)))

@@ -299,6 +299,21 @@ function yesNoSort( order ){
 	});
 }
 
+function yesNoZeroSort( order ){
+	$.each(order, function(index, value){
+		$.each(value, function(i, v){
+			$($(".checkbox[type='" + v.toString() + "']").children()[0]).removeAttr('checked');
+			$($(".checkbox[type='" + v.toString() + "']").children()[1]).removeClass('glyphicon-check');
+			$($(".checkbox[type='" + v.toString() + "']").children()[1]).addClass('glyphicon-unchecked');
+			$($(".checkbox[type='" + v.toString() + "']").children()[1]).css('color', "grey");
+			$(".checkbox[type='" + v.toString() + "']").css('border-color', 'grey');
+			$(".checkbox[type='" + v.toString() + "']").css('border-width', '1px');
+			$(".checkbox[type='" + v.toString() + "']").css('margin-top', '5px');
+			$(".checkbox[type='" + v.toString() + "']").css('margin-bottom', '9px');
+		});
+	});
+}
+
 function changeMethod (value){
 	var order;
 	var d = Date.now() - startTime;

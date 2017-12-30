@@ -2100,7 +2100,16 @@ class SurveyFinalView(views.generic.ListView):
         ctx['code']= code
         return ctx
 
-
+class SurveyEndView(views.generic.ListView):
+    template_name = 'events/Mturk/End.html'
+    model = Question
+    
+    def get_queryset(self):
+        return Question.objects.filter(pub_date__lte=timezone.now())
+    
+    def get_context_data(self,**kwargs):
+        ctx = super(SurveyEndView, self).get_context_data(**kwargs)
+        return ctx
 
 # view for question detail
 class IRBDetailView(views.generic.DetailView):
@@ -2174,7 +2183,7 @@ def ExpAddComment(request):
         comment = request.POST['comment']
         request.user.userprofile.comments = comment
         request.user.userprofile.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(reverse('polls:SurveyEnd'))
 
 def test_server(request):
     m = Message(timestamp=timezone.now(),text="test")

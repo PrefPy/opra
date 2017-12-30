@@ -2122,7 +2122,7 @@ class IRBDetailView(views.generic.DetailView):
         polls = json.loads(self.request.user.userprofile.sequence)
         current = self.request.user.userprofile.cur_poll
         try:
-            idx = polls.index(current)+1
+            idx = polls.index(current)
             ctx['poll_index'] = idx - 1
         except ValueError:
             pass

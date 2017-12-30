@@ -479,7 +479,7 @@ var VoteUtil = (function () {
 		else if(method == 2){ order_list = orderCol(method); final_list = dictCol(2);}
 		else if(method == 3){ order_list = orderSlideStar('slide'); item_type = ".slider_item"; final_list = dictSlideStar('slide');}
 		else if(method == 4){ order_list = orderSlideStar('star'); item_type= ".star_item";final_list = dictSlideStar('star');}
-		else if(method == 5){ order_list = orderYesNo(); item_type= ".checkbox";}
+		else if(method == 5){ order_list = orderYesNo(); item_type= ".checkbox"; final_list = dictYesNo();}
 		else{location.reload(); }
 		var final_order = [];
 		for (var i = 0; i < order_list.length; i++) {
@@ -494,6 +494,8 @@ var VoteUtil = (function () {
 		//record += "S" + d;
 		var record_final = JSON.stringify(final_list);
 		var d = (Date.now() - startTime).toString();
+
+		alert(record_final);
 
 		$('.pref_order').each(function(){
 			$(this).val(order);

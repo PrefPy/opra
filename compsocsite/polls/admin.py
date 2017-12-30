@@ -24,6 +24,11 @@ def changeAllSeparators(modeladmin, request, queryset):
             #print(s2)
             resp.save()
 
+def changeAllTitlesForFruits(modeladmin, request, queryset):
+    for poll in queryset:
+        poll.question_text = "Select All Fruit(s) You Like"
+        poll.save()
+
 
 #limits admin change permissions
 # https://gist.github.com/aaugustin/1388243
@@ -73,6 +78,8 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ('id','question_text', 'pub_date', 'question_owner')
     list_filter = ['pub_date', 'question_owner']
     search_fields = ['question_text']
+
+    actions = [changeAllTitlesForFruits]
 
 
 # response editing / viewing

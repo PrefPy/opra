@@ -291,7 +291,6 @@ def createMturkUser(request):
                 pass
             newname = name+"@mturk"
             exist = User.objects.filter(username=newname).exists()
-            user = User.objects.create_user(username=newname, password=name)
             first_or_last = [42]
             list1 = [63,64]
             list2 = list(range(43, 63))

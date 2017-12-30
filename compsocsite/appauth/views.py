@@ -299,7 +299,7 @@ def createMturkUser(request):
             flag = random.randrange(2)
             polls = []
             if flag == 1:
-                polls = first_or_last + list1 + list2
+                polls = list1 + first_or_last + list2
             else:
                 polls = list1 + list2 + first_or_last
             polls_str = json.dumps(polls)
@@ -315,7 +315,7 @@ def createMturkUser(request):
             flag = random.randrange(2)
             polls = []
             if flag == 1:
-                polls = first_or_last + list1 + list2
+                polls = list1 + first_or_last + list2
             else:
                 polls = list1 + list2 + first_or_last
             polls_str = json.dumps(polls)

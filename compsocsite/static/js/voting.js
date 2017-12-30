@@ -42,7 +42,7 @@ function select(item){
 	var temp = JSON.parse(record);
 	temp.push(temp_data);
 	record = JSON.stringify(temp);
-	console.log(record);
+	//console.log(record);
 }
 
 //Get order of one or two column
@@ -128,7 +128,7 @@ function dictSlideStar(str){
 		else{ return false; }
 		var type = $( this ).attr('type');
 		var bool = 0;
-		console.log($(item_type + "[type='" + type + "']").attr('id'));
+		//console.log($(item_type + "[type='" + type + "']").attr('id'));
 		$.each(values, function( index, value ){
 			if(value < score){
 				var temp = {};

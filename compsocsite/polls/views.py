@@ -2060,6 +2060,8 @@ def MturkVote(request, question_id):
     try:
         idx = polls.index(current)
         if idx == len(polls)-1:
+            request.user.userprofile.finished = True
+            request.user.userprofile.save()
             return HttpResponseRedirect(reverse('polls:SurveyCode'))
         else:
             request.user.userprofile.cur_poll = polls[idx + 1]

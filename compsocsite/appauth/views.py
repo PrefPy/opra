@@ -282,6 +282,7 @@ def createMturkUser(request):
     code= uuid.uuid1()
     if request.method == "POST":
         name = request.POST["name"]
+        redirect_page = 0
         if name != "" and request.user.username == "":
             age = 0
             try:
@@ -289,9 +290,7 @@ def createMturkUser(request):
             except ValueError:
                 pass
             newname = name+"@mturk"
-            user = User.objects.create_user(username=newname, password=name)
-            user.save()
-
+            user,created = User.objects.get_or_create(username=newname, password=name)
             first_or_last = [42]
             list1 = [63,64]
             list2 = list(range(43, 63))
@@ -303,10 +302,27 @@ def createMturkUser(request):
             else:
                 polls = list1 + list2 + first_or_last
             polls_str = json.dumps(polls)
-            profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=polls[0],time_creation=timezone.now())
-            profile.save()
-            user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(request,user)
+
+            if created:
+                profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=polls[0],time_creation=timezone.now())
+                profile.save()
+                redirect_page = polls[0]
+                user.backend = 'django.contrib.auth.backends.ModelBackend'
+                login(request,user)
+            else:
+                user.backend = 'django.contrib.auth.backends.ModelBackend'
+                login(request,user)
+                if user.userprofile.finished:
+                    return HttpResponseRedirect(reverse('polls:SurveyCode'))
+                idx = 0
+                try:
+                    user_seq = json.loads(user.userprofile.sequence)
+                    idx = user_seq.index(user.userprofile.cur_poll)
+                    redirect_page = user.userprofile.cur_poll
+                except ValueError:
+                    user.userprofile.sequence = polls_str
+                    user.userprofile.cur_poll = polls[0]
+                    user.userprofile.save()
         elif request.user.username != "":
             first_or_last = [42]
             list1 = [63,64]
@@ -322,8 +338,9 @@ def createMturkUser(request):
             request.user.userprofile.sequence = polls_str
             request.user.userprofile.cur_poll = polls[0]
             request.user.userprofile.save()
+            redirect_page = polls[0]
         #poll_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))
-        return HttpResponseRedirect(reverse('polls:IRBdetail', args=(list1[0],)))
+        return HttpResponseRedirect(reverse('polls:IRBdetail', args=(redirect_page,)))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         
 

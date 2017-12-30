@@ -24,6 +24,7 @@ class UserProfile(models.Model):
     comments = models.CharField(max_length=1000, blank=True, null=True)
     sequence = models.TextField(default="")
     cur_poll = models.IntegerField(default=1)
+    finished = models.BooleanField(default=False)
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
         return self.user.username

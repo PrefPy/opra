@@ -19,7 +19,7 @@
 				{% endif %}
                     <!-- Your preferences header -->
                     <div class="panel-heading" >
-                        <h4>Select all fruit(s) you like, then
+                        <h4>Select all option(s) you like, then
                             {% if not request.flavour == "mobile" %}
                                 <button id="submitbutton-yesno" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton btn btn-success" style=""> Submit </button>
                                 <button id="submitting-yesno" type="button" class="submitting btn btn-default" style="visibility:hidden;position:absolute;z-index:1;">
@@ -42,7 +42,7 @@
                     </div> <!-- end of header -->
 
                     <!-- Your preferences main panel -->
-                    <div class="panel-body" {% if question.id == 64 %}data-step="1" data-intro="Select all fruit(s) you like"{% endif %}>
+                    <div class="panel-body" {% if question.id == 64 %}data-step="1" data-intro="Select all option(s) you like"{% endif %}>
                         <ul id="yesNoList" >
                         <!-- The user hasn't voted on this poll yet -->
                         {% for item in items %}

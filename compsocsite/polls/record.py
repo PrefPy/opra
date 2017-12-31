@@ -362,8 +362,14 @@ def downloadRecords(request):
         dic["data"] = json.loads(record.col)
         dic["platform"] = record.device
         dic["UI"] = getUIs(record.question)
-        dic["initial_ranking"] = json.loads(record.initial_order)
-        dic["submitted_ranking"] = json.loads(record.final_order)
+        try:
+            dic["initial_ranking"] = json.loads(record.initial_order)
+        except ValueError:
+            dic["initial_ranking"] = []
+        try:
+            dic["submitted_ranking"] = json.loads(record.final_order)
+        except ValueError:
+            dic["submitted_ranking"] = []
         dic["timestamp_submission"] = str(record.timestamp)
         dic["time_submission"] = record.submit_time
         result.append(dic)

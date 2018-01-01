@@ -172,7 +172,7 @@
             
         </div>-->
     
-    <div class="col-md-8 col-md-offset-2">
+    <div class="col-md-10 col-md-offset-1">
     {% if error_message %}
     <p>
         <strong>{{ error_message }}</strong>
@@ -206,8 +206,8 @@
         </div>
     </div>
     
-     <div class = "row">
-         <div id="tabs">
+     <div class = "row" id="tabs">
+
              <!--<div id="countdown">60</div>-->
              
             {% if not question.ui_number == 1%}
@@ -225,7 +225,7 @@
                 {% if question.star_enabled %}{% include "events/Mturk/voteOptions/stars.html" %}{% endif %}
                 {% if question.yesno_enabled %}{% include "events/Mturk/voteOptions/yesNo.html" %}{% endif %}
                 {% if question.yesno2_enabled %}{% include "events/Mturk/voteOptions/yesNo2.html" %}{% endif %}
-         </div>  
+ 
     </div>
         <br/>
         <br/>

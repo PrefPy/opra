@@ -303,6 +303,7 @@ def editBasicInfo(request, question_id):
     slider = False
     star = False
     yesno = False
+    yesno2 = False
     uilist = request.POST.getlist('ui')
     if "twocol" in uilist:
         twocol = True
@@ -314,12 +315,15 @@ def editBasicInfo(request, question_id):
         star = True
     if "yesno" in uilist:
         yesno = True
+    if "yesno2" in uilist:
+        yesno2 = True
     question.twocol_enabled = twocol
     question.onecol_enabled = onecol
     question.slider_enabled = slider
     question.star_enabled = star
     question.yesno_enabled = yesno
-    question.ui_number = twocol+onecol+slider+star+yesno
+    question.yesno2_enabled = yesno2
+    question.ui_number = twocol+onecol+slider+star+yesno+yesno2
     question.save()
     request.session['setting'] = 8
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1406,6 +1410,7 @@ def setInitialSettings(request, question_id):
     slider = False
     star = False
     yesno = False
+    yesno2 = False
     uilist = request.POST.getlist('ui')
     if "twocol" in uilist:
         twocol = True
@@ -1417,6 +1422,8 @@ def setInitialSettings(request, question_id):
         star = True
     if "yesno" in uilist:
         yesno = True
+    if "yesno2" in uilist:
+        yesno2 = True
     vr = (2 ** (int(request.POST['pollpreferences']) - 1))
     for rule in request.POST.getlist('vr'):
         if int(rule) != (2 ** (int(request.POST['pollpreferences']) - 1)):
@@ -1426,7 +1433,8 @@ def setInitialSettings(request, question_id):
     question.slider_enabled = slider
     question.star_enabled = star
     question.yesno_enabled = yesno
-    question.ui_number = twocol+onecol+slider+star+yesno
+    question.yesno2_enabled = yesno2
+    question.ui_number = twocol+onecol+slider+star+yesno+yesno2
     question.vote_rule = vr
     if openstring == "anon":
         question.open = 1

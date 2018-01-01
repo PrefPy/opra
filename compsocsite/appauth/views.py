@@ -293,7 +293,7 @@ def createMturkUser(request):
             exist = User.objects.filter(username=newname).exists()
             first_or_last = [42]
             list1 = [63,64]
-            list2 = list(range(43, 63))
+            list2 = list(range(53, 62))+list(range(66,75))
             random.shuffle(list2)
             flag = random.randrange(2)
             polls = []

@@ -14,6 +14,7 @@
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" integrity="" crossorigin="anonymous" >
         
+        
     <!-- jQuery UI CSS (base theme) -->
     <link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css">
 
@@ -27,7 +28,7 @@
     <link rel="stylesheet" href="/static/fonts/lato.css">
     <!-- W3 -->
     <link rel="stylesheet" href="/static/css/w3.css">
-
+        
     <!-- Select2 -->
     <link href="/static/css/select2.min.css" rel="stylesheet" />
 		{% if request.flavour == "mobile" %}
@@ -223,6 +224,7 @@
                 {% if question.slider_enabled %}{% include "events/Mturk/voteOptions/slider.html" %}{% endif %}
                 {% if question.star_enabled %}{% include "events/Mturk/voteOptions/stars.html" %}{% endif %}
                 {% if question.yesno_enabled %}{% include "events/Mturk/voteOptions/yesNo.html" %}{% endif %}
+                {% if question.yesno2_enabled %}{% include "events/Mturk/voteOptions/yesNo2.html" %}{% endif %}
          </div>  
     </div>
         <br/>

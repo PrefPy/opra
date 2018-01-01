@@ -1,0 +1,191 @@
+{% load mathfilters %}
+<div id="yesNoSection" {% if request.flavour == "mobile" %}style="padding:0.4em;" {% endif %}>
+    <!-- This is the voting form. Submit results through a voting function -->
+    <form id="yesNo" action="{% url 'polls:Mturkvote' question.id %}"  method="post">
+        <div>
+            {% csrf_token %}
+
+
+            <div class="col-md-12" >
+
+                <!-- Panel for your preferences -->
+                <div class="panel panel-default"  >
+				{% if request.flavour == "mobile" %}
+				<div class = "row col-xs-12" style="padding:0%;margin:0%;margin-bottom: 4%;">
+						<button id="submitbutton-yesno" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton reset-button-mobile" style = "height:2.7em;padding:0%;margin:0%;background:darkgreen;">
+                            <span class="glyphicon glyphicon-upload" style="font-size:140%;color:white;margin:0%;">Submit</span>
+                        </button> 
+                </div>
+				{% endif %}
+                    <!-- Your preferences header -->
+                    <div class="panel-heading" >
+                        <h4>Select all option(s) you like, then
+                            {% if not request.flavour == "mobile" %}
+                                <button id="submitbutton-yesno" type="submit" onclick="VoteUtil.submitPref();" class="submitbutton btn btn-success" style=""> Submit </button>
+                                <button id="submitting-yesno" type="button" class="submitting btn btn-default" style="visibility:hidden;position:absolute;z-index:1;">
+                                    Submitting...
+                                </button>
+                            {% endif %}
+                            <input type="hidden" id="pref_order" class="pref_order" name="pref_order" value=""/>
+
+                            <div class="pull-right">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <span id="successMessage" {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                                            {{ message }}
+                                        </span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+
+                        </h4>
+                    </div> <!-- end of header -->
+
+                    <!-- Your preferences main panel -->
+                    <div class="panel-body" {% if question.id == 64 %}data-step="1" data-intro="Select all option(s) you like"{% endif %}>
+
+                              <div id ="YesNoList" class = "text-center">
+                        <!-- The user hasn't voted on this poll yet -->
+                            <div class= "row">
+                              <div class="col-md-3 col-md-offset-3">
+                                  <label class="checkbox" id="item{{ items.0.item_text }}" type="1" onclick="select(this);" style="width:200px; height:230px">
+                                      <input type="checkbox" style="display:none" >{{ items.0.item_text }} <span class="glyphicon" aria-hidden="true"></span>
+                                      <br/><br/>
+                                  
+                                <!-- Display image (uploaded) -->
+                                {% if items.0.image %}
+                                    <img class="item" src='/{{ items.0.image.url }}'/>
+                                {% endif %}
+                                <!-- Display image (external URL) -->
+                                {% if items.0.imageURL != Null %}
+                                    <img src='{{ items.0.imageURL }}' width="150px" height="150px"/>
+                                {% endif %}
+                                    
+                                <!-- Display tooltip for option description -->
+                                {% if items.0.item_description %}
+                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{items.0.item_description}}" data-title="Meddelanden">
+                                    </span>
+                                {% endif %}
+                                     
+                                  
+                                
+                                  </label>
+                              
+                            </div>
+                          
+                            <div class="col-md-3">
+                                 <label class="checkbox" id="item{{ items.1.item_text }}" type="2" onclick="select(this);" style="width:200px; height:230px">
+                              <input type="checkbox" style="display:none">{{ items.1.item_text }} <span class="glyphicon" aria-hidden="true"></span><br/><br/>
+                                <!-- Display image (uploaded) -->
+                                {% if items.1.image %}
+                                    <img class="item" src='/{{ items.1.image.url }}'/>
+                                {% endif %}
+                                <!-- Display image (external URL) -->
+                                {% if items.1.imageURL != Null %}
+                                    <img src='{{ items.1.imageURL }}' width="150px" height="150px"/>
+                                {% endif %}
+                                <!-- Display tooltip for option description -->
+                                {% if items.1.item_description %}
+                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{items.1.item_description}}" data-title="Meddelanden">
+                                    </span>
+                                {% endif %}
+                                
+                            </label>
+                            </div>
+                          
+                      </div>
+                            
+                        <div class= "row">
+                            <div class="col-md-3 col-md-offset-3">
+                                <label class="checkbox" id="item{{ items.2.item_text }}" type="3" onclick="select(this);" style="width:200px; height:230px">
+                              <input type="checkbox" style="display:none">{{ items.2.item_text }} <span class="glyphicon" aria-hidden="true"></span><br/><br/>
+                                <!-- Display image (uploaded) -->
+                                {% if items.2.image %}
+                                    <img class="item" src='/{{ items.2.image.url }}'/>
+                                {% endif %}
+                                <!-- Display image (external URL) -->
+                                {% if items.2.imageURL != Null %}
+                                    <img src='{{ items.2.imageURL }}' width="150px" height="150px"/>
+                                {% endif %}
+                                <!-- Display tooltip for option description -->
+                                {% if items.2.item_description %}
+                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{items.2.item_description}}" data-title="Meddelanden">
+                                    </span>
+                                {% endif %}
+                                
+                             </label>
+                           
+                            </div>
+                            <div class="col-md-3">
+                                 <label class="checkbox" id="item{{ items.3.item_text }}" type="4" onclick="select(this);" style="width:200px; height:230px">
+                              <input type="checkbox" style="display:none">{{ items.3.item_text }} <span class="glyphicon" aria-hidden="true"></span> <br/><br/>
+                                <!-- Display image (uploaded) -->
+                                {% if items.3.image %}
+                                    <img class="item" src='/{{ items.3.image.url }}'/>
+                                {% endif %}
+                                <!-- Display image (external URL) -->
+                                {% if items.3.imageURL != Null %}
+                                    <img src='{{ items.3.imageURL }}' width="150px" height="150px"/>
+                                {% endif %}
+                                <!-- Display tooltip for option description -->
+                                {% if items.3.item_description %}
+                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{items.3.item_description}}" data-title="Meddelanden">
+                                    </span>
+                                {% endif %}
+                                
+                            </label>
+                           
+                            </div>
+                      </div>
+        
+                            
+                        </div> <!-- end of main panel (left-sortable) -->
+                   
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    $(window).load(function(){
+        var original_order = [];
+        var t = 1;
+        {% if currentSelection %}
+            {% for s in currentSelection %}
+                {% if s %}
+                    var inner = [];
+                    {% for selection in s %}
+                        inner.push(t);
+                        t = t + 1;
+                    {% endfor %}
+                    original_order.push(inner);
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        
+        {% if currentSelection == None %}
+            {% for item in items %}
+                original_order.push([t]);
+                t = t + 1;
+            {% endfor %}
+        {% else %}
+
+            {% if unrankedCandidates %}
+                {% for item in unrankedCandidates %}
+                    original_order.push([t]);
+                    t = t + 1;
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+        //yesNoSort(original_order);
+        yesNoZeroSort(original_order);
+
+        order1 = JSON.stringify(dictYesNo());
+    });
+</script>
+<script>
+    introJs().start();
+</script>

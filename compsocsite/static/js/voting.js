@@ -217,11 +217,7 @@ function dictYesNo(){
 }
 
 function dictYesNo2(){
-	var arr = [];
-	arr.push($('#yesNoList').children()[0].children()[0].children()[0]);
-	arr.push($('#yesNoList').children()[0].children()[1].children()[0]);
-	arr.push($('#yesNoList').children()[1].children()[0].children()[0]);
-	arr.push($('#yesNoList').children()[1].children()[1].children()[0]);
+	var arr = $('.checkbox');
 	var order = [];
 	var yes = [];
 	var no = [];

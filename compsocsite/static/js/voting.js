@@ -221,11 +221,14 @@ function dictYesNo2(){
 	var order = [];
 	var yes = [];
 	var no = [];
+	var i = 0;
 	$.each(arr, function( index, value ){
 		if(!(typeof $(value).children()[0] === "undefined")){
 			temp = {};
 			temp["name"] = $(value).attr("id");
 			temp["ranked"] = 0;
+			if(i == 0 || i == 1) { temp["row"] = 1;}
+			else{temp["row"] = 2;}
 			if($(value).children()[0].checked){temp["tier"] = 1; yes.push(temp); }
 			else{temp["tier"] = 2; no.push(temp); }
 		}

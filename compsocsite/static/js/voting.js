@@ -227,10 +227,13 @@ function dictYesNo2(){
 			temp = {};
 			temp["name"] = $(value).attr("id");
 			temp["ranked"] = 0;
-			if(i == 0 || i == 1) { temp["row"] = 1;}
-			else{temp["row"] = 2;}
+			if(i == 0) { temp["position"] = "(1,1)";}
+			else if (i == 1){temp["position"] = "(1,2)";}
+			else if (i == 2){temp["position"] = "(2,1)";}
+			else{temp["position"] = "(2,2)";}
 			if($(value).children()[0].checked){temp["tier"] = 1; yes.push(temp); }
 			else{temp["tier"] = 2; no.push(temp); }
+			i++;
 		}
 	});
 	if(yes.length != 0){ order.push(yes); }

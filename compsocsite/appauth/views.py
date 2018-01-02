@@ -293,7 +293,7 @@ def createMturkUser(request):
             exist = User.objects.filter(username=newname).exists()
             first_or_last = [42]
             list1 = [63,64]
-            list2 = list(range(53, 62))+list(range(66,75))
+            list2 = list(range(53, 63))+list(range(66,76))
             random.shuffle(list2)
             flag = random.randrange(2)
             polls = []
@@ -329,7 +329,7 @@ def createMturkUser(request):
         elif request.user.username != "":
             first_or_last = [42]
             list1 = [63,64]
-            list2 = list(range(53, 62))+list(range(66,75))
+            list2 = list(range(53, 63))+list(range(66,76))
             random.shuffle(list2)
             flag = random.randrange(2)
             polls = []
@@ -367,3 +367,14 @@ class MessageView(generic.ListView):
         ctx['rpi_users'] = getRPIUsers()
         ctx['allowed_users'] = permit
         return ctx
+
+def resetAllFinish(request):
+    if request.user.username == "opraadmin":
+        users = User.objects.all()
+        for user in users:
+            if hasattr(user,'userprofile'):
+                user.userprofile.finished = False
+                user.userprofile.save()
+        return HttpResponse("success!")
+    else:
+        return HttpResponse("failed!")

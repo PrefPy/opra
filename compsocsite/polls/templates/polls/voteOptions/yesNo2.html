@@ -57,7 +57,7 @@
                         <!-- The user hasn't voted on this poll yet -->
                             <div class= "row">
                               <div class="col-md-3 col-md-offset-3">
-                                  <label class="checkbox" id="item{{ items.0.item_text }}" type="1" onclick="select(this);" style="width:200px; height:230px">
+                                  <label class="checkbox" id="item{{ items.0.item_text }}" type="1" onclick="select2(this);" style="width:200px; height:230px">
                                       <input type="checkbox" style="display:none" >{{ items.0.item_text }} <span class="glyphicon" aria-hidden="true"></span>
                                       <br/><br/>
                                   
@@ -83,7 +83,7 @@
                             </div>
                           
                             <div class="col-md-3">
-                                 <label class="checkbox" id="item{{ items.1.item_text }}" type="2" onclick="select(this);" style="width:200px; height:230px">
+                                 <label class="checkbox" id="item{{ items.1.item_text }}" type="2" onclick="select2(this);" style="width:200px; height:230px">
                               <input type="checkbox" style="display:none">{{ items.1.item_text }} <span class="glyphicon" aria-hidden="true"></span><br/><br/>
                                 <!-- Display image (uploaded) -->
                                 {% if items.1.image %}
@@ -106,7 +106,7 @@
                             
                         <div class= "row">
                             <div class="col-md-3 col-md-offset-3">
-                                <label class="checkbox" id="item{{ items.2.item_text }}" type="3" onclick="select(this);" style="width:200px; height:230px">
+                                <label class="checkbox" id="item{{ items.2.item_text }}" type="3" onclick="select2(this);" style="width:200px; height:230px">
                               <input type="checkbox" style="display:none">{{ items.2.item_text }} <span class="glyphicon" aria-hidden="true"></span><br/><br/>
                                 <!-- Display image (uploaded) -->
                                 {% if items.2.image %}
@@ -126,7 +126,7 @@
                            
                             </div>
                             <div class="col-md-3">
-                                 <label class="checkbox" id="item{{ items.3.item_text }}" type="4" onclick="select(this);" style="width:200px; height:230px">
+                                 <label class="checkbox" id="item{{ items.3.item_text }}" type="4" onclick="select2(this);" style="width:200px; height:230px">
                               <input type="checkbox" style="display:none">{{ items.3.item_text }} <span class="glyphicon" aria-hidden="true"></span> <br/><br/>
                                 <!-- Display image (uploaded) -->
                                 {% if items.3.image %}
@@ -190,6 +190,7 @@
             {% endif %}
         {% endif %}
         //yesNoSort(original_order);
-        yesNoZeroSort(original_order)
+        yesNoZeroSort(original_order);
+        order1 = JSON.stringify(dictYesNo2());
     });
 </script>

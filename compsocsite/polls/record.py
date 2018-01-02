@@ -387,5 +387,7 @@ def getUIs(poll):
         result.append("star")
     if poll.yesno_enabled:
         result.append("yesno")
+    if poll.yesno2_enabled:
+        result.append("yesno_grid")
     return result
     

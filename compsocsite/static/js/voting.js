@@ -45,6 +45,35 @@ function select(item){
 	//console.log(record);
 }
 
+function select2(item){
+	var d = (Date.now() - startTime).toString();
+	temp_data = {"item":$(item).attr("id")};
+	temp_data["time"] = [d];
+	temp_data["rank"] = [dictYesNo2()];
+	if($(item).children()[0].checked){
+		$(item).css('border-color', 'green');
+		$(item).css('border-width', '5px');
+		$(item).css('margin-top', '1px');
+		$(item).css('margin-bottom', '1px');
+		$($(item).children()[1]).removeClass('glyphicon-unchecked');
+		$($(item).children()[1]).addClass('glyphicon-check');
+		$($(item).children()[1]).css('color', "green");
+	}
+	else{
+		$(item).css('border-color', 'grey');
+		$(item).css('border-width', '1px');
+		$(item).css('margin-top', '5px');
+		$(item).css('margin-bottom', '9px');
+		$($(item).children()[1]).removeClass('glyphicon-check');
+		$($(item).children()[1]).addClass('glyphicon-unchecked');
+		$($(item).children()[1]).css('color', "grey");
+	}
+	var temp = JSON.parse(record);
+	temp.push(temp_data);
+	record = JSON.stringify(temp);
+	//console.log(record);
+}
+
 //Get order of one or two column
 function orderYesNo(){
 	var arr = $('#yesNoList').children();
@@ -170,6 +199,29 @@ function dictSlideStar(str){
 
 function dictYesNo(){
 	var arr = $('#yesNoList').children();
+	var order = [];
+	var yes = [];
+	var no = [];
+	$.each(arr, function( index, value ){
+		if(!(typeof $(value).children()[0] === "undefined")){
+			temp = {};
+			temp["name"] = $(value).attr("id");
+			temp["ranked"] = 0;
+			if($(value).children()[0].checked){temp["tier"] = 1; yes.push(temp); }
+			else{temp["tier"] = 2; no.push(temp); }
+		}
+	});
+	if(yes.length != 0){ order.push(yes); }
+	if(no.length != 0){ order.push(no); }
+	return order;
+}
+
+function dictYesNo2(){
+	var arr = [];
+	arr.push($('#yesNoList').children()[0].children()[0].children()[0]);
+	arr.push($('#yesNoList').children()[0].children()[1].children()[0]);
+	arr.push($('#yesNoList').children()[1].children()[0].children()[0]);
+	arr.push($('#yesNoList').children()[1].children()[1].children()[0]);
 	var order = [];
 	var yes = [];
 	var no = [];

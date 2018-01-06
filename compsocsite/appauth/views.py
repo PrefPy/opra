@@ -328,8 +328,8 @@ def createMturkUser(request):
                     redirect_page = polls[0]
         elif request.user.username != "":
             first_or_last = [42]
-            list1 = [63,64]
-            list2 = list(range(53, 63))+list(range(66,76))
+            list1 = [2,3]
+            list2 = list(range(97, 100))+list(range(94,94))
             random.shuffle(list2)
             flag = random.randrange(2)
             polls = []

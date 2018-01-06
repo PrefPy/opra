@@ -2165,7 +2165,7 @@ class IRBDetailView(views.generic.DetailView):
         #ctx['index']= idx
         #ctx['title_index']=idx-5
         #ctx['title_type']=idx<12
-        ctx['tutorials'] = [63,64]
+        ctx['tutorials'] = [2,3]
         ctx['seq']=range(1,len(polls)+1)
         #ctx['outof']=idx>5
         ctx['next'] = self.object.next

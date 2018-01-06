@@ -11,11 +11,11 @@ urlpatterns = [
     url(r'^main$', views.MainView.as_view(), name='index_guest'),
     
     #for IRB experiment
-    url(r'^IRB/(?P<pk>[0-9]+)/$', views.IRBDetailView.as_view(), name='IRBdetail'),
-    url(r'^IRB/(?P<question_id>[0-9]+)/MTurkvote/$', views.MturkVote, name='Mturkvote'),
-    url(r'^IRB/addComments/$', views.ExpAddComment, name='ExpAddComment'),
-    url(r'^IRB/SurveyCode/$', views.SurveyFinalView.as_view(), name='SurveyCode'),
-    url(r'^IRB/End/$', views.SurveyEndView.as_view(), name='SurveyEnd'),
+    url(r'^Exp/(?P<pk>[0-9]+)/$', views.IRBDetailView.as_view(), name='IRBdetail'),
+    url(r'^Exp/(?P<question_id>[0-9]+)/MTurkvote/$', views.MturkVote, name='Mturkvote'),
+    url(r'^Exp/addComments/$', views.ExpAddComment, name='ExpAddComment'),
+    url(r'^Exp/SurveyCode/$', views.SurveyFinalView.as_view(), name='SurveyCode'),
+    url(r'^Exp/End/$', views.SurveyEndView.as_view(), name='SurveyEnd'),
 
 
     #Two main types of polls

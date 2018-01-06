@@ -2220,3 +2220,10 @@ def test_server(request):
 def delete_messages(request):
     Message.objects.all().delete()
     return HttpResponse("success")
+    
+def get_num_responses(request):
+    result = ""
+    resps = Response.objects.filter(user__id__range=(237,647))
+    result += str(len(resps)) + "\n"
+    return HttpResponse(result)
+

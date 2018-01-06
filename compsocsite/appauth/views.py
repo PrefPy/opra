@@ -292,8 +292,8 @@ def createMturkUser(request):
             newname = name+"@mturk"
             exist = User.objects.filter(username=newname).exists()
             first_or_last = [42]
-            list1 = [63,64]
-            list2 = list(range(53, 63))+list(range(66,76))
+            list1 = [2,3]
+            list2 = [94,97,98,99,100]
             random.shuffle(list2)
             flag = random.randrange(2)
             polls = []
@@ -329,7 +329,7 @@ def createMturkUser(request):
         elif request.user.username != "":
             first_or_last = [42]
             list1 = [2,3]
-            list2 = list(range(97, 100))+list(range(94,94))
+            list2 = [94,97,98,99,100]
             random.shuffle(list2)
             flag = random.randrange(2)
             polls = []

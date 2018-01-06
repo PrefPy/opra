@@ -44,7 +44,7 @@
                     </div> <!-- end of header -->
 
                     <!-- Your preferences main panel -->
-                    <div class="panel-body" {% if question.id == 2 %}data-step="1" data-intro="Drag the options to rank, ties not allowed."{% endif %}>
+                    <div class="panel-body" {% if question.id == 2 %}data-step="1" data-intro="Drag the options to rank. Ties are not allowed."{% endif %}>
                         <ul id="one-sortable" >
                             {% if currentSelection %}
                                 <!-- Display a previously submitted vote -->

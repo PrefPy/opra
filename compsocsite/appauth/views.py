@@ -351,7 +351,7 @@ def createMturkUser(request):
             polls_str = json.dumps(polls)
             request.user.userprofile.sequence = polls_str
             request.user.userprofile.cur_poll = polls[0]
-            user.userprofile.numq=len(polls)
+            request.userprofile.numq=len(polls)
             request.user.userprofile.save()
             redirect_page = polls[0]
         #poll_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))

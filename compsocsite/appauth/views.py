@@ -305,7 +305,7 @@ def createMturkUser(request):
 
             if not exist:
                 user = User.objects.create_user(username=newname, password=name)
-                profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=polls[0],time_creation=timezone.now())
+                profile = UserProfile(user=user,mturk=1,age=age,code=code,sequence=polls_str,cur_poll=polls[0],time_creation=timezone.now(),numq=len(polls))
                 profile.save()
                 redirect_page = polls[0]
                 user.backend = 'django.contrib.auth.backends.ModelBackend'
@@ -314,23 +314,29 @@ def createMturkUser(request):
                 user = get_object_or_404(User, username=newname)
                 user.backend = 'django.contrib.auth.backends.ModelBackend'
                 login(request,user)
-                if user.userprofile.finished and user.userprofile.cur_poll in polls and len(user.userprofile.sequence)==len(polls):
+                if user.userprofile.finished and user.userprofile.cur_poll in polls and user.userprofile.numq ==len(polls):
                     return HttpResponseRedirect(reverse('polls:SurveyCode'))
-                if user.userprofile.cur_poll not in polls or len(user.userprofile.sequence)!=len(polls):
+                if user.userprofile.cur_poll in polls or user.userprofile.numq ==len(polls):
+                    idx = 0
+                    try:
+                        user_seq = json.loads(user.userprofile.sequence)
+                        idx = user_seq.index(user.userprofile.cur_poll)
+                        redirect_page = user.userprofile.cur_poll
+                    except ValueError:
+                        user.userprofile.sequence = polls_str
+                        user.userprofile.cur_poll = polls[0]
+                        user.userprofile.numq=len(polls)
+                        user.userprofile.save()
+                        redirect_page = polls[0]
+                else:
                     user.userprofile.sequence = polls_str
                     user.userprofile.cur_poll = polls[0]
-                    user.userprofile.save()
-                
-                idx = 0
-                try:
-                    user_seq = json.loads(user.userprofile.sequence)
-                    idx = user_seq.index(user.userprofile.cur_poll)
-                    redirect_page = user.userprofile.cur_poll
-                except ValueError:
-                    user.userprofile.sequence = polls_str
-                    user.userprofile.cur_poll = polls[0]
+                    user.userprofile.numq=len(polls)
                     user.userprofile.save()
                     redirect_page = polls[0]
+    
+    
+                
         elif request.user.username != "":
             first_or_last = [42]
             list1 = [2,3]
@@ -345,6 +351,7 @@ def createMturkUser(request):
             polls_str = json.dumps(polls)
             request.user.userprofile.sequence = polls_str
             request.user.userprofile.cur_poll = polls[0]
+            user.userprofile.numq=len(polls)
             request.user.userprofile.save()
             redirect_page = polls[0]
         #poll_list = list(Question.objects.filter(question_owner = get_object_or_404(User, username="opraexp")))

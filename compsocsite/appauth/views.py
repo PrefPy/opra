@@ -314,9 +314,9 @@ def createMturkUser(request):
                 user = get_object_or_404(User, username=newname)
                 user.backend = 'django.contrib.auth.backends.ModelBackend'
                 login(request,user)
-                if user.userprofile.finished and user.userprofile.cur_poll in polls and len(user.userprofile.sequence)!=length(polls):
+                if user.userprofile.finished and user.userprofile.cur_poll in polls and len(user.userprofile.sequence)!=len(polls):
                     return HttpResponseRedirect(reverse('polls:SurveyCode'))
-                if user.userprofile.cur_poll not in polls or len(user.userprofile.sequence)!=length(polls):
+                if user.userprofile.cur_poll not in polls or len(user.userprofile.sequence)!=len(polls):
                     user.userprofile.sequence = polls_str
                     user.userprofile.cur_poll = polls[0]
                     user.userprofile.save()

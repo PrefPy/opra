@@ -46,6 +46,7 @@ class Question(models.Model):
     star_enabled = models.BooleanField(default=True)
     yesno_enabled = models.BooleanField(default=True)
     yesno2_enabled = models.BooleanField(default=False)
+    allowties = models.BooleanField(default=True)
     initial_ui = models.IntegerField(default=1)
     ui_number = models.IntegerField(default=6)
     vote_rule = models.IntegerField(default=4095)

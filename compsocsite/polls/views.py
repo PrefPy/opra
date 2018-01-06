@@ -324,6 +324,15 @@ def editBasicInfo(request, question_id):
     question.yesno_enabled = yesno
     question.yesno2_enabled = yesno2
     question.ui_number = twocol+onecol+slider+star+yesno+yesno2
+    
+    tie=False
+    t = request.POST.getlist('allowties')
+    if "1" in t:
+         tie=True
+    if "2" in t:
+        tie = False
+
+    question.allowties = tie
     question.save()
     request.session['setting'] = 8
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -169,6 +169,13 @@ def AddStep1View(request):
         questionDesc = request.POST['desc']
         questionType = request.POST['questiontype']
         imageURL = request.POST['imageURL']
+        tie=False
+        t = request.POST.getlist('allowties')
+        if "1" in t:
+            tie = True
+        if "2" in t:
+            tie = False
+
         # create a new question using information from the form and inherit
         #   settings from the user's preferences
         question = Question(question_text=questionString, question_desc=questionDesc,
@@ -177,12 +184,13 @@ def AddStep1View(request):
                             emailInvite=request.user.userprofile.emailInvite,
                             emailDelete=request.user.userprofile.emailDelete,
                             emailStart=request.user.userprofile.emailStart,
-                            emailStop=request.user.userprofile.emailStop, creator_pref=1)
+                            emailStop=request.user.userprofile.emailStop, creator_pref=1,allowties = tie)
         if request.FILES.get('docfile') != None:
             question.image = request.FILES.get('docfile')
         elif imageURL != '':
             question.imageURL = imageURL
         question.question_type = questionType
+        
         question.save()
         setupEmail(question)
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
@@ -328,7 +336,7 @@ def editBasicInfo(request, question_id):
     tie=False
     t = request.POST.getlist('allowties')
     if "1" in t:
-         tie=True
+        tie = True
     if "2" in t:
         tie = False
 

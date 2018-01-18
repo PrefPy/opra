@@ -2159,7 +2159,7 @@ class IRBDetailView(views.generic.DetailView):
         current = self.request.user.userprofile.cur_poll
         try:
             idx = polls.index(current)
-            ctx['poll_index'] = idx - 1
+            ctx['poll_index'] = idx + 1
         except ValueError:
             pass
         #ctx['index']= idx

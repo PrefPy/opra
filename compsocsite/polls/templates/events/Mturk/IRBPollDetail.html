@@ -299,6 +299,10 @@
           order1 = JSON.stringify(dictCol(1));
             {% else %}
             {% endif %}
+			
+			{% if not question.allowties %}
+				allowTies = false;
+			{% endif %}
         });
 
 

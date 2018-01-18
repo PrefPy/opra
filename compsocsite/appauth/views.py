@@ -296,7 +296,7 @@ def createMturkUser(request):
             #list2 = [94,97,98,99,100]
             #random.shuffle(list2)
             #flag = random.randrange(2)
-            polls = list(range(103,112)) + list(range(124,133))
+            polls = list(range(103,113)) + list(range(124,134))
             random.shuffle(polls)
             # if flag == 1:
                 #polls = list1 + first_or_last + list2
@@ -388,8 +388,9 @@ def resetAllFinish(request):
         users = User.objects.all()
         for user in users:
             if hasattr(user,'userprofile'):
-                user.userprofile.finished = False
-                user.userprofile.save()
+                if user.userprofile.finished:
+                    user.userprofile.finished = False
+                    user.userprofile.save()
         return HttpResponse("success!")
     else:
         return HttpResponse("failed!")

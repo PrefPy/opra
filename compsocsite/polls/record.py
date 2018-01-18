@@ -375,6 +375,34 @@ def downloadRecords(request):
         result.append(dic)
     return JsonResponse(result, safe=False)
 
+def downloadSpecificRecords(request):
+    all_responses = []
+    result = []
+    polls = getMturkPollID()
+    for poll in polls:
+        all_responses += list(get_object_or_404(Question,pk=poll).response_set.all())
+    for resp in all_responses:
+        dic = {}
+        try:
+            dic = json.loads(resp.behavior_data)
+        except ValueError:
+            dic = {}
+        dic["UI"] = getUIs(resp.question)
+        dic["vote_id"] = resp.id
+        dic["poll_id"] = resp.question.id
+        if hasattr(resp, 'user'):
+            dic["user_id"] = resp.user.id
+        else:
+            dic["user_id"] = 0
+        result.append(dic)
+    return JsonResponse(result, safe=False)
+        
+
+
+def getMturkPollID():
+    result = list(range(103,113)) + list(range(124,134))
+    return result
+
 def getUIs(poll):
     result = []
     if poll.twocol_enabled:

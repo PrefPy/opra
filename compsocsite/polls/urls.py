@@ -88,6 +88,7 @@ urlpatterns = [
     url(r'^downloadpolls/$', record.downloadPolls, name='downloadpolls'),
     url(r'^downloadparticipants/$', record.downloadParticipants, name='downloadparticipants'),
     url(r'^downloadallrecords/$', record.downloadRecords, name='downloadallrecords'),
+    url(r'^downloadspecrecords/$', record.downloadSpecificRecords, name='downloadspecrecords'),
 
     # API
     url(r'^API/mixtures/$', views.mixtureAPI, name='mixture_api'),

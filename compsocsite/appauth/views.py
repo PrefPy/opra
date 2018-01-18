@@ -291,16 +291,18 @@ def createMturkUser(request):
                 pass
             newname = name+"@mturk"
             exist = User.objects.filter(username=newname).exists()
-            first_or_last = [42]
-            list1 = [2,3]
-            list2 = [94,97,98,99,100]
-            random.shuffle(list2)
-            flag = random.randrange(2)
-            polls = []
-            if flag == 1:
-                polls = list1 + first_or_last + list2
-            else:
-                polls = list1 + list2 + first_or_last
+            #first_or_last = [42]
+            #list1 = [2,3]
+            #list2 = [94,97,98,99,100]
+            #random.shuffle(list2)
+            #flag = random.randrange(2)
+            polls = list(range(103,122)) + list(range(124,133))
+            random.shuffle(polls)
+            # if flag == 1:
+                #polls = list1 + first_or_last + list2
+                
+            #else:
+                #polls = list1 + list2 + first_or_last
             polls_str = json.dumps(polls)
 
             if not exist:
@@ -338,16 +340,17 @@ def createMturkUser(request):
     
                 
         elif request.user.username != "":
-            first_or_last = [42]
-            list1 = [2,3]
-            list2 = [94,97,98,99,100]
-            random.shuffle(list2)
-            flag = random.randrange(2)
-            polls = []
-            if flag == 1:
-                polls = list1 + first_or_last + list2
-            else:
-                polls = list1 + list2 + first_or_last
+            #first_or_last = [42]
+            #list1 = [2,3]
+            #list2 = [94,97,98,99,100]
+            #random.shuffle(list2)
+            #flag = random.randrange(2)
+            polls = list(range(103,122)) + list(range(124,133))
+            random.shuffle(polls)
+                #if flag == 1:
+                #polls = list1 + first_or_last + list2
+                #else:
+                #polls = list1 + list2 + first_or_last
             polls_str = json.dumps(polls)
             request.user.userprofile.sequence = polls_str
             request.user.userprofile.cur_poll = polls[0]

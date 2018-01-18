@@ -529,6 +529,7 @@ var VoteUtil = (function () {
 		var order_list;
 		var final_list;
 		var item_type = ".li_item";
+		var record_data = {};
 		if(method == 1){order_list = orderCol(0); final_list = dictCol(1);}
 		else if(method == 2){ order_list = orderCol(method); final_list = dictCol(2);}
 		else if(method == 3){ order_list = orderSlideStar('slide'); item_type = ".slider_item"; final_list = dictSlideStar('slide');}
@@ -549,15 +550,33 @@ var VoteUtil = (function () {
 		var record_final = JSON.stringify(final_list);
 		var d = (Date.now() - startTime).toString();
 
+		record_data["data"] = JSON.parse(record);
+		record_data["submitted_ranking"] = final_list;
+		if(order1 != ""){
+			record_data["initial_ranking"] = JSON.parse(order1);
+		}
+		else{
+			record_data["initial_ranking"] = [];
+		}
+		record_data["time_submission"] = d;
+		record_data["platform"] = flavor;
+		var record_string = JSON.stringify(record_data);
+		$('.record_data').each(function(){
+			$(this).val(record_string);
+		});
+
 		$('.pref_order').each(function(){
 			$(this).val(order);
 		});
+
+		/*
 		$.ajax({
 			url: submissionURL,
 			type: "POST",
 			data: {'data': record, 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(), 'order1':order1,'final':record_final,'device':flavor,'commentTime':commentTime,'swit':swit,'submit_time':d,'ui':methodIndicator},
 			success: function(){}
 		});
+		*/
 		$('.submitbutton').css( "visibility","hidden");
 		$('.submitting').css("visibility","visible");
 		$('#pref_order').submit();

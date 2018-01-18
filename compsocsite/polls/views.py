@@ -1825,6 +1825,8 @@ def vote(request, question_id):
 
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
+    behavior_string = request.POST["record_data"]
+    print(behavior_string)
     if prefOrder == None:
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -1832,7 +1834,7 @@ def vote(request, question_id):
     # make Response object to store data
     comment = request.POST['comment']
     response = Response(question=question, user=request.user, timestamp=timezone.now(),
-                        resp_str=orderStr)
+                        resp_str=orderStr, behavior_data=behavior_string)
     if comment != "":
         response.comment = comment
     response.save()
@@ -2061,13 +2063,14 @@ def MturkVote(request, question_id):
     # get the preference order
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
+    behavior_string = request.POST["record_data"]
     if prefOrder == None:
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     # make Response object to store data
     response = Response(question=question, user=request.user, timestamp=timezone.now(),
-                        resp_str=orderStr)
+                        resp_str=orderStr, behavior_data=behavior_string)
     response.save()
 
     # find ranking student gave for each item under the question

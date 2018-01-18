@@ -264,10 +264,10 @@ class RecordView(generic.DetailView):
     
     def get_context_data(self, **kwargs):
         ctx = super(RecordView, self).get_context_data(**kwargs)
-        records = self.object.uservoterecord_set.all()
+        records = self.object.response_set.all()
         interpreted_records = []
         for r in records:
-            interpreted_records.append(interpretRecord(r))
+            interpreted_records.append(r.behavior_data)
         ctx['user_records'] = interpreted_records
         return ctx
 

@@ -109,6 +109,7 @@ class Response(models.Model):
     anonymous_id = models.IntegerField(default = 0)
     comment = models.CharField(max_length=1000, blank=True, null=True)
     active = models.IntegerField(default=1)
+    behavior_data = models.TextField(default="")
     def __str__(self):
         if self.user:
             return "Response of user " + self.user.username + "\nfor question " + self.question.question_text

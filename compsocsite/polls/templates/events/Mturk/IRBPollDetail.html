@@ -199,10 +199,6 @@
                 <!-- Display title and creator in the header -->
                 <div class="col-md-10" {% if request.flavour == "mobile" %} style="width:100%;" {% endif %}>
                     <h4 {% if request.flavour == "mobile" %} style="width:70%;display:inline;" {% endif %}>
-                        <!-->
-                    	 {% if not question.id in tutorials %}Question {{poll_index}} of 6:{{ question.question_text }} (No Ties Allowed){% endif %} 
-                        {% if question.id == 2%} Tutorial 1: One Column (Rank the Fruits in Order of Your Preference){%endif%}
-                        {% if question.id == 3%} Tutorial 2: Slider(Rank the Fruits in Order of Your Preference){%endif%}-->
                         Question {{poll_index}} of 20:{{ question.question_text }}
                         
 					</h4>

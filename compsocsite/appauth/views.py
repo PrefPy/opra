@@ -296,7 +296,7 @@ def createMturkUser(request):
             #list2 = [94,97,98,99,100]
             #random.shuffle(list2)
             #flag = random.randrange(2)
-            polls = list(range(103,122)) + list(range(124,133))
+            polls = list(range(103,112)) + list(range(124,133))
             random.shuffle(polls)
             # if flag == 1:
                 #polls = list1 + first_or_last + list2
@@ -345,7 +345,7 @@ def createMturkUser(request):
             #list2 = [94,97,98,99,100]
             #random.shuffle(list2)
             #flag = random.randrange(2)
-            polls = list(range(103,122)) + list(range(124,133))
+            polls = list(range(103,113)) + list(range(124,134))
             random.shuffle(polls)
                 #if flag == 1:
                 #polls = list1 + first_or_last + list2

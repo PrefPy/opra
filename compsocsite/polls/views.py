@@ -1826,7 +1826,7 @@ def vote(request, question_id):
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
     behavior_string = request.POST["record_data"]
-    print(behavior_string)
+    #print(behavior_string)
     if prefOrder == None:
         # the user must rank all preferences
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

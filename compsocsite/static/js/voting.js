@@ -938,6 +938,12 @@ $( document ).ready(function() {
 				*/
 				var d = (Date.now() - startTime).toString();
 				temp_data = {"item":item.attr("id")};
+				//console.log(item.children());
+				if(!allowTies){
+					item.children().each(function(){
+						temp_data["item"] = $(this).attr("id")
+					});
+				}
 				temp_data["time"] = [d];
 				temp_data["rank"] = [dictCol(method)];
 				

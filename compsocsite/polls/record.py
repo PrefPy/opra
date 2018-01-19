@@ -390,6 +390,7 @@ def downloadSpecificRecords(request):
         dic["UI"] = getUIs(resp.question)
         dic["vote_id"] = resp.id
         dic["poll_id"] = resp.question.id
+        dic["timestamp_submission"] = str(resp.timestamp)
         if hasattr(resp, 'user'):
             dic["user_id"] = resp.user.id
         else:

@@ -12,6 +12,8 @@
 <a href="{% url 'polls:downloadpolls' %}" class= "btn btn-primary">Download polls</a>
 <a href="{% url 'polls:downloadparticipants' %}" class= "btn btn-primary">Download participants</a>
 <a href="{% url 'polls:downloadallrecords' %}" class= "btn btn-primary">Download all vote records</a>
+<a href="{% url 'polls:downloadspecrecords' %}" class= "btn btn-primary">Download new vote records</a>
+
 
 <ul>
 	{% for record in user_records%}

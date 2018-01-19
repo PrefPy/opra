@@ -28,6 +28,10 @@ def changeAllTitlesForFruits(modeladmin, request, queryset):
     for poll in queryset:
         poll.question_text = "Select All Fruit(s) You Like"
         poll.save()
+        
+def deleteResponsesForSpecifiedPolls(modeladmin, request, queryset):
+    for poll in queryset:
+        poll.response_set.all().delete()
 
 
 #limits admin change permissions
@@ -79,7 +83,7 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ['pub_date', 'question_owner']
     search_fields = ['question_text']
 
-    actions = [changeAllTitlesForFruits]
+    actions = [changeAllTitlesForFruits,deleteResponsesForSpecifiedPolls]
 
 
 # response editing / viewing

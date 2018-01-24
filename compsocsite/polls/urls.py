@@ -4,6 +4,7 @@ from django.views.decorators.cache import cache_page
 from . import views
 from . import email
 from . import record
+from . import experiment
 
 app_name = 'polls'
 urlpatterns = [
@@ -102,4 +103,7 @@ urlpatterns = [
     
     # Mturk
     url(r'^getmturklist/$', views.getMturkPollList, name='getmturklist'),
+    url(r'^experiment/add$', experiment.createNewExperiment, name='experimentcreate'),
+    url(r'^experiment/(?P<pk>[0-9]+)/detail$', experiment.ExperimentSetup.as_view(), name='experimentdetail'),
+    url(r'^experiment/addpoll/(?P<exp_id>[0-9]+)$', experiment.addPollToExperiment, name='addpolltoexp'),
 ]

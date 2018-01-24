@@ -150,8 +150,8 @@
                             <span class="glyphicon glyphicon-plus"></span>
                         </a>
                         {% if request.user.username == "opraexp" %}
-                        <a href="{% url 'polls:getmturklist' %}" style='font-size:60%; float:right;' class="btn btn-yellow">
-                            Get Mturk
+                        <a href="{% url 'polls:experimentcreate' %}" style='font-size:60%; float:right;' class="btn btn-yellow">
+                            Add Exp
                         </a>
                         {% endif %}
                     </th>

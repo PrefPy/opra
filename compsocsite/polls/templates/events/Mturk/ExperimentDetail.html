@@ -1,0 +1,18 @@
+{% extends 'polls/base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+
+<div>
+	<p>Experiment Name: {{experiment.title}}</p>
+	<p>Poll List: {{experiment.polls}}</p>
+	<form action="{% url 'polls:experimentcreate' %}" method="post">
+		{% csrf_token %}
+		<label>Add a new poll:</label>
+		<input type="text" class="form-control" maxlength="4" size="5" name="poll_id" id="poll_id">
+		<input type="submit" class="btn btn-primary" value="submit">
+	</form>
+</div>
+
+{% endblock %}

@@ -350,3 +350,10 @@ class Message(models.Model):
     email = models.CharField(max_length=100, default="")
     name = models.CharField(max_length=200, default="")
     user = models.ForeignKey(User, null=True, blank=True)
+
+class Experiment(models.Model):
+    title = models.CharField(max_length=10000)
+    timestamp = models.DateTimeField('date/time created')
+    polls = models.TextField(default="[]")
+    status = models.IntegerField(default=0)
+    participants = models.ManyToManyField(User)

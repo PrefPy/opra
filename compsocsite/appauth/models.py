@@ -26,6 +26,7 @@ class UserProfile(models.Model):
     cur_poll = models.IntegerField(default=1)
     finished = models.BooleanField(default=False)
     numq= models.IntegerField(default=0)
+    exp_data = models.TextField(default="{}")
     # Override the __unicode__() method to return out something meaningful!
     def __unicode__(self):
         return self.user.username

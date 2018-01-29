@@ -205,6 +205,11 @@
                 </div>
             </div> 
         </div>
+		<div class="panel-body">
+		Description: {% if question.question_desc %}
+            <span {% if request.flavour == "mobile" %} style="width:70%" {% endif %}> {{ question.question_desc }} </span>
+            {% endif %}
+		</div>
     </div>
     
      <div class = "row" id="tabs">

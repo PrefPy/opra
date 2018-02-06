@@ -1,0 +1,168 @@
+{% load staticfiles %}
+<html>
+	<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" integrity="" crossorigin="anonymous" />
+
+    <!-- jQuery UI CSS (base theme) -->
+    <link rel="stylesheet" type="text/css" href="/static/css/jquery-ui.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/stylish-portfolio.css" />
+	<link rel="stylesheet" type="text/css" href="/static/css/shared.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/css/introjs.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/>
+    <!-- Custom Fonts -->
+    <link href="/static/fonts/sanc.css" rel="stylesheet" type="text/css" />     
+    <link rel="stylesheet" href="/static/fonts/lato.css">
+    <!-- W3 -->
+    <link rel="stylesheet" href="/static/css/w3.css">
+
+    <!-- Select2 -->
+    <link href="/static/css/select2.min.css" rel="stylesheet" />
+		{% if request.flavour == "mobile" %}
+		<link rel="stylesheet" type="text/css" href="/static/css/mobile.css"/>
+		{% else %}
+		<link rel="stylesheet" type="text/css" href="/static/css/desktop.css"/>
+		{% endif %}
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script
+        src="/static/js/jquery-2.2.4.min.js"
+        integrity=""
+        crossorigin="anonymous"></script>
+    <script
+      src="/static/js/jquery-ui.min.js"
+      integrity=""
+      crossorigin="anonymous"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- <script src="/static/js/5f5c1e4fb0.js"></script> -->
+    <script src="/static/js/select2.min.js"></script>
+    <script src='/static/js/intro.js'></script>
+    <script src='/static/js/base.js'></script>
+    <script src='/static/js/shared.js'></script>
+         <style>
+	    .btn{
+	    	border-radius:0;
+	    }
+	    body { padding-top: 60px; }
+        body,h1,h2,h3,h4,h5 {font-family:"Lato", sans-serif}
+
+       .rpi-red{
+            background-color:#3366CC;
+            color: #fff
+        }
+       .rpi-text-red{
+            color:#3366CC
+        }
+    </style>
+ </head> 
+<body>
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar rpi-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:230px;font-weight:bold;" id="mySidebar"><br>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px;margin-top:75px">Close Menu<hr/></a>
+  <div class="w3-container">
+    <h2 class="w3-padding" style="{%if request.flavour == 'mobile'%} margin-top:40px; color: transparent;{%endif%}"><br/><b>Lirong Xia's Research Group</b></h2>
+  </div>
+    <br/>
+  <div class="w3-bar-block">
+    <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white w3-hide-small">Advisor</a> 
+    <a href="#phd" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Ph.D Students</a> 
+    <a href="#ms" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Master Students</a> 
+    <a href="#undergrad" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Undergraduate Students</a> 
+  </div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-container w3-top w3-hide-large rpi-red w3-xlarge w3-padding" style="margin-top:75px">
+  <a href="javascript:void(0)" class="w3-button rpi-red w3-margin-right" onclick="w3_open()">☰</a>
+  <span>People</span>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:310px;">
+    
+    <!--Tutorial -->
+  <div class="w3-container" >
+      <br/>
+      <h1 class="w3-xxlarge rpi-text-red"><b class="w3-hide-small">Advisor</b></h1>
+      <hr style="width:50px;border:5px solid" class="w3-round rpi-text-red">
+      <br/>
+      
+      <!-- The Candidates -->
+      <div class="w3-row-padding">
+          
+         <div class="w3-col m11 w3-margin-bottom w3-hide-small" >
+             <div class="w3-col m3">
+                 <img src="http://vickmark.com/wp-content/uploads/2011/03/05boston-headshot-photographer.jpg" alt="Zhibing Zhao" width="150" height="140"> </div>
+          <div class="w3-col m9 w3-light-grey" >  
+             <div class="w3-container"> 
+                 <h4>赵志冰</h4>
+                <hr style="border:0.5px solid; color:lightgrey" />
+            背景：清华大学电机系（本科），<br/>康涅狄格大学电气与计算机工程系（硕士），<br/>伦斯勒理工大学计算机系（博士生）。
+                <br/>
+            研究兴趣：Learning to Rank, 参数估计，人工智能，机器学习
+                <br/>
+                 主页: <a href="http://homepages.rpi.edu/~zhaoz6/"><i>http://homepages.rpi.edu/~zhaoz6/</i></a>
+                <br/>
+                 简历: <a href="http://homepages.rpi.edu/~zhaoz6/docs/cv_zhao.pdf"><i>http://homepages.rpi.edu/~zhaoz6/docs/cv_zhao.pdf</i></a>
+              
+            </div>
+            
+          </div>
+        </div>
+
+      </div>
+  </div>
+  
+    
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+
+<!-- End page content -->
+</div>
+
+<script>
+// Script to open and close sidebar
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("myOverlay").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("myOverlay").style.display = "none";
+}
+
+// Modal Image Gallery
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  var captionText = document.getElementById("caption");
+  captionText.innerHTML = element.alt;
+}
+ 
+</script>
+    </body>
+
+</html>

@@ -42,6 +42,6 @@ urlpatterns = [
     url(r'^CSposter$', CSPosterView.as_view(), name='CS_poster'),
     url(r'^csposter$', CSPosterView.as_view(), name='cs_poster'),
     url(r'^Exp$', MturkView.as_view(), name='Mturk'),
-    url(r'^ResearchGroup$', RGView.as_view(), name='ResearchGroup'),
+    url(r'^ResearchGroupCN$', RGView.as_view(), name='ResearchGroup'),
                
 ]

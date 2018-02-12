@@ -16,6 +16,8 @@ var method = 1; //1 is twoCol, 2 is oneCol, 3 is Slider
 var methodIndicator = "two_column";
 var init_star = false;
 
+var top_tier_layer = 0;
+
 function select(item){
 	var d = (Date.now() - startTime).toString();
 	temp_data = {"item":$(item).attr("id")};
@@ -962,6 +964,7 @@ $( document ).ready(function() {
 				$( ".tier" ).each(function( index ) {
 					$( this ).remove();
 				});
+				$(".top_tier").remove();
 				submission.children().each(function( index ) {
 					if( $( this ).children().size() < 1 ){
 						$( this ).remove();
@@ -1025,6 +1028,11 @@ $( document ).ready(function() {
 						return false;
 					}
 				});
+				if(!allowTies && top_tier_layer != 0)
+				{
+					
+					submission.children().eq(top_tier_layer+1).after("<div class=\"top_tier\"><hr></div>");
+				}
 				//var d = Date.now() - startTime;
 				//record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt") + "||" + itemsSameTier +";;;";
 				/*

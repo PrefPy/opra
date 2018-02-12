@@ -50,6 +50,7 @@ class Question(models.Model):
     initial_ui = models.IntegerField(default=1)
     ui_number = models.IntegerField(default=6)
     vote_rule = models.IntegerField(default=4095)
+    first_tier = models.IntegerField(default=0)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):

@@ -77,6 +77,7 @@ class QuestionAdmin(admin.ModelAdmin):
         ('Follow up', {'fields': ['follow_up']}),
         ('Owner', {'fields' : ['question_owner']}),
         ('Voters', {'fields' : ['question_voters']}),
+        ('Top Tiers', {'fields': ['first_tier']}),
     ]
     inlines = [ItemInline]
     list_display = ('id','question_text', 'pub_date', 'question_owner')

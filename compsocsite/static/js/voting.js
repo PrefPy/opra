@@ -1034,7 +1034,7 @@ $( document ).ready(function() {
 				if(!allowTies && top_tier_layer != 0)
 				{
 					
-					submission.children().eq(top_tier_layer*2).after("<div class=\"top_tier\" style=\"height:4px;border:none;color:#666;background-color:#333;\"><hr></div>");
+					submission.children().eq(top_tier_layer*2).after("<div class=\"top_tier\" style=\"height:4px;border:none;color:green;background-color:green;\"><hr></div>");
 				}
 				//var d = Date.now() - startTime;
 				//record += d+ "::stop::" + item.attr("id") + "::"+ item.attr("alt") + "||" + itemsSameTier +";;;";

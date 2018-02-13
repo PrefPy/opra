@@ -84,9 +84,6 @@
                                                 </li>
                                             {% endfor %}
                                         </ul>
-										{% if forloop.counter == question.first_tier %}
-										<div class="top_tier"><hr></div>
-									{% endif %}
                                     {% endif %}
                                 {% endfor %}
                             {% endif %}
@@ -122,9 +119,6 @@
                                         </li>
 
                                     </ul>
-									{% if forloop.counter == question.first_tier %}
-										<div class="top_tier"><hr></div>
-									{% endif %}
                                 {% endfor %}
                                 <ul class="choice2 empty"></ul>
                             {% else %}

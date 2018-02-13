@@ -253,7 +253,7 @@ function dictCol(num){
 	var item_type = ".li_item";
 	$.each(arr, function( index, value ){
 		value.children().each(function( i1 ){
-			if( $( this ).children().size() > 0 ){
+			if( $( this ).children().size() > 0  && $( this ).attr("class") != "top_tier"){
 				var inner = [];
 				$( this ).children().each(function( i2 ){
 					var temp = {};

@@ -900,6 +900,7 @@ $( document ).ready(function() {
 		else
 			$('ul.choice1.empty').remove()
 		
+		
 		$(sortableSelector).sortable({
 		   
 			start: function(event, ui) {
@@ -1188,6 +1189,7 @@ $( document ).ready(function() {
 		enableSubmission();
 	}
 	VoteUtil.checkStyle();
+
 	$(".slide").each(function(){
 		$(this).slider({
 			step: 1,

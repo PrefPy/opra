@@ -310,7 +310,11 @@
 			{% if not question.allowties %}
 				allowTies = false;
 			{% endif %}
-      top_tier_layer = {{question.first_tier}};
+			  top_tier_layer = {{question.first_tier}};
+			  if(!allowTies && top_tier_layer != 0)
+			{
+				$("#one-sortable").children().eq(top_tier_layer*2+1).after("<div class=\"top_tier\" style=\"height:4px;border:none;color:#666;background-color:#333;\"><hr></div>");
+			}
         });
 
 

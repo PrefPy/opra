@@ -74,6 +74,7 @@ class QuestionAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,               {'fields': ['question_text']}),
         ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
+        ('Decription', {'fields': ['question_desc']}),
         ('Follow up', {'fields': ['follow_up']}),
         ('Owner', {'fields' : ['question_owner']}),
         ('Voters', {'fields' : ['question_voters']}),

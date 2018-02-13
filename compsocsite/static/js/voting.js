@@ -906,6 +906,7 @@ $( document ).ready(function() {
 			start: function(event, ui) {
 				ui.placeholder.height(ui.item.height());
 				item = ui.item;
+				$(".top_tier").remove();
 				
 				if ( item.parent().children().size() < 3 || VoteUtil.isMobileAgent() ){
 					ui.placeholder.css("width", "93%");
@@ -966,7 +967,7 @@ $( document ).ready(function() {
 				$( ".tier" ).each(function( index ) {
 					$( this ).remove();
 				});
-				$(".top_tier").remove();
+				
 				submission.children().each(function( index ) {
 					if( $( this ).children().size() < 1 ){
 						$( this ).remove();

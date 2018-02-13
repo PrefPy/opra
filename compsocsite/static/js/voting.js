@@ -532,6 +532,7 @@ var VoteUtil = (function () {
 		var final_list;
 		var item_type = ".li_item";
 		var record_data = {};
+		$(".top_tier").remove();
 		if(method == 1){order_list = orderCol(0); final_list = dictCol(1);}
 		else if(method == 2){ order_list = orderCol(method); final_list = dictCol(2);}
 		else if(method == 3){ order_list = orderSlideStar('slide'); item_type = ".slider_item"; final_list = dictSlideStar('slide');}

@@ -1188,11 +1188,6 @@ $( document ).ready(function() {
 		enableSubmission();
 	}
 	VoteUtil.checkStyle();
-	var submission = $("#one-sortable");
-	if(!allowTies && top_tier_layer != 0)
-	{
-		submission.children().eq(top_tier_layer*2).after("<div class=\"top_tier\" style=\"height:4px;border:none;color:#666;background-color:#333;\"><hr></div>");
-	}
 	$(".slide").each(function(){
 		$(this).slider({
 			step: 1,

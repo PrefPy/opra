@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<title>Research Group</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
+</style>
+<body class="w3-light-grey">
+
+<!-- Page Container -->
+<div class="w3-content" style="max-width:1400px;">
+
+  <!-- The Grid -->
+  <div class="w3-row-padding">
+  
+    <!-- Left Column -->
+        
+    
+    <div class="w3-white w3-text-white" >
+    <nav class="w3-sidebar" style="z-index:3;width:230px;font-weight:bold; background-color:rgb(0,150,135);" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft">Close<hr/></a>
+    <div class="w3-container">
+    <h2 class="w3-padding" style="{%if request.flavour == 'mobile'%} margin-top:40px; color: transparent;{%endif%}"><br/><b>Lirong Xia's Research Group</b></h2>
+  </div>
+    <br/>
+
+        <div class="w3-bar-block">
+          <a href="#advisor" class="w3-bar-item w3-button w3-hover-white w3-hide-small">Advisor</a> 
+            <br/>
+        <a href="#phd"  class="w3-bar-item w3-button w3-hover-white">Ph.D</a> 
+            <br/>
+            <a href="#ms"  class="w3-bar-item w3-button w3-hover-white">Master</a>
+            <br/>
+        <a href="#undergrad"  class="w3-bar-item w3-button w3-hover-white">Undergraduate</a> 
+          <hr>
+
+        </div>
+             </nav>
+      </div><br>
+      
+       <!-- Top menu on small screens -->
+<header class="w3-container w3-top w3-hide-large rpi-red w3-xlarge w3-padding" style="margin-top:75px">
+  <a href="javascript:void(0)" class="w3-button" onclick="w3_open()">☰</a>
+  <span>People</span>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+
+
+    <!-- End Left Column -->
+      
+
+    <!-- Right Column -->
+    <div style="margin-left:255px;margin-right:10px;">
+    
+        
+      <div class="w3-card w3-col m12 w3-margin-bottom w3-white" id="advisor">
+          <div class="w3-container">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-graduation-cap fa-fw w3-xxlarge w3-text-teal"></i> Advisor</h2>
+          
+       
+         <div class="w3-col m3" style="margin-top:10px;margin-left:15px;">
+            <img src="https://image.ibb.co/c5WBrH/lrx.jpg" alt="Lirong xia" width="90%" height="90%"> 
+          </div>
+            
+        <div class="w3-col m8">
+          <h4 class="w3-opacity w3-text-teal"><b>Lirong Xia</b></h4>
+            <h6><span class="w3-tag w3-teal w3-round">Current</span> Assistant professor, 2013-now<br/>
+            Shanghai University of Finance and Economics, visiting scholar, 2017 summer <br/>
+            U.C. Berkeley, visiting scholar, Simons-Berkeley fellow, 2015 fall<br/>
+            Harvard University, CRCS, NSF CI fellow, 2011-2013<br/>
+            Duke University, CS, Ph.D., J.B. Duke fellow, 2007-2011<br/>
+            Duke University, Economics, M.A., 2007-2010<br/>
+            Tsinghua University, Computer Science and Technology, B.E., 2000-2004
+                        </h6>
+            <h7>
+               Research Interest: Economics and computation, artificial intelligence, machine learning, multi-agent systems, decision-making under uncertainty, algorithm design, social choice (voting) theory, game theory, mechanism design, prediction markets.<br/><br/>
+                Highlights: NSF CAREER award, Simons-Berkeley Research Fellowship, "AI's 10 to watch" by IEEE Intelligent Systems, IJCAI-17 Early Career Spotlight Talk.<br/><br/>
+
+                Editorship: <br/>
+                <span class="w3-tag w3-teal w3-round">Current</span>: Mathematical Social Science (associate editor), Artificial Intelligence (board member)<br/> <br/>
+                Past: Journal of Artificial Intelligence Research<br/> <br/>
+                homepage: <a href="https://www.cs.rpi.edu/~xial/"><i>www.cs.rpi.edu/~xial/ </i></a>
+                <br/>
+            </h7>
+ 
+          <hr/>
+        </div>
+          
+        </div>
+
+          
+      </div>
+
+        
+      <div class="w3-card w3-col m12 w3-margin-bottom w3-white" id="phd">
+          <div class="w3-container" style='margin-bottom: 30px'>
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-graduation-cap fa-fw w3-xxlarge w3-text-teal"></i> Ph.d Students</h2>
+          
+        <div class='w3-container'>
+         <div class="w3-col m3" style=";margin-top: 10px">
+            <img src="https://preview.ibb.co/eMPxWH/zzb.jpg" alt="Zhibing Zhao" width="80%" height="80%"> 
+          </div>
+            
+        <div class="w3-col m8">
+          <h4 class="w3-opacity w3-text-teal"><b>Zhibing Zhao</b></h4>
+          <h6><span class="w3-tag w3-teal w3-round">Current</span> Rensselaer Polytechnic Institute, Ph.D. student, 2015-now  <br/>
+            University of Connecticut, Electrical Engineering, M.S. 2012-2014 <br/>
+Tsinghua University, Electrical Engineering, B.E. 2008-2012
+            </h6>
+            <h7>
+                Research Interest: learning to rank, machine learning, statistical inference<br/><br/>
+                Homepage: <a href="http://homepages.rpi.edu/~zhaoz6/"><i>http://homepages.rpi.edu/~zhaoz6/</i></a>
+                        </h7>
+          <hr/>
+        </div>
+       </div>
+
+              <div class='w3-container'>
+         <div class="w3-col m3" style="margin-top:30px;">
+            <img src="https://preview.ibb.co/bGS4dx/headshot_jw.jpg" alt="Jun Wang" width="80%" height="80%"> 
+          </div>
+            
+        <div class="w3-col m8" style="margin-top:30px;">
+          <h4 class="w3-opacity w3-text-teal"><b>Jun Wang</b></h4>
+          <h6><span class="w3-tag w3-teal w3-round">Current</span> Rensselaer Polytechnic Institute, Ph.D. student, 2016-now <br/>
+            </h6>
+            <h7>
+                Research Interest：artificial intelligence, machine learning <br/>
+            </h7>
+          <hr/>
+        </div>
+          
+    </div>
+              
+          
+    <div class='w3-container'>
+         <div class="w3-col m3" style="margin-top:30px;">
+            <img src="https://image.ibb.co/d6UaJx/la.jpg" alt="LIU AO" width="80%" height="80%"> 
+          </div>
+            
+        <div class="w3-col m8" style="margin-top:30px;">
+          <h4 class="w3-opacity w3-text-teal"><b>Ao Liu</b></h4>
+          <h6><span class="w3-tag w3-teal w3-round">Current</span> Rensselear Polytechnic Institute, Department of Computer Science, PhD student , 2018 spring - now<br/>
+Rensselear Polytechnic Institute, Department of Material Science, M.Eng,  2015 fall - now<br/>
+Game Designer (Balance), Enlight Media, 2015<br/>
+Tsinghua University, Computer Technology, Minor Course Degree, 2012-2014<br/>
+Tsinghua University, Academic Talent Program (Mathematics and Physics), B.S., 2010-2014
+            </h6>
+            <h7>
+                Research Interest: artificial intelligence, machine learning, rank aggregation, preference learning, algorithm design.<br/><br/>
+                Highlights: Presidential Research Fellowship (Resselear Polytechnic Institute)
+            </h7>
+          <hr/>
+        </div>
+          
+    </div>
+              
+          </div>
+          
+      </div>
+        
+                
+      <div class="w3-card w3-col m12 w3-margin-bottom w3-white" id="ms">
+          <div class="w3-container">
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-graduation-cap fa-fw w3-xxlarge w3-text-teal"></i> Master Students</h2>
+          
+       <div class='w3-container'>
+         <div class="w3-col m3" style="margin-top:10px;margin-left:5px;">
+            <img src="https://preview.ibb.co/i5ohsn/Profile_Picture.jpg" alt="Tyler" width="80%" height="60%"> 
+          </div>
+            
+        <div class="w3-col m8">
+          <h4 class="w3-opacity w3-text-teal"><b>Tyler A. Shepherd</b></h4>
+            <h6><span class="w3-tag w3-teal w3-round">Current</span> Resselear Polytechnic Institute, Co-Terminal Master's<br/>
+                Rensselaer Polytechnic Institute, Computer Science and Mathematics, B.S. 2014-2017
+                        </h6>
+            <h7>
+               Research Interests: Artificial intelligence, computational social processes, social choice theory
+
+                <br/>
+            </h7>
+ 
+          <hr/>
+        </div>
+              </div>
+              
+   
+         <div class='w3-container' style='margin-bottom:30px;margin-top:10px;'>          
+         <div class="w3-col m3" style="margin-top:10px;margin-left:5px;">
+            <img src="https://preview.ibb.co/gmLnsn/pic.jpg" alt="Bob" width="80%" height="100%"> 
+          </div>
+            
+        <div class="w3-col m8">
+          <h4 class="w3-opacity w3-text-teal"><b>Robert Martino</b></h4>
+            <h6><span class="w3-tag w3-teal w3-round">Current</span> Resselear Polytechnic Institute, Co-Terminal Master's<br/>
+                        </h6>
+            <h7>
+              Research Interests: Machine Learning, Complex systems
+
+                <br/>
+            </h7>
+ 
+          <hr/>
+        </div>
+              </div>
+          
+        </div>
+
+          
+      </div>
+        
+        
+        
+        
+        <div class="w3-card w3-col m12 w3-margin-bottom w3-white" id="undergrad">
+          <div class="w3-container" style='margin-bottom: 30px'>
+        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-graduation-cap fa-fw w3-xxlarge w3-text-teal"></i> Undergraduate Students</h2>
+          
+       <div>
+         <div class="w3-col m3" style="margin-left:15px;">
+            <img src="https://preview.ibb.co/gs62WH/ycn.jpg" alt="Chaonan Ye" width="78%" height="78%"> 
+          </div>
+            
+        <div class="w3-col m8">
+          <h4 class="w3-opacity w3-text-teal"><b>Chaonan Ye</b></h4>
+          <h6> Resselear Polytechnic Institute, Computer Science Dual Mathematics
+            </h6>
+            <h7>
+                Research Interest：artificial intelligence, machine learning, HCI, Data Mining<br/><br/>
+                Homepage: <a href="https://www.canonye.com"><i>www.canonye.com</i></a>
+                <br/>
+            </h7>
+ 
+          <hr/>
+        </div>
+          
+        </div>
+              
+            
+            <div class='w3-container'>
+         <div class="w3-col m3" style="margin-top:30px">
+            <img src=https://image.ibb.co/kJoD5c/lhm.jpg alt="haoming li" width="80%" height="80%"> 
+          </div>
+            
+        <div class="w3-col m8" style="margin-top:30px;">
+          <h4 class="w3-opacity w3-text-teal"><b>Haoming Li</b></h4>
+          <h6> <span class="w3-tag w3-teal w3-round">Current</span> Resselear Polytechnic Institute, Computer Science Dual Economics
+            </h6>
+            <h7>
+                Research Interest: Group Decision-Making, Game Theory, Data Analytics<br/>
+                <br/>
+            </h7>
+ 
+          <hr/>
+        </div>
+          
+        </div>
+            
+            <div class='w3-container'>
+       
+         <div class="w3-col m3" style="margin-top:30px;">
+            <img src="https://preview.ibb.co/fMVRQc/wjm.jpg" alt="Junming Wang" width="80%" height="80%"> 
+          </div>
+            
+        <div class="w3-col m8" style="margin-top:30px;">
+          <h4 class="w3-opacity w3-text-teal"><b>Junming Wang</b></h4>
+          <h6> <span class="w3-tag w3-teal w3-round">Current</span> Resselear Polytechnic Institute, Computer Science Dual Mathematics
+            </h6>
+            <h7>
+                Research Interest：Artificial Intelligence, Machine Learning, Development of Django<br/>
+                <br/>
+            </h7>
+ 
+          <hr/>
+        </div>
+          
+        </div>
+            
+
+          
+      </div>
+        </div>
+
+
+
+    <!-- End Right Column -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+  
+  <!-- End Page Container -->
+</div>
+<script>
+// Script to open and close sidebar
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("myOverlay").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("myOverlay").style.display = "none";
+}
+
+// Modal Image Gallery
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  var captionText = document.getElementById("caption");
+  captionText.innerHTML = element.alt;
+}
+ 
+</script>
+
+</body>
+</html>

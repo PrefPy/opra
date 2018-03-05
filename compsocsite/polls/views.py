@@ -2238,3 +2238,11 @@ class RGView(views.generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(RGView, self).get_context_data(**kwargs)
         return ctx
+
+class RGENView(views.generic.ListView):
+    template_name = 'events/ResearchGroupEN.html'
+    def get_queryset(self):
+        return Question.objects.filter(pub_date__lte=timezone.now())
+    def get_context_data(self, **kwargs):
+        ctx = super(RGENView, self).get_context_data(**kwargs)
+        return ctx

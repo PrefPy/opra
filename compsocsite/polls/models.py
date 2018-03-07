@@ -15,7 +15,7 @@ from django.conf import settings
 @python_2_unicode_compatible
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
-    question_desc = models.CharField(max_length=500, null=True, blank=True)
+    question_desc = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to='static/img/items/', blank=True, null=True)
     imageURL = models.CharField(max_length=500, blank=True, null=True)
     pub_date = models.DateTimeField('date published')
@@ -32,9 +32,9 @@ class Question(models.Model):
     poll_algorithm = models.IntegerField(default=1)
     question_type = models.IntegerField(default=1)
     winner = models.CharField(max_length=200,default="")
-    mixtures_pl1 = models.CharField(max_length=500, default="")
-    mixtures_pl2 = models.CharField(max_length=500, default="")
-    mixtures_pl3 = models.CharField(max_length=500, default="")
+    mixtures_pl1 = models.TextField(default="")
+    mixtures_pl2 = models.TextField(default="")
+    mixtures_pl3 = models.TextField(default="")
     m_poll = models.BooleanField(default=False)
     next = models.IntegerField(default=-1)
     first = models.IntegerField(default=-1)

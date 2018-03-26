@@ -1929,7 +1929,7 @@ def anonymousVote(request, question_id):
         voter = request.session['anonymousvoter']
         id = request.session['anonymousid']
     # get the preference order
-    print(orderStr)
+    #print(orderStr)
     orderStr = request.POST["pref_order"]
     prefOrder = getPrefOrder(orderStr, question)
     if prefOrder == None:

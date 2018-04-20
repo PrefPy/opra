@@ -1571,7 +1571,8 @@ def duplicatePoll(request, question_id):
         new_items.append(new_item)
     new_question.item_set.add(*new_items)
     setupEmail(new_question)
-    return HttpResponseRedirect(reverse('polls:regular_polls'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    #return HttpResponseRedirect(reverse('polls:regular_polls'))
 
 def deleteUserVotes(request, response_id):
     response = get_object_or_404(Response, pk=response_id)
@@ -2248,3 +2249,32 @@ class RGENView(views.generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(RGENView, self).get_context_data(**kwargs)
         return ctx
+
+def get_voters(request):
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        users = list(User.objects.filter(username__icontains=q))
+        poll_id = request.GET.get('poll_id', '-1')
+        if poll_id != '-1':
+            exists = Question.objects.filter(pk=poll_id)[0].question_voters.all()
+        else:
+            exists = []
+        ##Add get possible users from API
+        results = []
+        count = 0
+        for user in users:
+            if count == 20:
+                break
+            if user in exists:
+                continue
+            user_json = {}
+            user_json['id'] = user.id
+            user_json['label'] = user.username
+            user_json['value'] = user.username
+            results.append(user_json)
+            count += 1
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)

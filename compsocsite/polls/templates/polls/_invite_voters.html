@@ -1,14 +1,51 @@
+<script>
+    function add_voter(username){
+        $.ajax({
+            url: "{% url 'polls:addvoter' question.id %}",
+            data: {
+                'voters': username,
+                'email': $("#email1").val()
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#user-search').val("");
+                $('#currentVoters').html($('#currentVoters').html() + "<option value=\"" + username + "\">" + username + "</option>");
+            }
+        });
+    }
+
+    $(function() {
+        $("#user-search").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "/polls/api/get_voters/",
+                    dataType: "json",
+                    data: {
+                        term : request.term,
+                        poll_id : {{question.id}}
+                    },
+                    success: function(data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 2,
+            select: function( event, ui ) {
+                add_voter(ui.item.value);
+            }
+        });
+    });
+</script>
+
 <div class="col-md-4">
     <b>Current Voters: </b>
     <form action="{% url 'polls:delvoter' question.id %}" method="post">
         {% csrf_token %}
-        <select name="voters" class="form-control" multiple>
-            {% for user in users %}
-                {% if user in question.question_voters.all %}
-                    <option value="{{ user.username }}">{{ user.username }}</option>
-                {% endif %}
+        <select id="currentVoters" name="voters" class="form-control" multiple>
+            {% for user in question.question_voters.all %}
+                <option value="{{ user.username }}">{{ user.username }}</option>
             {% endfor %}
-        </select>  
+        </select>
         <br />
         {% if question.status == 1 %}
             <label for="email2">Email announcement</label>
@@ -20,21 +57,13 @@
 </div>     
 <div class="col-md-4">
     <b>Add Voter: </b>
-    <form action="{% url 'polls:addvoter' question.id %}" method="post">
+    <form id="addUserForm" action="{% url 'polls:addvoter' question.id %}" method="post">
         {% csrf_token %}
-        <div class="input-group">
-            <select name="voters" class="form-control multiple-select" multiple onchange="this.form.submit()">
-                {% for user in users %}
-                    {% if user not in question.question_voters.all %}
-                        <option value="{{ user.username }}">{{ user.username }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-            <input type="submit" class="btn btn-success" value="&#xf067;">
-        </div>
+        <input name="voters" type="text" class="form-control" id="user-search">
+
         <br />
         <label for="email1">Email announcement</label>
-        <input type="checkbox" name="email" id="email1" value="email" {% if question.emailInvite == True %} checked {% endif %} onchange="this.form.submit()">
+        <input type="checkbox" name="email" id="email1" value="email" {% if question.emailInvite == True %} checked {% endif %}>
         <br />
     </form>     
 </div>

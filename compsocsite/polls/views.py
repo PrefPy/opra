@@ -1539,7 +1539,7 @@ def uninvitedPoll(request, question_id):
 
 def duplicatePoll(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    title = question.question_text + "_COPY"
+    title = question.question_text
     desc = question.question_desc
     voters = question.question_voters.all()
     user = request.user
@@ -1557,7 +1557,9 @@ def duplicatePoll(request, question_id):
                             onecol_enabled=question.onecol_enabled,
                             slider_enabled=question.slider_enabled,
                             star_enabled=question.star_enabled,
-                            yesno_enabled=question.yesno_enabled)
+                            yesno_enabled=question.yesno_enabled,
+                            allowties=question.allowties,
+                            vote_rule=question.vote_rule)
     new_question.save()
     new_question.question_voters.add(*voters)
     new_items = []

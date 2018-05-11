@@ -51,6 +51,7 @@ class Question(models.Model):
     ui_number = models.IntegerField(default=6)
     vote_rule = models.IntegerField(default=4095)
     first_tier = models.IntegerField(default=0)
+    utility_model_enabled = models.BooleanField(default=False)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):
@@ -93,6 +94,7 @@ class Item(models.Model):
     imageURL = models.CharField(max_length=500, blank=True, null=True)
     timestamp = models.DateTimeField('item timestamp')
     recently_added = models.BooleanField(default=False)
+    utility = models.FloatField(default=0.0)
     def __str__(self):
         return self.item_text
     class Meta:

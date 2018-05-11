@@ -274,6 +274,12 @@ def addChoice(request, question_id):
     elif imageURL != '':
         item.imageURL = imageURL
 
+    # if the random utility model is enabled
+    if question.utility_model_enabled:
+        try:
+            item.utility = float(item_text)
+        except:
+            pass
     # save the choice
     item.save()
     request.session['setting'] = 0

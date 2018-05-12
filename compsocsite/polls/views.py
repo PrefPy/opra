@@ -2196,6 +2196,19 @@ class IRBDetailView(views.generic.DetailView):
             return ctx
 
         # check if the user submitted a vote earlier and display that for modification
+        #if len(currentUserResponses) > 0 and self.request.user.get_username() != "":
+        #    ctx['currentSelection'] = getCurrentSelection(currentUserResponses[0])
+        #    ctx['itr'] = itertools.count(1, 1)
+        #    ctx['unrankedCandidates'] = getUnrankedCandidates(currentUserResponses[0])
+        #    items = []
+         #   for item in ctx['currentSelection']:
+        #        for i in item:
+        #            items.append(i)
+        #    if not ctx['unrankedCandidates'] == None:
+        #        for item in ctx['unrankedCandidates']:
+        #            items.append(item)
+        #    ctx['items'] = items
+        #else:
             # no history so display the list of choices
         ctx['items'] = self.get_order(ctx)
         return ctx

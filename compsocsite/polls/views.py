@@ -273,13 +273,7 @@ def addChoice(request, question_id):
         item.image = request.FILES.get('docfile')
     elif imageURL != '':
         item.imageURL = imageURL
-
-    # if the random utility model is enabled
-    if question.utility_model_enabled:
-        try:
-            item.utility = float(item_text)
-        except:
-            pass
+    
     # save the choice
     item.save()
     request.session['setting'] = 0
@@ -1387,21 +1381,22 @@ def addVoter(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     creator_obj = User.objects.get(id=question.question_owner_id)
 
-    newVoters = request.POST.getlist('voters')
+    newVoters = request.GET.get('voters')
     # send an invitation email
-    email = request.POST.get('email') == 'email'
+    email = request.GET.get('email') == 'email'
     question.emailInvite = email
     question.save()
     if email:
         email_class = EmailThread(request, question_id, 'invite')
         email_class.start()
     # add each voter to the question by username
-    for voter in newVoters:
-        voterObj = User.objects.get(username=voter)
-        question.question_voters.add(voterObj.id)
+    voterObj = User.objects.get(username=newVoters)
+    question.question_voters.add(voterObj.id)
     request.session['setting'] = 1
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    data = "{}"
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
 
 # remove voters from a poll.
 # should only be done before a poll starts
@@ -2121,9 +2116,10 @@ class MturkView(views.generic.ListView):
     
     def get_context_data(self,**kwargs):
         ctx = super(MturkView, self).get_context_data(**kwargs)
-        exp = get_object_or_404(User, username="opraexp")
-        polls= list(Question.objects.filter(question_owner = exp))
-        ctx['IRB_polls'] = polls
+        #exp = get_object_or_404(User, username="opraexp")
+        #polls= list(Question.objects.filter(question_owner = exp))
+        #ctx['IRB_polls'] = polls
+        return ctx
 
 class SurveyFinalView(views.generic.ListView):
     template_name = 'events/Mturk/SurveyCode.html'
@@ -2165,7 +2161,7 @@ class IRBDetailView(views.generic.DetailView):
     
     def get_context_data(self, **kwargs):
         ctx = super(IRBDetailView, self).get_context_data(**kwargs)
-        exp = get_object_or_404(User, username="opraexp")
+        #exp = get_object_or_404(User, username="opraexp")
             
         polls = json.loads(self.request.user.userprofile.sequence)
         current = self.request.user.userprofile.cur_poll

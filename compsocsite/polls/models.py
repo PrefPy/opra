@@ -51,7 +51,7 @@ class Question(models.Model):
     ui_number = models.IntegerField(default=6)
     vote_rule = models.IntegerField(default=4095)
     first_tier = models.IntegerField(default=0)
-    utility_model_enabled = models.BooleanField(default=False)
+    utility_model = models.IntegerField(default=0)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):

@@ -401,7 +401,7 @@ def downloadSpecificRecords(request):
 
 
 def getMturkPollID():
-    polls = list(range(103,113)) + list(range(124,134))
+    polls = list(range(180,190))
     return polls
 
 def getUIs(poll):

@@ -27,7 +27,7 @@ def createNewExperiment(request):
         title_text = request.POST["title"]
         exp = Experiment(title=title_text,timestamp=timezone.now())
         exp.save()
-        return HttpResponseRedirect(reverse('polls:',args=(exp.id,)))
+        return HttpResponseRedirect(reverse('polls:experimentdetail',args=(exp.id,)))
     return render(request,'events/Mturk/AddExperiment.html',{})
 
 class ExperimentSetup(views.generic.DetailView):

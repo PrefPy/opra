@@ -61,7 +61,7 @@
                                     {% with prev=forloop.counter|mul:2 %}
                                     <ul class="choice2" id="{{ prev|add:1 }}">
                                     {% endwith %}
-                                        <li class="li_item" id="item{{ item.item_text }}" >
+                                        <li class="li_item" id="item{{ item.item_text }}" title="{{ random_utilities|index:forloop.counter0 }}">
                                             <!-- Display image (uploaded) -->
                                             {% if item.image %}
                                                 <img class="item" src='/{{ item.image.url }}'/>
@@ -71,7 +71,7 @@
                                                 <img class="item" src='{{ item.imageURL }}'/>
                                             {% endif %}
                                             <!-- Display option text -->
-                                            {{ item.item_text|random_utility }}
+                                            {{ random_utilities|index:forloop.counter0 }}
                                             <!-- Display tooltip for option description -->
                                             {% if item.item_description %}
                                                 <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}" data-title="Meddelanden">

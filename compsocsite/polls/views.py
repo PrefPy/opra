@@ -29,6 +29,7 @@ from multipolls.models import *
 import json
 import threading
 import itertools
+import numpy as np
 
 # view for homepage - index of questions & results
 class IndexView(views.generic.ListView):
@@ -2187,9 +2188,9 @@ class IRBDetailView(views.generic.DetailView):
 
     
         # reset button
-        if isPrefReset(self.request):
-            ctx['items'] = self.get_order(ctx)
-            return ctx
+        #if isPrefReset(self.request):
+        #    ctx['items'] = self.get_order(ctx)
+        #    return ctx
 
         # check if the user submitted a vote earlier and display that for modification
         #if len(currentUserResponses) > 0 and self.request.user.get_username() != "":
@@ -2206,7 +2207,18 @@ class IRBDetailView(views.generic.DetailView):
         #    ctx['items'] = items
         #else:
             # no history so display the list of choices
-        ctx['items'] = self.get_order(ctx)
+        random_order = self.get_order(ctx)
+        ctx['items'] = random_order
+        try:
+            random_utilities = []
+            sigma = 10
+            for i in random_order:
+                base = float(i.item_text)
+                utility = round(np.random.normal(0.0,sigma)+ base)
+                random_utilities.append(utility)
+        except:
+            random_utilities = random_order
+        ctx['random_utilities'] = random_utilities
         return ctx
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now())

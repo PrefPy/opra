@@ -258,6 +258,7 @@ function dictCol(num){
 				$( this ).children().each(function( i2 ){
 					var temp = {};
 					temp["name"] = $(item_type + "[type='" + $( this ).attr('type') + "']").attr('id');
+					temp["utility"] = $(item_type + "[type='" + $( this ).attr('type') + "']").attr('title');
 					temp["tier"] = tier;
 					temp["ranked"] = index;
 					inner.push(temp);
@@ -290,7 +291,7 @@ function oneColSort( order ){
 	$.each(order, function(index, value){
 		html += "<ul class=\"choice2\"><div class=\"tier\">" + index.toString() + "</div>";
 		$.each(value, function(i, v){
-			html += "<li class=\"li_item\" id=\"" + $("#oneColSection .li_item[type='" + v.toString() + "']").attr('id') + "\" type=" + v.toString() + ">";
+			html += "<li class=\"li_item\" id=\"" + $("#oneColSection .li_item[type='" + v.toString() + "']").attr('id') + "\" title=\""+ $("#oneColSection .li_item[type='" + v.toString() + "']").attr('title') +"\" type=" + v.toString() + ">";
 			html += $("#oneColSection .li_item[type='" + v.toString() + "']").html();
 			html += "</li>";
 		});

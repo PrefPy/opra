@@ -2215,6 +2215,8 @@ class IRBDetailView(views.generic.DetailView):
             for i in random_order:
                 base = float(i.item_text)
                 utility = round(np.random.normal(0.0,sigma)+ base)
+                while utility in random_utilities:
+                    utility = round(np.random.normal(0.0,sigma)+ base)
                 random_utilities.append(utility)
         except:
             random_utilities = random_order
@@ -2292,3 +2294,6 @@ def get_voters(request):
         data = 'fail'
     mimetype = 'application/json'
     return HttpResponse(data, mimetype)
+
+def recommend_ranking(k):
+    return

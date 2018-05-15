@@ -360,3 +360,6 @@ class Experiment(models.Model):
     polls = models.TextField(default="[]")
     status = models.IntegerField(default=0)
     participants = models.ManyToManyField(User)
+
+class RandomUtilityPool(models.Model):
+    data = models.TextField(default="[]")

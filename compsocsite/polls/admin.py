@@ -106,7 +106,7 @@ class RecordAdmin(admin.ModelAdmin):
     list_filter = ['user', 'timestamp']
 
 class RandomUtilityPoolAdmin(admin.ModelAdmin):
-    list_display = ('data')
+    list_display = ['data']
 # register models
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Response, ResponseAdmin)

@@ -2214,6 +2214,8 @@ class IRBDetailView(views.generic.DetailView):
             current_order = [int(i.item_text) for i in random_order]
             new_order = [random_order[current_order.index(i)] for i in recommended_order]
             random_order = new_order
+        except:
+            pass
         ctx['items'] = random_order
         try:
             random_utilities = []

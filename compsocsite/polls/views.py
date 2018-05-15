@@ -30,6 +30,7 @@ import json
 import threading
 import itertools
 import numpy as np
+import random
 
 # view for homepage - index of questions & results
 class IndexView(views.generic.ListView):
@@ -2208,6 +2209,11 @@ class IRBDetailView(views.generic.DetailView):
         #else:
             # no history so display the list of choices
         random_order = self.get_order(ctx)
+        try:
+            recommended_order = recommend_ranking(idx+1)
+            current_order = [int(i.item_text) for i in random_order]
+            new_order = [random_order[current_order.index(i)] for i in recommended_order]
+            random_order = new_order
         ctx['items'] = random_order
         try:
             random_utilities = []
@@ -2296,4 +2302,22 @@ def get_voters(request):
     return HttpResponse(data, mimetype)
 
 def recommend_ranking(k):
+    try:
+        dataset = json.loads(RandomUtilityPool.objects.get(id=1).data)
+        rankings = random.sample(dataset,k)
+        candidates = [i[1] for i in rankings[0]]
+        borda_scores = dict()
+        for c in candidates:
+            borda_scores[c] = 0
+        for r in rankings:
+            for i in range(len(r)):
+                borda_scores[r[i][1]] += len(r)-i-1
+        k = list(borda_scores.keys())
+        v = list(borda_scores.values())
+        v_with_index = [(v[i],i) for i in range(len(v))]
+        v_vith_index.sort()
+        sorted_k = [k[i[1]] for i in v_with_index]
+        return sorted_k
+    except:
+        return None
     return

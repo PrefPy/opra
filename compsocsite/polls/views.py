@@ -2318,7 +2318,7 @@ def recommend_ranking(k):
     k = list(borda_scores.keys())
     v = list(borda_scores.values())
     v_with_index = [(v[i],i) for i in range(len(v))]
-    v_with_index.sort()
+    v_with_index.sort(reverse=True)
     sorted_k = [k[i[1]] for i in v_with_index]
     return sorted_k
     #except:

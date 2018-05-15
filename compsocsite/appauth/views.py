@@ -391,7 +391,7 @@ def resetAllFinish(request):
         for user in users:
             if hasattr(user,'userprofile'):
                 #if user.userprofile.finished:
-                if user.cur_poll in poll_list:
+                if user.userprofile.cur_poll in poll_list:
                     user.userprofile.finished = False
                     user.userprofile.cur_poll = 0
                     user.userprofile.save()

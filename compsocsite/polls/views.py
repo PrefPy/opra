@@ -2211,6 +2211,7 @@ class IRBDetailView(views.generic.DetailView):
         random_order = self.get_order(ctx)
         try:
             recommended_order = recommend_ranking(idx+1)
+            print(recommended_order)
             current_order = [int(i.item_text) for i in random_order]
             new_order = [random_order[current_order.index(i)] for i in recommended_order]
             random_order = new_order

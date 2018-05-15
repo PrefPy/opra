@@ -390,8 +390,8 @@ def resetAllFinish(request):
         poll_list = list(range(180,190))
         for user in users:
             if hasattr(user,'userprofile'):
-                #if user.userprofile.finished:
-                if user.userprofile.cur_poll in poll_list:
+                if user.userprofile.finished:
+                #if user.userprofile.cur_poll in poll_list:
                     user.userprofile.finished = False
                     user.userprofile.cur_poll = 0
                     user.userprofile.save()

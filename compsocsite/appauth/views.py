@@ -392,21 +392,21 @@ def resetAllFinish(request):
                 if user.userprofile.finished:
                     user.userprofile.finished = False
                     user.userprofile.save()
-        utilitiesList = []
-        alternatives = [10,20,30,40,50,60,70,80,90,100]
-        sigma = 10
-        for i in range(50):
-            random_utilities = []
-            for num in alternatives:
-                base = num
-                utility = round(np.random.normal(0.0,sigma)+ base)
-                while utility in random_utilities:
-                    utility = round(np.random.normal(0.0,sigma)+ base)
-                random_utilities.append((utility,num))
-            random_utilities.sort()
-            utilitiesList.append(random_utilities)
-        random_pool = RandomUtilityPool(data=json.dumps(utilitiesList))
-        random_pool.save()
+        #utilitiesList = []
+        #alternatives = [10,20,30,40,50,60,70,80,90,100]
+        #sigma = 10
+        #for i in range(50):
+        #    random_utilities = []
+        #    for num in alternatives:
+        #        base = num
+        #        utility = round(np.random.normal(0.0,sigma)+ base)
+        #        while utility in random_utilities:
+        #            utility = round(np.random.normal(0.0,sigma)+ base)
+        #        random_utilities.append((utility,num))
+        #    random_utilities.sort()
+        #    utilitiesList.append(random_utilities)
+        #random_pool = RandomUtilityPool(data=json.dumps(utilitiesList))
+        #random_pool.save()
 
         return HttpResponse("success!")
     else:

@@ -103,9 +103,13 @@ class MessageAdmin(admin.ModelAdmin):
     
 class RecordAdmin(admin.ModelAdmin):
     list_display = ('user', 'timestamp')
-    list_display = ['user', 'timestamp']
+    list_filter = ['user', 'timestamp']
+
+class RandomUtilityPoolAdmin(admin.ModelAdmin):
+    list_display = ('data')
 # register models
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Response, ResponseAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(UserVoteRecord, RecordAdmin)
+admin.site.register(RandomUtilityPool, RandomUtilityPoolAdmin)

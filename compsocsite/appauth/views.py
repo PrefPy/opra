@@ -391,6 +391,7 @@ def resetAllFinish(request):
             if hasattr(user,'userprofile'):
                 if user.userprofile.finished:
                     user.userprofile.finished = False
+                    user.userprofile.cur_poll = 0
                     user.userprofile.save()
         #utilitiesList = []
         #alternatives = [10,20,30,40,50,60,70,80,90,100]

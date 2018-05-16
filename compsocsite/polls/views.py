@@ -2222,7 +2222,7 @@ class IRBDetailView(views.generic.DetailView):
         ctx['items'] = random_order
         try:
             random_utilities = []
-            sigma = 20
+            sigma = 30
             for i in random_order:
                 base = float(i.item_text)
                 utility = round(np.random.normal(0.0,sigma)+ base)
@@ -2308,7 +2308,7 @@ def get_voters(request):
 
 def recommend_ranking(k):
     try:
-        dataset = json.loads(RandomUtilityPool.objects.get(id=3).data)
+        dataset = json.loads(RandomUtilityPool.objects.get(id=5).data)
         rankings = random.sample(dataset,k)
         candidates = [i[1] for i in rankings[0]]
         borda_scores = dict()

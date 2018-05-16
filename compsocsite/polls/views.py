@@ -2210,7 +2210,7 @@ class IRBDetailView(views.generic.DetailView):
             # no history so display the list of choices
         random_order = self.get_order(ctx)
 
-        use_recommend = False
+        use_recommend = True
         if use_recommend:
             recommended_order = recommend_ranking(idx+1)
             try:

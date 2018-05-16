@@ -380,7 +380,7 @@ def downloadSpecificRecords(request):
     result = []
     polls = getMturkPollID()
     for poll in polls:
-        all_responses += list(get_object_or_404(Question,pk=poll).response_set.filter(active=1,timestamp__gt=datetime.datetime(2018,5,15,19)))
+        all_responses += list(get_object_or_404(Question,pk=poll).response_set.filter(active=1,timestamp__gt=datetime.datetime(2018,5,15,18)))
     for resp in all_responses:
         dic = {}
         try:

@@ -2222,7 +2222,7 @@ class IRBDetailView(views.generic.DetailView):
         ctx['items'] = random_order
         try:
             random_utilities = []
-            sigma = 30
+            sigma = 10
             for i in random_order:
                 base = float(i.item_text)
                 utility = round(np.random.normal(0.0,sigma)+ base)

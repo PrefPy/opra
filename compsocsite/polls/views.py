@@ -2210,7 +2210,7 @@ class IRBDetailView(views.generic.DetailView):
             # no history so display the list of choices
         random_order = self.get_order(ctx)
 
-        use_recommend = True
+        use_recommend = False
         if use_recommend:
             recommended_order = recommend_ranking(idx+1)
             try:
@@ -2308,7 +2308,7 @@ def get_voters(request):
 
 def recommend_ranking(k):
     try:
-        dataset = json.loads(RandomUtilityPool.objects.get(id=5).data)
+        dataset = json.loads(RandomUtilityPool.objects.get(id=1).data)
         rankings = random.sample(dataset,k)
         candidates = [i[1] for i in rankings[0]]
         borda_scores = dict()

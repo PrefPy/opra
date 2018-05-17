@@ -2213,7 +2213,7 @@ class IRBDetailView(views.generic.DetailView):
 
         use_recommend = True
         if use_recommend and idx > 0:
-            recommended_order = recommend_ranking(idx+1)
+            recommended_order = recommend_ranking(idx)
             try:
                 current_order = [int(i.item_text) for i in random_order]
                 new_order = [random_order[current_order.index(i)] for i in recommended_order]

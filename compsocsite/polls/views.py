@@ -2167,6 +2167,7 @@ class IRBDetailView(views.generic.DetailView):
             
         polls = json.loads(self.request.user.userprofile.sequence)
         current = self.request.user.userprofile.cur_poll
+        idx = 0
         try:
             idx = polls.index(current)
             ctx['poll_index'] = idx + 1
@@ -2211,7 +2212,7 @@ class IRBDetailView(views.generic.DetailView):
         random_order = self.get_order(ctx)
 
         use_recommend = True
-        if use_recommend:
+        if use_recommend and idx > 0:
             recommended_order = recommend_ranking(idx+1)
             try:
                 current_order = [int(i.item_text) for i in random_order]
@@ -2222,7 +2223,7 @@ class IRBDetailView(views.generic.DetailView):
         ctx['items'] = random_order
         try:
             random_utilities = []
-            sigma = 30
+            sigma = 20
             for i in random_order:
                 base = float(i.item_text)
                 utility = round(np.random.normal(0.0,sigma)+ base)
@@ -2308,7 +2309,7 @@ def get_voters(request):
 
 def recommend_ranking(k):
     try:
-        dataset = json.loads(RandomUtilityPool.objects.get(id=5).data)
+        dataset = json.loads(RandomUtilityPool.objects.get(id=3).data)
         rankings = random.sample(dataset,k)
         candidates = [i[1] for i in rankings[0]]
         borda_scores = dict()

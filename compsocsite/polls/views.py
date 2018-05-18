@@ -2211,7 +2211,7 @@ class IRBDetailView(views.generic.DetailView):
             # no history so display the list of choices
         random_order = self.get_order(ctx)
 
-        use_recommend = True
+        use_recommend = False
         if use_recommend and idx > 0:
             recommended_order = recommend_ranking(idx)
             try:
@@ -2223,7 +2223,7 @@ class IRBDetailView(views.generic.DetailView):
         ctx['items'] = random_order
         try:
             random_utilities = []
-            sigma = 20
+            sigma = 10
             for i in random_order:
                 base = float(i.item_text)
                 utility = round(np.random.normal(0.0,sigma)+ base)

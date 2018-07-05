@@ -75,6 +75,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 * **django-cas-client**:
 * **django-rq**:
 * **WhiteNoise**:
+* **django-cors-headers**:
 
 ##Models
 The following models are used to organize information:

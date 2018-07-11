@@ -1,7 +1,7 @@
 {% load mathfilters %}
-<div id="yesNoSection" {% if request.flavour == "mobile" %}style="padding:0.4em;" {% endif %}>
+<div id="{% if num == 1 %}yesNo{% else %}single{% endif %}Section" {% if request.flavour == "mobile" %}style="padding:0.4em;" {% endif %}>
     <!-- This is the voting form. Submit results through a voting function -->
-    <form id="yesNo" {% if request.user.username == "" %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
+    <form id="{% if num == 1 %}yesNo{% else %}single{% endif %}" {% if request.user.username == "" %} action="{% url 'polls:anonymousvote' question.id %}" {% else %} action="{% url 'polls:vote' question.id %}" {% endif %} method="post">
         <div class="row">
             {% csrf_token %}
             <!-- If this user isn't logged in and hasn't voted before -->

@@ -1,0 +1,71 @@
+{% extends 'polls/base.html' %}
+{% block extra_head %}
+<script>
+    $(function(){
+        $('#startDate').datepicker();
+    });
+    function validateForm() {
+        var x = document.forms["newClass"]["classTitle"].value;
+        var y = document.forms["newClass"]["startDate"].value;
+        if (x == null || x == "") {
+            alert("The class title must be filled out");
+            return false;
+        }
+        if (y == null || y == "") {
+            alert("The start date must be filled out");
+            return false;
+        }
+        $('#currentVoters').children().each(function(){
+            $(this).prop('checked', 'checked');
+        });
+        $('#user-search').val("");
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<style>
+    p.sameline{
+        display:inline-block;
+    }
+</style>
+
+<div class="col-md-10 col-md-offset-1">
+    <h2 align="center">Create a New Class</h2>
+
+    <form id="newClass" method="post" action="/polls/newClass/" name="newClass" onsubmit="return validateForm()" style="font-size:100%" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="classTitle">Title:</label> <small class="text-muted"> * </small> <br />
+        <input type="text" class="form-control" id="classTitle" name="classTitle" value="" maxlength="100" size="50" autofocus/>
+        <small class="text-muted">Required (at most 100 characters) </small> <br/><br/>
+
+        <label for="startDate">Start Date:</label><small class="text-muted"> * </small><br/>
+        <input type="text" class="form-control" name="startDate" id="startDate" value=""/><br/><br/>
+
+        <label>Days this class meets: </label> <small class="text-muted"> * </small><br />
+        <div class="btn-group" data-toggle="buttons" name="weekly">
+            <label class="btn btn-default active">
+                <input type="checkbox" value="1" checked>Monday
+            </label>
+            <label class="btn btn-default">
+                <input type="checkbox" value="2">Tuesday
+            </label>
+            <label class="btn btn-default">
+                <input type="checkbox" value="4">Wednesday
+            </label>
+            <label class="btn btn-default active">
+                <input type="checkbox" value="8" checked>Thursday
+            </label>
+            <label class="btn btn-default">
+                <input type="checkbox" value="16">Friday
+            </label>
+        </div><br/><br/>
+
+        {% include 'classes/_invite_students.html' %}
+    
+        <div class="col-md-6 col-md-offset-3" align="center" style='font-size:100%'>
+            <input type="submit" value="Next" class="btn btn-primary"/>
+        </div>
+    </form>
+</div>
+{% endblock %}

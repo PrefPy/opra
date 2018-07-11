@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^regular_polls/(?P<pk>[0-9]+)/folder$', login_required(views.RegularPollsFolderView.as_view()), name='regular_polls_folder'),
     url(r'^m_polls$', login_required(views.MultiPollsView.as_view()), name='m_polls'),
     url(r'^(?P<pk>[0-9]+)/demo$', views.DemoView.as_view(), name='voting_demo'),
+    url(r'^classes$', login_required(views.ClassesView.as_view()), name='classes'),
    
     # Create a new poll
     url(r'^add_step1/$', views.AddStep1View, name='AddStep1'), 
@@ -107,4 +108,13 @@ urlpatterns = [
     url(r'^experiment/add$', experiment.createNewExperiment, name='experimentcreate'),
     url(r'^experiment/(?P<pk>[0-9]+)/detail$', experiment.ExperimentSetup.as_view(), name='experimentdetail'),
     url(r'^experiment/addpoll/(?P<exp_id>[0-9]+)$', experiment.addPollToExperiment, name='addpolltoexp'),
+
+    # classes
+    url(r'^newClass/$', views.newClass, name='newClass'),
+    url(r'^class/(?P<pk>[0-9]+)/takeAttendance/$', views.takeAttendance, name='takeAttendance'),
+    url(r'^class/(?P<pk>[0-9]+)/stopAttendance/$', views.stopAttendance, name='stopAttendance'),
+    url(r'^class/(?P<pk>[0-9]+)/classSignIn/$', views.classSignIn, name='classSignIn'),
+    url(r'^class/(?P<pk>[0-9]+)/newQuiz/$', views.newQuiz, name='newQuiz'),
+    url(r'^class/(?P<pk>[0-9]+)/grades/$', views.GradesView.as_view(), name='grades'),
+    url(r'^class/(?P<pk>[0-9]+)/gradesCSV/$', views.GradesDownload, name='gradesCSV'),
 ]

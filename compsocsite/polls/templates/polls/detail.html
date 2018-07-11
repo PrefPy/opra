@@ -149,14 +149,23 @@
             {% if question.slider_enabled %}<li><a href="#sliderSection" onclick="changeMethod(3);">Sliders</a></li> {% endif %}
             {% if question.star_enabled %}<li><a href="#starsSection" onclick="changeMethod(4);">Stars</a></li> {% endif %}
             {% if question.yesno_enabled %}<li><a href="#yesNoSection" onclick="changeMethod(5);">Yes/No</a></li> {% endif %}
+            {% if question.single_enabled %}<li><a href="#singleSection" onclick="changeMethod(6);">Single</a></li> {% endif %}
         </ul>
 		{% endif %}
             {% if question.twocol_enabled %}{% include "polls/voteOptions/twoCol.html" %}{% endif %}
             {% if question.onecol_enabled %}{% include "polls/voteOptions/oneCol.html" %}{% endif %}
             {% if question.slider_enabled %}{% include "polls/voteOptions/slider.html" %}{% endif %}
             {% if question.star_enabled %}{% include "polls/voteOptions/stars.html" %}{% endif %}
-            {% if question.yesno_enabled %}{% include "polls/voteOptions/yesNo.html" %}{% endif %}
-            {% if question.yesno2_enabled %}{% include "polls/voteOptions/yesNo2.html" %}{% endif %}
+            {% with num=1 %}
+                {% if question.yesno_enabled %}
+                    {% include "polls/voteOptions/yesNo.html" %}
+                {% endif %}
+            {% endwith %}
+            {% with num=2 %}
+                {% if question.single_enabled %}
+                    {% include "polls/voteOptions/yesNo.html" %}
+                {% endif %}
+            {% endwith %}
     </div>
 
     {% endif %}

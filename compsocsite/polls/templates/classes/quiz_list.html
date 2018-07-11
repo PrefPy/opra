@@ -1,0 +1,14 @@
+
+												<a href="{% url 'polls:pollinfo' quiz.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if quiz.question_desc %} {{quiz.question_desc}} {%else%} None. {%endif%}">{{ quiz.question_text }}</a>
+												
+                        {% if question.status == 2 %}
+													{% if question.open != 3 and request.user in question.question_voters.all %}
+														<a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" role="button" >Vote</a>
+													{% elif question.open == 3 %}
+                                <a href="{% url 'polls:cardSwipe' question.id %}" class="btn btn-dark" role="button">Open voting page</a>
+                            {% endif %}
+                            
+                        {% endif %}
+						{% if question.question_type == 1 and question.status != 1 and question.status != 3 and question.response_set.all.count > 0 %}
+                            <a href="{% url 'polls:voteresults' question.id %}" class ="btn btn-dark" role="button" target="_blank" >Current Winners</a>
+                        {% endif %}

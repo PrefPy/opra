@@ -77,8 +77,10 @@ function select2(item){
 }
 
 //Get order of one or two column
-function orderYesNo(){
-	var arr = $('#yesNoList').children();
+function orderYesNo(num){
+	if(num == 5){ list = '#yesNoList'; }
+	if(num == 6){ list = '#singleList'; }
+	var arr = $(list).children();
 	var order = [];
 	var yes = [];
 	var no = [];
@@ -329,28 +331,31 @@ function starSort( order ){
 	init_star = false;
 }
 
-function yesNoSort( order ){
+function yesNoSort( num, order ){
 	$.each(order, function(index, value){
 		$.each(value, function(i, v){
+			var cb;
+			if(num == 5){ cb = ".checkbox[type='"; }
+			if(num == 6){ cb = ".checkbox_single[type='"; }
 			if(index == 0){
-				$($(".checkbox[type='" + v.toString() + "']").children()[0]).attr('checked', 'checked');
-				$($(".checkbox[type='" + v.toString() + "']").children()[1]).removeClass('glyphicon-unchecked');
-				$($(".checkbox[type='" + v.toString() + "']").children()[1]).addClass('glyphicon-check');
-				$($(".checkbox[type='" + v.toString() + "']").children()[1]).css('color', "green");
-				$(".checkbox[type='" + v.toString() + "']").css('border-color', 'green');
-				$(".checkbox[type='" + v.toString() + "']").css('border-width', '5px');
-				$(".checkbox[type='" + v.toString() + "']").css('margin-top', '1px');
-				$(".checkbox[type='" + v.toString() + "']").css('margin-bottom', '1px');
+				$($(cb + v.toString() + "']").children()[0]).attr('checked', 'checked');
+				$($(cb + v.toString() + "']").children()[1]).removeClass('glyphicon-unchecked');
+				$($(cb + v.toString() + "']").children()[1]).addClass('glyphicon-check');
+				$($(cb + v.toString() + "']").children()[1]).css('color', "green");
+				$(cb + v.toString() + "']").css('border-color', 'green');
+				$(cb + v.toString() + "']").css('border-width', '5px');
+				$(cb + v.toString() + "']").css('margin-top', '1px');
+				$(cb + v.toString() + "']").css('margin-bottom', '1px');
 			}
 			else{
-				$($(".checkbox[type='" + v.toString() + "']").children()[0]).removeAttr('checked');
-				$($(".checkbox[type='" + v.toString() + "']").children()[1]).removeClass('glyphicon-check');
-				$($(".checkbox[type='" + v.toString() + "']").children()[1]).addClass('glyphicon-unchecked');
-				$($(".checkbox[type='" + v.toString() + "']").children()[1]).css('color', "grey");
-				$(".checkbox[type='" + v.toString() + "']").css('border-color', 'grey');
-				$(".checkbox[type='" + v.toString() + "']").css('border-width', '1px');
-				$(".checkbox[type='" + v.toString() + "']").css('margin-top', '5px');
-				$(".checkbox[type='" + v.toString() + "']").css('margin-bottom', '9px');
+				$($(cb + v.toString() + "']").children()[0]).removeAttr('checked');
+				$($(cb + v.toString() + "']").children()[1]).removeClass('glyphicon-check');
+				$($(cb + v.toString() + "']").children()[1]).addClass('glyphicon-unchecked');
+				$($(cb + v.toString() + "']").children()[1]).css('color', "grey");
+				$(cb + v.toString() + "']").css('border-color', 'grey');
+				$(cb + v.toString() + "']").css('border-width', '1px');
+				$(cb + v.toString() + "']").css('margin-top', '5px');
+				$(cb + v.toString() + "']").css('margin-bottom', '9px');
 			}
 		});
 	});
@@ -390,15 +395,15 @@ function changeMethod (value){
 		swit += d + ";4";
 		order = orderSlideStar('star');
 	}
-	else if(method == 5){
-		order = orderYesNo();
+	else if(method == 5 || method == 6){
+		order = orderYesNo(method);
 	}
 	method = value;
 	if(method == 1){ swit += ";1;;"; methodIndicator = "two_column"; twoColSort(order); }
 	else if(method == 2){ swit += ";2;;"; methodIndicator = "one_column"; oneColSort(order); }
 	else if(method == 3){ swit += ";3;;"; methodIndicator = "slider"; sliderSort(order); }
 	else if(method == 4){ swit += ";4;;"; methodIndicator = "star"; init_star = true; starSort(order); init_star = false;}
-	else if(method == 5){ yesNoSort(order); }
+	else if(method == 5 || method == 6){ yesNoSort(method, order); }
 
 	VoteUtil.checkStyle();
 };
@@ -538,7 +543,8 @@ var VoteUtil = (function () {
 		else if(method == 2){ order_list = orderCol(method); final_list = dictCol(2);}
 		else if(method == 3){ order_list = orderSlideStar('slide'); item_type = ".slider_item"; final_list = dictSlideStar('slide');}
 		else if(method == 4){ order_list = orderSlideStar('star'); item_type= ".star_item";final_list = dictSlideStar('star');}
-		else if(method == 5){ order_list = orderYesNo(); item_type= ".checkbox"; final_list = dictYesNo();}
+		else if(method == 5){ order_list = orderYesNo(method); item_type= ".checkbox"; final_list = dictYesNo();}
+		else if(method == 6){ order_list = orderYesNo(method); item_type= ".checkbox_single";}
 		else{location.reload(); }
 		var final_order = [];
 		for (var i = 0; i < order_list.length; i++) {
@@ -1248,4 +1254,25 @@ $( document ).ready(function() {
 	if(deviceFlavor == "mobile" && firstTime){
 		VoteUtil.moveAll();
 	}
+	var limit = 1;
+	$('.checkbox_single').on('change', function(evt) {
+		if($(this).children()[0].checked){
+			$(this).siblings().each(function(){
+				$(this).children()[0].checked = false;
+				select(this);
+			});
+		}else{
+			var ver = false;
+			$(this).siblings().each(function(){
+				select(this);
+				if($(this).children()[0].checked == true){
+					ver = true;
+				}
+			});
+			if(!ver){
+				$(this).children()[0].checked = true;
+				select(this);
+			}
+		}
+	});
 });

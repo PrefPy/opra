@@ -1,0 +1,383 @@
+{% extends 'polls/base.html' %}
+{% block extra_head %}
+<script src='/static/js/qrcodejs/qrcode.js'></script>
+{% endblock %}
+{% load index %}
+{% block content %}
+<script>
+    function validateForm(integer) {
+        var x = document.forms["newQuiz" + integer]["quizTitle"].value;
+        if (x == null || x == "") {
+            alert("The quiz title must be filled out");
+            return false;
+        }
+        var array = [];
+        $('.added' + integer).each(function(){
+        	if($(this).val() != ""){ array.push($(this).val()); }
+        });
+        if($('#choice').val() != ""){ array.push($('#choice').val()); }
+        $('#choice').val(JSON.stringify(array));
+    }
+
+    function start(id){
+      $.ajax({
+          type:'get',
+          url:'/polls/' + id + "/start",
+          success: function(event){
+              location.reload();
+          }
+      });
+    }
+
+    function stop(id){
+      $.ajax({
+          type:'get',
+          url:'/polls/' + id + "/stop",
+          success: function(event){
+              location.reload();
+          }
+      });
+    }
+
+    function pause(id){
+      $.ajax({
+          type:'get',
+          url:'/polls/' + id + "/pause",
+          success: function(event){
+              location.reload();
+          }
+      });
+    }
+
+    function resume(id){
+      $.ajax({
+          type:'get',
+          url:'/polls/' + id + "/resume",
+          success: function(event){
+              location.reload();
+          }
+      });
+    }
+</script>
+<div class="container">
+	
+<div name="created" class="panel panel-default">
+	<div class="panel-body">
+		<table style="width:100%;border-collapse:collapse;" class="table" name="created">
+			<thead>
+				<tr>
+					<th>
+						Classes created by you ({{ classes_created|length }})
+					</th>
+					<th>
+					</th>
+					<th>
+						<a href="{% url 'polls:newClass' %}" style='font-size:60%; float:right;' class="btn btn-yellow">
+							<span class="glyphicon glyphicon-plus"></span>
+						</a>
+					</th>
+				</tr>
+			</thead>
+
+			{% for class in classes_created %}
+			<!-- M-polls' names-->
+			<tbody>
+				<tr style = "margin:0; padding:0" data-toggle="collapse" data-target="#{{ class.id }}" class="accordion-toggle">
+					<td>
+						<a href="#" data-toggle="tooltip" data-placement="right" title="Description: {%if class.description %} {{class.description}} {%else%} None. {%endif%}">
+						<span style= "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0; font-size:17px;">
+							{{ class.title }}
+						</span></a>
+					</td>
+
+					<td>
+						<a href="#" aria-hidden="true" data-toggle="modal" data-target="#new_quiz{{ class.id }}">
+							<span class="btn btn-primary" style="float:right">New Quiz</span>
+						</a>
+					</td>
+					<span>
+						<div class="modal fade" id="new_quiz{{ class.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										New Quiz for {{ class.title }}
+									</div>
+									<form id="newQuiz{{class.id}}" method="post" action="{% url 'polls:newQuiz' class.id %}" onsubmit="return validateForm({{class.id}})" name="newQuiz{{class.id}}">
+										{% csrf_token %}
+										<div class="modal-body">
+											<label for="quizTitle{{class.id}}">Title:</label> <small class="text-muted"> * </small> <br />
+							        <input type="text" class="form-control" id="quizTitle{{class.id}}" name="quizTitle" value="" maxlength="40" size="50" autofocus/>
+							        <small class="text-muted">Required (at most 40 characters) </small> <br/><br/>
+
+											<label for="quizDesc{{class.id}}">Description:</label> <small class="text-muted"> * </small> <br />
+							        <input type="text" class="form-control" id="quizDesc{{class.id}}" name="quizDesc" value="" maxlength="40" size="50" autofocus/>
+							        <small class="text-muted">Required (at most 40 characters) </small> <br/><br/>
+
+							        {% include 'classes/_add_choice.html' %}
+										<div class="modal-footer">
+											<a href="#">
+												<button class="btn-large btn-success btn-ok">
+													Yes
+												</button>
+											</a>
+											<button type="button" class="btn-large btn-default" data-dismiss="modal">
+												Cancel
+											</button>
+										</div>
+									</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</span>
+					<td>
+						<a href="{% url 'polls:gradesCSV' class.id %}">
+							<span class="btn btn-primary" style="float:right">Download Grades</span>
+						</a>
+						{% if class.attendance == -1 or class.attendance == 0 %}
+						<a href="{% url 'polls:takeAttendance' class.id %}">
+							<span class="btn btn-primary" style="float:right">Take Attendance</span>
+						</a>
+						{% else %}
+						<a href="{% url 'polls:stopAttendance' class.id %}">
+							<span class="btn btn-danger" style="float:right">Stop Attendance</span>
+						</a>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td colspan="12" class="hiddenRow" style="border-top: none;">
+						<div class="accordian-body collapse in" id="{{ class.id }}">
+						<table class="table table-hover" id="{{ class.id }}">
+							{% for question in class.question_set.all %}
+							{{ question.question_text }}
+								<tr class="info" >
+									<td>
+										<a href="#">
+											<span style = "font-size: 100%;">{{ question.question_text }} </span>
+										</a>
+									</td>
+
+									<td style="float:middle;">
+										{% if question.status == 2 and request.user in question.question_voters.all %}
+											<a href="#" class ="btn btn-dark" style='float:middle;font-size=60%;'>Vote</a>
+										{% endif %}
+									</td>
+									{% if question.status == 1 %}
+                        <td style="vertical-align:middle">
+                            <div class="start-icon">
+                            <i class="fa fa-play" aria-hidden="true" data-toggle="modal" data-target="#confirm-start{{ question.id }}"></i>
+                            </div>
+                        </td>
+
+                        <div class="modal fade" id="confirm-start{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        Confirm Start Poll {{ question.question_text }}
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to start poll {{ question.question_text }}? Once a poll is started, you cannot modify the settings or remove voters.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="{% url 'polls:start' question.id %}">
+                                            <button type="button" class="btn-large btn-success btn-ok">Yes</button>
+                                        </a>
+                                        <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif question.status == 2 %}
+						<td style="vertical-align:middle">
+							<div class="stop-icon pull-right">
+                            <i class="fa fa-stop" aria-hidden="true" data-toggle="modal" data-target="#confirm-stop{{ question.id }}"></i>
+                            </div>
+                            <div class="pause-icon pull-right" style="position:relative; right:10%;">
+                            <a href="{% url 'polls:pause' question.id %}"><i class="fa fa-pause" aria-hidden="true"></i></a>
+                            </div>
+                            
+                        </td>
+
+                        <div class="modal fade" id="confirm-stop{{ question.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        Confirm Stop Poll
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to stop this poll? Once a poll is stopped, no more votes can be changed.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="{% url 'polls:stop' question.id %}">
+                                            <button type="button" class="btn-large  btn-ok btn-danger" style="font-size:100%;">Yes</button>
+                                        </a>
+                                        <button type="button" class="btn-large btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif question.status == 3 %}
+                        <td>
+                            {% if question.question_type == 1 %}
+                                <a style="float:right;margin:10px" href="{% url 'polls:voteresults' question.id %}" class="overflow">
+                                    {{question.winner}} wins
+                                </a>
+                            {% elif question.question_type == 2 %}
+                                Allocation Complete: <br />
+
+                                {% for order_item in question.allocationvoter_set.all %}
+                                    {% if order_item.response.allocation %}
+                                        {{ order_item.user.username }}: {{ order_item.response.allocation.item_text }}
+                                        <br />
+                                    {% endif %}
+                                {% endfor %}
+
+                                <a href="{% url 'polls:allocate_results' question.id %}" >
+                                    <span class = "glyphicon glyphicon-info-sign" href="{% url 'polls:allocate_results' question.id %}"></span>
+                                </a>
+                            {% endif %}
+                        </td>
+					{% else %}
+					<td style="vertical-align:middle">
+                        <div class="start-icon">
+                            <a href="{% url 'polls:resume' question.id %}"><i class="fa fa-play" aria-hidden="true"></i></a>
+                        </div>
+                    </td>
+                    {% endif %}
+								</tr>
+							{% endfor %}
+						</table>
+						</div>
+					</td>
+				</tr>
+			</tbody><!-- for each question in one m-poll-->
+			{% endfor %} <!--end for class in classes-->
+		</table>
+	<!-- end for M-polls created by you-->
+	 </div>
+</div>
+
+<div name="participated" class="panel panel-default">
+	<div class="panel-body">
+
+	<table style = "width:100%;" class="table" name="participated">
+		<thead>
+			<tr>
+				<th>
+					Classes participated in ({{ classes_participated|length }})
+				</th>
+			</tr>
+		</thead>
+		{% for class in classes_participated %}
+		<tbody>
+			<tr data-toggle="collapse" data-target="#{{ class.id }}" class="accordion-toggle">
+				 <td>
+						<a href="#"  data-toggle="tooltip" data-placement="right" title="Description: {%if class.description %} {{class.description}} {%else%} None. {%endif%}">
+						<span style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:17px;">
+							{{ class.title }}
+						</span></a>
+						<span href="#collapse{{ forloop.counter }}" class="caret" style="color:#377BB5;"></span>
+					</td>
+
+					<td>
+						<a href="#" aria-hidden="true" data-toggle="modal" data-target="#take_quiz{{ class.id }}">
+							<span class="btn btn-primary" style="float:right">Quizzes</span>
+						</a>
+						{% if taking_attendance|index:forloop.counter0 %}
+						<a href="{% url 'polls:classSignIn' class.id %}">
+							<span class="btn btn-primary" style="float:right">Sign In</span>
+						</a>
+						{% endif %}
+					</td>
+					<span>
+						<div class="modal fade" id="take_quiz{{ class.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										Choose a quiz
+									</div>
+										<div class="modal-body">
+											<ul style="max-height: 400px;overflow-y: scroll;" id="quizzes_to_take{{class.id}}">
+											{% for quiz in quizzes_part_prev|index:forloop.counter0 %}
+												{% include 'classes/_quiz_list.html' %}
+											{% endfor %}
+
+											{% for quiz in quizzes_part_curr|index:forloop.counter0 %}
+												{% include 'classes/_quiz_list.html' %}
+											{% endfor %}
+											</ul>
+										<div class="modal-footer">
+											<button type="button" class="btn-large btn-default" data-dismiss="modal">
+												Close
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</span>
+			</tr>
+			<tr>
+				<td colspan="12" class="hiddenRow" style="border-top: none;">
+					<div class="accordian-body collapse in" id="{{ class.id }}">
+					<table class="table table-hover" id="{{ class.id }}">
+						<tr>Running Polls:</tr>
+						{% for question in quizzes_part_curr|index:forloop.counter0 %}
+							<tr class="info">
+								<td>
+									<a href="#" > <span style = "font-size: 100%;">{{ question.question_text }} </span></a>
+								</td>
+								<td style="float:middle;">
+									{% if question.status == 2 %}
+										<a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" style='float:middle'>Vote</a>
+									{% endif %}
+								</td>
+								<td>
+									{% if question.status == 1 %}
+										Poll not started
+									{% elif question.status == 2 %}
+										Polling in session
+									{% else %}
+										Correct Answer: {{question.correct_answer}}
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+					<table class="table table-hover" id="{{ class.id }}">
+						<tr>Past Polls:</tr>
+						{% for question in quizzes_part_prev|index:forloop.counter0 %}
+							<tr class="info">
+								<td>
+									<a href="#" > <span style = "font-size: 100%;">{{ question.question_text }} </span></a>
+								</td>
+								<td style="float:middle;">
+									<a style = "font-size: 100%;" href="{% url 'polls:voteresults' question.id %}" class="overflow">
+                                    {{question.winner}} wins
+                                	</a>
+								</td>
+								<td>
+									{% if question.status == 1 %}
+										Poll not started
+									{% elif question.status == 2 %}
+										Polling in session
+									{% else %}
+										Correct Answer: {{question.correct_answer}}
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+		{% endfor %}
+	</table>
+	</div>
+</div>
+
+</div><!--end of container-->
+{% endblock %}
+	

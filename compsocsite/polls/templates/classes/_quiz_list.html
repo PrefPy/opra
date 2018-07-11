@@ -1,0 +1,52 @@
+<li style="list-style: none;">
+<a href="{% url 'polls:pollinfo' quiz.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if quiz.question_desc %} {{quiz.question_desc}} {%else%} None. {%endif%}">
+	{{ quiz.question_text }}
+</a>
+						
+{% if quiz.status == 2 %}
+	{% if quiz.open != 3 and request.user in quiz.question_voters.all %}
+		<a href="{% url 'polls:detail' quiz.id %}" class ="btn btn-dark" role="button" >Vote</a>
+	{% elif quiz.open == 3 %}
+        <a href="{% url 'polls:cardSwipe' quiz.id %}" class="btn btn-dark" role="button">Open voting page</a>
+    {% endif %}
+{% endif %}
+
+{% if quiz.question_type == 1 and quiz.status != 1 and quiz.status != 3 and quiz.response_set.all.count > 0 %}
+    <a href="{% url 'polls:voteresults' quiz.id %}" class ="btn btn-dark" role="button" target="_blank" >Current Winners</a>
+{% endif %}
+
+{% if quiz.question_owner == request.user %}
+	{% if quiz.status == 1 %}
+		<div class="start-icon">
+			<i class="fa fa-play" aria-hidden="true" onclick="start({{quiz.id}})"></i>
+		</div>
+	{% elif quiz.status == 2 %}
+		<div class="stop-icon pull-right">
+			<i class="fa fa-stop" aria-hidden="true" onclick="stop({{quiz.id}})"></i>
+		</div>
+		<div class="pause-icon pull-right" style="position:relative; right:10%;">
+			<i class="fa fa-pause" aria-hidden="true" onclick="pause({{quiz.id}})"></i>
+		</div>
+
+	{% elif quiz.status == 3 %}
+		{% if quiz.question_type == 1 %}
+		<a style="float:right;margin:10px" href="{% url 'polls:voteresults' quiz.id %}" class="overflow">
+			{{quiz.winner}} wins
+		</a>
+		{% endif %}
+
+	{% else %}
+		<div class="start-icon">
+			<i class="fa fa-play" aria-hidden="true" onclick="resume({{quiz.id}})"></i>
+		</div>
+	{% endif %}
+{% endif %}
+</li>
+{% if quiz.status == 2 and quiz.question_owner == request.user %}
+<li>
+    <div id="qrcode" style="margin-top:15px;">
+        <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl=https://campusopra.cs.rpi.edu{% url 'polls:detail' quiz.id %}" style="width:400px" />
+    </div>
+    <h3 href="{% url 'polls:detail' quiz.id %}" id="QRLink">https://campusopra.cs.rpi.edu{% url 'polls:detail' quiz.id %}</h3>
+</li>
+{% endif %}

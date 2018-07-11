@@ -11,6 +11,16 @@ from django.conf import settings
 
 # Models
 
+class Classes(models.Model):
+    title = models.CharField(max_length=100, default="")
+    startDate = models.DateField('start date')
+    weekly = models.IntegerField(default=0)
+    teacher = models.ForeignKey(User, null=True)
+    attendance = models.IntegerField(default=-1)
+    teachingAssistants = models.ManyToManyField(User, related_name='tas')
+    students = models.ManyToManyField(User, related_name='students')
+
+
 # question that will receive responses
 @python_2_unicode_compatible
 class Question(models.Model):
@@ -46,12 +56,16 @@ class Question(models.Model):
     star_enabled = models.BooleanField(default=True)
     yesno_enabled = models.BooleanField(default=True)
     yesno2_enabled = models.BooleanField(default=False)
+    single_enabled = models.BooleanField(default=True)
     allowties = models.BooleanField(default=True)
     initial_ui = models.IntegerField(default=1)
     ui_number = models.IntegerField(default=6)
     vote_rule = models.IntegerField(default=4095)
     first_tier = models.IntegerField(default=0)
     utility_model = models.IntegerField(default=0)
+
+    related_class = models.ForeignKey(Classes, null=True)
+    correct_answer = models.TextField(default="")
     def __str__(self):
         return self.question_text
     def was_published_recently(self):
@@ -363,3 +377,4 @@ class Experiment(models.Model):
 
 class RandomUtilityPool(models.Model):
     data = models.TextField(default="[]")
+

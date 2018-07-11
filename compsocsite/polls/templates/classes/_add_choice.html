@@ -1,0 +1,26 @@
+<ul class="list-group" id="choicesetting">
+    <li id="added{{class.id}}" class="list-group-item">
+    </li>
+    <li class="list-group-item">
+        <div class="row">
+        <div class="col-xs-10 form-group">
+            <input type="text" id="choice" class="form-control" name="choice" value="" size="50" placeholder="Option name" autofocus/>
+        </div>
+
+        <button type="button" id="addOption{{class.id}}" class="btn btn-primary">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        </div>
+        </div>
+    </li>
+</ul>
+<script>
+    var counter = 0;
+    $('#addOption{{class.id}}').click(function(){
+        var text = $('#choice').val();
+        $('#added{{class.id}}').append("<div class=\"row\"><div class=\"col-xs-10 form-group\"><input type=\"text\" id=\"choice" + counter + "\" class=\"added{{class.id}} form-control\" name=\"choice" + counter + "\" value=\"\" size=\"50\"/></div></div>");
+        $('#choice' + counter).val(text);
+        $('#choice').val("");
+        counter = counter + 1;
+    });
+</script>

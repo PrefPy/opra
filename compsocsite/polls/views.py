@@ -10,6 +10,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.core.urlresolvers import reverse
 from django import views
+from django.db.models import Q
 
 from django.utils import timezone
 from django.template import RequestContext
@@ -1850,7 +1851,9 @@ def vote(request, question_id):
         question.related_class.students.add(request.user)
 
     if question.related_class != None and request.user == question.related_class.teacher:
-        pass
+        formatted_order = [i[4:] for i in prefOrder[0]]
+        question.correct_answer = json.dumps(formatted_order)
+        question.save()
 
 
     #enqueue
@@ -2346,6 +2349,7 @@ def newClass(request):
         date = date[2] + "-" + date[0] + "-" + date[1]
         new_class = Classes(title=request.POST['classTitle'], startDate=date, teacher=request.user)
         new_class.save()
+        new_class.students.add(request.user.id)
         return HttpResponseRedirect(reverse('polls:classes'))
     else:
         context = RequestContext(request)
@@ -2389,7 +2393,7 @@ def newQuiz(request, pk):
 def takeAttendance(request, pk):
     cur_class = get_object_or_404(Classes, pk=pk)
     if cur_class.teacher == request.user and cur_class.attendance == -1:
-        quiz = Question(question_text=cur_class.title + " attendance " + str(timezone.now()),
+        quiz = Question(question_text=cur_class.title + " attendance " + str(timezone.now())[:19],
                                 question_desc="",
                                 pub_date=timezone.now(),
                                 question_owner=request.user,
@@ -2455,6 +2459,10 @@ class ClassesView(views.generic.ListView):
         quizzes = []
         quizzes_part_curr = []
         quizzes_part_prev = []
+        quizzes_part_prev_answer = []
+        attendance_prev = []
+        attendance_curr = []
+        attendance_prev_states = []
         taking_attendance = []
         classes_part = self.request.user.students.exclude(teacher=None).order_by('-startDate')#self.request.user)
         ctx['classes_created'] = classes
@@ -2468,14 +2476,39 @@ class ClassesView(views.generic.ListView):
                 taking_attendance.append(prevResponseCount == 0)
             else:
                 taking_attendance.append(False)
+            previous_quiz = list(Question.objects.filter(related_class=class_inst).filter(question_type=3).filter(Q(status=3) | Q(status=4)))
+            previous_att = list(Question.objects.filter(related_class=class_inst).filter(question_type=4).filter(Q(status=3) | Q(status=4)))
             quizzes_part_curr.append(Question.objects.filter(related_class=class_inst).filter(question_type=3).filter(status=2))
-            quizzes_part_prev.append(Question.objects.filter(related_class=class_inst).filter(question_type=3).filter(status=3))
+            quizzes_part_prev.append(previous_quiz)
+            attendance_curr.append(Question.objects.filter(related_class=class_inst).filter(question_type=4).filter(status=2))
+            attendance_prev.append(previous_att)
+            for quiz in previous_quiz:
+                user_response = list(Response.objects.filter(question=quiz,user=self.request.user,active=1).order_by('timestamp'))
+                #print(user_response)
+                if len(user_response) > 0:
+                    try:
+                        resp_str = json.loads(user_response[0].resp_str)
+                        formatted_response = [i[4:] for i in resp_str[0]]
+                        quizzes_part_prev_answer.append(json.dumps(formatted_response))
+                    except:
+                        quizzes_part_prev_answer.append("")
+                else:
+                    quizzes_part_prev_answer.append("Missed")
+            for att in previous_att:
+                user_response = list(Response.objects.filter(question=att,user=self.request.user,active=1).order_by('timestamp'))
+                if len(user_response) > 0:
+                    attendance_prev_states.append("Attended")
+                else:
+                    attendance_prev_states.append("Missed")
         taking_attendance.reverse()
         ctx['quizzes_created'] = quizzes
         ctx['quizzes_part_prev'] = quizzes_part_prev
         ctx['quizzes_part_curr'] = quizzes_part_curr
+        ctx['attendance_prev'] = attendance_prev
         ctx['taking_attendance'] = taking_attendance
-        print(taking_attendance)
+        ctx['quizzes_part_prev_answer'] = quizzes_part_prev_answer
+        ctx['attendance_prev_states'] = attendance_prev_states
+        #print(taking_attendance)
         return ctx
 
 class GradesView(views.generic.ListView):

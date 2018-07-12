@@ -82,7 +82,7 @@
 			{% for class in classes_created %}
 			<!-- M-polls' names-->
 			<tbody>
-				<tr style = "margin:0; padding:0" data-toggle="collapse" data-target="#{{ class.id }}" class="accordion-toggle">
+				<tr style = "margin:0; padding:0" data-toggle="collapse" data-target="#{{ class.id }}created" class="accordion-toggle">
 					<td>
 						<a href="#" data-toggle="tooltip" data-placement="right" title="Description: {%if class.description %} {{class.description}} {%else%} None. {%endif%}">
 						<span style= "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0; font-size:17px;">
@@ -147,20 +147,19 @@
 				</tr>
 				<tr>
 					<td colspan="12" class="hiddenRow" style="border-top: none;">
-						<div class="accordian-body collapse in" id="{{ class.id }}">
+						<div class="accordian-body collapse {% if forloop.counter0 == 0%}in{% endif %}" id="{{ class.id }}created">
 						<table class="table table-hover" id="{{ class.id }}">
 							{% for question in class.question_set.all %}
-							{{ question.question_text }}
 								<tr class="info" >
 									<td>
-										<a href="#">
+										<a href="{% url 'polls:pollinfo' question.id %}">
 											<span style = "font-size: 100%;">{{ question.question_text }} </span>
 										</a>
 									</td>
 
 									<td style="float:middle;">
-										{% if question.status == 2 and request.user in question.question_voters.all %}
-											<a href="#" class ="btn btn-dark" style='float:middle;font-size=60%;'>Vote</a>
+										{% if question.status == 2 %}
+											<a href="{% url 'polls:detail' question.id %}" class ="btn btn-dark" style='float:middle;font-size=60%;'>Vote</a>
 										{% endif %}
 									</td>
 									{% if question.status == 1 %}
@@ -271,7 +270,7 @@
 		</thead>
 		{% for class in classes_participated %}
 		<tbody>
-			<tr data-toggle="collapse" data-target="#{{ class.id }}" class="accordion-toggle">
+			<tr data-toggle="collapse" data-target="#{{ class.id }}part" class="accordion-toggle">
 				 <td>
 						<a href="#"  data-toggle="tooltip" data-placement="right" title="Description: {%if class.description %} {{class.description}} {%else%} None. {%endif%}">
 						<span style = "padding-top:0;padding-bottom:0;margin-top:0;margin-bottom:0;font-size:17px;">
@@ -320,7 +319,7 @@
 			</tr>
 			<tr>
 				<td colspan="12" class="hiddenRow" style="border-top: none;">
-					<div class="accordian-body collapse in" id="{{ class.id }}">
+					<div class="accordian-body collapse {% if forloop.counter0 == 0%}in{%endif%}" id="{{ class.id }}part">
 					<table class="table table-hover" id="{{ class.id }}">
 						<tr>Running Polls:</tr>
 						{% for question in quizzes_part_curr|index:forloop.counter0 %}
@@ -354,7 +353,7 @@
 								</td>
 								<td style="float:middle;">
 									<a style = "font-size: 100%;" href="{% url 'polls:voteresults' question.id %}" class="overflow">
-                                    {{question.winner}} wins
+                                    Your Answer: {{quizzes_part_prev_answer|index:forloop.counter0}}
                                 	</a>
 								</td>
 								<td>
@@ -365,6 +364,23 @@
 									{% else %}
 										Correct Answer: {{question.correct_answer}}
 									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</table>
+					<table class="table table-hover" id="{{ class.id }}">
+						<tr>Attendance History:</tr>
+						{% for question in attendance_prev|index:forloop.counter0 %}
+							<tr class="info">
+								<td>
+									<a href="#" > <span style = "font-size: 100%;">{{ question.question_text }} </span></a>
+								</td>
+								<td style="float:middle;">
+									<a style = "font-size: 100%;" href="{% url 'polls:voteresults' question.id %}" class="overflow">
+                                    {{attendance_prev_states|index:forloop.counter0}}
+                                	</a>
+								</td>
+								<td>
 								</td>
 							</tr>
 						{% endfor %}

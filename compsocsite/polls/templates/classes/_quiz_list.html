@@ -2,7 +2,7 @@
 <a href="{% url 'polls:pollinfo' quiz.id %}" data-toggle="tooltip" data-placement="right" title="Description: {%if quiz.question_desc %} {{quiz.question_desc}} {%else%} None. {%endif%}">
 	{{ quiz.question_text }}
 </a>
-						
+{% load qr_code %}
 {% if quiz.status == 2 %}
 	{% if quiz.open != 3 and request.user in quiz.question_voters.all %}
 		<a href="{% url 'polls:detail' quiz.id %}" class ="btn btn-dark" role="button" >Vote</a>
@@ -45,8 +45,10 @@
 {% if quiz.status == 2 and quiz.question_owner == request.user %}
 <li>
     <div id="qrcode" style="margin-top:15px;">
-        <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl=https://campusopra.cs.rpi.edu{% url 'polls:detail' quiz.id %}" style="width:400px" />
+    	{% with quiz.id|stringformat:"i" as quiz_id %}
+    		{% qr_from_text "https://opra.cs.rpi.edu/polls/"|add:quiz_id size="s" image_format="png" error_correction="L" %}
+    	{% endwith %}
     </div>
-    <h3 href="{% url 'polls:detail' quiz.id %}" id="QRLink">https://campusopra.cs.rpi.edu{% url 'polls:detail' quiz.id %}</h3>
+    <h3 href="{% url 'polls:detail' quiz.id %}" id="QRLink">https://opra.cs.rpi.edu{% url 'polls:detail' quiz.id %}</h3>
 </li>
 {% endif %}

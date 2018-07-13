@@ -27,6 +27,7 @@ from .email import EmailThread, setupEmail
 from django.conf import settings
 from multipolls.models import *
 
+from . import opra_crypto
 import json
 import threading
 import itertools
@@ -1851,7 +1852,7 @@ def vote(request, question_id):
         question.related_class.students.add(request.user)
 
     if question.related_class != None and request.user == question.related_class.teacher:
-        formatted_order = [i[4:] for i in prefOrder[0]]
+        formatted_order = sorted([i[4:] for i in prefOrder[0]])
         question.correct_answer = json.dumps(formatted_order)
         question.save()
 
@@ -2363,7 +2364,7 @@ def newQuiz(request, pk):
                                 question_desc=request.POST["quizDesc"],
                                 pub_date=timezone.now(),
                                 question_owner=request.user,
-                                display_pref=False,
+                                display_pref=4,
                                 emailInvite=False,
                                 emailDelete=False,
                                 emailStart=False,
@@ -2378,7 +2379,7 @@ def newQuiz(request, pk):
                                 ui_number=True+True+True+True+True,
                                 vote_rule=1,
                                 creator_pref=1,
-                                open=1,
+                                open=2,
                                 related_class=cur_class)
         quiz.save()
         for option in options:
@@ -2397,7 +2398,7 @@ def takeAttendance(request, pk):
                                 question_desc="",
                                 pub_date=timezone.now(),
                                 question_owner=request.user,
-                                display_pref=False,
+                                display_pref=4,
                                 emailInvite=False,
                                 emailDelete=False,
                                 emailStart=False,
@@ -2412,7 +2413,7 @@ def takeAttendance(request, pk):
                                 ui_number=True+True+True+True+True,
                                 vote_rule=1,
                                 creator_pref=1,
-                                open=1,
+                                open=2,
                                 status=2,
                                 related_class=cur_class)
         quiz.save()
@@ -2436,6 +2437,14 @@ def stopAttendance(request, pk):
         cur_class.attendance = -1
         cur_class.save()
     return HttpResponseRedirect(reverse('polls:classes'))
+
+def attendanceSignIn(request, question_id):
+    cur_poll = get_object_or_404(Question, pk=question_id)
+    if request.user not in cur_poll.related_class.students:
+        cur_poll.related_class.add(request.user.id)
+    resp = Response(question=cur_poll, user=request.user, timestamp=timezone.now(),resp_str="[\"itemI'm here\"]")
+    resp.save()
+    return render(request, "success_join.html", {"poll_name":cur_poll.question_text})
 
 def classSignIn(request, pk):
     cur_class = get_object_or_404(Classes, pk=pk)
@@ -2488,7 +2497,7 @@ class ClassesView(views.generic.ListView):
                 if len(user_response) > 0:
                     try:
                         resp_str = json.loads(user_response[0].resp_str)
-                        formatted_response = [i[4:] for i in resp_str[0]]
+                        formatted_response = sorted([i[4:] for i in resp_str[0]])
                         quizzes_part_prev_answer.append(json.dumps(formatted_response))
                     except:
                         quizzes_part_prev_answer.append("")

@@ -117,4 +117,5 @@ urlpatterns = [
     url(r'^class/(?P<pk>[0-9]+)/newQuiz/$', views.newQuiz, name='newQuiz'),
     url(r'^class/(?P<pk>[0-9]+)/grades/$', views.GradesView.as_view(), name='grades'),
     url(r'^class/(?P<pk>[0-9]+)/gradesCSV/$', views.GradesDownload, name='gradesCSV'),
+    url(r'^class/(?P<pk>[0-9]+)/attendclass/$', views.attendanceSignIn, name='attendclass'),
 ]

@@ -53,6 +53,10 @@
 	    	{% endif %}
     	{% endwith %}
     </div>
+    {% if quiz.question_type == 3%}
     <h3 href="{% url 'polls:detail' quiz.id %}" id="QRLink">https://opra.cs.rpi.edu{% url 'polls:detail' quiz.id %}</h3>
+    {% else %}
+    <h3 href="{% url 'polls:attendclass' quiz.id %}" id="QRLink">https://opra.cs.rpi.edu{% url 'polls:attendclass' quiz.id %}</h3>
+    {% endif %}
 </li>
 {% endif %}

@@ -301,6 +301,10 @@
 											{% for quiz in quizzes_part_curr|index:forloop.counter0 %}
 												{% include 'classes/_quiz_list.html' %}
 											{% endfor %}
+
+											{% for quiz in attendance_curr|index:forloop.counter0 %}
+												{% include 'classes/_quiz_list.html' %}
+											{% endfor %}
 											</ul>
 										<div class="modal-footer">
 											<button type="button" class="btn-large btn-default" data-dismiss="modal">

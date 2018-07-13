@@ -2441,7 +2441,7 @@ def stopAttendance(request, pk):
 def attendanceSignIn(request, question_id):
     cur_poll = get_object_or_404(Question, pk=question_id)
     if request.user not in cur_poll.related_class.students.all():
-        cur_poll.related_class.add(request.user.id)
+        cur_poll.related_class.students.add(request.user.id)
     resp = Response(question=cur_poll, user=request.user, timestamp=timezone.now(),resp_str="[\"itemI'm here\"]")
     resp.save()
     return render(request, "success_join.html", {"poll_name":cur_poll.question_text})

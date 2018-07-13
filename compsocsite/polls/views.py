@@ -2438,6 +2438,7 @@ def stopAttendance(request, pk):
         cur_class.save()
     return HttpResponseRedirect(reverse('polls:classes'))
 
+@login_required
 def attendanceSignIn(request, question_id):
     cur_poll = get_object_or_404(Question, pk=question_id)
     if request.user not in cur_poll.related_class.students.all():

@@ -46,7 +46,11 @@
 <li>
     <div id="qrcode" style="margin-top:15px;">
     	{% with quiz.id|stringformat:"i" as quiz_id %}
-    		{% qr_from_text "https://opra.cs.rpi.edu/polls/"|add:quiz_id size="s" image_format="png" error_correction="L" %}
+	    	{% if quiz.question_type == 3%}
+	    		{% qr_from_text "https://opra.cs.rpi.edu/polls/"|add:quiz_id size="s" image_format="png" error_correction="L" %}
+	    	{% else %}
+	    		{% qr_from_text "https://opra.cs.rpi.edu/polls/class/"|add:quiz_id|add:"/attendclass/" size="s" image_format="png" error_correction="L" %}
+	    	{% endif %}
     	{% endwith %}
     </div>
     <h3 href="{% url 'polls:detail' quiz.id %}" id="QRLink">https://opra.cs.rpi.edu{% url 'polls:detail' quiz.id %}</h3>

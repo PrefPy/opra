@@ -2514,6 +2514,7 @@ class ClassesView(views.generic.ListView):
         ctx['quizzes_part_prev'] = quizzes_part_prev
         ctx['quizzes_part_curr'] = quizzes_part_curr
         ctx['attendance_prev'] = attendance_prev
+        ctx['attendance_curr'] = attendance_curr
         ctx['taking_attendance'] = taking_attendance
         ctx['quizzes_part_prev_answer'] = quizzes_part_prev_answer
         ctx['attendance_prev_states'] = attendance_prev_states

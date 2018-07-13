@@ -284,11 +284,6 @@
 						<a href="#" aria-hidden="true" data-toggle="modal" data-target="#take_quiz{{ class.id }}">
 							<span class="btn btn-primary" style="float:right">Quizzes</span>
 						</a>
-						{% if taking_attendance|index:forloop.counter0 %}
-						<a href="{% url 'polls:classSignIn' class.id %}">
-							<span class="btn btn-primary" style="float:right">Sign In</span>
-						</a>
-						{% endif %}
 					</td>
 					<span>
 						<div class="modal fade" id="take_quiz{{ class.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

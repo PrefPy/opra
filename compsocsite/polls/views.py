@@ -2445,7 +2445,7 @@ def attendanceSignIn(request, question_id):
         cur_poll.related_class.students.add(request.user.id)
     resp = Response(question=cur_poll, user=request.user, timestamp=timezone.now(),resp_str="[\"itemI'm here\"]")
     resp.save()
-    return render(request, "success_join.html", {"poll_name":cur_poll.question_text})
+    return render(request, "classes/success_join.html", {"poll_name":cur_poll.question_text})
 
 def classSignIn(request, pk):
     cur_class = get_object_or_404(Classes, pk=pk)

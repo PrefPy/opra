@@ -1,5 +1,6 @@
 {% extends 'polls/base.html' %}
 {% block extra_head %}
+{% load qr_code %}
 
 <script src='/static/js/qrcodejs/qrcode.js'></script>
 
@@ -209,7 +210,9 @@
     <h3 class="page-header">Info and settings of {{ question.question_text }} </h3>
 
     <div id="qrcode" style="margin-top:15px;">
-        <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl=https://opra.cs.rpi.edu{% url 'polls:detail' question.id %}" style="width:400px" />
+        {% with question.id|stringformat:"i" as question_id %}
+                {% qr_from_text "https://opra.cs.rpi.edu/polls/"|add:question_id size="s" image_format="png" error_correction="L" %}
+        {% endwith %}
     </div>
     <a href="#" id="showQRLink">Show Link</a>
     <a href="#" id="hideQRLink">Hide Link</a>

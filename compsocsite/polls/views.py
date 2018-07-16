@@ -494,43 +494,42 @@ def getPollWinner(question):
     result = FinalResult(question=question, timestamp=timezone.now(),
                          result_string="", mov_string="", cand_num=question.item_set.all().count(),
                          node_string="", edge_string="", shade_string="")
-    resultstr = ""
-    movstr = ""
-    nodestr = ""
-    edgestr = ""
-    shadestr = ""
+    
+    resultlist = []
     mov = getMarginOfVictory(latest_responses, cand_map)
+    movlist = [str(i) for i in mov]
     for x in range(0, len(vote_results)):
         for key, value in vote_results[x].items():
-            resultstr += str(value)
-            resultstr += ","
-    for x in range(0, len(mov)):
-        movstr += str(mov[x])
-        movstr += ","
-    resultstr = resultstr[:-1]
-    movstr = movstr[:-1]
+            resultlist.append(str(value))
+            # resultstr += str(value)
+            # resultstr += ","
+    # for x in range(0, len(mov)):
+    #     movstr += str(mov[x])
+    #     movstr += ","
+    # resultstr = resultstr[:-1]
+    # movstr = movstr[:-1]
     (nodes, edges) = parseWmg(latest_responses, cand_map)
-    for node in nodes:
-        for k, v in node.items():
-            nodestr += k + "," + str(v) + ";"
-        nodestr += "|"
-    nodestr = nodestr[:-2]
-    for edge in edges:
-        for k, v in edge.items():
-            edgestr += k + "," + str(v) + ";"
-        edgestr += "|"
-    edgestr = edgestr[:-2]
+    # for node in nodes:
+    #     for k, v in node.items():
+    #         nodestr += k + "," + str(v) + ";"
+    #     nodestr += "|"
+    # nodestr = nodestr[:-2]
+    # for edge in edges:
+    #     for k, v in edge.items():
+    #         edgestr += k + "," + str(v) + ";"
+    #     edgestr += "|"
+    # edgestr = edgestr[:-2]
     shadevalues = getShadeValues(vote_results)
-    for x in shadevalues:
-        for y in x:
-            shadestr += y + ";"
-        shadestr += "|"
-    shadestr = shadestr[:-2]
-    result.result_string = resultstr
-    result.mov_string = movstr
-    result.node_string = nodestr
-    result.edge_string = edgestr
-    result.shade_string = shadestr
+    # for x in shadevalues:
+    #     for y in x:
+    #         shadestr += y + ";"
+    #     shadestr += "|"
+    # shadestr = shadestr[:-2]
+    result.result_string = json.dumps(resultlist)
+    result.mov_string = json.dumps(movlist)
+    result.node_string = json.dumps(nodes)
+    result.edge_string = json.dumps(edges)
+    result.shade_string = json.dumps(shadevalues)
     result.save()
 
     if question.new_vote:
@@ -549,13 +548,50 @@ def getPollWinner(question):
 #List<List<String>>
 def interpretResult(finalresult):
     candnum = finalresult.cand_num
-    resultstr = finalresult.result_string
-    movstr = finalresult.mov_string
-    shadestr = finalresult.shade_string
-    nodestr = finalresult.node_string
-    edgestr = finalresult.edge_string
-    resultlist = resultstr.split(",")
-    movlist = movstr.split(",")
+    # resultstr = finalresult.result_string
+    # movstr = finalresult.mov_string
+    # shadestr = finalresult.shade_string
+    # nodestr = finalresult.node_string
+    # edgestr = finalresult.edge_string
+    # resultlist = resultstr.split(",")
+    # movlist = movstr.split(",")
+    # tempResults = []
+    # algonum = len(getListPollAlgorithms())
+    # if len(resultlist) < candnum*algonum:
+    #     algonum = 7
+    # if len(resultlist) > 0:
+    #     for x in range(0, algonum):
+    #         tempList = []
+    #         for y in range(x*candnum, (x+1)*candnum):
+    #             tempList.append(resultlist[y])
+    #         tempResults.append(tempList)
+    # tempMargin = []
+    # for margin in movlist:
+    #     tempMargin.append(margin)
+    # tempShades = []
+    # shadelist = shadestr.split(";|")
+    # for item in shadelist:
+    #     tempShades.append(item.split(";"))
+    # temp_nodes = []
+    # nodelist = nodestr.split(";|")
+    # for node in nodelist:
+    #     data = {}
+    #     l = node.split(";")
+    #     for item in l:
+    #         tup = item.split(",")
+    #         data[tup[0]] = tup[1]
+    #     temp_nodes.append(data)
+    # tempEdges = []
+    # edgelist = edgestr.split(";|")
+    # if edgestr != "":
+    #     for edge in edgelist:
+    #         data = {}
+    #         l = edge.split(";")
+    #         for item in l:
+    #             tup = item.split(",")
+    #             data[tup[0]] = tup[1]
+    #         tempEdges.append(data)
+    resultlist = json.loads(finalresult.result_string)
     tempResults = []
     algonum = len(getListPollAlgorithms())
     if len(resultlist) < candnum*algonum:
@@ -566,32 +602,10 @@ def interpretResult(finalresult):
             for y in range(x*candnum, (x+1)*candnum):
                 tempList.append(resultlist[y])
             tempResults.append(tempList)
-    tempMargin = []
-    for margin in movlist:
-        tempMargin.append(margin)
-    tempShades = []
-    shadelist = shadestr.split(";|")
-    for item in shadelist:
-        tempShades.append(item.split(";"))
-    temp_nodes = []
-    nodelist = nodestr.split(";|")
-    for node in nodelist:
-        data = {}
-        l = node.split(";")
-        for item in l:
-            tup = item.split(",")
-            data[tup[0]] = tup[1]
-        temp_nodes.append(data)
-    tempEdges = []
-    edgelist = edgestr.split(";|")
-    if edgestr != "":
-        for edge in edgelist:
-            data = {}
-            l = edge.split(";")
-            for item in l:
-                tup = item.split(",")
-                data[tup[0]] = tup[1]
-            tempEdges.append(data)
+    tempMargin = json.loads(finalresult.mov_string)
+    tempShades = json.loads(finalresult.shade_string)
+    temp_nodes = json.loads(finalresult.node_string)
+    tempEdges = json.loads(finalresult.edge_string)
     return [tempResults, tempMargin, tempShades, temp_nodes, tempEdges]
 
 def recalculateResult(request, question_id):

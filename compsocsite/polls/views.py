@@ -1322,7 +1322,7 @@ def getMarginOfVictory(latest_responses, cand_map):
     marginList[2] = MechanismVeto().getMov(pollProfile)
     marginList[3] = MechanismKApproval(3).getMov(pollProfile)
     marginList[4] = MechanismSimplifiedBucklin().getMov(pollProfile)
-    marginList[12] = MechanismPluralityRunOff().getMov(pollProfile)
+    #marginList[12] = MechanismPluralityRunOff().getMov(pollProfile)
 
     return marginList
 

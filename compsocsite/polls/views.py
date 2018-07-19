@@ -809,6 +809,8 @@ class VoteResultsView(views.generic.DetailView):
         #print("page accessed")
         cand_map = getCandidateMapFromList(list(self.object.item_set.all()))
         ctx['cand_map'] = cand_map# if (len(latest_responses) > 0) else None
+        if len(list(self.object.response_set.all())) == 0:
+            return ctx
         if self.object.status != 4 and self.object.new_vote == True:
             getPollWinner(self.object)
         final_result = self.object.finalresult

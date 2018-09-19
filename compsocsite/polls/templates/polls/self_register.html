@@ -1,0 +1,41 @@
+{% extends 'polls/base.html' %}
+{% load mathfilters %}
+{% load staticfiles %}
+{% block extra_head %}
+
+{% endblock %}
+
+{% block content %}
+<br/>
+{% if request.user.username == "" %}
+	<div class="w3-panel w3-center" style="padding:170px 16px;">
+		  <h1 class="w3-xlarge">
+		      Please
+		      <a data-toggle="modal" data-target="#loginmodal" class="w3-border w3-button rpi-red"><span class="fa fa-sign-in"></span> Login</a>
+		      <br/>
+		      <br/>
+
+		  </h1>
+
+	</div>
+{% else %}
+
+<h3>Self Registration for {{question.question_text}}</h3>
+
+{% if submitted %}
+
+<p>You have already registered. Please wait for approval.</p>
+
+{% else %}
+	
+<form action="{% url 'polls:selfsignup' question.id %}" method="post">
+	{% csrf_token %}
+	<input type="text" class="form-control" name="item_name" size="50" value=""/>
+	<br/>
+	<button type="submit" class="btn btn-primary">Submit for Approval</button>
+</form>
+
+{% endif %}
+
+{% endif %}
+{% endblock %}

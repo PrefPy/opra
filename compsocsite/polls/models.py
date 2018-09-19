@@ -66,6 +66,7 @@ class Question(models.Model):
 
     related_class = models.ForeignKey(Classes, null=True)
     correct_answer = models.TextField(default="")
+    allow_self_sign_up = models.IntegerField(default=0)
     def __str__(self):
         return self.question_text
     def was_published_recently(self):
@@ -109,6 +110,7 @@ class Item(models.Model):
     timestamp = models.DateTimeField('item timestamp')
     recently_added = models.BooleanField(default=False)
     utility = models.FloatField(default=0.0)
+    self_sign_up_user_id = models.TextField(default="")
     def __str__(self):
         return self.item_text
     class Meta:
@@ -377,4 +379,11 @@ class Experiment(models.Model):
 
 class RandomUtilityPool(models.Model):
     data = models.TextField(default="[]")
+
+class SignUpRequest(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item_name = models.TextField()
+    status = models.IntegerField(default=1)
+    timestamp = models.DateTimeField('request timestamp')
 

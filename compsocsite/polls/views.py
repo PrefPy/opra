@@ -783,6 +783,7 @@ class PollInfoView(views.generic.DetailView):
             progressPercentage = len(latest_responses) / self.object.question_voters.all().count()
             progressPercentage = progressPercentage * 100
             ctx['progressPercentage'] = progressPercentage
+        ctx['request_list'] = self.object.signuprequest_set.filter(status=1)
         return ctx
     def get_queryset(self):
         """
@@ -882,6 +883,7 @@ class VoteResultsView(views.generic.DetailView):
         ctx['mixtures_pl1'] = mixtures_pl1
         ctx['mixtures_pl2'] = mixtures_pl2
         ctx['mixtures_pl3'] = mixtures_pl3
+        print(mixtures_pl1)
         previous_results = self.object.voteresult_set.all()
         ctx['previous_winners'] = []
         for pw in previous_results:
@@ -1444,6 +1446,7 @@ def setInitialSettings(request, question_id):
     question.display_pref = request.POST['viewpreferences']
     question.creator_pref = request.POST['creatorpreferences']
     openstring = request.POST['openpoll']
+    signup_string = request.POST['selfsignup']
     twocol = False
     onecol = False
     slider = False
@@ -1481,6 +1484,11 @@ def setInitialSettings(request, question_id):
         question.open = 0
     else:
         question.open = 2
+    if signup_string == "allow":
+        question.allow_self_sign_up = 1
+    else:
+        question.allow_self_sign_up = 0
+
     question.save()
     return HttpResponseRedirect(reverse('polls:regular_polls'))
 
@@ -1826,15 +1834,18 @@ def getPrefOrder(orderStr, question):
     # empty string
     if orderStr == "":
         return None
-    final_order = json.loads(orderStr)
-    #current_array = orderStr.split(";;|;;")
-    #prefOrder = []
-    #length = 0
-    #for item in current_array:
-    #    if item != "":
-    #        curr = item.split(";;")
-    #        prefOrder.append(curr)
-    #        length += len(curr)
+    if ";;|;;" in orderStr:
+        current_array = orderStr.split(";;|;;")
+        final_order = []
+        length = 0
+        for item in current_array:
+            if item != "":
+                curr = item.split(";;")
+                final_order.append(curr)
+                length += len(curr)
+    else:
+        final_order = json.loads(orderStr)
+    
     # the user hasn't ranked all the preferences yet
     #if length != len(question.item_set.all()):
      #   return None
@@ -2356,6 +2367,71 @@ def recommend_ranking(k):
         return sorted_k
     except:
         return None
+
+
+class SelfRegisterView(views.generic.DetailView):
+    model = Question
+    template_name = "polls/self_register.html"
+    def get_context_data(self, **kwargs):
+        ctx = super(SelfRegisterView, self).get_context_data(**kwargs)
+        if check_duplicate_sign_up(self.request.user,self.object):
+            ctx["submitted"] = True
+        return ctx
+
+def change_self_sign_up(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    signup_string = request.POST["selfsignup"]
+    if signup_string == "allow":
+        question.allow_self_sign_up = 1
+    else:
+        question.allow_self_sign_up = 0
+    question.save()
+    request.session['setting'] = 9
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def self_sign_up(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if request.method == "POST" and request.user != question.question_owner:
+        if check_duplicate_sign_up(request.user,question):
+            return HttpResponse("You can only register once!")
+        item_name = request.POST['item_name']
+        new_request = SignUpRequest(question=question,user=request.user,item_name=item_name,timestamp=timezone.now())
+        new_request.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def check_duplicate_sign_up(user, question):
+    current_list = list(question.item_set.all())
+    request_list = list(question.signuprequest_set.filter(status=1))
+    for i in current_list:
+        if str(user.id) == i.self_sign_up_user_id:
+            return True
+    for r in request_list:
+        if user == r.user:
+            return True
+    return False
+
+def approve_request(request, request_id):
+    sign_up_request = get_object_or_404(SignUpRequest,pk=request_id)
+    question = sign_up_request.question
+    if question.status != 1 and question.status != 4:
+        return HttpResponse("Please pause the poll first.")
+    sign_up_request.status = 2
+    sign_up_request.save()
+    item_text = sign_up_request.item_name
+    allChoices = question.item_set.all()
+    for choice in allChoices:
+        if item_text == choice.item_text:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    recentlyAdded = False
+    if question.status == 4:
+        recentlyAdded = True
+    new_choice = Item(question=question, item_text=item_text, timestamp=timezone.now(), recently_added=recentlyAdded, self_sign_up_user_id=str(sign_up_request.user.id))
+    new_choice.save()
+    request.session['setting'] = 9
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 #############################################################
 # CLASSES                                                   #

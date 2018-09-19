@@ -118,4 +118,12 @@ urlpatterns = [
     url(r'^class/(?P<pk>[0-9]+)/grades/$', views.GradesView.as_view(), name='grades'),
     url(r'^class/(?P<pk>[0-9]+)/gradesCSV/$', views.GradesDownload, name='gradesCSV'),
     url(r'^class/(?P<question_id>[0-9]+)/attendclass/$', views.attendanceSignIn, name='attendclass'),
+    #url(r'^(?P<pk>[0-9]+)/qrcode/$', views.QRView.as_view(), name='qrview'),
+
+    # self sign up
+    url(r'^(?P<question_id>[0-9]+)/changeselfsignup/$', views.change_self_sign_up, name='changeselfsignup'),
+    url(r'^(?P<question_id>[0-9]+)/selfsignup/$', views.self_sign_up, name='selfsignup'),
+    url(r'^request/(?P<request_id>[0-9]+)/approve/$', views.approve_request, name='approverequest'),
+    url(r'^(?P<pk>[0-9]+)/selfregister/$', views.SelfRegisterView.as_view(), name='selfregister'),
+
 ]

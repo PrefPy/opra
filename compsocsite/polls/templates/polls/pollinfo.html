@@ -141,6 +141,7 @@
             <li {% if request.session.setting == 2 %} class="active" {% endif %}><a data-toggle="tab" href="#algorithm">Algorithms and Visibility</a></li>
             <li {% if request.session.setting == 6 %} class="active" {% endif %}><a data-toggle="tab" href="#historyinfo">History</a></li>
 			<li {% if request.session.setting == 7 %} class="active" {% endif %}><a data-toggle="tab" href="#recycle">Manage Deleted Votes</a></li>
+            <li {% if request.session.setting == 9 %} class="active" {% endif %}><a data-toggle="tab" href="#approverequest">Self Sign Up</a></li>
            
             {% if question.m_poll == False %}
                 <li {% if request.session.setting == 1 %} class="active" {% endif %}><a data-toggle="tab" href="#voters">Voters</a></li>
@@ -362,6 +363,10 @@
 <div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 7 %}active{% endif %}" id="recycle">
 	{% include 'polls/_view_deleted_votes.html' %}
 </div>
+
+<div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 9 %}active{% endif %}" id="approverequest">
+    {% include 'polls/_approve_request.html' %}
+</div>
     
 {% else %}
 <div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane" id="quit">
@@ -397,11 +402,14 @@
 <div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane active" id="general">
     {% include 'polls/_voters_generalinfo.html' %}
 </div>
+
 {% endif %}  
                                     
 <div class="col-xs-9 col-xs-offset-3 col-md-10 col-md-offset-2 main tab-pane {% if request.session.setting == 6 %}active{% endif %}" id="historyinfo">
     {% include 'polls/_view_history.html' %}
 </div>
+
+
 
 <script>
     $("#editInvite").hide();

@@ -1,0 +1,31 @@
+<h3 class="page-header">Self Sign Up for {{ question.question_text }} </h3>
+<form class="form-group" method="post" action="{% url 'polls:changeselfsignup' question.id %}">
+    {% csrf_token %}
+
+    <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-default {% if question.allow_self_sign_up == 1 %}active{% endif %}">
+        <input type="radio" name="selfsignup" value="allow" {% if question.allow_self_sign_up == 1 %}checked{% endif %}>Allow
+        </label>
+        <label class="btn btn-default {% if question.allow_self_sign_up == 0 %}active{% endif %}">
+        <input type="radio" name="selfsignup" value="notallow" {% if question.allow_self_sign_up == 0 %}checked{% endif %}>Don't Allow
+        </label>
+    </div>
+
+    <input type="submit" value="Submit" class="btn btn-primary">
+</form>
+<p>Self Sign Up Link: <a href="https://opra.cs.rpi.edu/polls/{{question.id}}/selfregister/">https://opra.cs.rpi.edu/polls/{{question.id}}/selfregister/</a></p>
+<br/>
+{% if question.allow_self_sign_up == 1 %}
+<h3>List of Self Sign Up Requests for {{question.question_text}}</h3>
+<ul>
+{% for r in request_list %}
+    <li>
+        <form method="post" action="{% url 'polls:approverequest' r.id %}">
+            {% csrf_token %}
+            {{r.user.username}}:  {{r.item_name}}
+            <input type="submit" value="Approve" class="btn btn-primary"/>
+        </form>
+    </li>
+{% endfor%}
+{% endif %}
+</ul>

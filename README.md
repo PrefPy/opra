@@ -7,10 +7,10 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 ##Installation
 * **For Windows**:
 
-1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3 (as of now, 3.4 or 3.5).
+1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3.
 2. Install [Django](https://www.djangoproject.com). The easiest way to do this is through [pip] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py). Then you can install django simply by entering the command: 
 
-   <code>pip install django</code>
+   <code>pip install django==1.11</code>
    
    You can verify installation by entering the command:
    
@@ -32,7 +32,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 
 * **For Mac**:
 
-1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3 (as of now, 3.4 or 3.5). For Mac, the default python version is python 2. You can check your python version by entering the command in terminal:
+1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3. For Mac, the default python version is python 2. You can check your python version by entering the command in terminal:
 
     <code> python -V </code>
 
@@ -47,7 +47,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
     More about pip can be found [here] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py).
     Then you can install django simply by entering the command: 
 
-    <code>pip install django</code>
+    <code>pip install django==1.11</code>
 
     You can verify installation by entering the command:
 
@@ -68,14 +68,15 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
     <code>http://127.0.0.1:8000</code>
 
 ##Dependencies
-* **Django-mathfilters**:
-* **Django-mobile**:
+* **django-mathfilters**:
+* **django-mobile**:
 * **pillow**:
 * **prefpy**:
 * **django-cas-client**:
 * **django-rq**:
 * **WhiteNoise**:
 * **django-cors-headers**:
+* **django-qr-code**:
 
 ##Models
 The following models are used to organize information:

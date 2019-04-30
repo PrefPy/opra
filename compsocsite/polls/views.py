@@ -35,30 +35,56 @@ import numpy as np
 import random
 import csv
 
-# view for homepage - index of questions & results
 class IndexView(views.generic.ListView):
+    """
+    Define homepage view, inheriting ListView class, which specifies a context variable.
+    
+    Note that login is required to view the items on the page.
+    """
+    
     template_name = 'polls/index2.html'
     context_object_name = 'question_list'
     def get_queryset(self):
+        """Override function in parent class and return all questions."""
+        
         return Question.objects.all().order_by('-pub_date')
 
+
 class RegularPollsView(views.generic.ListView):
+    """
+    Define regular polls view, inheriting ListView class, which specifies a context variable.
+    
+    The variables used in regular polls page are extracted from database and defined below.
+    """
+    
     template_name = 'polls/regular_polls.html'
     context_object_name = 'question_list'
     def get_queryset(self):
-        return Question.objects.all()
+        """Override function in parent class and return all questions."""
+        
+        return Question.objects.all().order_by('-pub_date')
+        
+    
     def get_context_data(self, **kwargs):
+        """Override function in parent class and define additional context variables to be used in the page."""
+        
+        
         ctx = super(RegularPollsView, self).get_context_data(**kwargs)
+        # get folders
         ctx['folders'] = Folder.objects.filter(user=self.request.user).all()
         unshown = []
         for folder in ctx['folders']:
             unshown += folder.questions.all()
+        
         # sort the lists by date (most recent should be at the top)
         ctx['polls_created'] = list(Question.objects.filter(question_owner=self.request.user,
                                                        m_poll=False).order_by('-pub_date'))
+        # get all polls current user participates in and filter out those she is the owner of
         polls = self.request.user.poll_participated.filter(m_poll=False)
         polls = polls.exclude(question_owner=self.request.user).order_by('-pub_date')
         ctx['polls_participated'] = list(polls)
+        
+        # for polls in folders, do not show them in the main page
         for poll in unshown:
             if poll in ctx['polls_created']:
                 ctx['polls_created'].remove(poll)
@@ -67,27 +93,38 @@ class RegularPollsView(views.generic.ListView):
         return ctx
 
 class RegularPollsFolderView(views.generic.DetailView):
+    """Define folder view, inheriting DetailView class, which specifies a specific object."""
+    
     template_name = 'polls/regular_polls_folder.html'
     model = Folder
+    
     def get_context_data(self, **kwargs):
+        """Override function in parent class and define additional context variables to be used in the page."""
+        
         ctx = super(RegularPollsFolderView, self).get_context_data(**kwargs)
-        # sort the lists by date (most recent should be at the top)
         ctx['polls_folder'] = self.object.questions.all()
         return ctx
 
-# the original query will return data from earliest to latest
-# reverse the list so that the data is from latest to earliest
+
 def reverseListOrder(query):
+    """Reverse the order in a list."""
+    
     list_query = list(query)
     list_query.reverse()
     return list_query
 
 class MultiPollsView(views.generic.ListView):
+    """Define multi-poll view, inheriting ListView class, which specifies a context variable. """
     template_name = 'polls/m_polls.html'
     context_object_name = 'question_list'
     def get_queryset(self):
+        """Override function in parent class and return all questions."""
+        
         return Question.objects.all()
+    
     def get_context_data(self, **kwargs):
+        """Override function in parent class and define additional context variables to be used in the page."""
+        
         ctx = super(MultiPollsView, self).get_context_data(**kwargs)
         # sort the list by date
         m_polls = MultiPoll.objects.filter(owner=self.request.user)
@@ -96,13 +133,20 @@ class MultiPollsView(views.generic.ListView):
         ctx['multipolls_participated'] = reverseListOrder(m_polls_part)
         return ctx
 
-# guest homepage view
+
 class MainView(views.generic.ListView):
+    """Define homepage for users that have not logged in."""
+    
     template_name = 'polls/index.html'
     context_object_name = 'question_list'
+    
     def get_queryset(self):
+        """Override function in parent class and return all questions."""
+        
         return Question.objects.all().order_by('-pub_date')
     def get_context_data(self, **kwargs):
+        """Override function in parent class and define additional context variables to be used in the page."""
+        
         ctx = super(MainView, self).get_context_data(**kwargs)
         # sort the list by date
         ctx['preference'] = 1

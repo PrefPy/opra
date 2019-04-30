@@ -15,7 +15,7 @@
 <script>
 
     //Uncomment for WMG
-    /*var cy = cytoscape({
+    var cy = cytoscape({
         container: document.getElementById('cy'),
         layout: {
             name: 'circle',
@@ -69,7 +69,7 @@
             {% endfor %}
         ]
       },
-    });*/
+    });
     function showK(num){
         $('#k1').css('display', 'none');
         $('#k2').css('display', 'none');
@@ -403,7 +403,7 @@
 
                             <!-- margin of victory column -->
                             {% if forloop.counter <= margin_len %}
-                                <td>{% if margin_victory|index:forloop.counter0 == "-1" %}-{% else %}{{margin_victory|index:forloop.counter0}}{% endif %}</td>
+                                <td>{% if margin_victory|index:forloop.counter0 == "-1" %} {% else %}{{margin_victory|index:forloop.counter0}}{% endif %}</td>
                             {% else %}
                                 <td>-</td>
                             {% endif %}
@@ -475,6 +475,7 @@
             </div>
         </div>
 		-->
+		<!--
         <div class="panel panel-default">
             <div class="panel-heading" data-toggle="collapse" href="#collapse_wmg">
                 <h4 class="panel-title">
@@ -489,6 +490,7 @@
                 </div>
             </div>
         </div>
+		-->
         
         <!-- Panel for plackett luce mixtures (closed by default) -->
         <div class="panel panel-default" onload="createMixtures()">

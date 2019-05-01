@@ -4,7 +4,7 @@ import json
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django import views
 
 from .models import *

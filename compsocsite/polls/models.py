@@ -15,7 +15,7 @@ class Classes(models.Model):
     title = models.CharField(max_length=100, default="")
     startDate = models.DateField('start date')
     weekly = models.IntegerField(default=0)
-    teacher = models.ForeignKey(User, null=True)
+    teacher = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     attendance = models.IntegerField(default=-1)
     teachingAssistants = models.ManyToManyField(User, related_name='tas')
     students = models.ManyToManyField(User, related_name='students')
@@ -30,7 +30,7 @@ class Question(models.Model):
     imageURL = models.CharField(max_length=500, blank=True, null=True)
     pub_date = models.DateTimeField('date published')
     follow_up = models.OneToOneField('Question', on_delete=models.CASCADE, null = True, blank = True)
-    question_owner = models.ForeignKey(User, null=True)
+    question_owner = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     question_voters = models.ManyToManyField(User, related_name='poll_participated')
     status = models.IntegerField(default=1)
     display_pref = models.IntegerField(default=1)
@@ -64,7 +64,7 @@ class Question(models.Model):
     first_tier = models.IntegerField(default=0)
     utility_model = models.IntegerField(default=0)
 
-    related_class = models.ForeignKey(Classes, null=True)
+    related_class = models.ForeignKey(Classes, null=True, on_delete=models.CASCADE)
     correct_answer = models.TextField(default="")
     allow_self_sign_up = models.IntegerField(default=0)
     def __str__(self):
@@ -121,7 +121,7 @@ class Item(models.Model):
 class Response(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
     resp_str = models.CharField(max_length=1000, null=True, blank=True)
-    user = models.ForeignKey(User, null = True, blank = True)
+    user = models.ForeignKey(User, null = True, blank = True, on_delete=models.CASCADE)
     timestamp = models.DateTimeField('response timestamp')
     allocation = models.ForeignKey(Item, default=None, null = True, blank = True, on_delete=models.CASCADE) # assigned by algorithm function
     anonymous_voter = models.CharField(max_length=50,blank=True,null=True)
@@ -142,7 +142,7 @@ class Response(models.Model):
 class EmailResponse(models.Model):
     identity = models.CharField(max_length=20, null=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
-    user = models.ForeignKey(User, null=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     def __str__(self):
         return ""     
 
@@ -294,12 +294,12 @@ class Dictionary(models.Model):
 class KeyValuePair(models.Model):
     """A Key-Value pair with a pointer to the Dictionary that owns it.
     """
-    container = models.ForeignKey(Dictionary, db_index=True)
+    container = models.ForeignKey(Dictionary, db_index=True, on_delete=models.CASCADE)
     key = models.ForeignKey(Item, default=None, on_delete=models.CASCADE, db_index=True) # changed from original model
     value = models.IntegerField(default=0, db_index=True) # changed from original model
     
 class FinalResult(models.Model):
-    question = models.OneToOneField(Question)
+    question = models.OneToOneField(Question, on_delete=models.CASCADE)
     result_string = models.TextField(default="")
     mov_string = models.TextField(default="")
     node_string = models.TextField(default="")
@@ -346,7 +346,7 @@ class CandScorePair(models.Model):
 class UserVoteRecord(models.Model):
     timestamp = models.DateTimeField('record timestamp')
     user =models.CharField(max_length=100,default="(Anonymous)")
-    question = models.ForeignKey(Question,default=None)
+    question = models.ForeignKey(Question,default=None, on_delete=models.CASCADE)
     record = models.CharField(max_length=10000,default="")
     col = models.TextField(default="")
     one_col = models.TextField(default="")
@@ -368,7 +368,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField('message timestamp')
     email = models.CharField(max_length=100, default="")
     name = models.CharField(max_length=200, default="")
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
 
 class Experiment(models.Model):
     title = models.CharField(max_length=10000)

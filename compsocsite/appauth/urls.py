@@ -1,5 +1,5 @@
 from django.conf.urls import url
-import cas.middleware
+#import cas.middleware
 
 from . import views
 

@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.utils import timezone
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 # Create your views here.
 
 

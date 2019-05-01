@@ -4,7 +4,7 @@ import csv
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest, JsonResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views import generic
 from django.core.files import File
 from .models import *

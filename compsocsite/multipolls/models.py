@@ -12,7 +12,7 @@ class MultiPoll(models.Model):
     number = models.IntegerField(default=1)
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=500)
-    owner = models.ForeignKey(User,related_name='owner')
+    owner = models.ForeignKey(User,related_name='owner', on_delete=models.CASCADE)
     questions = models.ManyToManyField(Question, through='MultiPollQuestion', through_fields=('multipoll','question'))
     voters = models.ManyToManyField(User, related_name='multipoll_participated')
     pos = models.IntegerField(default=0)
@@ -27,22 +27,22 @@ class MultiPoll(models.Model):
 class MultiPollQuestion(models.Model):
     class Meta:
         ordering = ['order']
-    multipoll = models.ForeignKey(MultiPoll)
-    question = models.ForeignKey(Question)
+    multipoll = models.ForeignKey(MultiPoll, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     order = models.PositiveIntegerField(default=0)
     def __str__(self):
         return ""
     
 # a poll can have multiple dependent polls (must be part of the same multipoll)
 class Combination(models.Model):
-    target_question = models.ForeignKey(Question)
+    target_question = models.ForeignKey(Question, on_delete=models.CASCADE)
     dependent_questions = models.ManyToManyField(Question, related_name="dependent_questions")
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     dependencies = models.ManyToManyField(Item)
-    response = models.OneToOneField(Response,null=True, blank=True)
+    response = models.OneToOneField(Response,null=True, blank=True, on_delete=models.CASCADE)
 
 # link the choices for the dependent polls to a response
 class ConditionalItem(models.Model):
-    combination = models.ForeignKey(Combination)
+    combination = models.ForeignKey(Combination, on_delete=models.CASCADE)
     items = models.ManyToManyField(Item)
-    response = models.ForeignKey(Response, null=True, blank=True)
+    response = models.ForeignKey(Response, null=True, blank=True, on_delete=models.CASCADE)

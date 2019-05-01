@@ -7,7 +7,7 @@ import numpy as np
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views import generic
 from django.core import mail
 
@@ -23,7 +23,6 @@ from django.core.validators import validate_email
 
 from polls.models import Message, Question, RandomUtilityPool
 from polls import opra_crypto
-import cas.middleware
 
 def register(request):
     context = RequestContext(request)

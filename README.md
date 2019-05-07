@@ -2,78 +2,56 @@
 
 This project is a web app that assists in the assignment of presentations to students. It allows students to rank their preferences for a presentation topic and presentation date. When all students have input their preferences, it algorithmically allocates topics and presentation dates for all students.
 
-The web app is built on Django, and uses an SQLite database. [Click here](https://docs.djangoproject.com/en/1.9/) for more information on how Django works.
+The web app is built on Django, and uses an SQLite database. [Click here](https://docs.djangoproject.com/) for more information on how Django works.
 
 ##Installation
-* **For Windows**:
 
 1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3.
 2. Install [Django](https://www.djangoproject.com). The easiest way to do this is through [pip] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py). Then you can install django simply by entering the command: 
 
-   <code>pip install django==1.11</code>
+   <code>pip install django==2.2</code>
    
    You can verify installation by entering the command:
+   
+   <code> python </code>
    
    <code> import django </code>
    
    <code> print(django.get_version()) </code>
+   
+* Note that if your system has both Python 2 and Python 3, usually "python3" and "pip3" are used in places of "python" and "pip" repectively. Replace as needed.
     
-3. Install the dependencies listed below in the Dependencies section.
-4. Clone this project from Github
-5. To run the project, you open the command line (terminal), change to the current directory of the project. Then in the root of the project, enter the following commands:
+3. Install the dependencies listed below in the Dependencies section by entering:
+
+    <code>  pip install Package-Name </code>
+	
+4. Clone [opra_dependencies] (https://github.com/tomjmwang/opra_dependencies) Github directoy to your local machine. Copy django_mobile and prefpy directoies to your python library and overwrite original files.
+	
+5. Clone this project from Github
+
+6. Copy settings.py from opra_dependencies to compsocsite/compsocsite
+
+7. Open command line (terminal), change to OPRA's directory, and then enter the following commands:
   
   <code>cd composcite</code>
   
-  <code>python3 manage.py runserver</code>
+  <code>python manage.py migrate</code>
+  
+  <code>python manage.py createcachetable</code>
+  
+  Then run the server by entering:
+
+  <code>python manage.py runserver</code>
 
 6. To view the page, go to your web browser and visit this address:
 
   <code>http://127.0.0.1:8000</code>
 
-* **For Mac**:
-
-1. Install [Python](https://www.python.org/downloads/). It is recommended that you use the latest version of Python 3. For Mac, the default python version is python 2. You can check your python version by entering the command in terminal:
-
-    <code> python -V </code>
-
-    or 
-
-    <code> python3 -V </code>
-
-2. Install [Django](https://www.djangoproject.com). The easiest way to do this is through pip. You can install pip by entering the command in terminal:
-
-    <code> sudo easy_install pip </code>
-
-    More about pip can be found [here] (https://pip.pypa.io/en/latest/installing/#installing-with-get-pip-py).
-    Then you can install django simply by entering the command: 
-
-    <code>pip install django==1.11</code>
-
-    You can verify installation by entering the command:
-
-    <code> import django </code>
-
-    <code> print(django.get_version()) </code>
-3. Install the dependencies listed below in the Dependencies section by entering:
-
-    <code>  pip install Package-Name </code>
-4. Clone this project from Github (You can download Github Desktop for Mac or clone this project direclt from Github Website.)
-5. To run the project, you open the command line (terminal), change to the current directory of the project. Then in the root of the project, enter the following commands:
-
-    <code>cd composcite</code>
-    
-    <code>python3 manage.py runserver</code>
-6. To view the page, go to your web browser and visit this address:
-
-    <code>http://127.0.0.1:8000</code>
 
 ##Dependencies
-* **django-mathfilters**:
 * **django-mobile**:
 * **pillow**:
 * **prefpy**:
-* **django-cas-client**:
-* **django-rq**:
 * **WhiteNoise**:
 * **django-cors-headers**:
 * **django-qr-code**:

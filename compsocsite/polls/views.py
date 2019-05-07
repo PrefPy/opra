@@ -144,6 +144,7 @@ class MainView(views.generic.ListView):
         """Override function in parent class and return all questions."""
         
         return Question.objects.all().order_by('-pub_date')
+
     def get_context_data(self, **kwargs):
         """Override function in parent class and define additional context variables to be used in the page."""
         
@@ -156,9 +157,10 @@ class MainView(views.generic.ListView):
 
         return ctx
 
-# demo for voting page in main page
-# view for question detail
+
 class DemoView(views.generic.DetailView):
+    """Define demo poll, which is not used. Need more work on this."""
+    
     model = Question
     template_name = 'polls/demo.html'
 
@@ -181,6 +183,8 @@ class DemoView(views.generic.DetailView):
 
 
 class GMView(views.generic.ListView):
+    """Define poll main page for GM week 2017."""
+    
     template_name = 'events/GM2017/GM2017.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -190,7 +194,10 @@ class GMView(views.generic.ListView):
         ctx['winners'] = getWinnersFromIDList(getGMPollIDLIst())
         return ctx
 
+        
 class GMResultsView(views.generic.ListView):
+    """Define result page for GM week 2017."""
+
     template_name = 'events/GM2017/GM2017results.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -202,6 +209,8 @@ class GMResultsView(views.generic.ListView):
 
 
 class CSPosterView(views.generic.ListView):
+    """Define CS Poster page."""
+    
     template_name = 'events/CSposter/CSposter.html'
     context_object_name = 'question_list'
     def get_queryset(self):
@@ -210,8 +219,14 @@ class CSPosterView(views.generic.ListView):
         ctx = super(CSPosterView, self).get_context_data(**kwargs)
         return ctx
 
-# step 1: the intial question object will be created.
+
 def AddStep1View(request):
+    """
+    Define the first step in creating poll.
+    
+    Obtain title, description, type, allowing tie, and image from POST of HTTP request.
+    Redirects to add step 1 page if request does not contain POST, go to add step 2 otherwise.
+    """
     context = RequestContext(request)
     if request.method == 'POST':
         questionString = request.POST['questionTitle']
@@ -226,7 +241,7 @@ def AddStep1View(request):
             tie = False
 
         # create a new question using information from the form and inherit
-        #   settings from the user's preferences
+        # settings from the user's preferences
         question = Question(question_text=questionString, question_desc=questionDesc,
                             pub_date=timezone.now(), question_owner=request.user,
                             display_pref=request.user.userprofile.displayPref,
@@ -245,8 +260,10 @@ def AddStep1View(request):
         return HttpResponseRedirect(reverse('polls:AddStep2', args=(question.id,)))
     return render(request,'polls/add_step1.html', {})
 
-# step 2: the owner adds choices to a poll
+
 class AddStep2View(views.generic.DetailView):
+    """Define step 2 in creating poll: adding choices."""
+    
     model = Question
     template_name = 'polls/add_step2.html'
     def get_context_data(self, **kwargs):
@@ -254,13 +271,12 @@ class AddStep2View(views.generic.DetailView):
         ctx['items'] = self.object.item_set.all()
         return ctx
     def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
-# step 3: the owner invites voters and groups to a poll
+
 class AddStep3View(views.generic.DetailView):
+    """Defind step 3 in creating poll: inviting voters."""
+
     model = Question
     template_name = 'polls/add_step3.html'
     def get_context_data(self, **kwargs):
@@ -269,13 +285,12 @@ class AddStep3View(views.generic.DetailView):
         ctx['groups'] = Group.objects.all()
         return ctx
     def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
-# step 4: the owner selects the type of poll and other settings
+
 class AddStep4View(views.generic.DetailView):
+    """Define step 4 in creating poll: privacy setting, voting mechanisms, voting UIs, etc."""
+    
     model = Question
     template_name = 'polls/add_step4.html'
     def get_context_data(self, **kwargs):
@@ -291,16 +306,22 @@ class AddStep4View(views.generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
-# Add a single choice to a poll.
-# - A choice must contain text
-# - No duplicate choices (text can't be the same)
-# - The user can add an image to the choice, but images are optional
+
 def addChoice(request, question_id):
+    """
+    Called when the "+" for adding choice is pressed.
+    
+    Submitted data must satisfy:
+        - cannot be empty
+        - cannot contain exactly same text as choices already added
+    Image is optional.
+    """
+
     question = get_object_or_404(Question, pk=question_id)
     item_text = request.POST['choice']
     imageURL = request.POST['imageURL']
 
-    #check for empty strings
+    # check for empty strings
     if item_text == "":
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -309,7 +330,8 @@ def addChoice(request, question_id):
     for choice in allChoices:
         if item_text == choice.item_text:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
+    
+    # for cases of adding new alternative when poll is paused
     recentlyAdded = False
     if question.status == 4:
         recentlyAdded = True
@@ -328,12 +350,17 @@ def addChoice(request, question_id):
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 def editChoice(request, question_id):
+    """Called when choice title or description is edited in poll info page."""
+    
     question = get_object_or_404(Question, pk=question_id)
     for item in question.item_set.all():
+        # get data from POST request
         new_text = request.POST["item"+str(item.id)]
         item_desc = request.POST["itemdescription"+str(item.id)]
         imageURL = request.POST["imageURL"+str(item.id)]
+        # update choice info accordingly
         if item_desc != "":
             item.item_description = item_desc
         if request.FILES.get("docfile"+str(item.id)) != None:
@@ -345,8 +372,16 @@ def editChoice(request, question_id):
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 def editBasicInfo(request, question_id):
+    """
+    Called in basic info tab in poll info page when saving changes.
+    
+    Updates title, description, available voting UIs, and whether ties are allowed.
+    """
+    
     question = get_object_or_404(Question, pk=question_id)
+    # update title and description
     new_title = question.question_text
     if "title" in request.POST:
         new_title = request.POST["title"]
@@ -355,6 +390,8 @@ def editBasicInfo(request, question_id):
         new_desc = request.POST["desc"]
     question.question_text = new_title
     question.question_desc = new_desc
+    
+    # update UIs
     twocol = False
     onecol = False
     slider = False
@@ -382,6 +419,7 @@ def editBasicInfo(request, question_id):
     question.yesno2_enabled = yesno2
     question.ui_number = twocol+onecol+slider+star+yesno+yesno2
     
+    # update whether ties are allowed
     tie=False
     t = request.POST.getlist('allowties')
     if "1" in t:
@@ -390,20 +428,25 @@ def editBasicInfo(request, question_id):
         tie = False
 
     question.allowties = tie
+    
+    # save the changes
     question.save()
     request.session['setting'] = 8
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-# remove a choice from the poll.
-# deleting choices should only be done before the poll starts
+
 def deleteChoice(request, choice_id):
+    """Delete a choice; can only be done before a poll starts."""
+    
     item = get_object_or_404(Item, pk=choice_id)
     item.delete()
     request.session['setting'] = 0
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-# permanently erase a poll and all its information and settings
+
 def deletePoll(request, question_id):
+    """Delete a poll. Only poll owner can do this."""
+    
     question = get_object_or_404(Question, pk=question_id)
 
     # check to make sure the current user is the owner
@@ -413,8 +456,10 @@ def deletePoll(request, question_id):
     question.delete()
     return HttpResponseRedirect(reverse('polls:index'))
 
-# the voter can opt out of a poll at any time
+
 def quitPoll(request, question_id):
+    """Voter opts out of a poll."""
+    
     question = get_object_or_404(Question, pk=question_id)
 
     # notify the user if this option is checked
@@ -428,9 +473,15 @@ def quitPoll(request, question_id):
 
     return HttpResponseRedirect(reverse('polls:regular_polls'))
 
-# when a poll starts, users can cast votes at any time.
-# however, the owner won't be able to remove voters or choices
+
 def startPoll(request, question_id):
+    """
+    Called when poll owner starts a poll.
+    
+    After a poll starts, voters can vote at any time.
+    However, poll owner cannot remove choices any more.
+    """
+    
     question = get_object_or_404(Question, pk=question_id)
 
     # check to make sure the owner started the poll
@@ -448,10 +499,17 @@ def startPoll(request, question_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 def pausePoll(request, question_id):
+    """
+    Called when a poll is paused. 
+    
+    Owner can then add choices. Voters can no longer vote until poll resumes.
+    """
+    
     question = get_object_or_404(Question, pk=question_id)
 
-    # check to make sure the owner stopped the poll
+    # check to make sure the owner paused the poll
     if request.user != question.question_owner:
         return HttpResponseRedirect(reverse('polls:index'))
 
@@ -465,13 +523,16 @@ def pausePoll(request, question_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 def resumePoll(request, question_id):
+    """Resume a poll from paused state."""
+    
     question = get_object_or_404(Question, pk=question_id)
 
-    # check to make sure the owner started the poll
+    # check to make sure the owner resumed the poll
     if request.user != question.question_owner:
         return HttpResponseRedirect(reverse('polls:index'))
-
+    
     allItems = question.item_set.all()
     for item in allItems:
         if item.recently_added:
@@ -482,9 +543,15 @@ def resumePoll(request, question_id):
     question.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-# when a poll stops, users can no longer cast votes
-# the final results will be calculated and displayed
+
+
 def stopPoll(request, question_id):
+    """
+    Stop a poll.
+    
+    After the poll stops, voters cannot vote. Final results will be available.
+    """
+    
     question = get_object_or_404(Question, pk=question_id)
 
     # check to make sure the owner stopped the poll
@@ -507,9 +574,16 @@ def stopPoll(request, question_id):
 # Question question
 # return String winnerStr
 def getPollWinner(question):
+    """
+    Calculate winner of poll. 
+    
+    Parameter: Question object.
+    Returns: string containing winner(s), mixture for k = 1, 2, 3.
+    """
+    
     all_responses = question.response_set.filter(active=1).order_by('-timestamp')
-
     (latest_responses, previous_responses) = categorizeResponses(all_responses)
+    # Calculate results
     cand_map = getCandidateMapFromList(list(question.item_set.all()))
     (vote_results, mixtures_pl1, mixtures_pl2,
      mixtures_pl3) = getVoteResults(latest_responses, cand_map)
@@ -517,6 +591,8 @@ def getPollWinner(question):
     current_result = vote_results[index_vote_results]
 
     winnerStr = ""
+    
+    # Transform result data into JSON strings and save in database
 
     #item_set = getCandidateMap(latest_responses[0])
     for index, score in current_result.items():
@@ -575,7 +651,8 @@ def getPollWinner(question):
     result.edge_string = json.dumps(edges)
     result.shade_string = json.dumps(shadevalues)
     result.save()
-
+    
+    # Resets new vote flag so that result is not computed again
     if question.new_vote:
         question.new_vote = False
     question.winner = winnerStr
@@ -587,10 +664,15 @@ def getPollWinner(question):
     return winnerStr, json.dumps(mixtures_pl1), json.dumps(mixtures_pl2), json.dumps(mixtures_pl3)
 
 
-#Interpret result into strings that can be shown on the result page
-#FinalResult finalresult
-#List<List<String>>
+
 def interpretResult(finalresult):
+    """
+    Interpret result into strings that can be shown on the result page.
+    
+    Parameter: FinalResult object
+    Returns: list of list of String containing data used on result page.
+    """
+    
     candnum = finalresult.cand_num
     # resultstr = finalresult.result_string
     # movstr = finalresult.mov_string
@@ -652,31 +734,39 @@ def interpretResult(finalresult):
     tempEdges = json.loads(finalresult.edge_string)
     return [tempResults, tempMargin, tempShades, temp_nodes, tempEdges]
 
+
 def recalculateResult(request, question_id):
+    """Called when poll owner wants to recalculate result manually."""
+    
     question = get_object_or_404(Question, pk=question_id)
     getPollWinner(question)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-# check whether the user clicked 'reset' when ordering preferences
+
 def isPrefReset(request):
+    """Reset order in two-column UI. No longer used."""
     # reset link would have '?order=null' at the end
     orderStr = request.GET.get('order', '')
     if orderStr == "null":
         return True
     return False
 
-# given a list of responses, return the response's selection data
-# List<Response> mostRecentResponse
-# return List<List<(Item, int)>> array
+
 def getCurrentSelection(mostRecentResponse):
+    """
+    Given a response, return current ranking data that can be loaded on voting UIs.
+    
+    Parameter: Response object.
+    Returns: List<List<Item>>
+    """
     responseDict = {}
-    if mostRecentResponse.dictionary_set.all().count() > 0:
-        responseDict = mostRecentResponse.dictionary_set.all()[0]
-    else:
-        responseDict = buildResponseDict(mostRecentResponse, mostRecentResponse.question,
-                                         getPrefOrder(mostRecentResponse.resp_str,
-                                                      mostRecentResponse.question))
+    # if mostRecentResponse.dictionary_set.all().count() > 0:
+        # responseDict = mostRecentResponse.dictionary_set.all()[0]
+    # else:
+    responseDict = buildResponseDict(mostRecentResponse, mostRecentResponse.question,
+                                     getPrefOrder(mostRecentResponse.resp_str,
+                                                  mostRecentResponse.question))
     rd = responseDict
     array = []
     for itr in range(mostRecentResponse.question.item_set.all().count()):
@@ -687,6 +777,8 @@ def getCurrentSelection(mostRecentResponse):
     return array
 
 def getUnrankedCandidates(resp):
+    """Simiar to getCurrentSelection; gets unranked alternatives."""
+    
     rd = buildResponseDict(resp, resp.question, getPrefOrder(resp.resp_str, resp.question))
     array = []
     for itr in rd:
@@ -696,12 +788,16 @@ def getUnrankedCandidates(resp):
         return None
     return array
 
-# view for question detail
+
 class DetailView(views.generic.DetailView):
+    """Define poll voting page view."""
+    
     model = Question
     template_name = 'polls/detail.html'
 
     def get_order(self, ctx):
+        """Define the initial order to be displayed on the page."""
+        
         other_user_responses = self.object.response_set.reverse()
         default_order = list(ctx['object'].item_set.all())
         random.shuffle(default_order)

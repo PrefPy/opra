@@ -15,41 +15,41 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='finalresult',
             name='edge_string',
-            field=models.CharField(default='', max_length=10000),
+            field=models.TextField(default=''),
         ),
         migrations.AlterField(
             model_name='finalresult',
             name='mov_string',
-            field=models.CharField(default='', max_length=10000),
+            field=models.TextField(default=''),
         ),
         migrations.AlterField(
             model_name='finalresult',
             name='node_string',
-            field=models.CharField(default='', max_length=10000),
+            field=models.TextField(default=''),
         ),
         migrations.AlterField(
             model_name='finalresult',
             name='result_string',
-            field=models.CharField(default='', max_length=10000),
+            field=models.TextField(default=''),
         ),
         migrations.AlterField(
             model_name='finalresult',
             name='shade_string',
-            field=models.CharField(default='', max_length=10000),
+            field=models.TextField(default=''),
         ),
         migrations.AlterField(
             model_name='question',
             name='question_text',
-            field=models.CharField(max_length=200),
+            field=models.TextField(default=''),
         ),
         migrations.AlterField(
             model_name='response',
             name='resp_str',
-            field=models.CharField(blank=True, max_length=1000, null=True),
+            field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
             model_name='uservoterecord',
             name='record',
-            field=models.CharField(max_length=10000),
+            field=models.TextField(default=''),
         ),
     ]

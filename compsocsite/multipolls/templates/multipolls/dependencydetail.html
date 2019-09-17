@@ -7,7 +7,6 @@
     }
  .bloc { display:inline-block; vertical-align:top; overflow:hidden; border-style: none; }
  .bloc select { padding:10px; margin:-5px -20px -5px -5px; }
-
    
 </style>
 
@@ -35,13 +34,10 @@ function resetDefault()
     }
     return false;
 }
-
 //display confirmation message for 2 seconds and then fade away slowly
 $(function() {
     $("#successMessage").delay(2000).fadeOut('slow');
 });
-
-
 </script>
 
 
@@ -165,7 +161,7 @@ $(function() {
         {% if request.flavour == "mobile" %}
         <div class="col-md-6 margin-panel-top">
         {% else %}
-        <div class="col-md-6 margin-panel-top">
+        <div class="col-md-8 margin-panel-top">
         {% endif %}
         
         <div class="panel panel-default" id="dependencypreference">
@@ -197,7 +193,6 @@ $(function() {
       
                     
             <div class="panel-body" >
-
                 <ul id="left-sortable" class="sortable-ties">
                     {% if condition_responses %}
                         <div class="empty"></div> 
@@ -245,7 +240,7 @@ $(function() {
         {% if request.flavour == "mobile" %}
         <div class="col-md-6 margin-panel-top">
         {% else %}
-        <div class="col-md-6 margin-panel-top">
+        <div class="col-md-4 margin-panel-top">
         {% endif %}
         
             <div class="panel panel-default panel-border" id="dependencyremain">
@@ -267,10 +262,9 @@ $(function() {
                         {% for item in items %}
                             <!-- Display each option. Each option gets its own tier two -->
                           {% with prev=forloop.counter|mul:2 %}
-                             <ul class="choice1" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
+                             <ul class="choice2" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
                                 {% endwith %}
                                 <div class="tier two">#{{ forloop.counter }}</div>
-
                                 <li class="list-element" id="item{{ item.item_text }}" type="{{ item.id }}">
                                    <!-- Display image (uploaded) -->
                                    {% if item.image %}
@@ -307,6 +301,4 @@ $(function() {
     } else {
         $('#left-sortable').css("height", wholeHeight2);
     }
-
 </script>
-

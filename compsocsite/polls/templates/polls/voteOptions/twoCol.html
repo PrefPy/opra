@@ -29,7 +29,7 @@
       </div>
    </div>
    {% else %}
-   <div class ="col-sm-6">
+   <div class ="col-sm-8">
       <!-- Panel for your preferences -->
       <div class="panel panel-default">
          {% endif %}
@@ -106,7 +106,7 @@
       {% if not request.flavour == "mobile"%}
    </div>
    {% endif %}
-   <div class="col-xs-12 col-sm-6" style="padding:0%;margin:0%;">
+   <div class="col-xs-12 col-sm-4" style="padding:0%;margin:0%;">
       <!-- Remaining options panel header -->
       {% if request.flavour == "mobile" %}
       <button onclick="VoteUtil.moveAll(); return false;" class="move-all-button-mobile" style = "width:100%;height:2.7em;margin-bottom:10px;">
@@ -136,7 +136,7 @@
                   
                   <!-- Display each option. Each option gets its own tier two -->
                   {% with prev=forloop.counter|mul:2 %}
-                     <ul class="choice1" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
+                     <ul class="choice2" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
                         {% endwith %}
                         <div class="tier two">#{{ forloop.counter }}</div>
 
@@ -163,7 +163,7 @@
                   {% if unrankedCandidates %}
                   {% for item in unrankedCandidates %}
                      {% with prev=forloop.counter|mul:2 %}
-                     <ul class="choice1" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
+                     <ul class="choice2" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
                         {% endwith %}
                         <div class="tier two">#{{ forloop.counter }}</div>
                         <li class="list-element" id="item{{ item.item_text }}" type="{{ forloop.counter }}">

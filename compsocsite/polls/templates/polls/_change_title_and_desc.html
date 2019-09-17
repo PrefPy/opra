@@ -18,10 +18,10 @@
 				<label>Ties</label> <br />
 				<div class="btn-group" data-toggle="buttons">
 						<label class="btn btn-default {% if question.allowties %}active{% endif %}">
-						<input type="radio" name="allowties" value="1" {% if question.allowties %} checked {% endif %} {% if question.status != 1 %} disabled {% endif %}>Enabled
+						<input type="radio" name="allowties" value="1" {% if question.allowties %} checked {% endif %}>Enabled
 						</label>
 						<label class="btn btn-default {% if not question.allowties %}active{% endif %}" >
-						<input type="radio" name="allowties" value="2" {% if not question.allowties %} checked {% endif %} {% if question.status != 1 %} disabled {% endif %}>Disabled
+						<input type="radio" name="allowties" value="2" {% if not question.allowties %} checked {% endif %}>Disabled
 						</label>
 				</div>
 		</fieldset>

@@ -420,7 +420,7 @@ def editBasicInfo(request, question_id):
     question.ui_number = twocol+onecol+slider+star+yesno+yesno2
     
     # update whether ties are allowed
-    tie=False
+    tie=question.allowties
     t = request.POST.getlist('allowties')
     if "1" in t:
         tie = True

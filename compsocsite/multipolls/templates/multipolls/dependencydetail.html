@@ -198,34 +198,39 @@ $(function() {
                     
             <div class="panel-body" >
 
-                <ul id="left-sortable" >
+                <ul id="left-sortable" class="sortable-ties">
                     {% if condition_responses %}
-                    
+                        <div class="empty"></div> 
                         {% for s in condition_responses %}
                             {% if s %}
-                                <ul class="choice1 empty"></ul>
-                                <ul class="choice1">
-                                    <div class="tier">{{ forloop.counter }}</div>
-                                    {% for selection in s %}
-                                        <li class="li_item" id="item{{ selection.item_text }}" >
-                                            {% if selection.image %}
-                                                <img class="item" src='/{{ selection.image.url }}'/>
-                                            {% endif %}
-                                            {% if selection.imageURL != Null %}
-                                                <img class="item" src='{{ selection.imageURL }}'/>
-                                            {% endif %}
-
-                                            {{ selection }}
-                                            {% if selection.item_description %}
-                                                <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{selection.0.item_description}}"></span>
-                                            {% endif %}
-                                        </li>
-
-                                    {% endfor %}
-                                </ul>
+                                <ul class="choice1" >
+                                 <!-- Display the tier two number -->
+                                 <div class="tier two">#{{ forloop.counter }}</div>
+                                 <!-- Display all the options selected for this tier two -->
+                                 {% for selection in s %}
+                                 <li class="list-element" id="item{{ selection.item_text }}">
+                                    <!-- Display image (uploaded) -->
+                                    {% if selection.image %}
+                                    <img class="item" src='/{{ selection.image.url }}'/>
+                                    {% endif %}
+                                    <!-- Display image (external URL) -->
+                                    {% if selection.imageURL != Null %}
+                                    <img class="item" src='{{ selection.imageURL }}'/>
+                                    {% endif %}
+                                    <!-- Display option text -->
+                                    {{ selection }}
+                                    <!-- Display tooltip for option description -->
+                                    {% if selection.item_description %}
+                                    <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{selection.0.item_description}}"></span>
+                                    {% endif %}
+                                 </li>
+                                 {% endfor %}
+                                 
+                               </ul>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
+                    <div class="empty"></div> 
                 </ul> <!-- left-sortable-->
             </div>
             {% if request.flavour == "mobile" %}
@@ -260,21 +265,31 @@ $(function() {
                     <ul id="right-sortable" class="list-group">
                         {% if condition_responses == None %}
                         {% for item in items %}
-                            <ul class="choice1 empty"></ul>
-                            <div class="tier">{{ forloop.counter }}</div>
-                            <ul class="choice1" onclick = "VoteUtil.moveToPref(this)">
-                                <li class="li_item" id="item{{ item.item_text }}" type="{{ forloop.counter }}">
-                                    {% if item.image %}
-                                        <img class="item" src='/{{ item.image.url }}'/>
-                                    {% endif %}
-                                    {% if item.imageURL != Null %}
-                                        <img class="item" src='{{ item.imageURL }}'/>
-                                    {% endif %}
-                                    {{ item.item_text }}
+                            <!-- Display each option. Each option gets its own tier two -->
+                          {% with prev=forloop.counter|mul:2 %}
+                             <ul class="choice1" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
+                                {% endwith %}
+                                <div class="tier two">#{{ forloop.counter }}</div>
+
+                                <li class="list-element" id="item{{ item.item_text }}" type="{{ item.id }}">
+                                   <!-- Display image (uploaded) -->
+                                   {% if item.image %}
+                                   <img class="item" src='/{{ item.image.url }}'/>
+                                   {% endif %}
+                                   <!-- Display image (external URL) -->
+                                   {% if item.imageURL != Null %}
+                                   <img class="item" src='{{ item.imageURL }}'/>
+                                   {% endif %}
+                                   <!-- Display option text -->
+                                   {{ item.item_text }}
+                                   <!-- Display tooltip for option description -->
+                                   {% if item.item_description %}
+                                   <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{item.item_description}}" data-title="Meddelanden">
+                                   </span>
+                                   {% endif %}
                                 </li>
-                            </ul>
+                             </ul>
                         {% endfor %}
-                        <ul class="choice1 empty"></ul>
                         {% endif %}
                     </ul>
                 </div>

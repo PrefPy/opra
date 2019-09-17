@@ -76,7 +76,8 @@ input[type="submit"] {
     margin: 0;
     padding: 0px;
 }
-#left-sortable li, #right-sortable li, #one-sortable li, #yesNoList label {
+
+#yesNoList label {
     display: block;
     margin: 5px 5px 5px 5px;
     padding: 5px;
@@ -235,25 +236,7 @@ div{
     min-height: 5px;
     min-width: 15px;
 }
-.tier {
-    float:left;
-    font-weight: bold;
-    -moz-user-select: none;
-    -webkit-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
-    -o-user-select:none;
-    padding-left: 10px;
-}
-ul.choice1{
-    -moz-user-select: none;
-    -webkit-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
-    -o-user-select:none;
-    padding-left: 30px;
-    padding-right: 20px;
-}
+
 li.li_item{
     display: inline-block;
     padding: 10px;
@@ -262,11 +245,10 @@ li.slider_item{
     display:block;
     padding: 10px;
 }
-ul.empty {
-    background-color:grey;
-    height: 5px;
+ul.unselectable{
+    background-color:blue;
+    height: 25px;
 }
-
 .nav-tabs {
 		position: fixed;
 		top: 50px;
@@ -318,3 +300,142 @@ th {
 #collapse_des span {
     overflow-wrap: break-word;
 }
+
+.ui-selectable-helper {
+    position: absolute;
+    z-index: 100;
+    border: 2px dotted blue;
+}
+
+.tier {
+    background-color: #999;
+    float: left;
+    border: 8px;
+    color: white;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+vertical-align: middle;
+line-height: 40px; 
+text-shadow: 1px 1px 2px #000000;
+
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0px 1px;
+    border-radius: 50%;
+
+}
+
+.choice1 {
+    white-space: nowrap;
+    background:rgb(223, 222, 222);
+    height: 40px;
+    width: 400px;
+    padding: 0;
+    margin: 10px 0px;
+    border: 0;
+    border-radius: 0.3rem;
+}
+
+.choice2 {
+    white-space: nowrap;
+    background: whitesmoke;
+    height: 40px;
+    width: 400px;
+    padding: 0;
+    margin: 10px 0px;
+    animation-duration: 3s;
+    border: 0;
+    border-radius: 0.1875rem;
+}
+
+.list-element {
+    display: inline-block;
+    float: left;
+    margin: 5px 5px;
+    cursor: default;
+    width: 100px;
+    height: 30px;
+    background-color: white;
+    text-align: center;
+    font-size: 16px;
+    color: #252525;
+    border: 2px solid rgb(145, 138, 138);
+    border-radius: 0.3rem;
+
+}
+.list-element.ui-selected {
+    background-color: rgb(176, 197, 214)
+}
+
+
+.choice1 li>div {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+
+.choice1 li .div-sortablehandle {
+    display: none;
+    opacity: 0.5;
+    left: -100%;
+}
+
+.choice1 li.ui-selected .div-sortablehandle {
+    display: inline-block;
+    cursor: default;
+    width: 100px;
+    height: 28px;
+    left: -107%;
+    border-radius: 0.1875rem;
+}
+
+.empty{
+    white-space: nowrap;
+    background: whitesmoke;
+    height: 10px;
+    width: 400px;
+    padding: 0;
+}
+
+.li-placeHolder {
+    display: inline-block;
+    margin: 5px 5px;
+    cursor: default;
+    width: 100px;
+    height: 30px;
+    background-color: rgb(193, 214, 231);
+    text-align: center;
+    border-radius: 0.3rem;
+}
+
+.col-placeHolder {
+    white-space: nowrap;
+    background-color: rgb(193, 214, 231);
+    height: 40px;
+    width: 400px;
+    padding: 0;
+    margin: 10px 0px;
+    border-radius: 0.3rem;
+
+}
+
+.transporter {
+    display: block;
+    float: none;
+    cursor: default;
+    width: 60px;
+    height: 20px;
+    text-align: center;
+    border: 0px solid darkgray;
+}
+
+
+
+

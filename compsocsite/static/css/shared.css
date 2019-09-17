@@ -315,57 +315,60 @@ th {
     height: 40px;
     width: 40px;
     text-align: center;
-vertical-align: middle;
-line-height: 40px; 
-text-shadow: 1px 1px 2px #000000;
-
+    vertical-align: middle;
+    line-height: 40px; 
+    text-shadow: 1px 1px 2px #444242;
+    box-shadow: 1px 1px 2px #444242;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 40px;
     font-weight: bold;
     cursor: pointer;
-    margin: 0px 1px;
-    border-radius: 50%;
-
+    margin: 0px 15px 0px 0px;
+    border-radius: 0.3rem;
 }
 
 .choice1 {
     white-space: nowrap;
     background:rgb(223, 222, 222);
     height: 40px;
-    width: 400px;
+    line-height: 40px; 
+    width: 550px;
     padding: 0;
-    margin: 10px 0px;
+    margin: 8px 0px;
     border: 0;
     border-radius: 0.3rem;
+    flex-wrap: wrap;
 }
 
 .choice2 {
     white-space: nowrap;
     background: whitesmoke;
     height: 40px;
-    width: 400px;
+    width: 250px;
     padding: 0;
-    margin: 10px 0px;
+    margin: 5px 0px;
     animation-duration: 3s;
     border: 0;
-    border-radius: 0.1875rem;
+    border-radius: 0.3rem;
 }
 
 .list-element {
+    flex: 0 50%;
     display: inline-block;
     float: left;
-    margin: 5px 5px;
+    margin: 2.5px 8px;
     cursor: default;
-    width: 100px;
-    height: 30px;
+    width: 125px;
+    height: 35px;
+    line-height: 35px; 
     background-color: white;
     text-align: center;
     font-size: 16px;
     color: #252525;
     border: 2px solid rgb(145, 138, 138);
-    border-radius: 0.3rem;
+    border-radius: 0.3rem; 
 
 }
 .list-element.ui-selected {
@@ -399,19 +402,19 @@ text-shadow: 1px 1px 2px #000000;
 .empty{
     white-space: nowrap;
     background: whitesmoke;
-    height: 10px;
-    width: 400px;
+    height: 1px;
+    width: 500px;
     padding: 0;
 }
 
 .li-placeHolder {
+    float:left;
     display: inline-block;
-    margin: 5px 5px;
+    margin: 2.5px 8px;
     cursor: default;
-    width: 100px;
-    height: 30px;
+    width: 125px;
+    height: 35px;
     background-color: rgb(193, 214, 231);
-    text-align: center;
     border-radius: 0.3rem;
 }
 

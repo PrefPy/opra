@@ -1003,7 +1003,7 @@ $( document ).ready(function() {
 			 $(this).remove();  
 		});
 		var emptyLine = " <div class=\"empty\"></div> ";
-		$('.sortable-ties').children(".choice1").first().before(emptyLine);
+		$('.sortable-ties').prepend(emptyLine);
 		$('.sortable-ties').append(emptyLine); // since .after() has a bug of not working in certain stances, we use .append() here
 
 	}

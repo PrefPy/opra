@@ -191,7 +191,7 @@ def endSubpoll(multipoll):
     
     # get results for this subpoll
     if question.question_type == 1: #poll
-        question.winner = getPollWinner(question)
+        question.winner = getPollWinner(question)[0]
     elif question.question_type == 2: #allocation
         getFinalAllocation(question)
     question.save()

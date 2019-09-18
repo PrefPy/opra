@@ -301,4 +301,18 @@ $(function() {
     } else {
         $('#left-sortable').css("height", wholeHeight2);
     }
+
+    $(window).load(function(){
+        var t = 1;
+        {% if condition_responses %}
+            {% for s in condition_responses %}
+                {% if s %}
+                    {% for selection in s %}
+                        $("#item{{selection.item_text}}").attr("type",t.toString());
+                        t = t+1;
+                    {% endfor %}
+                {% endif %}
+            {% endfor%}
+        {% endif %}
+    });
 </script>

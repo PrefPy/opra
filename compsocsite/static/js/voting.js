@@ -107,14 +107,13 @@ function orderCol(num){
 			if( $( this ).children().size() > 0 ){
 				var inner = [];
 				$( this ).children().each(function( index ){
-          if(!$(this).hasClass("tier")) inner.push($( this ).attr('type'));
+         			 if(!$(this).hasClass("tier")) inner.push($( this ).attr('type'));
 				});
 				order.push(inner);
 			}
 		});
 	});
   
-  //alert(order.length);
   return order;
 }
 
@@ -405,14 +404,14 @@ function changeCSS(){
     $(".col-placeHolder").css("width", "550px");
 
     $("#left-sortable").children(".choice1").each(function(){
-	  size = $(this).children("").size();
+	  size = $(this).children(":not(.ui-selected), :not(.transporter)").size();
 	  //$(this).css("height", ((size-1)*40).toString() + "px");
-      if(size > 3){
-		  num = ((Math.round((size-3)/4) + 1));
+      if(size > 4){
+		  size -= 1;
+		  num = Math.ceil(size/3);
 		  $(this).css("height", (num*40).toString() + "px");
 		  $(this).children(".tier").css( "height", (num*40).toString() + "px");
 		  $(this).children(".tier").css( "line-height", (num*40).toString() + "px");
-
       }
       else{
 		  $(this).css("height", "40px");
@@ -428,9 +427,10 @@ function changeCSS(){
     $(".col-placeHolder").css("width", "800px");
   }
   $("#one-sortable").children(".choice1").each(function(){
-    size = $(this).children().size();
-    if(size > 5){
-		num = ((Math.round((size-5)/6) + 1));
+	size = $(this).children(":not(.ui-selected), :not(.transporter)").size();
+    if(size > 7){
+		size -= 1;
+		num = Math.ceil(size/6);
 		$(this).css("height", (num*40).toString() + "px");
 		$(this).children(".tier").css( "height", (num*40).toString() + "px");
 		$(this).children(".tier").css( "line-height", (num*40).toString() + "px");
@@ -494,59 +494,55 @@ var VoteUtil = (function () {
 	}
 	
 	// clears all items from the left side and returns the right side to its default state
-	function clearAll () {
-		var d = (Date.now() - startTime).toString();
-		temp_data = {"item":""};
-		temp_data["time"] = [d];
-		temp_data["rank"] = [dictCol(1)];
-		if(method == 1){
-      var tier = 1; 
-
-      // move the left items over to the right side
-			$("#left-sortable").children().each(function(index){
-				if($(this).children().size() > 0){
-					$(this).children().each(function(index){
-            var temp = $("#right-sortable" ).html();
-            //$(this).attr("onclick")="VoteUtil.moveToPref(this)"; 
-            if(!$(this).hasClass("tier")){
-              $("#right-sortable" ).html( 
-                temp + "<ul class=\"choice2\" onclick =\"VoteUtil.moveToPref(this)\">" 
-                      + "<div class=\"tier two\"> #" + tier.toString() + "</div>" 
-                      + $(this)[0].outerHTML + "</ul>" );
-                tier++;
-              }
-				  	});					
-				}
-      }); 
-      $( '#left-sortable' ).html("");
-
-			$(".choice1").each(function(index){
-        $(this).attr("onclick", "VoteUtil.moveToPref(this)"); 
-      });
+	function clearAll() {
+	    var d = (Date.now() - startTime).toString();
+	    temp_data = {
+	        "item": ""
+	    };
+	    temp_data["time"] = [d];
+	    temp_data["rank"] = [dictCol(1)];
+	    if (method == 1) {
+	        var tier = $("#right-sortable").children().size()+1;
+	        // move the left items over to the right side
+	        $("#left-sortable").children().each(function(index) {
+	        	if ($(this).children().size() > 0) {
+	                $(this).children().each(function(index) {
+	                    var temp = $("#right-sortable").html();
+	                    //$(this).attr("onclick")="VoteUtil.moveToPref(this)"; 
+	                    if (!$(this).hasClass("tier")) {
+	                        $("#right-sortable").html(
+	                            temp + "<ul class=\"choice2\" onclick =\"VoteUtil.moveToPref(this)\">" + "<div class=\"tier two\"> #" + tier.toString() + "</div>" + $(this)[0].outerHTML + "</ul>");
+	                        tier++;
+	                    }
+	                });
+	            }
+	        });
 			// clear the items from the left side
-			
-			//checkStyle();
-			disableSubmission();
-			// add the clear action to the record
-			//var d = Date.now() - startTime;
-			//record += d + "||";
-			d = (Date.now() - startTime).toString();
-			temp_data["time"].push(d);
-			temp_data["rank"].push(dictCol(1));
-			var temp = JSON.parse(record);
-			temp.push(temp_data);
-			//temp["star"].push({"time":d, "action":"set", "value":rating.toString(), "item":$(this).parent().attr("id") });
+
+	        $('#left-sortable').html("");
+
+	        $(".choice1").each(function(index) {
+	            $(this).attr("onclick", "VoteUtil.moveToPref(this)");
+	        });
+
+	        disableSubmission();
+	        // add the clear action to the record
+	        //var d = Date.now() - startTime;
+	        //record += d + "||";
+	        d = (Date.now() - startTime).toString();
+	        temp_data["time"].push(d);
+	        temp_data["rank"].push(dictCol(1));
+	        var temp = JSON.parse(record);
+	        temp.push(temp_data);
+	        //temp["star"].push({"time":d, "action":"set", "value":rating.toString(), "item":$(this).parent().attr("id") });
 			record = JSON.stringify(temp);
-		}
+			
+	    }
 	}
 	
-	function insideEach(t, id, tier){
-		
-	}
-	
-	function checkStyle () {
-		
-	}
+	function insideEach(t, id, tier){ }
+
+	function checkStyle () { }
 	
 	// submits the current left side preferences	
 	function submitPref() {
@@ -853,16 +849,14 @@ $( document ).ready(function() {
 	// $('#one-sortable').children().each(function(index, value){
 	// 	//console.log(value);
 	// });
-	
-	window.setInterval(function(){
-		  checksubmission();
-		  changeCSS();
 
-		  str = "";
+	window.setInterval(function(){
+		  checkSubmission();
 		  setupSortable();
   	}, 1000);
-  
-  function checksubmission(){
+	  changeCSS();
+
+  function checkSubmission(){
     if($("#left-sortable").children().size() > 0){
 		$(".submitbutton").prop("disabled", false);
     }
@@ -873,6 +867,7 @@ $( document ).ready(function() {
   }
   	// reinitalize the sortable function
 	function setupSortable(){
+		var str = "";
 		if (allowTies){
 			str = ".choice1, .sortable-ties";
 			$('.sortable-ties').selectable({
@@ -892,9 +887,10 @@ $( document ).ready(function() {
 			else if (method == 2) { $(".col-placeHolder").css("width", "800px"); }
 			},
 			stop: function(e, ui) {
-			checkall();
+			checkAll();
 			removeSelected();
 			resetEmpty();
+			changeCSS();
 		}
 		});
       		
@@ -902,7 +898,7 @@ $( document ).ready(function() {
 			cancel: '.tier .empty',
 			cursorAt: {
 				top: 20,
-				left: 25
+				left: 60
 			},
 			items: "li:not(.tier)",
 			placeholder: "li-placeHolder",
@@ -916,9 +912,12 @@ $( document ).ready(function() {
 				var selected = $('.ui-selected').clone();
 				item.data('multidrag', selected);
 				$('.ui-selected').not(item).remove();
+
 				return $('<li class="transporter" />').append(selected);
 			},
-		
+			receive: function (event, ui) {
+				changeCSS();
+			},
 			change: function(e, ui) {
 				if (ui.placeholder.parent().hasClass("sortable-ties")) {
 					if (method == 1) { 
@@ -937,9 +936,11 @@ $( document ).ready(function() {
 
 			stop: function(e, ui) {
 				var selected = ui.item.data('multidrag');
+				selected.removeClass('ui-selected');
 				ui.item.after(selected);
 				ui.item.remove();
-				checkall();
+
+				checkAll();
 				changeCSS();
 				removeSelected();
 				resetEmpty();
@@ -948,10 +949,9 @@ $( document ).ready(function() {
 			
     }).disableSelection(); 
 	}
-	function checkall() {
+	function checkAll() {
       t1 = 1;
       t2 = 1;
-
       list = [];
       html = "<ul class=\"choice1 ui-sortable\">"; 
       if(method == 1){ html += "<div class=\"tier two\">0</div>"; }
@@ -1011,7 +1011,6 @@ $( document ).ready(function() {
 	if ($('#right-sortable li').length == 0) {
 		enableSubmission();
 	}
-	//VoteUtil.checkStyle();
 
 	$(".slide").each(function(){
 		$(this).slider({

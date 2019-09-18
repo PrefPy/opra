@@ -404,7 +404,7 @@ function changeCSS(){
     $(".col-placeHolder").css("width", "550px");
 
     $("#left-sortable").children(".choice1").each(function(){
-	  size = $(this).children(":not(.ui-selected), :not(.transporter)").size();
+	  size = $(this).children(":not(.ui-selected, .transporter)").size();
 	  //$(this).css("height", ((size-1)*40).toString() + "px");
       if(size > 4){
 		  size -= 1;
@@ -427,7 +427,7 @@ function changeCSS(){
     $(".col-placeHolder").css("width", "800px");
   }
   $("#one-sortable").children(".choice1").each(function(){
-	size = $(this).children(":not(.ui-selected), :not(.transporter)").size();
+	size = $(this).children(":not(.ui-selected, .transporter)").size();
     if(size > 7){
 		size -= 1;
 		num = Math.ceil(size/6);

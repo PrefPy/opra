@@ -29,7 +29,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 	
 5. Clone this project from Github
 
-6. Copy settings.py from opra_dependencies to compsocsite/compsocsite
+6. Copy settings.py from opra_dependencies to compsocsite/compsocsite. Copy opra_crypto.py from opra_dependencies to compsocsite/polls.
 
 7. Open command line (terminal), change to OPRA's directory, and then enter the following commands:
   
@@ -55,6 +55,10 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 * **WhiteNoise**:
 * **django-cors-headers**:
 * **django-qr-code**:
+* **scipy**:
+* **numpy**:
+* **networkx**:
+
 
 ##Models
 The following models are used to organize information:
@@ -62,8 +66,6 @@ The following models are used to organize information:
 * **Question:** includes the text of a question, its publication date, and whether it is a follow-up to another question
 * **Item:** an option within a question that can be ranked by users. Includes the text of the item and the question it is associated with
 * **Response:** the response of one student to one question. Includes a dictionary of the input preferences, the question and student it is associated with, the submission timestamp, and the item from this response the student has been allocated. This last field starts out blank, and is updated when an allocation algorithm is run
-* **Dictionary:** a helper model with all the functionality of a Python dictionary. Includes the response it is associated with
-* **KeyValuePair:** a helper model for key-value pairs in the dictionary model. The key is an item of a question and the value is the ranking the student assigned to that item
 
 
 ##Poll Owner Usage

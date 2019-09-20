@@ -15,7 +15,7 @@ var commentTime = "";
 var method = 1; // 1 is twoCol, 2 is oneCol, 3 is Slider
 var methodIndicator = "two_column";
 var init_star = false;
-
+var animOffset = 200;  // animation speed of ranking UIs, 200 = 0.2s
 var top_tier_layer = 0;
 
 function select(item){
@@ -397,52 +397,59 @@ function yesNoZeroSort( order ){
 	});
 }
 
+
+// change the behavior of the UI when the user change voting method
+// or drop a new item
 function changeCSS(){
-  if(method == 1){
-    $(".choice1").css("width", "550px");
-    $(".empty"). css("width", "550px");
-    $(".col-placeHolder").css("width", "550px");
+	// if method is twocol
+	if(method == 1){
+		$(".choice1").css("width", "550px");
+		$(".empty"). css("width", "550px");
+		$(".col-placeHolder").css("width", "550px");
 
-    $("#left-sortable").children(".choice1").each(function(){
-	  size = $(this).children(":not(.ui-selected, .transporter)").size();
-	  //$(this).css("height", ((size-1)*40).toString() + "px");
-      if(size > 4){
-		  size -= 1;
-		  num = Math.ceil(size/3);
-		  $(this).css("height", (num*40).toString() + "px");
-		  $(this).children(".tier").css( "height", (num*40).toString() + "px");
-		  $(this).children(".tier").css( "line-height", (num*40).toString() + "px");
-      }
-      else{
-		  $(this).css("height", "40px");
-		  $(this).children(".tier").css( "height", "40px");
-		  $(this).children(".tier").css( "line-height", "40px");
+		// extend the height of choice1 box if there exists more than 3 list-element in a row
+		// vice versa
+		$("#left-sortable").children(".choice1").each(function(){
+		size = $(this).children(":not(.ui-selected, .transporter)").size();
+		//$(this).css("height", ((size-1)*40).toString() + "px");
+		if(size > 4){
+			size -= 1;
+			num = Math.ceil(size/3);
+			$(this).css("height", (num*40).toString() + "px");
+			$(this).children(".tier").css( "height", (num*40).toString() + "px");
+			$(this).children(".tier").css( "line-height", (num*40).toString() + "px");
+		}
+		else{
+			$(this).css("height", "40px");
+			$(this).children(".tier").css( "height", "40px");
+			$(this).children(".tier").css( "line-height", "40px");
 
-      }
-    });
-  }
-  else if(method == 2){
-    $(".choice1").css("width", "800px");
-    $(".empty"). css("width", "800px");
-    $(".col-placeHolder").css("width", "800px");
-  }
-  $("#one-sortable").children(".choice1").each(function(){
-	size = $(this).children(":not(.ui-selected, .transporter)").size();
-    if(size > 7){
-		size -= 1;
-		num = Math.ceil(size/6);
-		$(this).css("height", (num*40).toString() + "px");
-		$(this).children(".tier").css( "height", (num*40).toString() + "px");
-		$(this).children(".tier").css( "line-height", (num*40).toString() + "px");
-
+		}
+		});
 	}
-	else{
-		$(this).css("height", "40px");
-		$(this).children(".tier").css( "height", "40px");
-		$(this).children(".tier").css( "line-height", "40px");
-
+	// if method is onecol, extend the selection bar
+	else if(method == 2){
+		$(".choice1").css("width", "800px");
+		$(".empty"). css("width", "800px");
+		$(".col-placeHolder").css("width", "800px");
 	}
-  });
+	// extend the height of choice1 box if there exists more than 6 list-element in a row
+	// vice versa
+	$("#one-sortable").children(".choice1").each(function(){
+		size = $(this).children(":not(.ui-selected, .transporter)").size();
+		if(size > 7){
+			size -= 1;
+			num = Math.ceil(size/6);
+			$(this).css("height", (num*40).toString() + "px");
+			$(this).children(".tier").css( "height", (num*40).toString() + "px");
+			$(this).children(".tier").css( "line-height", (num*40).toString() + "px");
+		}
+		else{
+			$(this).css("height", "40px");
+			$(this).children(".tier").css( "height", "40px");
+			$(this).children(".tier").css( "line-height", "40px");
+		}
+	});
   
 }
 
@@ -854,7 +861,7 @@ $( document ).ready(function() {
 		  checkSubmission();
 		  setupSortable();
   	}, 1000);
-	  changeCSS();
+	changeCSS();
 
   function checkSubmission(){
     if($("#left-sortable").children().size() > 0){
@@ -863,7 +870,6 @@ $( document ).ready(function() {
     else{
       	$(".submitbutton").prop("disabled", true);
 	}
-	
   }
   	// reinitalize the sortable function
 	function setupSortable(){
@@ -886,12 +892,19 @@ $( document ).ready(function() {
 			if (method == 1)      { $(".col-placeHolder").css("width", "550px"); }
 			else if (method == 2) { $(".col-placeHolder").css("width", "800px"); }
 			},
+			revert:'invalid',
+			start: function(e, ui){
+				$(".col-placeHolder").hide(animOffset);	// add animation for placeholder
+			},
+			change: function (e,ui){
+				$(".col-placeHolder").hide().show(animOffset);// add animation for placeholder
+			},
 			stop: function(e, ui) {
-			checkAll();
-			removeSelected();
-			resetEmpty();
-			changeCSS();
-		}
+				checkAll();
+				removeSelected();
+				resetEmpty();
+				changeCSS();
+			}
 		});
       		
 		$('.choice1').sortable({
@@ -903,7 +916,9 @@ $( document ).ready(function() {
 			items: "li:not(.tier)",
 			placeholder: "li-placeHolder",
 			connectWith: str,
-		
+			start: function(e, ui){
+				//$(".li-placeHolder").hide(animOffset);	// add animation for placeholder
+			},
 			helper: function(e, item) {
 				if (!item.hasClass('ui-selected')) {
 				$('.ul').find('.ui-selected').removeClass('ui-selected');
@@ -919,18 +934,21 @@ $( document ).ready(function() {
 				changeCSS();
 			},
 			change: function(e, ui) {
-				if (ui.placeholder.parent().hasClass("sortable-ties")) {
-					if (method == 1) { 
-						$(".li-placeHolder").css("width", "550px");
-					 }
-					else if (method == 2) { 
-						$(".li-placeHolder").css("width", "800px"); 
+				// wait the animation to competer then change teh css of placeholder
+				$(".li-placeHolder").hide().show(animOffset, function(){
+					if (ui.placeholder.parent().hasClass("sortable-ties")) {
+						if (method == 1) { 
+							$(".li-placeHolder").css("width", "550px");
+						 }
+						else if (method == 2) { 
+							$(".li-placeHolder").css("width", "800px"); 
+						}
+						$(".li-placeHolder").css({ "float": "none", "height": "40px", "margin": "0px 0px" });
 					}
-					$(".li-placeHolder").css({ "float": "none", "height": "40px", "margin": "0px 0px" });
-				}
-				else { 
-					$(".li-placeHolder").css({ "float": "left", "width": "125px", "height": "35px", "margin": "2.5px 8px" }); 
-				}
+					else { 
+						$(".li-placeHolder").css({ "float": "left", "width": "125px", "height": "35px", "margin": "2.5px 8px" }); 
+					}
+				});
 				changeCSS();
 			},
 

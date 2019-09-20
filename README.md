@@ -58,6 +58,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 * **scipy**:
 * **numpy**:
 * **networkx**:
+* **django-mathfilters**:
 
 
 ##Models

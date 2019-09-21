@@ -888,16 +888,21 @@ $( document ).ready(function() {
 			placeholder: "col-placeHolder",
 			handle: ".tier",
 			//items: "ul",
-			change: function(e, ui) {
-			if (method == 1)      { $(".col-placeHolder").css("width", "550px"); }
-			else if (method == 2) { $(".col-placeHolder").css("width", "800px"); }
-			},
 			revert:'invalid',
 			start: function(e, ui){
-				$(".col-placeHolder").hide(animOffset);	// add animation for placeholder
+				$(".col-placeHolder").hide();
 			},
 			change: function (e,ui){
-				$(".col-placeHolder").hide().show(animOffset);// add animation for placeholder
+				$(".col-placeHolder").hide().show(animOffset, function(){
+					if (method == 1) { 
+						$(".col-placeHolder").css("width", "550px");
+						}
+					else if (method == 2) { 
+						$(".col-placeHolder").css("width", "800px"); 
+					}
+					$(".li-placeHolder").css({ "float": "none", "height": "40px", "margin": "0px 0px" });
+				});
+				changeCSS();
 			},
 			stop: function(e, ui) {
 				checkAll();

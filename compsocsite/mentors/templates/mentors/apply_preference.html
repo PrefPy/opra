@@ -1,0 +1,59 @@
+{% extends 'mentors/apply.html' %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+<form method="POST" action="{% url 'mentors:applyfunc3' %}" id="applyfunc3">
+    {% csrf_token %}
+    <legend> Course selection </legend>
+    <div class="wrap">
+        <div class="search">
+            
+            <input type="text" class="searchTerm" placeholder="Class Search">
+                <button type="submit" class="searchButton">
+                    <i class="fa fa-search"></i>
+                </button>
+        </div>
+    </div>
+   <div> Please select you prefrence of course below: (this part is unfinished, it's normal if you see nothing)
+       </div>
+    <ul id="left-sortable" class = "sortable-ties">
+        {% if currentSelection %}
+        <!-- Display a previously submitted vote -->
+        <div class="empty"></div>
+        {% for s in currentSelection %}
+        {% if s %}
+        <ul class="choice1" >
+            <!-- Display the tier two number -->
+            <div class="tier two">#{{ forloop.counter }}</div>
+            <!-- Display all the options selected for this tier two -->
+            {% for selection in s %}
+            <li class="list-element" id="item{{ selection.item_text }}">
+                <!-- Display image (uploaded) -->
+                {% if selection.image %}
+                <img class="item" src='/{{ selection.image.url }}'/>
+                {% endif %}
+                <!-- Display image (external URL) -->
+                {% if selection.imageURL != Null %}
+                <img class="item" src='{{ selection.imageURL }}'/>
+                {% endif %}
+                <!-- Display option text -->
+                {{ selection }}
+                <!-- Display tooltip for option description -->
+                {% if selection.item_description %}
+                <span class="glyphicon glyphicon-info-sign pull-right" data-toggle="tooltip" data-placement="top" title="{{selection.0.item_description}}"></span>
+                {% endif %}
+            </li>
+            {% endfor %}
+            
+        </ul>
+        {% endif %}
+        {% endfor %}
+        
+        {% endif %}
+        <div class="empty"></div>
+    </ul>
+</form>
+
+{% endblock %}

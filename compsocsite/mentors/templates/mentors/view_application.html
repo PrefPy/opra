@@ -1,0 +1,73 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+	<p>
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+				{{ message }}
+			</div>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</p>
+</div>
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b> View Your Application </b>
+            </div>
+            <div class="panel-body"">
+                <div class = "row col-md-12">
+                    {% for application in applications %}
+                    <div class="inputline">
+                        <label for="rin">RIN: </label>  {{ application.RIN }}
+                    </div>
+                    <div class="inputline">
+                        <label > Name: </label> {{ application.first_name }} {{ application.last_name }}
+                     
+                    </div>
+                     <div class="inputline">
+                        <label for="email">RCS Email:</label> {{ application.RPI_email }}
+                    </div>
+                    <div class="inputline">
+                        <label for="phone">Phone:</label> {{ application.phone }}
+                    </div>
+                    <div class="inputline">
+                        <label for="gpa">Cumulative GPA:</label> {{ application.GPA }}
+                    </div>
+                    <div class="inputline">
+                        <label for="recommender">Recommender:</label> {{ application.recommender }}
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+		<div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Groups you can join</b>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                {% if opengroups %}
+                    <tbody>
+                    {% for group in opengroups %}
+                        {% if request.user != group.owner and request.user not in group.members.all %}
+                            <tr>
+                                <td>{{ group.name }}</td>
+                                <td><a href="{% url 'groups:join' group.id %}" class="btn btn-primary">Join</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

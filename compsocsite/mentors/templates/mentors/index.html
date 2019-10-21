@@ -1,0 +1,65 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+	<p>
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+				{{ message }}
+			</div>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</p>
+</div>
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <b> Mentor Application </b>
+            </div>
+            
+            <div class="panel-body">
+                <table class="table">
+                {% if applied %}
+                    <!- user wait for Application>
+                    <tbody>
+                        Mentor apllication success
+                    </tbody>
+                    <tr><td> <a href="{% url 'mentors:view_application' %}"><span class="btn btn-primary">View</span></a></td></tr>
+                    <tr><form method="GET" action="{% url 'mentors:withdrawfunc' %}" id="withdrawfunc">
+                            <input type="submit" value="Withdraw apllication" class="btn btn-primary">
+                    </form></tr>
+                {% else %}
+                <b> Begin to apply:  </b>
+                    <tr><td> <a href="{% url 'mentors:apply' %}"><span class="btn btn-primary">Apply</span></a></td></tr>
+                {% endif %}
+                </table>
+            </div>
+        </div>
+		<div class="panel panel-default">
+            <div class="panel-heading">
+                <b>Groups you can join</b>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                {% if opengroups %}
+                    <tbody>
+                    {% for group in opengroups %}
+                        {% if request.user != group.owner and request.user not in group.members.all %}
+                            <tr>
+                                <td>{{ group.name }}</td>
+                                <td><a href="{% url 'groups:join' group.id %}" class="btn btn-primary">Join</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

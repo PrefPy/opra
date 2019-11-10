@@ -1,22 +1,83 @@
-label {
-    color: rgb(63, 63, 63);
-    font-weight: bold;
-    display: block;
-    width: 150px;
-    float: left;
+.accordion-heading{
+  font-size: 66px;
+  color: red;
+
+}
+.my_label {
+  color: rgb(63, 63, 63);
+  font-weight: bold;
+  display: block;
+  float: left;
+  width: 33%;
+  display: inline-block;
+}
+label.radio.inline{
+  width: 33%;
+  padding: 0px 15px;
+}
+.course_title{
+  font: 80px;
+  color: red;
+  font-weight: bold;
+}
+.control-group{
+  width:100%;
+}
+.course_block{
+  width:100%;
+  height:200px;
 }
 
-.inputline{
-    height: 30px;
-    padding: 20px 15px;
+.course_choice {
+  white-space: nowrap;
+  background:rgb(223, 222, 222);
+  height: 40px;
+  line-height: 40px; 
+  width: 650px;
+  padding: 0;
+  margin: 6px 0px;
+  border: 0;
+  border-radius: 0.1rem;
+  flex-wrap: wrap;
 }
+
+.course-element {
+  flex: 0 50%;
+  display: inline-block;
+  float: left;
+  margin: 2.5px 4px;
+  cursor: default;
+  width: 175px;
+  height: 35px;
+  line-height: 35px; 
+  background-color: white;
+  text-align: center;
+  font-size: 12px;
+  color: #252525;
+  border: 1px solid rgb(145, 138, 138);
+  border-radius: 0.2rem; 
+}
+.course-element.ui-selecting {
+  background-color: rgb(109, 108, 106)
+}
+.course-element.ui-selected {
+  background-color: rgb(176, 197, 214)
+}
+.inputline{
+    padding: 10px 15px;
+    width:100%;
+
+}
+
 .textline{
     padding: 10px 15px;
 }
 
 .vspacewithline{
-    padding: 10px 15px;
+  padding: 10px 15px;
 
+    width:100%;
+    height: 1px;
 }
 * {box-sizing: border-box}
 

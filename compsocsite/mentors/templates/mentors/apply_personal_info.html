@@ -5,56 +5,9 @@
 
 {% block content %}
 <form method="POST" action="{% url 'mentors:applyfunc1' %}" id="applyfunc1">
-        {% csrf_token %}
-            <legend> Personal Information </legend>
-            <div class="inputline">
-                <label for="rin">RIN: </label>
-                <input type="text" name="rin" id="rin" size="22" maxlength="100" value="" onchange="this.value = cleanup_numeric( this.value );" autofocus="">
-                <small>(e.g. 660000007)</small>
-                <span class="required">&nbsp;&nbsp;«&nbsp;required</span>
-            </div>
-    
-            <div class="inputline">
-                <label for="fname">First Name:</label>
-                <input type="text" name="fname" id="fname" size="22" maxlength="100" value="">
-                <span class="required">&nbsp;&nbsp;«&nbsp;required</span>
-            </div>
-    
-            <div class="inputline">
-                <label for="lname">Last Name:</label>
-                <input type="text" name="lname" id="lname" size="22" maxlength="100" value="">
-                <span class="required">&nbsp;&nbsp;«&nbsp;required</span>
-            </div>
-    
-            <div class="inputline">
-                <label for="email">RCS Email:</label>
-                <input type="text" name="email" id="email" size="22" maxlength="100" value="" onchange="this.value = this.value.toLowerCase();"><span style="font-family: Courier New, Courier, sans-serif">@rpi.edu</span>
-                <span class="required">&nbsp;&nbsp;«&nbsp;required</span>
-            </div>
-    
-            <div class="inputline">
-                <label for="phone">Phone:</label>
-                <input type="text" name="phone" id="phone" size="22" maxlength="100" value="" >
-                <small>(e.g. 518-597-xxxx)</small>
-                <span class="required">&nbsp;&nbsp;«&nbsp;required</span>
-            </div>
-    
-            <div class="inputline">
-                <label for="gpa">Cumulative GPA:</label>
-                <input type="text" name="gpa" id="gpa" size="22" maxlength="100" value="">
-                <small>(e.g. 3.67)</small>
-                <span class="required">&nbsp;&nbsp;«&nbsp;required</span>
-            </div>
-    
-            <div class="inputline">
-                <label for="recommender">Recommender:</label>
-                <input type="text" name="recommender" id="recommender" size="22" maxlength="100" value="">
-                <span class="required">&nbsp;&nbsp;«&nbsp;required</span>
-            </div>
-    
-            <div class="inputline">
-                <input type="submit" value="Save and Continue" class="btn btn-primary">
-            </div>
-        </form>
+    <legend> Personal Information </legend>
+    {% csrf_token %}
+    {{ apply_form.as_p }}
+</form>
 
 {% endblock %}

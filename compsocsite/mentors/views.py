@@ -203,7 +203,7 @@ def addStudentRandom(request):
                 new_grade = Grade(id=None)
                 #glist  = ['a','a-','b+','b','b-','c+','c','c-','d+','d','f','p','n']
                 #new_grade.id = None
-                glist  = ['a','a-','b+','b','b-','c','c+''n']
+                glist  = ['a','a-','b+','b','b-','c','c+','n']
 
                 new_grade.student_grade = random.choice(glist)
                 if (new_grade.student_grade != 'p' and new_grade.student_grade != 'n' and new_grade.student_grade != 'f'):

@@ -17,25 +17,23 @@
 		{% endif %}
 	</p>
 </div>
-    {% if not applied %}
+{% if not applied %}
 
-   
-    <div class="container col-md-9">
-            
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <b> Mentor application Form </b>
-            </div>
-
-            <div class="panel-body"">
-                    {% load crispy_forms_tags %}
-                    {% crispy apply_form apply_form.helper %}
-                    {{ form.errors }}
-            </div>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b> Mentor application Form </b>
         </div>
-        {% else %}
-        <div> Session Expired </div>
-        {% endif %}
-		
+
+        <div class="panel-body"">
+                {% load crispy_forms_tags %}
+                {% crispy apply_form apply_form.helper %}
+                {{ form.errors }}
+        </div>
+    </div>
+</div>
+{% else %}
+<div> Session Expired </div>
+{% endif %}
 {% endif %}
 {% endblock %}

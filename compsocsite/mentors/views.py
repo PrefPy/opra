@@ -39,6 +39,7 @@ import csv
 import logging
 import random as r
 from .match import Matcher
+import ast
 
 class IndexView(views.generic.ListView):
     """
@@ -128,13 +129,21 @@ class ApplyPreferenceView(views.generic.ListView):
         ctx['applied'] = Mentor.applied
         ctx['applications'] = Mentor.objects.all()
         ctx['step'] = Mentor.step
-
         # === need more for course data ===
-
         return ctx
 
     def get_queryset(self):
         return Mentor.objects.all()
+
+# view course features and change their weights
+class CourseFeatureView(views.generic.ListView):
+    template_name = 'mentors/course_feature.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(CourseFeatureView, self).get_context_data(**kwargs)
+        ctx['courses'] = Course.objects.all()
+        return ctx
+    def get_queryset(self):
+        return Course.objects.all()
 
 # apply step
 def applystep(request):
@@ -142,8 +151,16 @@ def applystep(request):
         # initate a new mentor applicant
         form = MentorApplicationfoForm(request.POST)
         if form.is_valid():
-            form.save()
-            print("yes")
+            new_applicant = form.save()
+            order_str = breakties(request.POST['pref_order'])
+
+            pref = new_applicant.course_pref
+            pref[new_applicant.RIN] = order_str
+            pref.save()
+
+            l = pref[new_applicant.RIN]
+            l = [n.strip() for n in ast.literal_eval(l)] # convert str list to actual list u['a', 'b', 'c'] -> ['a', 'b', 'c']
+            print(len(l))
         else:
             print(form.errors)
 
@@ -159,6 +176,17 @@ def applystep(request):
     return render(request, 'mentors/apply.html', {'courses': courses, 'apply_form': form})
 
 
+# return the prefer after brutally break ties
+def breakties(order_str):
+    l = []
+    order = getPrefOrder(order_str) # change str to double lists
+    for i in range(len(order)):
+        random.shuffle(order[i]) # break ties with random
+        for j in range(len(order[i])):
+            l.append(order[i][j])
+                
+    return l
+
 # withdraw application, should add semester later
 def withdraw(request):
     if request.method == 'GET':
@@ -166,7 +194,7 @@ def withdraw(request):
         Mentor.applied = False
     return HttpResponseRedirect(reverse('mentors:index'))
 
-
+# load CS_Course.csv 
 def addcourse(request):
     if request.method == 'POST':
         Course.objects.all().delete()
@@ -184,8 +212,11 @@ def addcourse(request):
 
     return render(request, 'mentors/index.html', {})
 
-# Randomly add students
+# Randomly add students with assigned numbers
 def addStudentRandom(request):
+    classes = [course.name for course in Course.objects.all()]
+    numClass = len(Course.objects.all())
+
     if request.method == 'POST':
         Mentor.objects.all().delete()
 
@@ -195,14 +226,19 @@ def addStudentRandom(request):
             new_applicant.RIN = str(661680900 + i)
             new_applicant.first_name = "student_"
             new_applicant.last_name = str(i)
-            new_applicant.GPA = round(random.uniform(2.5, 4)*100)/100 # simple round
+            new_applicant.GPA = round(random.uniform(2.0, 4)*100)/100 # simple round
             new_applicant.phone = 518596666
+
+            pref = Dict()
+            pref.name = new_applicant.RIN
+            pref.save()
+            new_applicant.course_pref = pref
             new_applicant.save()
 
+            new_applicant.course_pref[new_applicant.RIN] = r.sample(classes, r.randint(1, numClass))
             for course in Course.objects.all():
                 new_grade = Grade(id=None)
                 #glist  = ['a','a-','b+','b','b-','c+','c','c-','d+','d','f','p','n']
-                #new_grade.id = None
                 glist  = ['a','a-','b+','b','b-','c','c+','n']
 
                 new_grade.student_grade = random.choice(glist)
@@ -213,8 +249,6 @@ def addStudentRandom(request):
                     new_grade.have_taken = False
                     new_grade.mentor_exp = False
 
-                #new_grade.have_taken = random.choice([True, False])
-                #new_grade.mentor_exp = random.choice([True, False])
                 new_grade.course = course
                 new_grade.student = new_applicant
                 new_grade.save()
@@ -255,7 +289,6 @@ def StartMatch(request):
                             )
                     }
                 )
-
             studentFeatures.update({s.RIN: studentFeatures_per_course})
 
 
@@ -264,33 +297,34 @@ def StartMatch(request):
         classCaps = {c: r.randint(3, 10) for c in classes}
         students = [studnet.RIN for studnet in Mentor.objects.all()]
         numClasses = len(Course.objects.all())
+        studentPrefs = {s.RIN: [n.strip() for n in ast.literal_eval(s.course_pref[s.RIN])] for s in Mentor.objects.all()}
 
-        studentPrefs = {s: [c for c in r.sample(classes, r.randint(numClasses, numClasses ))] for s in students}
+
+        #studentPrefs = {s: [c for c in r.sample(classes, r.randint(numClasses, numClasses ))] for s in students}
         #print(studentPrefs)
         #studentFeatures = {s: {c: tuple(r.randint(0, 10) for i in range(numFeatures)) for c in classRank} for s, classRank in studentPrefs.items()}
         #print(studentFeatures)
         classFeatures = {c: (r.randint(3, 10), r.randint(3, 10), r.randint(1, 10), r.randint(1, 10)) for c in classes}
-       # classFeatures = {c: (0, 1000, 5, 5) for c in classes}
+        #classFeatures = {c: (0, 1000, 5, 5) for c in classes}
 
         matcher = Matcher(studentPrefs, studentFeatures, classCaps, classFeatures)
         classMatching = matcher.match()
+
         '''
         assert matcher.isStable()
         print("matching is stable\n")
         '''
+
         #print out some classes and students
         for (course, student_list) in classMatching.items():
-            print(course)
-            for s in student_list:
-                
-                this_student = Mentor.objects.filter(RIN = s).first()
+            print(course + ", cap: " + str(classCaps[course]) + ", features: ", classFeatures[course])
+            for s_rin in student_list:        
+                this_student = Mentor.objects.filter(RIN = s_rin).first()
                 this_course  = Course.objects.filter(name = course).first()
                 query = Grade.objects.filter(student = this_student, course = this_course)
                 item = query.first()
-                print("   "+s + " cumlative GPA: " + str(this_student.GPA).upper() + " grade: " + item.student_grade.upper() + ", has mentor exp: " + str(item.mentor_exp) )
-
+                print("   "+s_rin + " cumlative GPA: " + str(this_student.GPA).upper() + " grade: " + item.student_grade.upper() + ", has mentor exp: " + str(item.mentor_exp) )
                 #print("   ",s , studentFeatures[s][course])
-
             print()
 
         unmatchedClasses = set(classes) - classMatching.keys()
@@ -302,3 +336,30 @@ def StartMatch(request):
         print(f"{len(unmatchedClasses)} classes with no students")
         print(f"{len(unmatchedStudents)} students not in a class")
     return render(request, 'mentors/index.html', {})
+
+# function to get preference order from a string
+# String orderStr
+# Question question
+# return List<List<String>> prefOrder
+def getPrefOrder(orderStr):
+    # empty string
+    if orderStr == "":
+        return None
+    if ";;|;;" in orderStr:
+        current_array = orderStr.split(";;|;;")
+        final_order = []
+        length = 0
+        for item in current_array:
+            if item != "":
+                curr = item.split(";;")
+                final_order.append(curr)
+                length += len(curr)
+    else:
+        final_order = json.loads(orderStr)
+    
+    # the user hasn't ranked all the preferences yet
+    #if length != len(question.item_set.all()):
+     #   return None
+
+    return final_order
+

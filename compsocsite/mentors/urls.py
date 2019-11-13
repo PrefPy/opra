@@ -12,10 +12,11 @@ urlpatterns = [
     url(r'^apply$', login_required(views.ApplyView.as_view()), name='apply'),
     # personal info
     url(r'^apply/$', views.applystep, name='applyfunc1'),
+    url(r'^viewcourse$', login_required(views.CourseFeatureView.as_view()), name='viewcourse'),
+
     # compensation and responsbility
     #url(r'^applyfunc2/$', views.applystep, name='applyfunc2'),
     # RANKING of preference of course of studnet
-    url(r'^apply/$', views.applystep, name='applyfunc3'),
 
     url(r'^addcoursefunc/$', views.addcourse, name='addcoursefunc'),
     url(r'^addStudentRandomfunc/$', views.addStudentRandom, name='addStudentRandomfunc'),

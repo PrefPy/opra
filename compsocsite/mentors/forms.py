@@ -29,9 +29,12 @@ class MentorApplicationfoForm(ModelForm):
             'email': forms.TextInput(attrs={'placeholder': ' xxx@rpi.email'}),
             'phone': forms.TextInput(attrs={'placeholder': ' 5185941234'}),
         }
-        
     def __init__(self, *args, **kwargs):
         super(MentorApplicationfoForm, self).__init__(*args, **kwargs)
+        self.fields["course_pref"].required = False
+        
+         
+
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'
         self.helper.form_class = 'blueForms'
@@ -98,6 +101,7 @@ class MentorApplicationfoForm(ModelForm):
                     Field('recommender', css_class = "inputline"),
                     HTML("</fieldset>"),
                 ),
+
                 AccordionGroup('== COMPENSATION AND RESPONSIBILITIES ==',
                     HTML("<fieldset>"),
                     HTML("""
@@ -126,7 +130,7 @@ class MentorApplicationfoForm(ModelForm):
                     course_layout,
                     HTML("</fieldset>"),
                 ),
-                
+
                 AccordionGroup('== COURSE RANKINGS ==',
                     HTML("<fieldset>"),
 
@@ -139,7 +143,8 @@ class MentorApplicationfoForm(ModelForm):
                                 <ul class="course_choice" >
                                 <!-- Display the tier number -->
                                     <div class="tier two">#{{ forloop.counter }}</div>
-                                    <li class="course-element" id = "cousre_{{ forloop.counter }}" type = "cousre_{{ forloop.counter }}">
+                                    <li class="course-element" id = "{{ course.name }}" type =
+                                     "{{ course.name }}">
                                         {{ course.subject }} {{course.number}}
                                     </li>
                                 </ul>
@@ -147,9 +152,14 @@ class MentorApplicationfoForm(ModelForm):
                                 {% endfor %}
                             </ul>
                             '''),
-                    HTML("</fieldset>"),
+                    HTML(''' 
+                    <input type="hidden" id="pref_order" class="pref_order" name="pref_order" value=""/>
+                    <input type="hidden" id="record_data" class="record_data" name="record_data" value=""/>
 
+                    '''),
+                    HTML("</fieldset>"),
                 ),
+                
                 AccordionGroup('== SCHEDULING ==',
                     HTML("<fieldset>"),
                     HTML("Time slot plugin here"),
@@ -170,17 +180,24 @@ class MentorApplicationfoForm(ModelForm):
         new_applicant.GPA = self.cleaned_data["GPA"]
         new_applicant.phone = self.cleaned_data["phone"]
         new_applicant.compensation = self.cleaned_data["compensation"]
-        new_applicant.save()
-        print(new_applicant)
 
+        # create a dictionary to store a list of preference
+        pref = Dict()
+        pref.name = new_applicant.RIN
+        pref.save()
+            
+        new_applicant.course_pref = pref
+        new_applicant.save()
+        #orderStr = self.cleaned_data["pref_order"]
+        
         # Save Grades on the course average
         for course in Course.objects.all():
-            course_grade = course.name+ "_grade"
-            course_exp   = course.name+ "_exp"
+            course_grade = course.name + "_grade"
+            course_exp   = course.name + "_exp"
 
-            new_grade    = Grade()
+            new_grade         = Grade()
             new_grade.student = new_applicant
-            new_grade.course = course
+            new_grade.course  = course
             new_grade.student_grade = self.cleaned_data[course_grade] # Grade on this course
             if (self.cleaned_data[course_exp] == 'Y'): # Mentor Experience
                 new_grade.mentor_exp = True
@@ -195,57 +212,5 @@ class MentorApplicationfoForm(ModelForm):
             new_grade.save()
             print(new_grade.course.name + ": " + new_grade.student_grade.upper())
 
+        return new_applicant
 
-class CompensationForm(ModelForm):
-    class Meta:
-        model = Mentor
-        fields = ('compensation',)  
-        
-
-
-'''
-class GradeForm(forms.ModelForm): 
-    class Meta: 
-        model = Grade
-        fields = ('student_grade', 'mentor_exp')
-        help_texts= {
-            'student_grade': _("Have you taken this course and earned a grade? If so, please specify the grade: "),
-            'mentor_exp': _("Have you mentored this class before? "),
-        }
-
-class GradeForm2(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        courses = Course.objects.all()
-        for i in range(len(courses) + 1):
-            field_name = 'courses_%s' % (i,)
-            grades = (
-                     ('a', 'A'),
-                     ('a-', 'A-'),
-                     ('b+', 'B+'),
-                     ('b', 'B'),
-                     ('b-', 'B-'),
-                     ('c+', 'C+'),
-                     ('c', 'C'),
-                     ('c-', 'C-'),
-                     ('d+', 'D+'),
-                     ('d', 'D'),
-                     ('f', 'F'),
-                     ('p', 'Progressing'),
-                     ('n', 'Not Taken'),
-                     )
-    
-            self.fields[field_name] = forms.ChoiceField(choices = grades) 
-            self.initial[field_name] = 'n'
-            help_texts = {
-                field_name: _("Have you taken this course and earned a grade? If so, please specify the grade: "),
-            }
-            try:
-                #self.initial[field_name] = 'n'
-                True
-            except IndexError:
-                self.initial[field_name] = ''
-        # create an extra blank field
-        # field_name = 'interest_%s' % (i + 1,)
-        # self.fields[field_name] = forms.CharField(required=False)
-        '''

@@ -15,6 +15,8 @@
 		{% endif %}
 	</p>
 </div>
+
+<!- Mentor apllication window>
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -39,8 +41,24 @@
             </table>
         </div>
     </div>
-    
 </div>
+
+<!- Professor apllication window>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b> Professor Interface </b>
+        </div>
+        
+        <div class="panel-body">
+            <b> Check your courses:  </b>
+                <tr><td> <a href="{% url 'mentors:viewcourse' %}"><span class="btn btn-primary">View</span></a></td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-body">
@@ -52,7 +70,7 @@
 
             <form method="POST" action="{% url 'mentors:addStudentRandomfunc' %}" id="addStudentRandomfunc">
                 {% csrf_token %}
-                <h2> Add Student Random</h2>
+                <h2> Add Student Random (DEV)</h2>
                 <input type="number" id="num_students" name="num_students" >
                 <input type="submit" value="Add student Random"  name="submit" id="submit" />
             </form>

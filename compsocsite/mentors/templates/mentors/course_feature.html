@@ -1,0 +1,43 @@
+{% extends 'mentors/apply.html' %}
+{% load staticfiles %}
+{% block content %}
+<script src='/static/js/course.js'></script>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+          <fieldset>
+
+          <form method="POST" action="" >
+              {% csrf_token %}
+                <b> Choose Course: </b>
+                
+                <select name="courses">
+                    {% for course in courses %}
+                    <option value="{{course.name}}">{{course}}</option>
+                    {% endfor %}
+                </select> <i class="fa fa-search"></i>
+
+              <div class="panel-body" >
+                  <ul id="sliders" >
+                    <li class="slider_item" id="1" alt=1 type=1>
+                        <strong>Cumlative GPA </strong> : <div id="score1">0</div>
+                        <div class="slide" id="1" type="Slide_1"></div>
+                    </li>
+                    <li class="slider_item" id="2" alt=2 type=2>
+                        <strong> Grade on this course before </strong> :  <div id="score2">0</div>
+                        <div class="slide" id="2" type="Slide_2"></div>
+                    </li>
+                    <li class="slider_item" id="3" alt=3 type=3>
+                        <strong> Have Mentor Experience </strong> : <div id="score3">0</div>
+                        <div class="slide" id="3" type="Slide_3"></div>
+                    </li>
+                  </ul>  
+              </div>
+              <input type="submit" value="Submit Changes"  name="submit" id="submit" />
+        </form>
+
+        </fieldset>
+        </div>
+    </div>
+</div>
+{% endblock %}

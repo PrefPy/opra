@@ -206,9 +206,9 @@ class MentorApplicationfoForm(ModelForm):
 
             # if the student has failed the class, or is progressing, we consider he did not take the course
             if (new_grade.student_grade != 'p' and new_grade.student_grade != 'n' and new_grade.student_grade != 'f'):
-                new_grade.have_taken = False
-            else:
                 new_grade.have_taken = True
+            else:
+                new_grade.have_taken = False
             new_grade.save()
             print(new_grade.course.name + ": " + new_grade.student_grade.upper())
 

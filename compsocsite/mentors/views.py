@@ -160,7 +160,7 @@ def applystep(request):
 
             l = pref[new_applicant.RIN]
             l = [n.strip() for n in ast.literal_eval(l)] # convert str list to actual list u['a', 'b', 'c'] -> ['a', 'b', 'c']
-            print(len(l))
+            #print(len(l))
         else:
             print(form.errors)
 
@@ -218,12 +218,12 @@ def addStudentRandom(request):
     numClass = len(Course.objects.all())
 
     if request.method == 'POST':
-        Mentor.objects.all().delete()
+        #Mentor.objects.all().delete()
 
         num_students = request.POST['num_students']
         for i in range(int(num_students)):
             new_applicant = Mentor()
-            new_applicant.RIN = str(661680900 + i)
+            new_applicant.RIN = str(100000000 + i)
             new_applicant.first_name = "student_"
             new_applicant.last_name = str(i)
             new_applicant.GPA = round(random.uniform(2.0, 4)*100)/100 # simple round
@@ -278,6 +278,7 @@ def StartMatch(request):
         studentFeatures = {}
         for s in Mentor.objects.all():
             studentFeatures_per_course = {}
+            #print(s)
             for c in Course.objects.all():
                 item = Grade.objects.filter(student = s, course = c).first()
                 studentFeatures_per_course.update(
@@ -289,6 +290,7 @@ def StartMatch(request):
                             )
                     }
                 )
+            #print(studentFeatures_per_course)
             studentFeatures.update({s.RIN: studentFeatures_per_course})
 
 

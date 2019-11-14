@@ -11,7 +11,16 @@ from crispy_forms.bootstrap import *
 class MentorApplicationfoForm(ModelForm):
     class Meta:
         model = Mentor
-        fields = '__all__' 
+        #fields = '__all__' 
+        fields = (  'RIN', 
+                    'first_name', 
+                    'last_name',
+                    'GPA',
+                    'email',
+                    'phone',
+                    'recommender',
+                    'compensation',
+                )
         '''  
         help_texts = {
             'RIN': _(' *Required'),          
@@ -31,10 +40,8 @@ class MentorApplicationfoForm(ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super(MentorApplicationfoForm, self).__init__(*args, **kwargs)
-        self.fields["course_pref"].required = False
+        #self.fields["course_pref"].required = False
         
-         
-
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'
         self.helper.form_class = 'blueForms'
@@ -77,9 +84,7 @@ class MentorApplicationfoForm(ModelForm):
 
             course_layout.append(Field(course.name+ "_grade", label_class = "long_label"))
             #course_layout.append(HTML('<br></br>'))
-
             course_layout.append(InlineRadios(course.name+ "_exp"))
-
             course_layout.append(HTML("</div>"))   
 
         # Time slot choices

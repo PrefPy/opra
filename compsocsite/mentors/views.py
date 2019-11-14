@@ -24,7 +24,7 @@ from prefpy.allocation_mechanism import *
 from prefpy.gmm_mixpl import *
 from prefpy.egmm_mixpl import *
 from django.conf import settings
-from multipolls.models import *
+from django.template import Context
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -145,6 +145,16 @@ class CourseFeatureView(views.generic.ListView):
     def get_queryset(self):
         return Course.objects.all()
 
+class MatchResultView(views.generic.ListView):
+    template_name = 'mentors/view_match_result.html'
+    def get_context_data(self, **kwargs):
+        ctx = super(MatchResultView, self).get_context_data(**kwargs)
+        ctx['courses'] = Course.objects.all()
+        return ctx
+    def get_queryset(self):
+        return Course.objects.all()
+
+
 # apply step
 def applystep(request):
     if request.method == 'POST':
@@ -160,16 +170,16 @@ def applystep(request):
 
             l = pref[new_applicant.RIN]
             l = [n.strip() for n in ast.literal_eval(l)] # convert str list to actual list u['a', 'b', 'c'] -> ['a', 'b', 'c']
-            #print(len(l))
+
+            return render(request, 'mentors/index.html', {'applied': True})
         else:
             print(form.errors)
 
     else:  # display empty form
-        print("empty")
         form = MentorApplicationfoForm()
 
         #Mentor.applied = True
-        #Mentor.step += 1
+   
     #return HttpResponseRedirect(reverse('groups:members', args=(group.id,)))
     courses = Course.objects.all()
 
@@ -260,19 +270,11 @@ def addStudentRandom(request):
 
 def StartMatch(request):
     if request.method == 'POST':
-        grade_weights = {   'a':    4,
-                            'a-':   3.69,
-                            'b+':   3.33,
-                            'b':    3,
-                            'b-':   2.67,
-                            'c+':   2.33,
-                            'c':    2,
-                            'c-':   1.67,
-                            'd+':   1.33,
-                            'd':    1,
-                            'f':    0,
-                            'p':    0,
-                            'n':    0}
+        grade_weights = {   'a':    4,    'a-':   3.69,
+                            'b+':   3.33, 'b':    3, 'b-':   2.67,
+                            'c+':   2.33, 'c':    2, 'c-':   1.67,
+                            'd+':   1.33, 'd':    1, 'f':    0,
+                            'p':    0,    'n':    0}
 
         # begin matching:
         studentFeatures = {}
@@ -290,7 +292,7 @@ def StartMatch(request):
                             )
                     }
                 )
-            #print(studentFeatures_per_course)
+            #print([i.student_grade for i in s.grade_set.all()])
             studentFeatures.update({s.RIN: studentFeatures_per_course})
 
 
@@ -303,9 +305,7 @@ def StartMatch(request):
 
 
         #studentPrefs = {s: [c for c in r.sample(classes, r.randint(numClasses, numClasses ))] for s in students}
-        #print(studentPrefs)
         #studentFeatures = {s: {c: tuple(r.randint(0, 10) for i in range(numFeatures)) for c in classRank} for s, classRank in studentPrefs.items()}
-        #print(studentFeatures)
         classFeatures = {c: (r.randint(3, 10), r.randint(3, 10), r.randint(1, 10), r.randint(1, 10)) for c in classes}
         #classFeatures = {c: (0, 1000, 5, 5) for c in classes}
 
@@ -317,27 +317,39 @@ def StartMatch(request):
         print("matching is stable\n")
         '''
 
+        # create a context to store the results
+        result = Context()
+        result["courses"] = [] # list of courses
+
         #print out some classes and students
         for (course, student_list) in classMatching.items():
             print(course + ", cap: " + str(classCaps[course]) + ", features: ", classFeatures[course])
+            this_course  = Course.objects.filter(name = course).first()
+
+            mentor_list = []
             for s_rin in student_list:        
                 this_student = Mentor.objects.filter(RIN = s_rin).first()
-                this_course  = Course.objects.filter(name = course).first()
-                query = Grade.objects.filter(student = this_student, course = this_course)
-                item = query.first()
-                print("   "+s_rin + " cumlative GPA: " + str(this_student.GPA).upper() + " grade: " + item.student_grade.upper() + ", has mentor exp: " + str(item.mentor_exp) )
-                #print("   ",s , studentFeatures[s][course])
-            print()
+                item = Grade.objects.filter(student = this_student, course = this_course).first()
 
+                print("   " + s_rin + " cumlative GPA: " + str(this_student.GPA).upper() + " grade: " + item.student_grade.upper() + ", has mentor exp: " + str(item.mentor_exp) )
+
+                #assign the course to this student
+                this_student.mentored_course = this_course
+                this_student.save()
+
+                new_mentor = {"name": this_student.first_name+" "+this_student.last_name, "GPA": this_student.GPA, "grade": item.student_grade.upper(), "Exp": str(item.mentor_exp)}
+                mentor_list.append(new_mentor)
+            
+            print()
+            result["courses"].append({"name": str(this_course), "mentors": mentor_list})
+       
         unmatchedClasses = set(classes) - classMatching.keys()
         unmatchedStudents = set(students) - matcher.studentMatching.keys()
-
-        #unmatchedStudents uses the non-returned output matcher.studentMatching
-        #it's a dict from student to class they're in
-
         print(f"{len(unmatchedClasses)} classes with no students")
         print(f"{len(unmatchedStudents)} students not in a class")
-    return render(request, 'mentors/index.html', {})
+
+    
+    return render(request, 'mentors/view_match_result.html', {'result': result})
 
 # function to get preference order from a string
 # String orderStr
@@ -359,9 +371,6 @@ def getPrefOrder(orderStr):
     else:
         final_order = json.loads(orderStr)
     
-    # the user hasn't ranked all the preferences yet
-    #if length != len(question.item_set.all()):
-     #   return None
-
+    
     return final_order
 

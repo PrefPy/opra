@@ -12,7 +12,8 @@ urlpatterns = [
     url(r'^apply$', login_required(views.ApplyView.as_view()), name='apply'),
     # personal info
     url(r'^apply/$', views.applystep, name='applyfunc1'),
-    url(r'^viewcourse$', login_required(views.CourseFeatureView.as_view()), name='viewcourse'),
+    url(r'^view-course$', login_required(views.CourseFeatureView.as_view()), name='view-course'),
+    url(r'^view-course-result$', login_required(views.MatchResultView.as_view()), name='view-course-result'),
 
     # compensation and responsbility
     #url(r'^applyfunc2/$', views.applystep, name='applyfunc2'),

@@ -1,0 +1,35 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+	<p>
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+				{{ message }}
+			</div>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</p>
+</div>
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body"">
+            {% for course in result.courses %}
+            <div><b> {{course.name}} </b> </div>
+                {% for mentor in course.mentors %}
+                <div>&nbsp&nbsp{{mentor.name}},&nbspGPA:&nbsp{{mentor.GPA}},&nbspgrade:&nbsp{{mentor.grade}},&nbspmentor experience:&nbsp{{mentor.Exp}} </div>
+                {% endfor %}
+            <br></br>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}

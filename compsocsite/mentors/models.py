@@ -177,24 +177,41 @@ class KeyValuePair(models.Model):
     key = models.CharField(max_length=240, db_index=True)
     value = models.CharField(max_length=240, db_index=True)
 
-# the model for a mentor applicant
+# The model for a course
+class Course(models.Model):
+    subject = models.CharField(max_length=4)  # e.g CSCI              
+    number = models.CharField(max_length=4, default="1000") # e.g 1100
+    name = models.CharField(max_length=50, default = 'none') # e.g Intro to programming
+
+    # This should change to foreignkey afterwards
+    # But we left this now to make the implementation easy
+    instructor = models.CharField(max_length=50, default = 'none') # Instrcutor's name
+
+    # feature weights to represent the pref
+    feature_cumlative_GPA = models.IntegerField(default=0)
+    feature_has_taken = models.IntegerField(default=0)
+    feature_course_GPA = models.IntegerField(default=0)
+    feature_mentor_exp = models.IntegerField(default=0)
+
+    
+    def __str__(self):
+        return self.subject + " " + self.number + " " + self.name
+
+# the model to represent a mentor applicant
 class Mentor(models.Model):
 
     # already applied for this semester
     applied = models.BooleanField(default = False)
     #step = models.IntegerField(default = 1)
 
-    # Personal Info of applicants
+    # Personal Info & preference of applicants
     RIN = models.CharField(max_length=9, validators=[MinLengthValidator(9)], primary_key=True)
     first_name = models.CharField(max_length=50) # first name
     last_name = models.CharField(max_length=50) # last name
-
     GPA = MinMaxFloat(min_value = 0.0, max_value = 4.0)
-
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=50) # ???
     recommender = models.CharField(max_length=50)
-
     # Compensation Choices
     compensation_choice = (
                      ('1', 'Pay'),
@@ -202,25 +219,21 @@ class Mentor(models.Model):
                      ('3', 'No Preference'),
                      )
     compensation = models.CharField(max_length=1, choices = compensation_choice, default='1')
+
+    # Course preference of applicants, the data model here is dictionary
+    # Yeah we can do charfield... will change it afterwards
     course_pref = models.ForeignKey(Dict, on_delete = models.CASCADE, default = None)
    
+    # Many to one relation 
+    # mentor_course -> {s1, s2, s3, ...}
+    # To get all the mentors in a course: course.mentor_set.all()
+    mentored_course = models.ForeignKey(Course, on_delete = models.CASCADE, default = None, null=True)
+
+
     def __str__(self):
         return self.first_name + " " + self.last_name
 
-# The model for a course
-class Course(models.Model):
-    subject = models.CharField(max_length=4)  # e.g CSCI              
-    number = models.CharField(max_length=4, default="1000") # e.g 1100
-    name = models.CharField(max_length=50, default = 'none') # e.g Intro to programming
-    instructor = models.CharField(max_length=50, default = 'none') # Instrcutor's name
 
-    feature_cumlative_GPA = models.IntegerField(default=0)
-    feature_has_taken = models.IntegerField(default=0)
-    feature_course_GPA = models.IntegerField(default=0)
-    feature_mentor_exp = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.subject + " " + self.number + " " + self.name
 
 class Grade(models.Model):
     student = models.ForeignKey(Mentor, on_delete=models.CASCADE)
@@ -248,7 +261,7 @@ class Grade(models.Model):
     
 
 
-class Professor(models.Model):
+class Instrcutor(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     department = models.CharField(max_length=50)

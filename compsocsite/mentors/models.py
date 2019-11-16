@@ -193,7 +193,9 @@ class Course(models.Model):
     feature_course_GPA = models.IntegerField(default=0)
     feature_mentor_exp = models.IntegerField(default=0)
 
-    
+    # mentor capacity each course to have 
+    mentor_cap = models.IntegerField(default = 0)
+
     def __str__(self):
         return self.subject + " " + self.number + " " + self.name
 

@@ -19,10 +19,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core import mail
-from prefpy.mechanism import *
-from prefpy.allocation_mechanism import *
-from prefpy.gmm_mixpl import *
-from prefpy.egmm_mixpl import *
 from django.conf import settings
 from django.template import Context
 
@@ -217,10 +213,37 @@ def addcourse(request):
                     subject = row[1],
                     number = row[2],
                     instructor = row[3],
-                    )
+                    mentor_cap = r.randint(3, 10),
+                    feature_cumlative_GPA = r.randint(3, 10),
+                    feature_has_taken = r.randint(0, 10),
+                    feature_course_GPA = r.randint(3, 10),
+                    feature_mentor_exp = r.randint(0, 10),
+                )
                 print(row[0] + " " + row[1] + " " + row[2] + " successfully added.")
 
     return render(request, 'mentors/index.html', {})
+
+def searchCourse(request):
+    courses = Course.objects.all()
+    if request.method == 'POST':
+        
+        course_name = request.POST.get('courses', False)
+        choosen_course = Course.objects.filter(name = course_name).first()
+    return render(request, 'mentors/course_feature.html', {'courses': courses, 'choosen_course': choosen_course})
+
+def changeFeature(request):
+    courses = Course.objects.all()
+    if request.method == 'POST':
+        
+        course_name = request.POST.get('course', False)
+
+        choosen_course = Course.objects.filter(name = course_name).first()
+        choosen_course.feature_cumlative_GPA = request.POST.get('f1', False)
+        choosen_course.feature_course_GPA= request.POST.get('f2', False)
+        choosen_course.feature_has_taken = request.POST.get('f3', False)
+        choosen_course.feature_mentor_exp = request.POST.get('f4', False)
+        choosen_course.save()
+    return render(request, 'mentors/course_feature.html', {'courses': courses, 'choosen_course': choosen_course})
 
 # Randomly add students with assigned numbers
 def addStudentRandom(request):
@@ -297,25 +320,25 @@ def StartMatch(request):
 
 
         numFeatures = 4 # number of features we got
-        classes = [course.name for course in Course.objects.all()]
-        classCaps = {c: r.randint(3, 10) for c in classes}
-        students = [studnet.RIN for studnet in Mentor.objects.all()]
+        classes = [c.name for c in Course.objects.all()]
+        classCaps = {c.name: c.mentor_cap for c in Course.objects.all()}
+        students = [s.RIN for s in Mentor.objects.all()]
         numClasses = len(Course.objects.all())
         studentPrefs = {s.RIN: [n.strip() for n in ast.literal_eval(s.course_pref[s.RIN])] for s in Mentor.objects.all()}
 
 
         #studentPrefs = {s: [c for c in r.sample(classes, r.randint(numClasses, numClasses ))] for s in students}
         #studentFeatures = {s: {c: tuple(r.randint(0, 10) for i in range(numFeatures)) for c in classRank} for s, classRank in studentPrefs.items()}
-        classFeatures = {c: (r.randint(3, 10), r.randint(3, 10), r.randint(1, 10), r.randint(1, 10)) for c in classes}
+        classFeatures = {c.name: (c.feature_cumlative_GPA, c.feature_course_GPA, c.feature_has_taken, c.feature_mentor_exp) for c in Course.objects.all()}
         #classFeatures = {c: (0, 1000, 5, 5) for c in classes}
 
         matcher = Matcher(studentPrefs, studentFeatures, classCaps, classFeatures)
         classMatching = matcher.match()
 
-        '''
+        
         assert matcher.isStable()
         print("matching is stable\n")
-        '''
+        
 
         # create a context to store the results
         result = Context()

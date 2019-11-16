@@ -23,7 +23,8 @@ urlpatterns = [
     url(r'^addStudentRandomfunc/$', views.addStudentRandom, name='addStudentRandomfunc'),
     url(r'^matchfunc/$', views.StartMatch, name='matchfunc'),
 
-    url(r'^searchcoursefunc/$', views.addcourse, name='searchcoursefunc'),
+    url(r'^searchcoursefunc/$', views.searchCourse, name='searchcoursefunc'),
+    url(r'^changefeaturefunc/$', views.changeFeature, name='changefeaturefunc'),
 
     url(r'^view_application$', login_required(views.view_applyView.as_view()), name='view_application'),
     url(r'^withdrawfunc/$', views.withdraw, name='withdrawfunc'),

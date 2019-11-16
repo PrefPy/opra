@@ -2,12 +2,22 @@
 {% load staticfiles %}
 {% block content %}
 <script src='/static/js/course.js'></script>
+<script>
+        function changeVal() {
+            $("#f1").attr("value", document.getElementById("score1").textContent);
+            $("#f2").attr("value", document.getElementById("score2").textContent);
+            $("#f3").attr("value", document.getElementById("score3").textContent);
+            $("#f4").attr("value", document.getElementById("score4").textContent);
+        }
+        
+        </script>
+
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-body">
           <fieldset>
 
-          <form method="POST" action="" >
+          <form method="POST" action="{% url 'mentors:searchcoursefunc' %}" id="searchcoursefunc">
               {% csrf_token %}
                 <b> Choose Course: </b>
                 
@@ -15,27 +25,44 @@
                     {% for course in courses %}
                     <option value="{{course.name}}">{{course}}</option>
                     {% endfor %}
-                </select> <i class="fa fa-search"></i>
+                </select> <button type="submit"> <i class="fa fa-search"></i> </button>
 
-              <div class="panel-body" >
-                  <ul id="sliders" >
-                    <li class="slider_item" id="1" alt=1 type=1>
-                        <strong>Cumlative GPA </strong> : <div id="score1">0</div>
-                        <div class="slide" id="1" type="Slide_1"></div>
-                    </li>
-                    <li class="slider_item" id="2" alt=2 type=2>
-                        <strong> Grade on this course before </strong> :  <div id="score2">0</div>
-                        <div class="slide" id="2" type="Slide_2"></div>
-                    </li>
-                    <li class="slider_item" id="3" alt=3 type=3>
-                        <strong> Have Mentor Experience </strong> : <div id="score3">0</div>
-                        <div class="slide" id="3" type="Slide_3"></div>
-                    </li>
-                  </ul>  
-              </div>
-              <input type="submit" value="Submit Changes"  name="submit" id="submit" />
-        </form>
+            </form>
+            {% if choosen_course %}
+            <form method="POST" action="{% url 'mentors:changefeaturefunc' %}" id="searchcoursefunc">
+                {% csrf_token %}
+                <div> <b>{{choosen_course.name}}: </b></div>
+                <input type="hidden" name="course"  value="{{choosen_course.name}}"/>
 
+                <div><b>Capacity: </b>{{choosen_course.mentor_cap}}</div>
+                <div class="panel-body" >
+                    <ul id="sliders" >
+                        <li class="slider_item" id="1" alt=1 type=1>
+                            <strong>Cumlative GPA </strong> : <div id="score1">{{choosen_course.feature_cumlative_GPA}}</div>
+                            <div class="slide" id="1" type="Slide_1"></div>
+                        </li>
+                        <li class="slider_item" id="2" alt=2 type=2>
+                            <strong> Grade on this course before </strong> :  <div id="score2">{{choosen_course.feature_course_GPA}}</div>
+                            <div class="slide" id="2" type="Slide_2"></div>
+                        </li>
+                        <li class="slider_item" id="3" alt=3 type=3>
+                            <strong> Have taken the course </strong> : <div id="score3">{{choosen_course.feature_has_taken}}</div>
+                            <div class="slide" id="3" type="Slide_3"></div>
+                        </li>
+                        <li class="slider_item" id="4" alt=4 type=4>
+                            <strong> Have Mentor Experience </strong> : <div id="score4">{{choosen_course.feature_mentor_exp}}</div>
+                            <div class="slide" id="4" type="Slide_4"></div>
+                        </li>
+                    </ul>  
+                </div>
+                <input type="hidden" name="f1"  id = "f1" value= changeVal2()/>
+                <input type="hidden" name="f2"  id = "f2" value= ""/>
+                <input type="hidden" name="f3"  id = "f3" value= document.getElementById("score3").textContent/>
+                <input type="hidden" name="f4"  id = "f4" value= document.getElementById("score4").textContent/>
+
+              <input type="submit" value="Submit Changes" onclick="changeVal()" name="submit" id="submit" />
+            </form>
+            {% endif %}
         </fieldset>
         </div>
     </div>

@@ -20,8 +20,8 @@
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-body"">
-            {% for course in result.courses %}
-            <div><b> {{course.name}} </b> </div>
+            {% for course in result.courses|dictsort:"number"%}
+            <div><b> {{course.name}} </b>&nbsp[features: {{course.features}}]  </div>
                 {% for mentor in course.mentors %}
                 <div>&nbsp&nbsp{{mentor.name}},&nbspGPA:&nbsp{{mentor.GPA}},&nbspgrade:&nbsp{{mentor.grade}},&nbspmentor experience:&nbsp{{mentor.Exp}} </div>
                 {% endfor %}

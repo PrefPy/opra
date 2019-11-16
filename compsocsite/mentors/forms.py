@@ -8,6 +8,193 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import *
 from crispy_forms.bootstrap import *
 
+class MentorApplicationfoForm_step1(ModelForm):
+    class Meta:
+        model = Mentor
+        #fields = '__all__' 
+        fields = (  'RIN', 
+                    'first_name', 
+                    'last_name',
+                    'GPA',
+                    'email',
+                    'phone',
+                    'recommender',
+                )
+        widgets = {
+            'RIN': forms.TextInput(attrs={'placeholder': ' 661680100'}),
+            'GPA': forms.TextInput(attrs={'placeholder': ' 3.6'}),
+            'email': forms.TextInput(attrs={'placeholder': ' xxx@rpi.email'}),
+            'phone': forms.TextInput(attrs={'placeholder': ' 5185941234'}),
+        }
+    def __init__(self, *args, **kwargs):
+        super(MentorApplicationfoForm_step1, self).__init__(*args, **kwargs)  
+        courses = Course.objects.all()
+        course_layout = Div()
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            HTML('== PERSONAL INFORMATION =='),
+            HTML("<fieldset>"),
+            Field('RIN', 'first_name', 'last_name', 'email', 'phone', 'GPA', css_class = ""),
+            HTML("""
+            <div class = 'inputline'>Please provide the name of someone in the CS Department who can recommend you. You are encouraged, but not required, to contact this person.
+            </div>"""),
+            HTML("""
+            <div class = 'inputline'>Please provide only a name here (describe additional circumstances in the freeform textbox below).</div>
+            """),
+            Field('recommender', css_class = "inputline"),
+            HTML("</fieldset>"),
+        )
+        self.helper.form_method = 'POST'
+        self.helper.label_class = "my_label"
+        self.helper.add_input(Submit('next', 'Next'))
+
+class MentorApplicationfoForm_step2(ModelForm):
+    class Meta:
+        model = Mentor
+        #fields = '__all__' 
+        fields = ( 'compensation',)
+    def __init__(self, *args, **kwargs):
+        super(MentorApplicationfoForm_step2, self).__init__(*args, **kwargs)  
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            HTML('== COMPENSATION AND RESPONSIBILITIES =='),
+            HTML("<fieldset>"),
+            HTML("""
+            <div class = "inputline">
+                We currently have funding for a fixed number of paid programming mentors. Therefore, if you apply for pay, you may be asked to work for credit instead. Course credit counts as a graded 1-credit or 2-credit free elective. In general, if you work an average of 1-3 hours per week, you will receive 1 credit; if you average 4 or more hours per week, you will receive 2 credits. Note that no more than 4 credits may be earned as an undergraduate (spanning all courses and all semesters). Please do not apply for credit if you have already earned 4 credits as a mentor; apply only for pay.
+            </div>
+            """),
+            Field('compensation', css_class = ""),
+            HTML("""
+            <div class = "inputline">
+                For a paid position, you <strong>must</strong> follow
+                the given instructions to ensure you are paid; otherwise, 
+                another candidate will be selected.  More specifically, you 
+                will be required to have a <strong>student employment card</strong>.
+                This requires you to have a federal I-9 on file.  Bring appropriate 
+                identification with you to Amos Eaton&nbsp;109 if this is your first 
+                time working for RPI;
+            </div>
+            """),
+            HTML("</fieldset>"),
+
+        )
+        self.helper.form_method = 'POST'
+        self.helper.label_class = "my_label"
+        self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
+        self.helper.add_input(Submit('next', 'Next'))
+
+class MentorApplicationfoForm_step3(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(MentorApplicationfoForm_step3, self).__init__(*args, **kwargs)  
+        self.helper = FormHelper()
+        courses = Course.objects.all()
+        course_layout = Div()
+        for course in courses:          
+            course_layout.append(HTML("<div class = 'course_block'>"))   
+            course_layout.append( HTML("<div class = 'course_title'>" + course.subject +" "+ course.number +" "+ course.name + "</div>") )
+            grades = (
+                     ('a', 'A'),
+                     ('a-', 'A-'),
+                     ('b+', 'B+'),
+                     ('b', 'B'),
+                     ('b-', 'B-'),
+                     ('c+', 'C+'),
+                     ('c', 'C'),
+                     ('c-', 'C-'),
+                     ('d+', 'D+'),
+                     ('d', 'D'),
+                     ('f', 'F'),
+                     ('p', 'Progressing'),
+                     ('n', 'Not Taken'),
+                     )
+            choices_YN = (
+                    ('Y', 'YES'),
+                    ('N', 'NO'),
+            )
+            self.fields[course.name+ "_grade"] = forms.ChoiceField(
+                choices = grades, 
+                label = "Grade on this course:",
+            ) 
+            #self.initial[course.name+ "_grade"] = 'n'
+
+            self.fields[course.name+ "_exp"] = forms.ChoiceField(choices = choices_YN, label = 'Have you mentored this class before? ')
+            #self.initial[course.name+ "_exp"] = 'N'
+
+            course_layout.append(Field(course.name+ "_grade", label_class = "long_label"))
+            #course_layout.append(HTML('<br></br>'))
+            course_layout.append(InlineRadios(course.name+ "_exp"))
+            course_layout.append(HTML("</div>"))   
+
+        self.helper.layout = Layout(
+            HTML('== COURSE EXPERIENCE =='),
+            HTML("<fieldset>"),
+            course_layout,
+            HTML("</fieldset>"),
+        )
+        self.helper.form_method = 'POST'
+        self.helper.label_class = "my_label"
+        self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
+        self.helper.add_input(Submit('next', 'Next'))
+
+
+class MentorApplicationfoForm_step4(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(MentorApplicationfoForm_step4, self).__init__(*args, **kwargs)  
+        self.helper = FormHelper()
+        self.fields["pref_order"] = forms.CharField(max_length=10000)
+        self.fields["pref_order"].required = False
+        
+        self.helper.layout = Layout(
+            HTML('== COURSE PREFERENCE =='),
+
+            HTML("<fieldset>"),
+            HTML('''Please rank the courses which you prefer to mentor, #1 means the highest prioity, and #2 means the second priority...etc. This will help us to allocate your position.'''),
+
+            HTML('''
+                <ul id="left-sortable" class = "sortable-ties">
+                    <div class="empty"></div> 
+                    {% for course in courses %}
+                    {% if course %}       
+                    <ul class="course_choice" >
+                    <!-- Display the tier number -->
+                        <div class="tier two">#{{ forloop.counter }}</div>
+                        <li class="course-element" id = "{{ course.name }}" type =
+                            "{{ course.name }}">
+                            {{ course.subject }} {{course.number}}
+                        </li>
+                    </ul>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                '''),
+            # HTML part to store thr rankings
+            Field('pref_order', id='pref_order', css_class = 'pref_order', type = 'hidden'),
+            HTML("</fieldset>"),
+        )
+        self.helper.form_method = 'POST'
+        self.helper.label_class = "my_label"
+        self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
+        self.helper.add_input(Submit('next', 'Next', onclick="VoteUtil.submitPref();"))
+        
+
+class MentorApplicationfoForm_step5(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(MentorApplicationfoForm_step5, self).__init__(*args, **kwargs)  
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            HTML('== SCHEDULING =='),
+            HTML("<fieldset>"),
+            HTML("Time slot plugin here"),
+            HTML("</fieldset>"),
+        )
+        self.helper.form_method = 'POST'
+        self.helper.label_class = "my_label"
+        self.helper.add_input(Submit('submit', 'Submit'))
+
+
+'''
+# DEPRECATED 
 class MentorApplicationfoForm(ModelForm):
     class Meta:
         model = Mentor
@@ -21,7 +208,7 @@ class MentorApplicationfoForm(ModelForm):
                     'recommender',
                     'compensation',
                 )
-        '''  
+         
         help_texts = {
             'RIN': _(' *Required'),          
             'first_name': _(' *Required'),
@@ -31,7 +218,7 @@ class MentorApplicationfoForm(ModelForm):
             'phone': _(' *Required'),
             'recommender': _(' *Required'),
         }
-        '''
+        
         widgets = {
             'RIN': forms.TextInput(attrs={'placeholder': ' 661680100'}),
             'GPA': forms.TextInput(attrs={'placeholder': ' 3.6'}),
@@ -77,10 +264,10 @@ class MentorApplicationfoForm(ModelForm):
                 choices = grades, 
                 label = "Grade on this course:",
             ) 
-            self.initial[course.name+ "_grade"] = 'n'
+            #self.initial[course.name+ "_grade"] = 'n'
 
             self.fields[course.name+ "_exp"] = forms.ChoiceField(choices = choices_YN, label = 'Have you mentored this class before? ')
-            self.initial[course.name+ "_exp"] = 'N'
+            #self.initial[course.name+ "_exp"] = 'N'
 
             course_layout.append(Field(course.name+ "_grade", label_class = "long_label"))
             #course_layout.append(HTML('<br></br>'))
@@ -127,7 +314,6 @@ class MentorApplicationfoForm(ModelForm):
                     </div>
                     """),
                     HTML("</fieldset>"),
-
                 ),  
 
                 AccordionGroup('== COURSE SELECTIONS ==',
@@ -139,9 +325,9 @@ class MentorApplicationfoForm(ModelForm):
                 AccordionGroup('== COURSE RANKINGS ==',
                     HTML("<fieldset>"),
 
-                    HTML('''Please rank the courses which you prefer to mentor, #1 means the highest prioity, and #2 means the second priority...etc. This will help us to allocate your position.'''),
+                    HTML(''Please rank the courses which you prefer to mentor, #1 means the highest prioity, and #2 means the second priority...etc. This will help us to allocate your position.''),
 
-                    HTML('''<ul id="left-sortable" class = "sortable-ties">
+                    HTML(''<ul id="left-sortable" class = "sortable-ties">
                                 <div class="empty"></div> 
                                 {% for course in courses %}
                                 {% if course %}       
@@ -156,12 +342,12 @@ class MentorApplicationfoForm(ModelForm):
                                 {% endif %}
                                 {% endfor %}
                             </ul>
-                            '''),
-                    HTML(''' 
+                            ''),
+                    HTML('' 
                     <input type="hidden" id="pref_order" class="pref_order" name="pref_order" value=""/>
                     <input type="hidden" id="record_data" class="record_data" name="record_data" value=""/>
 
-                    '''),
+                    ''),
                     HTML("</fieldset>"),
                 ),
                 
@@ -219,3 +405,4 @@ class MentorApplicationfoForm(ModelForm):
 
         return new_applicant
 
+'''

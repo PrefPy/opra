@@ -224,8 +224,8 @@ class Mentor(models.Model):
 
     # Course preference of applicants, the data model here is dictionary
     # Yeah we can do charfield... will change it afterwards
-    course_pref = models.ForeignKey(Dict, on_delete = models.CASCADE, default = None)
-   
+    #course_pref = models.ForeignKey(Dict, on_delete = models.CASCADE, default = None)
+    course_pref = models.CharField(max_length=10000)
     # Many to one relation 
     # mentor_course -> {s1, s2, s3, ...}
     # To get all the mentors in a course: course.mentor_set.all()

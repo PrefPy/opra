@@ -12,6 +12,11 @@ urlpatterns = [
     url(r'^apply$', login_required(views.ApplyView.as_view()), name='apply'),
     # personal info
     url(r'^apply/$', views.applystep, name='applyfunc1'),
+    url(r'^applystep2/$', views.applystep2, name='applystep2'),
+    url(r'^applystep3/$', views.applystep3, name='applystep3'),
+    url(r'^applystep4/$', views.applystep4, name='applystep4'),
+    url(r'^applystep5/$', views.applystep5, name='applystep5'),
+
     url(r'^view-course$', login_required(views.CourseFeatureView.as_view()), name='view-course'),
     url(r'^view-course-result$', login_required(views.MatchResultView.as_view()), name='view-course-result'),
 

@@ -63,10 +63,14 @@ label.radio.inline{
 .course-element.ui-selected {
   background-color: rgb(176, 197, 214)
 }
-.inputline{
-    padding: 10px 15px;
-    width:100%;
 
+.ui-slider-handle{
+  background-color: grey;
+}
+
+.inputline{
+  padding: 10px 15px;
+  width:100%;
 }
 
 .textline{

@@ -253,11 +253,18 @@ def applystep4(request):
 
 # Time slots page
 def applystep5(request):
-    form = MentorApplicationfoForm_step5(request.POST or None, initial={})
+    initial={
+        'time_slots': request.session.get('time_slots', None),
+        'other_times': request.session.get('other_times', None),
+    }
+
+    form = MentorApplicationfoForm_step5(request.POST or None, initial=initial)
     if request.method == 'POST':
         if form.is_valid():     
             #order_str = breakties(request.POST['pref_order'])
-            submit_application(request)
+            request.session['time_slots'] = form.cleaned_data['time_slots']
+            request.session['other_times'] = form.cleaned_data['other_times']
+
             return HttpResponseRedirect(reverse('mentors:applystep6'))
         else:
             print(form.errors)
@@ -265,10 +272,14 @@ def applystep5(request):
 
 # Students Additional Page
 def applystep6(request):
-    form = MentorApplicationfoForm_step6(request.POST or None, initial={})
+    initial={
+        'relevant_info': request.session.get('relevant_info', None),
+    }
+    form = MentorApplicationfoForm_step6(request.POST or None, initial=initial)
     if request.method == 'POST':
         if form.is_valid():     
             #order_str = breakties(request.POST['pref_order'])
+            request.session['relevant_info'] = form.cleaned_data['relevant_info']
             submit_application(request)
             return render(request, 'mentors/index.html',{})
         else:
@@ -304,7 +315,13 @@ def submit_application(request):
     #pref.save()
         
     new_applicant.course_pref = breakties(request.session["pref_order"])
+    new_applicant.time_slots = request.session["time_slots"]
+    new_applicant.other_times = request.session["other_times"]
+    new_applicant.relevant_info = request.session["relevant_info"]
+
     new_applicant.save()
+    for i in new_applicant.time_slots: 
+        print(i)
     #orderStr = self.cleaned_data["pref_order"]
     
     # Save Grades on the course average

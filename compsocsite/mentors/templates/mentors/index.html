@@ -20,13 +20,13 @@
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <b> Mentor Application </b>
+            <b> Spring 2020 Undergraduate Programming Mentor Application Form </b>
         </div>
         
         <div class="panel-body">
             <table class="table">
             {% if applied %}
-                <!- user wait for Application>
+                <!- user for Application>
                 <tbody>
                     Mentor apllication success
                 </tbody>
@@ -35,6 +35,37 @@
                         <input type="submit" value="Withdraw apllication" class="btn btn-primary">
                 </form></tr>
             {% else %}
+
+            <p>
+                The Computer Science Department is currently recruiting undergraduate
+                programming mentors for Spring 2020 courses!
+            </p>
+
+            <p>
+                Undergraduate programming mentors help students better understand computer science and,
+                in particular, programming.
+                Mentoring typically occurs during labs and recitations, with either the instructor or
+                TA heading each session.
+                Mentors also typically hold group office hours.
+                And for some courses, mentors meet periodically
+                with TAs and instructors to receive guidance as to how to best mentor.
+            </p>
+
+            <p>
+                Because mentoring for CSCI requires approximately six hours per week
+                on top of your other commitments,
+                <strong>please do not mentor for other departments</strong>
+                (e.g., the I-PERSIST mentoring program).
+            </p>
+
+            <p>
+                Please apply below.
+                Applications are due by 12/6/2019.
+                Send any questions
+                to&nbsp;<a href="mailto:hulbes@rpi.edu">Shianne Hulbert</a>.
+                <strong>And please be sure to specify your schedule below to the best of your knowledge.</strong>
+            </p>
+
             <b> Begin to apply: </b>
                 <tr><td> <a href="{% url 'mentors:applyfunc1' %}"><span class="btn btn-primary">Apply</span></a></td></tr>
             {% endif %}

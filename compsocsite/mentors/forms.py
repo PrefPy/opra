@@ -198,13 +198,19 @@ class MentorApplicationfoForm_step4(forms.Form):
         self.helper.add_input(Submit('next', 'Next', onclick="VoteUtil.submitPref();"))
         
 # Time slots availble for students
-class MentorApplicationfoForm_step5(forms.Form):
-     
-   # widgets = { 'other_times': forms.Textarea(attrs={'cols': 80, 'rows': 40})}
+class MentorApplicationfoForm_step5(ModelForm):
+    class Meta:
+        model = Mentor
+        fields = ( 'other_times',)
+        widgets = { 
+            #'time_slots': forms.CheckboxSelectMultiple(),
+            'other_times': forms.Textarea(attrs={'cols': 100, 'rows': 8})
+        }
 
     def __init__(self, *args, **kwargs):
         super(MentorApplicationfoForm_step5, self).__init__(*args, **kwargs)  
         self.helper = FormHelper()
+        
         time_slots_choices = (
                      ('M_4:00-4:50PM',      'M 4:00-4:50PM'),
                      ('M_4:00-5:50PM',      'M 4:00-5:50PM'),
@@ -231,10 +237,8 @@ class MentorApplicationfoForm_step5(forms.Form):
             required=False,
             widget=forms.CheckboxSelectMultiple()
             ) 
-
-        self.fields["time_slots"].label = False
-        self.fields["other_times"] = forms.CharField(widget=forms.Textarea(attrs={'cols': 100, 'rows': 8}))
-
+        
+        
         self.helper.layout = Layout(
             HTML('== SCHEDULING =='),
             HTML("<fieldset>"),
@@ -253,7 +257,16 @@ class MentorApplicationfoForm_step5(forms.Form):
         self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
         self.helper.add_input(Submit('next', 'Next', onclick="VoteUtil.submitPref();"))
 
-class MentorApplicationfoForm_step6(forms.Form):
+
+
+class MentorApplicationfoForm_step6(ModelForm):
+    class Meta:
+        model = Mentor
+        fields = ( 'relevant_info', )
+        widgets = { 
+            'relevant_info': forms.Textarea(attrs={'cols': 100, 'rows': 8})
+        }
+
     def __init__(self, *args, **kwargs):
         super(MentorApplicationfoForm_step6, self).__init__(*args, **kwargs)  
         self.helper = FormHelper()
@@ -264,11 +277,16 @@ class MentorApplicationfoForm_step6(forms.Form):
             HTML("<fieldset>"),
             HTML('''<div class = 'textline'> Please provide any other relevant information about yourself in the space below, including your mentoring preferences (i.e.,&nbsp;which courses you'd prefer to mentor, which courses you'd prefer not to mentor, other extracurricular CS activities you're involved with, etc.). <strong>Do not leave this blank.</strong></div>'''),
             Field('relevant_info', style = "width:100%"),
+            HTML(""" <div class = 'vspacewithline'> </div>"""),
+
+            HTML('''<div class = 'textline'>  After you choose to submit, you can save your profile and change it if needed at any time after. </div>'''),
+
             HTML("</fieldset>"),
         )
         self.helper.form_method = 'POST'
         self.helper.form_show_labels = False
-        self.helper.add_input(Submit('submit', 'Submit'))
+        self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
+        self.helper.add_input(Submit('save and submit', 'Save and Submit'))
 
 '''
 # DEPRECATED 

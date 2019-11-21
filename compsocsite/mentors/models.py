@@ -221,6 +221,7 @@ class Mentor(models.Model):
                      ('3', 'No Preference'),
                      )
     compensation = models.CharField(max_length=1, choices = compensation_choice, default='1')
+    '''
     time_slots_choices = (
                      ('M_4:00-4:50PM',      'M 4:00-4:50PM'),
                      ('M_4:00-5:50PM',      'M 4:00-5:50PM'),
@@ -241,7 +242,13 @@ class Mentor(models.Model):
                      ('T_4:00-5:50AM',      'T 4:00-5:50AM'),
                      ('T_6:00-6:50PM',      'T 6:00-7:50PM'),
         )
-    time_slots = models.CharField(choices = time_slots_choices, max_length = len(time_slots_choices), default= "")
+    time_slots = models.CharField(choices = time_slots_choices, max_length = 20, default= "")
+    '''
+    time_slots = models.CharField(max_length = 1000, default= "[]")
+
+    other_times = models.CharField(max_length = 1000, default = "") 
+    relevant_info = models.CharField(max_length = 1000, default = "")
+
 
     # Course preference of applicants, the data model here is dictionary
     # Yeah we can do charfield... will change it afterwards

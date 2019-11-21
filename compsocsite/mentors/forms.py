@@ -64,7 +64,7 @@ class MentorApplicationfoForm_step2(ModelForm):
     class Meta:
         model = Mentor
         #fields = '__all__' 
-        fields = ( 'compensation',)
+        fields = ( 'compensation', 'studnet_status', 'employed_paid_before')
     def __init__(self, *args, **kwargs):
         super(MentorApplicationfoForm_step2, self).__init__(*args, **kwargs)  
         self.helper = FormHelper()
@@ -78,7 +78,19 @@ class MentorApplicationfoForm_step2(ModelForm):
             </div>
             """),
             HTML(""" <div class = 'vspacewithline'> </div>"""),
+
+            HTML("""<label class = 'inputline' style = "float: left;"> Select your compensations: </label>"""),
             Div('compensation', css_class = "inputline"),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+
+            HTML("""<label class = 'inputline' style = "float: left;"> I have been employed and paid by RPI before: </label>"""),
+            Div('employed_paid_before', css_class = "inputline"),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+
+            HTML("""<label class = 'inputline' style = "float: left;"> Please specify your student status: </label>"""),
+            Div('studnet_status', css_class = "inputline"),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+
             HTML(""" <div class = 'vspacewithline'> </div>"""),
             HTML(""" <div class="textline">For a paid position, you <strong>must</strong> follow the given instructions to ensure you are paid; otherwise, 
             another candidate will be selected.  More specifically, you will be required to have a <strong>student employment card</strong>.  This requires 
@@ -99,6 +111,7 @@ class MentorApplicationfoForm_step2(ModelForm):
         )
         self.helper.form_method = 'POST'
         self.helper.label_class = "my_label"
+        self.helper.form_show_labels = False
         self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
         self.helper.add_input(Submit('next', 'Next'))
 
@@ -138,9 +151,9 @@ class MentorApplicationfoForm_step3(forms.Form):
 
             self.fields[course.name+ "_exp"] = forms.ChoiceField(choices = choices_YN, label = "")
             #self.initial[course.name+ "_exp"] = 'N'
-            course_layout.append(HTML("""<label style = "float: left;"> Whether taken this course at RPI before and earned grade: </label>"""))
+            course_layout.append(HTML("""<label  style = "float: left;"> Whether taken this course at RPI before and earned grade: </label>"""))
             course_layout.append(Field(course.name+ "_grade", label_class="float: left;"))
-            #course_layout.append(HTML(""" <div class = 'vspace'> </div>"""))
+            #course_layout.append(HTML(""" <div class = 'emptyspace'> </div>"""))
             course_layout.append(HTML("""<label style = "float: left;"> Have mentored this RPI course before: </label>"""))
             course_layout.append(Field(course.name+ "_exp"))
             course_layout.append(HTML(""" <div class = 'vspacewithline'> </div>""")),
@@ -149,6 +162,17 @@ class MentorApplicationfoForm_step3(forms.Form):
         self.helper.layout = Layout(
             HTML('== COURSE EXPERIENCE =='),
             HTML("<fieldset>"),
+            HTML('''<div class = 'textline'> Below is a list of courses likely to need mentors. 
+            Please check<strong> all </strong> courses for which you are able to mentor. Note that CSCI 1100 is in
+             Python, CSCI 1190 is in MATLAB, CSCI 1200 is in C++, CSCI 2300 is in Python/C++, CSCI 2500 
+             is in C/Assembly, and CSCI 2600 is in Java. For each of the courses you have taken, 
+             please specify the letter grade you earned in the course at RPI (or select "AP" if you 
+             earned AP credit for CSCI 1100).</div>'''),
+            HTML('''<div class = 'textline'> Note that you cannot be a mentor for a course you will be taking in the same semester or for a course
+            you plan to take in the future. In some cases, you are allowed to mentor for courses you have never taken;
+            be sure to describe equivalent courses or experiences in the general comments textbox further below.
+            </div>'''),
+            HTML(""" <div class = 'vspacewithline'> </div>"""),
             course_layout,
             HTML("</fieldset>"),
         )
@@ -286,7 +310,7 @@ class MentorApplicationfoForm_step6(ModelForm):
         self.helper.form_method = 'POST'
         self.helper.form_show_labels = False
         self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
-        self.helper.add_input(Submit('save and submit', 'Save and Submit'))
+        self.helper.add_input(Submit("save and submit", "Save and Submit"))
 
 '''
 # DEPRECATED 

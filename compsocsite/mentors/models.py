@@ -214,13 +214,21 @@ class Mentor(models.Model):
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=50) # ???
     recommender = models.CharField(max_length=50)
+
     # Compensation Choices
     compensation_choice = (
-                     ('1', 'Pay ($14/hour) '),
-                     ('2', 'Credit'),
-                     ('3', 'No Preference'),
+                    ('n', 'No Preference'),
+                     ('p', 'Pay ($14/hour) '),
+                     ('c', 'Credit'),
                      )
-    compensation = models.CharField(max_length=1, choices = compensation_choice, default='1')
+    compensation = models.CharField(max_length=1, choices = compensation_choice, default='n')
+    status = (
+            ('i', 'International'),
+            ('d', 'Domestic'),
+            )
+    studnet_status = models.CharField(max_length=1, choices = status, default='i')
+    employed_paid_before = models.BooleanField(default = False)
+
     '''
     time_slots_choices = (
                      ('M_4:00-4:50PM',      'M 4:00-4:50PM'),

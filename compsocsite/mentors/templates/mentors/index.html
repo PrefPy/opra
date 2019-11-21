@@ -24,18 +24,6 @@
         </div>
         
         <div class="panel-body">
-            <table class="table">
-            {% if applied %}
-                <!- user for Application>
-                <tbody>
-                    Mentor apllication success
-                </tbody>
-                <tr><td> <a href="{% url 'mentors:view_application' %}"><span class="btn btn-primary">View</span></a></td></tr>
-                <tr><form method="GET" action="{% url 'mentors:withdrawfunc' %}" id="withdrawfunc">
-                        <input type="submit" value="Withdraw apllication" class="btn btn-primary">
-                </form></tr>
-            {% else %}
-
             <p>
                 The Computer Science Department is currently recruiting undergraduate
                 programming mentors for Spring 2020 courses!
@@ -62,14 +50,25 @@
                 Please apply below.
                 Applications are due by 12/6/2019.
                 Send any questions
-                to&nbsp;<a href="mailto:hulbes@rpi.edu">Shianne Hulbert</a>.
+                to&nbsp;<a href="mailto:hulbes@rpi.edu" style = "color:red;">Shianne Hulbert</a>.
                 <strong>And please be sure to specify your schedule below to the best of your knowledge.</strong>
             </p>
+            {% if applied %}
+                <!- user for Application>
+                <tbody>
+                    Mentor apllication success
+                </tbody>
+                <tr><td> <a href="{% url 'mentors:view_application' %}"><span class="btn btn-primary">View</span></a></td></tr>
+                <tr><form method="GET" action="{% url 'mentors:withdrawfunc' %}" id="withdrawfunc">
+                        <input type="submit" value="Withdraw apllication" class="btn btn-primary">
+                </form></tr>
+            {% else %}
+
+           
 
             <b> Begin to apply: </b>
                 <tr><td> <a href="{% url 'mentors:applyfunc1' %}"><span class="btn btn-primary">Apply</span></a></td></tr>
             {% endif %}
-            </table>
         </div>
     </div>
 </div>

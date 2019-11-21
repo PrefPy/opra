@@ -165,7 +165,7 @@ def applystep(request):
             'first_name': request.session.get('first_name', None),
             'last_name': request.session.get('last_name', None),
             'GPA': request.session.get('GPA', None),
-            'email': request.session.get('email', None),
+            'email': request.user.email,
             'phone': request.session.get('phone', None),
             'recommender': request.session.get('recommender', None)}
     form = MentorApplicationfoForm_step1(request.POST or None, initial=initial)
@@ -178,7 +178,7 @@ def applystep(request):
             request.session['first_name'] = form.cleaned_data['first_name']
             request.session['last_name'] = form.cleaned_data['last_name']
             request.session['GPA'] = form.cleaned_data['GPA']
-            request.session['email'] = form.cleaned_data['email']
+            request.session['email'] = request.user.email,
             request.session['phone'] = form.cleaned_data['phone']
             request.session['recommender'] = form.cleaned_data['recommender']
             '''
@@ -189,6 +189,7 @@ def applystep(request):
             l = pref[new_applicant.RIN]
             l = [n.strip() for n in ast.literal_eval(l)] # convert str list to actual list u['a', 'b', 'c'] -> ['a', 'b', 'c']
             '''
+            print('yes')
             return HttpResponseRedirect(reverse('mentors:applystep2'))
             #return render(request, 'mentors/index.html', {'applied': True})
             
@@ -250,9 +251,21 @@ def applystep4(request):
     return render(request, 'mentors/apply.html', {'courses':Course.objects.all(), 'apply_form': form})
 
 
-# time slots
+# Time slots page
 def applystep5(request):
     form = MentorApplicationfoForm_step5(request.POST or None, initial={})
+    if request.method == 'POST':
+        if form.is_valid():     
+            #order_str = breakties(request.POST['pref_order'])
+            submit_application(request)
+            return HttpResponseRedirect(reverse('mentors:applystep6'))
+        else:
+            print(form.errors)
+    return render(request, 'mentors/apply.html', {'courses':Course.objects.all(), 'apply_form': form})
+
+# Students Additional Page
+def applystep6(request):
+    form = MentorApplicationfoForm_step6(request.POST or None, initial={})
     if request.method == 'POST':
         if form.is_valid():     
             #order_str = breakties(request.POST['pref_order'])
@@ -261,7 +274,6 @@ def applystep5(request):
         else:
             print(form.errors)
     return render(request, 'mentors/apply.html', {'courses':Course.objects.all(), 'apply_form': form})
-
 
 
 # return the prefer after brutally break ties
@@ -511,7 +523,28 @@ def StartMatch(request):
         print(f"{len(unmatchedStudents)} students not in a class")
 
 
-    return render(request, 'mentors/view_match_result.html', {'result': result})
+    return render(request, 'mentors/view_match_result.html', {'result': viewMatchResult()})
+
+def viewResultPage(request):
+    return render(request, 'mentors/view_match_result.html', {'result': viewMatchResult()})
+
+def viewMatchResult():
+    # create a context to store the results
+    result = Context()
+    result["courses"] = [] # list of courses
+    for course in Course.objects.all():
+        mentor_list = []
+        for student in course.mentor_set.all():
+            item = Grade.objects.filter(student = student, course = course).first()
+            new_mentor = {"name": student.first_name+" "+student.last_name, "GPA": student.GPA, "grade": item.student_grade.upper(), "Exp": str(item.mentor_exp)}
+            mentor_list.append(new_mentor)
+
+        result["courses"].append({"name": str(course),
+                                    "number": str(course.number),
+                                    "features": (course.feature_cumlative_GPA, course.feature_course_GPA, course.feature_has_taken, course.feature_mentor_exp) , 
+                                    "mentors": mentor_list})
+    return result
+
 
 # function to get preference order from a string
 # String orderStr
@@ -535,4 +568,5 @@ def getPrefOrder(orderStr):
     
     
     return final_order
+
 

@@ -23,29 +23,41 @@ class MentorApplicationfoForm_step1(ModelForm):
         widgets = {
             'RIN': forms.TextInput(attrs={'placeholder': ' 661680100'}),
             'GPA': forms.TextInput(attrs={'placeholder': ' 3.6'}),
-            'email': forms.TextInput(attrs={'placeholder': ' xxx@rpi.email'}),
+            'email': forms.TextInput(attrs={'readonly':'readonly', "style": "color:blue;"}), # Read-only email
             'phone': forms.TextInput(attrs={'placeholder': ' 5185941234'}),
         }
     def __init__(self, *args, **kwargs):
         super(MentorApplicationfoForm_step1, self).__init__(*args, **kwargs)  
-        courses = Course.objects.all()
-        course_layout = Div()
         self.helper = FormHelper()
+        #self.fields['email'] = user.email
         self.helper.layout = Layout(
             HTML('== PERSONAL INFORMATION =='),
             HTML("<fieldset>"),
-            Field('RIN', 'first_name', 'last_name', 'email', 'phone', 'GPA', css_class = ""),
+            Div('RIN', css_class = "inputline"),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+            Div('first_name', css_class = "inputline"),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+            Div('last_name', css_class = "inputline"),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+
+            Div('email',css_class = "inputline"),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+
+            Div('phone', css_class = "inputline"),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+
+            Div('GPA', css_class = "inputline"),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+            HTML(""" <div class = 'vspacewithline'> </div>"""),
             HTML("""
-            <div class = 'inputline'>Please provide the name of someone in the CS Department who can recommend you. You are encouraged, but not required, to contact this person.
-            </div>"""),
-            HTML("""
-            <div class = 'inputline'>Please provide only a name here (describe additional circumstances in the freeform textbox below).</div>
+            <div class = 'textline'>Please provide the name of someone in the CS Department who can recommend you. You are encouraged, but not required, to contact this person.
+             Please provide only a name here (describe additional circumstances in the freeform textbox below).</div>
             """),
-            Field('recommender', css_class = "inputline"),
+            Div('recommender', css_class = "inputline"),
             HTML("</fieldset>"),
         )
         self.helper.form_method = 'POST'
-        self.helper.label_class = "my_label"
+        self.helper.label_class = "inputline"
         self.helper.add_input(Submit('next', 'Next'))
 
 class MentorApplicationfoForm_step2(ModelForm):
@@ -59,23 +71,29 @@ class MentorApplicationfoForm_step2(ModelForm):
         self.helper.layout = Layout(
             HTML('== COMPENSATION AND RESPONSIBILITIES =='),
             HTML("<fieldset>"),
+            
             HTML("""
-            <div class = "inputline">
+            <div class = "textline">
                 We currently have funding for a fixed number of paid programming mentors. Therefore, if you apply for pay, you may be asked to work for credit instead. Course credit counts as a graded 1-credit or 2-credit free elective. In general, if you work an average of 1-3 hours per week, you will receive 1 credit; if you average 4 or more hours per week, you will receive 2 credits. Note that no more than 4 credits may be earned as an undergraduate (spanning all courses and all semesters). Please do not apply for credit if you have already earned 4 credits as a mentor; apply only for pay.
             </div>
             """),
-            Field('compensation', css_class = ""),
-            HTML("""
-            <div class = "inputline">
-                For a paid position, you <strong>must</strong> follow
-                the given instructions to ensure you are paid; otherwise, 
-                another candidate will be selected.  More specifically, you 
-                will be required to have a <strong>student employment card</strong>.
-                This requires you to have a federal I-9 on file.  Bring appropriate 
-                identification with you to Amos Eaton&nbsp;109 if this is your first 
-                time working for RPI;
-            </div>
-            """),
+            HTML(""" <div class = 'vspacewithline'> </div>"""),
+            Div('compensation', css_class = "inputline"),
+            HTML(""" <div class = 'vspacewithline'> </div>"""),
+            HTML(""" <div class="textline">For a paid position, you <strong>must</strong> follow the given instructions to ensure you are paid; otherwise, 
+            another candidate will be selected.  More specifically, you will be required to have a <strong>student employment card</strong>.  This requires 
+            you to have a federal I-9 on file.  Bring appropriate identification with you to Amos Eaton&nbsp;125 if this is your first time working for RPI; 
+            <strong><a style = "color:red;" href="https://www.uscis.gov/i-9-central/acceptable-documents" target="_blank">click here for a list of acceptable documents.</a></strong>  
+            <strong>Note that original documents are required; copies cannot be accepted.</strong> </div>"""),
+
+            HTML(""" <div class="textline"><strong>Detailed instructions are listed here: <a style = "color:red;" href="https://info.rpi.edu/student-employment/required-documents" 
+            target="_blank">https://info.rpi.edu/student-employment/required-documents</a></strong></div>"""),
+
+            HTML(""" <div class="textline">Please note that to be paid, you will be required to submit your specific hours in SIS 
+            every two weeks.  This <strong>must</strong> be completed to get paid on time, and any late submissions will incur a fee charged to the department.</div>"""),
+
+            HTML(""" <div class="textline">If you are unable to attend your assigned labs or office hours (e.g., illness, interview, conference, etc.), you <strong>must</strong> 
+            notify your graduate lab TA and instructor and help arrange a substitute mentor.  Unexcused absences will cause you to either earn a lower letter grade or not be asked to mentor again.</div>"""),
             HTML("</fieldset>"),
 
         )
@@ -89,10 +107,10 @@ class MentorApplicationfoForm_step3(forms.Form):
         super(MentorApplicationfoForm_step3, self).__init__(*args, **kwargs)  
         self.helper = FormHelper()
         courses = Course.objects.all()
-        course_layout = Div()
+        course_layout = Field()
         for course in courses:          
-            course_layout.append(HTML("<div class = 'course_block'>"))   
-            course_layout.append( HTML("<div class = 'course_title'>" + course.subject +" "+ course.number +" "+ course.name + "</div>") )
+            course_layout.append( HTML('''<div class = 'course_title' style="width: 330px; min-height: 80px; float:left;">''' + str(course)+ "</div>") )
+            course_layout.append(HTML("&nbsp; &nbsp; &nbsp; &nbsp;"))
             grades = (
                      ('a', 'A'),
                      ('a-', 'A-'),
@@ -118,13 +136,15 @@ class MentorApplicationfoForm_step3(forms.Form):
             ) 
             #self.initial[course.name+ "_grade"] = 'n'
 
-            self.fields[course.name+ "_exp"] = forms.ChoiceField(choices = choices_YN, label = 'Have you mentored this class before? ')
+            self.fields[course.name+ "_exp"] = forms.ChoiceField(choices = choices_YN, label = "")
             #self.initial[course.name+ "_exp"] = 'N'
+            course_layout.append(HTML("""<label style = "float: left;"> Whether taken this course at RPI before and earned grade: </label>"""))
+            course_layout.append(Field(course.name+ "_grade", label_class="float: left;"))
+            #course_layout.append(HTML(""" <div class = 'vspace'> </div>"""))
+            course_layout.append(HTML("""<label style = "float: left;"> Have mentored this RPI course before: </label>"""))
+            course_layout.append(Field(course.name+ "_exp"))
+            course_layout.append(HTML(""" <div class = 'vspacewithline'> </div>""")),
 
-            course_layout.append(Field(course.name+ "_grade", label_class = "long_label"))
-            #course_layout.append(HTML('<br></br>'))
-            course_layout.append(InlineRadios(course.name+ "_exp"))
-            course_layout.append(HTML("</div>"))   
 
         self.helper.layout = Layout(
             HTML('== COURSE EXPERIENCE =='),
@@ -133,7 +153,7 @@ class MentorApplicationfoForm_step3(forms.Form):
             HTML("</fieldset>"),
         )
         self.helper.form_method = 'POST'
-        self.helper.label_class = "my_label"
+        self.helper.form_show_labels = False
         self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
         self.helper.add_input(Submit('next', 'Next'))
 
@@ -149,7 +169,8 @@ class MentorApplicationfoForm_step4(forms.Form):
             HTML('== COURSE PREFERENCE =='),
 
             HTML("<fieldset>"),
-            HTML('''Please rank the courses which you prefer to mentor, #1 means the highest prioity, and #2 means the second priority...etc. This will help us to allocate your position.'''),
+            HTML('''<div class = 'textline'> Please rank the courses which you prefer to mentor, #1 means the highest prioity, and #2 means the second priority...etc. The rankings will help us to allocate your position.</div>'''),
+            HTML(""" <div class = 'vspacewithline'> </div>"""),
 
             HTML('''
                 <ul id="left-sortable" class = "sortable-ties">
@@ -173,25 +194,81 @@ class MentorApplicationfoForm_step4(forms.Form):
             HTML("</fieldset>"),
         )
         self.helper.form_method = 'POST'
-        self.helper.label_class = "my_label"
         self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
         self.helper.add_input(Submit('next', 'Next', onclick="VoteUtil.submitPref();"))
         
-
+# Time slots availble for students
 class MentorApplicationfoForm_step5(forms.Form):
+     
+   # widgets = { 'other_times': forms.Textarea(attrs={'cols': 80, 'rows': 40})}
+
     def __init__(self, *args, **kwargs):
         super(MentorApplicationfoForm_step5, self).__init__(*args, **kwargs)  
         self.helper = FormHelper()
+        time_slots_choices = (
+                     ('M_4:00-4:50PM',      'M 4:00-4:50PM'),
+                     ('M_4:00-5:50PM',      'M 4:00-5:50PM'),
+                     ('M_5:00-5:50PM',      'M 5:00-5:50PM'),
+                     ('M_6:00-6:50PM',      'M 6:00-6:50PM'),
+                     ('T_10:00-11:50AM',    'T 10:00-11:50AM'),
+                     ('T_12:00-1:50PM',     'T 12:00-1:50PM'),
+                     ('T_2:00-3:50PM',      'T 2:00-3:50PM'),
+                     ('T_4:00-4:50PM',      'T 4:00-4:50PM'),
+                     ('T_5:00-5:50AM',      'T 5:00-5:50AM'),
+                     ('T_6:00-6:50PM',      'T 6:00-6:50PM'),
+                     ('W_10:00-11:50AM',    'W 10:00-11:50AM'),
+                     ('W_12:00-1:50PM',     'W 12:00-1:50PM'),
+                     ('W_2:00-3:50PM',      'W 2:00-3:50PM'),
+                     ('W_4:00-4:50PM',      'W 4:00-4:50PM'),
+                     ('W_5:00-5:50AM',      'W 5:00-5:50AM'),
+                     ('W_6:00-6:50PM', '     W 6:00-7:50PM'),
+                     ('T_4:00-5:50AM',      'T 4:00-5:50AM'),
+                     ('T_6:00-6:50PM',      'T 6:00-7:50PM'),
+        )
+        self.fields["time_slots"] = forms.MultipleChoiceField(
+            choices=time_slots_choices, 
+            label=False, 
+            required=False,
+            widget=forms.CheckboxSelectMultiple()
+            ) 
+
+        self.fields["time_slots"].label = False
+        self.fields["other_times"] = forms.CharField(widget=forms.Textarea(attrs={'cols': 100, 'rows': 8}))
+
         self.helper.layout = Layout(
             HTML('== SCHEDULING =='),
             HTML("<fieldset>"),
-            HTML("Time slot plugin here"),
+            HTML(''' <div class="textline"> Indicate your availability for the 
+            Spring 2020 semester by carefully checking all boxes that apply. The more boxes you check,
+             the more likely you will be a mentor. Note that there is overlap in some of the days/times listed below.</div>'''),
+            Div("time_slots"),
+            HTML(""" <div class = 'vspacewithline'> </div>"""),
+            HTML(''' <div class="textline">Please list other days/times of additional availability. The more days/times you are 
+            available, the more likely you will be selected as a mentor. <strong>Do not leave this blank.</strong></div>'''),
+            Field('other_times', style = "width:100%"),
             HTML("</fieldset>"),
         )
         self.helper.form_method = 'POST'
-        self.helper.label_class = "my_label"
-        self.helper.add_input(Submit('submit', 'Submit'))
+        self.helper.form_show_labels = False
+        self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
+        self.helper.add_input(Submit('next', 'Next', onclick="VoteUtil.submitPref();"))
 
+class MentorApplicationfoForm_step6(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(MentorApplicationfoForm_step6, self).__init__(*args, **kwargs)  
+        self.helper = FormHelper()
+
+        self.fields["relevant_info"] = forms.CharField(widget=forms.Textarea(attrs={'cols': 100, 'rows': 8}))
+        self.helper.layout = Layout(
+            HTML('== ADDITIONAL INFOMATION =='),
+            HTML("<fieldset>"),
+            HTML('''<div class = 'textline'> Please provide any other relevant information about yourself in the space below, including your mentoring preferences (i.e.,&nbsp;which courses you'd prefer to mentor, which courses you'd prefer not to mentor, other extracurricular CS activities you're involved with, etc.). <strong>Do not leave this blank.</strong></div>'''),
+            Field('relevant_info', style = "width:100%"),
+            HTML("</fieldset>"),
+        )
+        self.helper.form_method = 'POST'
+        self.helper.form_show_labels = False
+        self.helper.add_input(Submit('submit', 'Submit'))
 
 '''
 # DEPRECATED 

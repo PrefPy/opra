@@ -61,24 +61,31 @@
 
 <div class="container">
     <div class="panel panel-default">
+        <div class="panel-heading">
+                <b> Admin </b>
+        </div>
         <div class="panel-body">
             <form method="POST" action="{% url 'mentors:addcoursefunc' %}" id="addcoursefunc">
                 {% csrf_token %}
-                <h2>Add Course (DEV)</h2>
+                Add Course (DEV): 
                 <input type="submit" value="Load csv"  name="submit" id="submit" />
             </form>
 
             <form method="POST" action="{% url 'mentors:addStudentRandomfunc' %}" id="addStudentRandomfunc">
                 {% csrf_token %}
-                <h2> Add Student Random (DEV)</h2>
+                 Add Student Random (DEV):
                 <input type="number" id="num_students" name="num_students" >
                 <input type="submit" value="Add student Random"  name="submit" id="submit" />
             </form>
 
             <form method="POST" action="{% url 'mentors:matchfunc' %}" id="matchfunc">
                 {% csrf_token %}
-                <h2> Match </h2>
+                Match:
                 <input type="submit" value="Match"  name="submit" id="submit" />
+            </form>
+            <form method="POST" action="{% url 'mentors:view-course-result' %}" id="matchfunc">
+                {% csrf_token %}
+                <input type="submit" value="View Match Result"  name="submit" id="submit" />
             </form>
         </div>
     </div>

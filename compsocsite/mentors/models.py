@@ -216,11 +216,32 @@ class Mentor(models.Model):
     recommender = models.CharField(max_length=50)
     # Compensation Choices
     compensation_choice = (
-                     ('1', 'Pay'),
+                     ('1', 'Pay ($14/hour) '),
                      ('2', 'Credit'),
                      ('3', 'No Preference'),
                      )
     compensation = models.CharField(max_length=1, choices = compensation_choice, default='1')
+    time_slots_choices = (
+                     ('M_4:00-4:50PM',      'M 4:00-4:50PM'),
+                     ('M_4:00-5:50PM',      'M 4:00-5:50PM'),
+                     ('M_5:00-5:50PM',      'M 5:00-5:50PM'),
+                     ('M_6:00-6:50PM',      'M 6:00-6:50PM'),
+                     ('T_10:00-11:50AM',    'T 10:00-11:50AM'),
+                     ('T_12:00-1:50PM',     'T 12:00-1:50PM'),
+                     ('T_2:00-3:50PM',      'T 2:00-3:50PM'),
+                     ('T_4:00-4:50PM',      'T 4:00-4:50PM'),
+                     ('T_5:00-5:50AM',      'T 5:00-5:50AM'),
+                     ('T_6:00-6:50PM',      'T 6:00-6:50PM'),
+                     ('W_10:00-11:50AM',    'W 10:00-11:50AM'),
+                     ('W_12:00-1:50PM',     'W 12:00-1:50PM'),
+                     ('W_2:00-3:50PM',      'W 2:00-3:50PM'),
+                     ('W_4:00-4:50PM',      'W 4:00-4:50PM'),
+                     ('W_5:00-5:50AM',      'W 5:00-5:50AM'),
+                     ('W_6:00-6:50PM', '     W 6:00-7:50PM'),
+                     ('T_4:00-5:50AM',      'T 4:00-5:50AM'),
+                     ('T_6:00-6:50PM',      'T 6:00-7:50PM'),
+        )
+    time_slots = models.CharField(choices = time_slots_choices, max_length = len(time_slots_choices), default= "")
 
     # Course preference of applicants, the data model here is dictionary
     # Yeah we can do charfield... will change it afterwards

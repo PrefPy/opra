@@ -16,9 +16,10 @@ urlpatterns = [
     url(r'^applystep3/$', views.applystep3, name='applystep3'),
     url(r'^applystep4/$', views.applystep4, name='applystep4'),
     url(r'^applystep5/$', views.applystep5, name='applystep5'),
+    url(r'^applystep6/$', views.applystep6, name='applystep6'),
 
     url(r'^view-course$', login_required(views.CourseFeatureView.as_view()), name='view-course'),
-    url(r'^view-course-result$', login_required(views.MatchResultView.as_view()), name='view-course-result'),
+    url(r'^view-course-result$', login_required(views.viewResultPage), name='view-course-result'),
 
     # compensation and responsbility
     #url(r'^applyfunc2/$', views.applystep, name='applyfunc2'),

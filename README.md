@@ -31,13 +31,15 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 
 6. ~~Copy settings.py from opra_dependencies to compsocsite/compsocsite.~~ (an updated settings.py is now included.) Copy opra_crypto.py from opra_dependencies to compsocsite/polls.
 
+6.5. For testing locally, edit compsocsite/appauth/views.py and find-replace `https://opra.cs.rpi.edu` with `http://127.0.0.1:8000`
+
 7. Open command line (terminal), change to OPRA's directory, and then enter the following commands:
   
-  <code>cd composcite</code>
-  
-  <code>python manage.py migrate</code>
-  
-  <code>python manage.py createcachetable</code>
+  ```
+  cd composcite
+  python manage.py migrate
+  python manage.py createcachetable
+  ```
   
   Then run the server by entering:
 

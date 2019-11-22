@@ -29,7 +29,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 	
 5. Clone this project from Github
 
-6. Copy settings.py from opra_dependencies to compsocsite/compsocsite. Copy opra_crypto.py from opra_dependencies to compsocsite/polls.
+6. ~~Copy settings.py from opra_dependencies to compsocsite/compsocsite.~~ (an updated settings.py is now included.) Copy opra_crypto.py from opra_dependencies to compsocsite/polls.
 
 7. Open command line (terminal), change to OPRA's directory, and then enter the following commands:
   
@@ -58,6 +58,7 @@ The web app is built on Django, and uses an SQLite database. [Click here](https:
 * **scipy**:
 * **numpy**:
 * **networkx**:
+* **django-crispy-forms**:
 
 
 ##Models

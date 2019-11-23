@@ -122,7 +122,7 @@ button:hover .greencolor {
 .margin-panel-top {
     margin-top: 12px;
 }
-
+ 
 @media only screen and (max-device-width: 480px) {
     .panel-body {
         padding-left: 1px;
@@ -205,6 +205,10 @@ ul.example li.placeholder:before {
   /** Define arrowhead **/
 }
 
+panel-round-box{
+    border-radius: 4rem;
+    color: rgb(88, 54, 54);
+}
 
 /* image */
 img.item {
@@ -371,10 +375,13 @@ th {
     border-radius: 0.3rem; 
 
 }
+
+.list-element.ui-selecting {
+    background-color: rgb(109, 108, 106)
+}
 .list-element.ui-selected {
     background-color: rgb(176, 197, 214)
 }
-
 
 .choice1 li>div {
     display: inline-block;
@@ -384,18 +391,26 @@ th {
     display: inline-block;
 }
 
-.choice1 li .div-sortablehandle {
-    display: none;
-    opacity: 0.5;
-    left: -100%;
+.ul-list li>div {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
 }
 
-.choice1 li.ui-selected .div-sortablehandle {
+.choice1 li .li-sortablehandle {
+    display: none;
+    opacity: 0.5;
+    top: -42px;
+}
+
+.choice1 li.ui-selected .li-sortablehandle {
     display: inline-block;
     cursor: default;
-    width: 100px;
-    height: 28px;
-    left: -107%;
+    width: 125px;
+    height: 35px;
+    top: -42px;
     border-radius: 0.1875rem;
 }
 
@@ -414,15 +429,15 @@ th {
     cursor: default;
     width: 125px;
     height: 35px;
-    background-color: rgb(193, 214, 231);
+    background-color: rgb(157, 171, 182);
     border-radius: 0.3rem;
 }
 
 .col-placeHolder {
     white-space: nowrap;
-    background-color: rgb(193, 214, 231);
     height: 40px;
     width: 550px;
+    background-color: rgb(157, 171, 182);
     padding: 0;
     margin: 10px 0px;
     border-radius: 0.3rem;
@@ -439,6 +454,14 @@ th {
     border: 0px solid darkgray;
 }
 
-
+.noselect {
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 

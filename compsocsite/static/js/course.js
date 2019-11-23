@@ -10,13 +10,13 @@ var order1 = "";
 var order2 = "";
 var flavor = "";
 var startTime = 0;
-var allowTies = true;
+var allowTies = false;
 var commentTime = "";
-var method = 2; // 1 is twoCol, 2 is oneCol, 3 is Slider
+var method = 1; // 1 is twoCol, 2 is oneCol, 3 is Slider
 var methodIndicator = "two_column";
 var init_star = false;
 var animOffset = 200;  // animation speed of ranking UIs, 200 = 0.2s
-var top_tier_layer = 0;
+var top_c_tier_layer = 0;
 
 function select(item){
 	var d = (Date.now() - startTime).toString();
@@ -107,7 +107,7 @@ function orderCol(num){
 			if( $( this ).children().size() > 0 ){
 				var inner = [];
 				$( this ).children().each(function( index ){
-         			 if(!$(this).hasClass("tier")) inner.push($( this ).attr('type'));
+         			 if(!$(this).hasClass("c_tier")) inner.push($( this ).attr('type'));
 				});
 				order.push(inner);
 			}
@@ -198,7 +198,7 @@ function dictSlideStar(str){
 	for(i = 0; i < arr.length; i++){
 		var j;
 		for(j = 0; j < arr[i].length; j++){
-			arr[i][j]["tier"] = i+1;
+			arr[i][j]["c_tier"] = i+1;
 		}
 	}
 	return arr;
@@ -214,8 +214,8 @@ function dictYesNo(){
 			temp = {};
 			temp["name"] = $(value).attr("id");
 			temp["ranked"] = 0;
-			if($(value).children()[0].checked){temp["tier"] = 1; yes.push(temp); }
-			else{temp["tier"] = 2; no.push(temp); }
+			if($(value).children()[0].checked){temp["c_tier"] = 1; yes.push(temp); }
+			else{temp["c_tier"] = 2; no.push(temp); }
 		}
 	});
 	if(yes.length != 0){ order.push(yes); }
@@ -238,8 +238,8 @@ function dictYesNo2(){
 			else if (i == 1){temp["position"] = "(1,2)";}
 			else if (i == 2){temp["position"] = "(2,1)";}
 			else{temp["position"] = "(2,2)";}
-			if($(value).children()[0].checked){temp["tier"] = 1; yes.push(temp); }
-			else{temp["tier"] = 2; no.push(temp); }
+			if($(value).children()[0].checked){temp["c_tier"] = 1; yes.push(temp); }
+			else{temp["c_tier"] = 2; no.push(temp); }
 			i++;
 		}
 	});
@@ -255,22 +255,22 @@ function dictCol(num){
 	if(num == 1){ arr = [$('#left-sortable'), $('#right-sortable')]; }
 	else if(num == 2){ arr = [$('#one-sortable')]; }
 	var order = [];
-	var tier = 1;
+	var c_tier = 1;
 	var item_type = ".course-element";
 	$.each(arr, function( index, value ){
 		value.children().each(function( i1 ){
-			if( $( this ).children().size() > 0  && $( this ).attr("class") != "top_tier"){
+			if( $( this ).children().size() > 0  && $( this ).attr("class") != "top_c_tier"){
 				var inner = [];
 				$( this ).children().each(function( i2 ){
 					var temp = {};
 					temp["name"] = $(item_type + "[type='" + $( this ).attr('type') + "']").attr('id');
 					temp["utility"] = $(item_type + "[type='" + $( this ).attr('type') + "']").attr('title');
-					temp["tier"] = tier;
+					temp["c_tier"] = c_tier;
 					temp["ranked"] = index;
 					inner.push(temp);
 				});
 				order.push(inner);
-				tier++;
+				c_tier++;
 			}
 		});
   });
@@ -279,18 +279,18 @@ function dictCol(num){
 
 function twoColSort( order ){
   var html = "";
-  var tier = 1;
+  var c_tier = 1;
   var emptyLine = "<div class=\"empty\"></div>";
   html += emptyLine;
 	$.each(order, function(index, value){
-		html += "<ul class=\"course_choice\"> <div class=\"tier two\"> #" + tier + "</div>"; 
+		html += "<ul class=\"course_choice\"> <div class=\"c_tier two\"> #" + c_tier + "</div>"; 
 		$.each(value, function(i, v){
 			html += "<li class=\"course-element\" id=\"" + $(".course-element[type='" + v.toString() + "']").attr('id') + "\" type=" + v.toString() + ">";
 			html += $(".course-element[type='" + v.toString() + "']").html();
 			html += "</li>";
     });
     html += "</ul>";
-    tier ++;
+    c_tier ++;
   });
   html += emptyLine;
 	$('#left-sortable').html(html);
@@ -302,18 +302,18 @@ function twoColSort( order ){
 function oneColSort( order ){
 //	var html = "<ul class=\"empty\"></ul>";
   var html = "";
-  var tier = 1;
+  var c_tier = 1;
   var emptyLine = " <div class=\"empty\"></div> ";
   html += emptyLine;
 	$.each(order, function(index, value){
-		html += "<ul class=\"course_choice\"><div class=\"tier one\">#" + tier + "</div>"; 
+		html += "<ul class=\"course_choice\"><div class=\"c_tier one\">#" + c_tier + "</div>"; 
 		$.each(value, function(i, v){
 			html += "<li class=\"course-element\" id=\"" + $("#oneColSection .course-element[type='" + v.toString() + "']").attr('id') + "\" title=\""+ $("#oneColSection .course-element[type='" + v.toString() + "']").attr('title') +"\" type=" + v.toString() + ">";
 			html += $("#oneColSection .course-element[type='" + v.toString() + "']").html();
 			html += "</li>";
     });
     html += "</ul>";
-    tier ++;
+    c_tier ++;
 
   });
   //html += "</ul><ul class=\"empty\"></ul>";
@@ -403,51 +403,57 @@ function yesNoZeroSort( order ){
 function changeCSS(){
 	// if method is twocol
 	if(method == 1){
-		$(".course_choice").css("width", "550px");
-		$(".empty"). css("width", "550px");
-		$(".col-placeHolder").css("width", "550px");
+		$(".course_choice").css("width", "100%");
+		$(".empty"). css("width", "100%");
+		$(".col-placeHolder").css("width", "100%");
 
 		// extend the height of course_choice box if there exists more than 3 course-element in a row
 		// vice versa
 		$("#left-sortable").children(".course_choice").each(function(){
 		size = $(this).children(":not(.ui-selected, .transporter)").size();
 		//$(this).css("height", ((size-1)*40).toString() + "px");
-		if(size > 4){
-			size -= 1;
-			num = Math.ceil(size/3);
-			$(this).css("height", (num*40).toString() + "px");
-			$(this).children(".tier").css( "height", (num*40).toString() + "px");
-			$(this).children(".tier").css( "line-height", (num*40).toString() + "px");
+		if(allowTies){
+			if(size > 4){
+				size -= 1;
+				num = Math.ceil(size/3);
+				$(this).css("height", (num*40).toString() + "px");
+				$(this).children(".c_tier").css( "height", (num*40).toString() + "px");
+				$(this).children(".c_tier").css( "line-height", (num*40).toString() + "px");
+			}
+			else{
+				$(this).css("height", "40px");
+				$(this).children(".c_tier").css( "height", "40px");
+				$(this).children(".c_tier").css( "line-height", "40px");
+	
+			}
 		}
-		else{
-			$(this).css("height", "40px");
-			$(this).children(".tier").css( "height", "40px");
-			$(this).children(".tier").css( "line-height", "40px");
-
-		}
+		
 		});
 	}
 	// if method is onecol, extend the selection bar
 	else if(method == 2){
-		$(".course_choice").css("width", "800px");
-		$(".empty"). css("width", "800px");
-		$(".col-placeHolder").css("width", "800px");
+		$(".course_choice").css("width", "100%");
+		$(".empty"). css("width", "100%");
+		$(".col-placeHolder").css("width", "100%");
 	}
 	// extend the height of course_choice box if there exists more than 6 course-element in a row
 	// vice versa
 	$("#left-sortable").children(".course_choice").each(function(){
 		size = $(this).children(":not(.ui-selected, .transporter)").size();
+		if(allowTies){
+
 		if(size > 5){
 			size -= 1;
 			num = Math.ceil(size/4);
 			$(this).css("height", (num*40).toString() + "px");
-			$(this).children(".tier").css( "height", (num*40).toString() + "px");
-			$(this).children(".tier").css( "line-height", (num*40).toString() + "px");
+			$(this).children(".c_tier").css( "height", (num*40).toString() + "px");
+			$(this).children(".c_tier").css( "line-height", (num*40).toString() + "px");
 		}
 		else{
 			$(this).css("height", "40px");
-			$(this).children(".tier").css( "height", "40px");
-			$(this).children(".tier").css( "line-height", "40px");
+			$(this).children(".c_tier").css( "height", "40px");
+			$(this).children(".c_tier").css( "line-height", "40px");
+		}
 		}
 	});
   
@@ -509,17 +515,17 @@ var VoteUtil = (function () {
 	    temp_data["time"] = [d];
 	    temp_data["rank"] = [dictCol(1)];
 	    if (method == 1) {
-	        var tier = $("#right-sortable").children().size()+1;
+	        var c_tier = $("#right-sortable").children().size()+1;
 	        // move the left items over to the right side
 	        $("#left-sortable").children().each(function(index) {
 	        	if ($(this).children().size() > 0) {
 	                $(this).children().each(function(index) {
 	                    var temp = $("#right-sortable").html();
 	                    //$(this).attr("onclick")="VoteUtil.moveToPref(this)"; 
-	                    if (!$(this).hasClass("tier")) {
+	                    if (!$(this).hasClass("c_tier")) {
 	                        $("#right-sortable").html(
-	                            temp + "<ul class=\"choice2\" onclick =\"VoteUtil.moveToPref(this)\">" + "<div class=\"tier two\"> #" + tier.toString() + "</div>" + $(this)[0].outerHTML + "</ul>");
-	                        tier++;
+	                            temp + "<ul class=\"course_choice2\" onclick =\"VoteUtil.moveToPref(this)\">" + $(this)[0].outerHTML + "</ul>");
+	                        c_tier++;
 	                    }
 	                });
 	            }
@@ -554,7 +560,7 @@ var VoteUtil = (function () {
 		var final_list;
 		var item_type = ".course-element";
 		var record_data = {};
-		$(".top_tier").remove();
+		$(".top_c_tier").remove();
 		if(method == 1)      {order_list = orderCol(0); final_list = dictCol(1);}
 		else if(method == 2){ order_list = orderCol(method); final_list = dictCol(2);}
 		else if(method == 3){ order_list = orderSlideStar('slide'); item_type = ".slider_item"; final_list = dictSlideStar('slide');}
@@ -564,11 +570,11 @@ var VoteUtil = (function () {
 		else{location.reload(); }
 		var final_order = [];
 		for (var i = 0; i < order_list.length; i++) {
-			var sametier = [];
+			var samec_tier = [];
 			for (var j = 0; j < order_list[i].length; j++) {
-				sametier.push($(item_type + "[type='" + order_list[i][j].toString() + "']").attr('id'));
+				final_order.push( order_list[i][j].toString() );
 			}
-			final_order.push(sametier);
+			//final_order.push(samec_tier);
     	}
 		order = JSON.stringify(final_order);
 		//var d = Date.now() - startTime;
@@ -612,19 +618,22 @@ var VoteUtil = (function () {
 	
 	// moves preference item obj from the right side to the bottom of the left side
 	function moveToPref(obj) {
-		$(obj).removeClass('choice2');
+		$(obj).removeClass('course_choice2');
 		$(obj).addClass('course_choice');
 		var time = 100
 		var prefcolumn = $('#left-sortable');
+		var tier = "<div class='c_tier'>0</div>";
 		var currentli = $(obj);
-		var tier = currentli.children().first().attr("alt");
-		var tierRight = 1;
-		var tierleft = 1;
+		var c_tier = 0;
+		var c_tierRight = 1;
+		var c_tierleft = 1;
 
 		var item = currentli.children().first().attr("id");
 		var emptyLine = " <div class=\"empty\"></div> ";
-	
+
 		var d = (Date.now() - startTime).toString();
+
+		currentli.prepend(tier)
 		temp_data = {
 			"item": item
 		};
@@ -638,19 +647,19 @@ var VoteUtil = (function () {
 		} else {
 			$('#left-sortable').children(".course_choice").last().after(currentli);
 		}
-		//record += d+ "::clickFrom::" + item + "::"+ tier+";;";
+		//record += d+ "::clickFrom::" + item + "::"+ c_tier+";;";
 	
-		tier = currentli.children().first().attr("alt");
+		c_tier = currentli.children().first().attr("alt");
 		if ($('#left-sortable').children().size() != 0) {
 			enableSubmission();
 		}
-		$('#right-sortable').children(".choice2").each(function() {
-			$(this).children(".tier").text("#" + tierRight.toString());
-			tierRight++;
+		$('#right-sortable').children(".course_choice2").each(function() {
+			$(this).children(".c_tier").text(c_tierRight.toString());
+			c_tierRight++;
 		});
 		$('#left-sortable').children(".course_choice").each(function() {
-			$(this).children(".tier").text("#" +tierleft.toString());
-			tierleft++;
+			$(this).children(".c_tier").text(c_tierleft.toString());
+			c_tierleft++;
 		});
 		$('#left-sortable').children().each(function() {
 			$(this).removeAttr('onclick');
@@ -663,20 +672,20 @@ var VoteUtil = (function () {
 		temp.push(temp_data);
 		record = JSON.stringify(temp);
 		//d = Date.now() - startTime;
-		//record += d+ "::clickTo::" + item + "::"+ tier+";;;";
+		//record += d+ "::clickTo::" + item + "::"+ c_tier+";;;";
 		/*
 		if(methodIndicator == "two_column")
 		{
 			var d = (Date.now() - startTime).toString();
 			var temp = JSON.parse(record);
-			temp["two_column"].push({"method":methodIndicator,"time":d, "action":"click", "from":prev_tier,"to": tier, "item":item });
+			temp["two_column"].push({"method":methodIndicator,"time":d, "action":"click", "from":prev_c_tier,"to": c_tier, "item":item });
 			record = JSON.stringify(temp);
 		}
 		else
 		{
 			var d = (Date.now() - startTime).toString();
 			var temp = JSON.parse(one_record);
-			temp["one_column"].push({"method":methodIndicator,"time":d, "action":"click", "from":prev_tier,"to": tier, "item":item });
+			temp["one_column"].push({"method":methodIndicator,"time":d, "action":"click", "from":prev_c_tier,"to": c_tier, "item":item });
 			one_record = JSON.stringify(temp);
 		}
 		*/
@@ -688,14 +697,16 @@ var VoteUtil = (function () {
 		temp_data = {"item":""};
 		temp_data["time"] = [d];
 		temp_data["rank"] = [dictCol(1)];
-		$('.choice2').each(function(){
-			$(this).removeClass('choice2');
+		$('.course_choice2').each(function(){
+			$(this).removeClass('course_choice2');
 			$(this).addClass('course_choice');
 		});
 		emptyLine = " <div class=\"empty\"></div> "; 
-		if ($('#right-sortable').children().size() > 0 && $('#left-sortable').children().size()== 0) 
-			{$('#left-sortable' ).html( emptyLine + $( '#left-sortable' ).html() + $( '#right-sortable' ).html() + emptyLine);
-		}
+		if ($('#right-sortable').children().size() > 0 && $('#left-sortable').children().size() == 0) {
+			$("#right-sortable").children(".course_choice").each(function(){
+				moveToPref($(this));
+			});	
+			}
 		else if ($('#right-sortable').children().size() > 0 && $('#left-sortable').children().size() > 0){
 			$("#right-sortable").children(".course_choice").each(function(){
 				moveToPref($(this));
@@ -705,7 +716,7 @@ var VoteUtil = (function () {
 		//VoteUtil.checkStyle();
 		enableSubmission();
 		$('.course_choice').each(function(){
-      	$(this).removeAttr('onclick');
+      		$(this).removeAttr('onclick');
 		});
 		//var d = Date.now() - startTime;
 		//record += d + ";;;";
@@ -874,48 +885,16 @@ $( document ).ready(function() {
 		if (allowTies){
 			str = ".course_choice, .sortable-ties";
 			$('.sortable-ties').selectable({
-				cancel: '.tier',
+				cancel: '.c_tier',
 				filter: "li",
 			});
-		}
-		else{
-			str = ".sortable-ties";
-		}		
-		$('.sortable-ties').sortable({
-			placeholder: "col-placeHolder",
-			handle: ".tier",
-			//items: "ul",
-			revert:'invalid',
-			start: function(e, ui){
-				$(".col-placeHolder").hide();
-			},
-			change: function (e, ui){
-				$(".col-placeHolder").hide().show(animOffset, function(){
-					if (method == 1) { 
-						$(".col-placeHolder").css("width", "550px");
-						}
-					else if (method == 2) { 
-						$(".col-placeHolder").css("width", "800px"); 
-					}
-					$(".li-placeHolder").css({ "float": "none", "height": "40px", "margin": "0px 0px" });
-				});
-				changeCSS();
-			},
-			stop: function(e, ui) {
-				checkAll();
-				removeSelected();
-				resetEmpty();
-				changeCSS();
-			}
-		});
-      		
-		$('.course_choice').sortable({
-			cancel: '.tier .empty',
+			$('.course_choice').sortable({
+			cancel: '.c_tier .empty',
 			cursorAt: {
 				top: 20,
 				left: 60
 			},
-			items: "li:not(.tier)",
+			items: "li:not(.c_tier)",
 			placeholder: "li-placeHolder",
 			connectWith: str,
 			start: function(e, ui){
@@ -940,10 +919,10 @@ $( document ).ready(function() {
 				$(".li-placeHolder").hide().show(animOffset, function(){
 					if (ui.placeholder.parent().hasClass("sortable-ties")) {
 						if (method == 1) { 
-							$(".li-placeHolder").css("width", "550px");
+							$(".li-placeHolder").css("width", "100%");
 						 }
 						else if (method == 2) { 
-							$(".li-placeHolder").css("width", "800px"); 
+							$(".li-placeHolder").css("width", "100%"); 
 						}
 						$(".li-placeHolder").css({ "float": "none", "height": "40px", "margin": "0px 0px" });
 					}
@@ -968,14 +947,46 @@ $( document ).ready(function() {
 
 			
     }).disableSelection(); 
+		}
+		else{
+			str = ".sortable-ties";
+		}		
+		$('.sortable-ties').sortable({
+			placeholder: "col-placeHolder",
+			//handle: ".c_tier",
+			//items: "ul",
+			start: function(e, ui){
+				$(".col-placeHolder").hide();
+			},
+			change: function (e, ui){
+				$(".col-placeHolder").hide().show(animOffset, function(){
+					if (method == 1) { 
+						$(".col-placeHolder").css("width", "100%");
+						}
+					else if (method == 2) { 
+						$(".col-placeHolder").css("width", "100%"); 
+					}
+					$(".li-placeHolder").css({ "float": "none", "height": "40px", "margin": "0px 0px" });
+				});
+				changeCSS();
+			},
+			stop: function(e, ui) {
+				checkAll();
+				removeSelected();
+				resetEmpty();
+				changeCSS();
+			}
+		});
+      		
+		
 	}
 	function checkAll() {
       t1 = 1;
       t2 = 1;
       list = [];
       html = "<ul class=\"course_choice ui-sortable\">"; 
-      if(method == 1){ html += "<div class=\"tier two\">0</div>"; }
-      if(method == 2){ html += "<div class=\"tier one\">0</div>"; }
+      if(method == 1){ html += "<div class=\"c_tier two\">0</div>"; }
+      if(method == 2){ html += "<div class=\"c_tier one\">0</div>"; }
 
       $('.sortable-ties').children().each(function() {
         if ($(this).hasClass('course-element')) {
@@ -1007,8 +1018,8 @@ $( document ).ready(function() {
         $(this).remove();
       });
       
-      $('.tier').each(function() {
-        $(this).text("\#"+t1.toString());
+      $('.c_tier').each(function() {
+        $(this).text(t1.toString());
         t1++;
       });  
       

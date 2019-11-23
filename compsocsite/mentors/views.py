@@ -516,6 +516,7 @@ def addStudentRandom(request):
             new_applicant.course_pref[new_applicant.RIN] = r.sample(classes, r.randint(1, numClass))
             '''
             new_applicant.course_pref = r.sample(classes, r.randint(1, numClass))
+            print(new_applicant.course_pref)
             new_applicant.save()
 
             for course in Course.objects.all():
@@ -572,7 +573,7 @@ def StartMatch(request):
         classes = [c.name for c in Course.objects.all()]
         classCaps = {c.name: c.mentor_cap for c in Course.objects.all()}
         students = [s.RIN for s in Mentor.objects.all()]
-        studentPrefs = {s.RIN: [n.strip() for n in ast.literal_eval(s.course_pref)] for s in Mentor.objects.all()}
+        studentPrefs = {s.RIN: ast.literal_eval(s.course_pref) for s in Mentor.objects.all()}
         classFeatures = {c.name: (c.feature_cumlative_GPA, c.feature_course_GPA, c.feature_has_taken, c.feature_mentor_exp) for c in Course.objects.all()}
         matcher = Matcher(studentPrefs, studentFeatures, classCaps, classFeatures)
         classMatching = matcher.match()

@@ -29,7 +29,7 @@ class MentorApplicationfoForm_step1(ModelForm):
     def __init__(self, *args, **kwargs):
         super(MentorApplicationfoForm_step1, self).__init__(*args, **kwargs)  
         self.helper = FormHelper()
-        #self.fields['email'] = user.email
+        self.fields['recommender'].required = False
         self.helper.layout = Layout(
             HTML('== PERSONAL INFORMATION =='),
             HTML("<fieldset>"),
@@ -137,6 +137,7 @@ class MentorApplicationfoForm_step3(forms.Form):
                      ('d', 'D'),
                      ('f', 'F'),
                      ('p', 'Progressing'),
+                     ('ap', 'AP'),
                      ('n', 'Not Taken'),
                      )
             choices_YN = (
@@ -162,8 +163,7 @@ class MentorApplicationfoForm_step3(forms.Form):
         self.helper.layout = Layout(
             HTML('== COURSE EXPERIENCE =='),
             HTML("<fieldset>"),
-            HTML('''<div class = 'textline'> Below is a list of courses likely to need mentors. 
-            Please check<strong> all </strong> courses for which you are able to mentor. Note that CSCI 1100 is in
+            HTML('''<div class = 'textline'> Below is a list of courses likely to need mentors. Note that CSCI 1100 is in
              Python, CSCI 1190 is in MATLAB, CSCI 1200 is in C++, CSCI 2300 is in Python/C++, CSCI 2500 
              is in C/Assembly, and CSCI 2600 is in Java. For each of the courses you have taken, 
              please specify the letter grade you earned in the course at RPI (or select "AP" if you 
@@ -193,25 +193,66 @@ class MentorApplicationfoForm_step4(forms.Form):
             HTML('== COURSE PREFERENCE =='),
 
             HTML("<fieldset>"),
-            HTML('''<div class = 'textline'> Please rank the courses which you prefer to mentor, #1 means the highest prioity, and #2 means the second priority...etc. The rankings will help us to allocate your position.</div>'''),
+            HTML('''<div class = 'textline'> Select the courses you would like to mentor and the courses 
+            you do not prefer. For the course you would like to mentor, please change their rankings by
+            <strong style = 'color: red;'> dragging </strong> the courses. 
+            #1 means the highest prioity for you to mentor, and #2 means the second priority...etc. 
+            </div>'''),
+            HTML('''<div class = 'textline'> Your ranking will help us to decide your position.
+            </div>'''),
+
             HTML(""" <div class = 'vspacewithline'> </div>"""),
 
+            # Ranking UI here
             HTML('''
-                <ul id="left-sortable" class = "sortable-ties">
-                    <div class="empty"></div> 
-                    {% for course in courses %}
-                    {% if course %}       
-                    <ul class="course_choice" >
-                    <!-- Display the tier number -->
-                        <div class="tier two">#{{ forloop.counter }}</div>
-                        <li class="course-element" id = "{{ course.name }}" type =
-                            "{{ course.name }}">
-                            {{ course.subject }} {{course.number}}
-                        </li>
-                    </ul>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
+            <div class ="col-md-6">
+                <div class = 'panel panel-default'>
+                    <div class="panel-heading">
+                        <b> Courses Prefer to Mentor: &nbsp </b>
+                        <button onclick="VoteUtil.clearAll(); return false;" class="btn btn-primary  reset-button" style="background"> Clear </button>
+                    </div>
+
+                    <div class="panel-body"">
+                        <ul id="left-sortable" class = "sortable-ties">
+                            {% for course in pref_courses %}
+                            {% if course %}       
+                            <ul class="course_choice" >
+                                <!-- Display the tier number -->
+                                    <div class="c_tier">{{ forloop.counter }}</div>
+                                    <li class="course-element" id = "{{ course.name }}" type = "{{ course.name }}">
+                                &nbsp {{ course.subject }} {{ course.number }}  &nbsp<strong> {{course.name }}</strong>
+                                    </li>
+                                </ul>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class ="col-md-6">
+                <div class = 'panel panel-default'>
+                    <div class="panel-heading">
+                        <b> Courses <strong style = "color:red;">NOT</strong> Prefer to Mentor: &nbsp </b>
+                        <button onclick="VoteUtil.moveAll(); return false;" class="btn btn-primary move-all-button" >
+                        Move All
+                        </button>
+                    </div>
+
+                    <div class="panel-body"">
+                        <ul id="right-sortable">
+                            {% for course in not_pref_courses %}
+                            {% if course %}       
+                            <ul class="course_choice2" id="{{ prev|add:1 }}" onclick="VoteUtil.moveToPref(this)">
+                                <li class="course-element" id = "{{ course.name }}" type = "{{ course.name }}">
+                                &nbsp {{ course.subject }} {{ course.number }}  &nbsp<strong> {{course.name }}</strong>
+                                </li>
+                            </ul>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
                 '''),
             # HTML part to store thr rankings
             Field('pref_order', id='pref_order', css_class = 'pref_order', type = 'hidden'),

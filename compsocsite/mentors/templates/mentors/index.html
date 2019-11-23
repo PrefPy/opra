@@ -53,20 +53,21 @@
                 to&nbsp;<a href="mailto:hulbes@rpi.edu" style = "color:red;">Shianne Hulbert</a>.
                 <strong>And please be sure to specify your schedule below to the best of your knowledge.</strong>
             </p>
+            <div class = vspacewithline ></div>
             {% if applied %}
-                <!- user for Application>
                 <tbody>
-                    Mentor apllication success
+                    <p>Your mentor application success!</p>
+                    <p>You can change your application at anytime, but remember, we will start to look at all the applications after 12/6, so make sure you submitted before the deadline.</p>
+
+                    <b> View your application and make changes: &nbsp</b>
+                    <tr><td> <a href="{% url 'mentors:applyfunc1' %}"><span class="btn btn-primary">View and Change</span></a></td></tr>
                 </tbody>
                 <tr><td> <a href="{% url 'mentors:view_application' %}"><span class="btn btn-primary">View</span></a></td></tr>
                 <tr><form method="GET" action="{% url 'mentors:withdrawfunc' %}" id="withdrawfunc">
-                        <input type="submit" value="Withdraw apllication" class="btn btn-primary">
+                        <input type="submit" value="Withdraw apllication" class="btn btn-primary", style= "color:red">
                 </form></tr>
             {% else %}
-
-           
-
-            <b> Begin to apply: </b>
+             <b> Begin to apply: &nbsp</b>
                 <tr><td> <a href="{% url 'mentors:applyfunc1' %}"><span class="btn btn-primary">Apply</span></a></td></tr>
             {% endif %}
         </div>
@@ -111,7 +112,7 @@
             <form method="POST" action="{% url 'mentors:matchfunc' %}" id="matchfunc">
                 {% csrf_token %}
                 Match:
-                <input type="submit" value="Match"  name="submit" id="submit" />
+                <input type="submit" value="Match" name="submit" id="submit" />
             </form>
             <form method="POST" action="{% url 'mentors:view-course-result' %}" id="matchfunc">
                 {% csrf_token %}

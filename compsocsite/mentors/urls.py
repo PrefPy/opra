@@ -8,15 +8,15 @@ from django.urls import path
 
 app_name = 'mentors'
 urlpatterns = [
-    url(r'^$', login_required(views.IndexView.as_view()), name='index'),
+    url(r'^$', login_required(views.viewindex), name='index'),
     url(r'^apply$', login_required(views.ApplyView.as_view()), name='apply'),
     # personal info
     url(r'^apply/$', views.applystep, name='applyfunc1'),
-    url(r'^applystep2/$', views.applystep2, name='applystep2'),
-    url(r'^applystep3/$', views.applystep3, name='applystep3'),
-    url(r'^applystep4/$', views.applystep4, name='applystep4'),
-    url(r'^applystep5/$', views.applystep5, name='applystep5'),
-    url(r'^applystep6/$', views.applystep6, name='applystep6'),
+    url(r'^applystep2/$', login_required(views.applystep2), name='applystep2'),
+    url(r'^applystep3/$', login_required(views.applystep3), name='applystep3'),
+    url(r'^applystep4/$', login_required(views.applystep4), name='applystep4'),
+    url(r'^applystep5/$', login_required(views.applystep5), name='applystep5'),
+    url(r'^applystep6/$', login_required(views.applystep6), name='applystep6'),
 
     url(r'^view-course$', login_required(views.CourseFeatureView.as_view()), name='view-course'),
     url(r'^view-course-result$', login_required(views.viewResultPage), name='view-course-result'),

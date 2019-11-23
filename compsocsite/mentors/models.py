@@ -177,6 +177,8 @@ class KeyValuePair(models.Model):
     key = models.CharField(max_length=240, db_index=True)
     value = models.CharField(max_length=240, db_index=True)
 
+
+
 # The model for a course
 class Course(models.Model):
     subject = models.CharField(max_length=4)  # e.g CSCI              
@@ -207,13 +209,15 @@ class Mentor(models.Model):
     #step = models.IntegerField(default = 1)
 
     # Personal Info & preference of applicants
-    RIN = models.CharField(max_length=9, validators=[MinLengthValidator(9)], primary_key=True)
+    #RIN = models.CharField(max_length=9, validators=[MinLengthValidator(9)], primary_key=True)
+
+    RIN = models.CharField(max_length=9, validators=[MinLengthValidator(9)])
     first_name = models.CharField(max_length=50) # first name
     last_name = models.CharField(max_length=50) # last name
     GPA = MinMaxFloat(min_value = 0.0, max_value = 4.0)
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=50) # ???
-    recommender = models.CharField(max_length=50)
+    recommender = models.CharField(max_length=50, default="")
 
     # Compensation Choices
     compensation_choice = (

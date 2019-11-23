@@ -37,40 +37,27 @@ import random as r
 from .match import Matcher
 import ast
 
+# Main Page of mentor application
 class IndexView(views.generic.ListView):
-    """
-        Define homepage view, inheriting ListView class, which specifies a context variable.
-
-        Note that login is required to view the items on the page.
-        """
-
     template_name = 'mentors/index.html'
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
-
         # check if there exist a mentor application
-        ctx['applied'] = Mentor.applied
+        ctx['applied'] = self.request.user.userprofile.mentor_applied
+        print(ctx['applied'])
         return ctx
 
     def get_queryset(self):
-        """Override function in parent class and return all questions."""
-
         return Mentor.objects.all()
+
+def viewindex(request):
+    return render(request, 'mentors/index.html', {'applied': request.user.userprofile.mentor_applied})
 
 class ApplyView(views.generic.ListView):
     template_name = 'mentors/apply.html'
     def get_context_data(self, **kwargs):
         ctx = super(ApplyView, self).get_context_data(**kwargs)
-        # check if there exist a mentor application
-        ctx['applied'] = Mentor.applied
-        ctx['applications'] = Mentor.objects.all()
-        ctx['step'] = Mentor.step
-
-        if (Mentor.applied):
-            ctx['step'] = Mentor.step
-        else:
-            ctx['step'] = 1
-            Mentor.step = 1
+        ctx['applied'] = self.request.user.userprofile.mentor_applied
 
         return ctx
     def get_queryset(self):
@@ -80,9 +67,6 @@ class view_applyView(views.generic.ListView):
     template_name = 'mentors/view_application.html'
     def get_context_data(self, **kwargs):
         ctx = super(view_applyView, self).get_context_data(**kwargs)
-        # check if there exist a mentor application
-        ctx['applied'] = Mentor.applied
-        ctx['applications'] = Mentor.objects.all()
 
         return ctx
     def get_queryset(self):
@@ -150,37 +134,44 @@ class MatchResultView(views.generic.ListView):
     def get_queryset(self):
         return Course.objects.all()
 
-def step1(request):
-    initial={'fn': request.session.get('fn', None)}
-    form = PersonForm(request.POST or None, initial=initial)
-    if request.method == 'POST':
-        if form.is_valid():
-            request.session['fn'] = form.cleaned_data['fn']
-            return HttpResponseRedirect(reverse('step2'))
-    return render(request, 'step1.html', {'form': form})
 
 # apply step
 def applystep(request):
-    initial={'RIN': request.session.get('RIN', None), 
-            'first_name': request.session.get('first_name', None),
-            'last_name': request.session.get('last_name', None),
-            'GPA': request.session.get('GPA', None),
-            'email': request.user.email,
-            'phone': request.session.get('phone', None),
-            'recommender': request.session.get('recommender', None)}
+    this_user = request.user.userprofile
+    p = this_user.mentor_profile
+
+    initial={
+        'RIN': request.session.get('RIN', p.RIN if this_user.mentor_applied else None), 
+        'first_name': request.session.get('first_name', p.first_name if this_user.mentor_applied else None),
+        'last_name': request.session.get('last_name', p.last_name if this_user.mentor_applied else None),
+        'GPA': request.session.get('GPA', p.GPA if this_user.mentor_applied else None),
+        'email': request.user.email,
+        'phone': request.session.get('phone', p.phone if this_user.mentor_applied else None),
+        'recommender': request.session.get('recommender', p.recommender if this_user.mentor_applied else None)
+    }
+    
+    print(request.user.userprofile.time_creation)
     form = MentorApplicationfoForm_step1(request.POST or None, initial=initial)
     if request.method == 'POST':
         # initate a new mentor applicant
         if form.is_valid():
-            #new_applicant = form.save()
-            #order_str = breakties(request.POST['pref_order'])
-            request.session['RIN'] = form.cleaned_data['RIN']
-            request.session['first_name'] = form.cleaned_data['first_name']
-            request.session['last_name'] = form.cleaned_data['last_name']
-            request.session['GPA'] = form.cleaned_data['GPA']
-            request.session['email'] = request.user.email,
-            request.session['phone'] = form.cleaned_data['phone']
-            request.session['recommender'] = form.cleaned_data['recommender']
+            if (this_user.mentor_applied):
+                p.RIN = form.cleaned_data['RIN']
+                p.first_name = form.cleaned_data['first_name']
+                p.last_name = form.cleaned_data['last_name']
+                p.GPA = form.cleaned_data['GPA']
+                p.email = request.user.email,
+                p.phone = form.cleaned_data['phone']
+                p.recommender = form.cleaned_data['recommender']
+                p.save()
+            else:
+                request.session['RIN'] = form.cleaned_data['RIN']
+                request.session['first_name'] = form.cleaned_data['first_name']
+                request.session['last_name'] = form.cleaned_data['last_name']
+                request.session['GPA'] = form.cleaned_data['GPA']
+                request.session['email'] = request.user.email,
+                request.session['phone'] = form.cleaned_data['phone']
+                request.session['recommender'] = form.cleaned_data['recommender']
             '''
             pref = new_applicant.course_pref
             pref[new_applicant.RIN] = order_str
@@ -189,7 +180,6 @@ def applystep(request):
             l = pref[new_applicant.RIN]
             l = [n.strip() for n in ast.literal_eval(l)] # convert str list to actual list u['a', 'b', 'c'] -> ['a', 'b', 'c']
             '''
-            print('yes')
             return HttpResponseRedirect(reverse('mentors:applystep2'))
             #return render(request, 'mentors/index.html', {'applied': True})
             
@@ -203,35 +193,80 @@ def applystep(request):
 
 # Compensation agreement
 def applystep2(request):
-    initial={'compensation': request.session.get('compensation', None)}
+    this_user = request.user.userprofile
+    p = this_user.mentor_profile
+    initial={
+        'compensation': request.session.get('compensation', p.compensation if this_user.mentor_applied else None),
+        'studnet_status':request.session.get('studnet_status', p.studnet_status if this_user.mentor_applied else None),
+        'employed_paid_before':request.session.get('employed_paid_before', p.employed_paid_before if this_user.mentor_applied else None)
+    }
+     
     form = MentorApplicationfoForm_step2(request.POST or None, initial=initial)
 
     if request.method == 'POST':
-        if form.is_valid():     
-            request.session['compensation'] = form.cleaned_data['compensation']
+        if form.is_valid():  
+            if (this_user.mentor_applied):
+                p.compensation = form.cleaned_data['compensation']
+                p.studnet_status = form.cleaned_data['studnet_status']
+                p.employed_paid_before = form.cleaned_data['employed_paid_before']   
+                p.save()
+            else:
+                request.session['compensation'] = form.cleaned_data['compensation']
+                request.session['studnet_status'] = form.cleaned_data['studnet_status']
+                request.session['employed_paid_before'] = form.cleaned_data['employed_paid_before']
+
             return HttpResponseRedirect(reverse('mentors:applystep3'))
         else:
             print(form.errors)
+
     return render(request, 'mentors/apply.html', {'apply_form': form})
 
 
 # Course grade and mentor experience
 def applystep3(request):
+    this_user = request.user.userprofile
+    p = this_user.mentor_profile
+
     initial={}
-    for course in Course.objects.all():
-        course_grade = course.name + "_grade"
-        course_exp   = course.name + "_exp"
-        initial.update({course_grade: request.session.get(course_grade, 'n')})
-        initial.update({course_exp: request.session.get(course_exp, 'N')})
+    if (this_user.mentor_applied):
+        for course in Course.objects.all():
+            this_grade = Grade.objects.filter(course = course, student = p).first()
+            course_grade = course.name + "_grade"
+            course_exp   = course.name + "_exp"
+            initial.update({course_grade: request.session.get(course_grade, this_grade.student_grade)})
+            initial.update({course_exp: request.session.get(course_exp, 'N' if this_grade.mentor_exp == False else 'Y')})
+    else:
+        for course in Course.objects.all():
+            course_grade = course.name + "_grade"
+            course_exp   = course.name + "_exp"
+            initial.update({course_grade: request.session.get(course_grade, 'n')})
+            initial.update({course_exp: request.session.get(course_exp, 'N')})
+    
+    
     form = MentorApplicationfoForm_step3(request.POST or None, initial=initial)
 
     if request.method == 'POST':
         if form.is_valid():   
-            for course in Course.objects.all():
-                course_grade = course.name + "_grade"
-                course_exp   = course.name + "_exp"
-                request.session[course_grade] = form.cleaned_data[course_grade]
-                request.session[course_exp] = form.cleaned_data[course_exp]
+            if (this_user.mentor_applied):
+                for course in Course.objects.all():
+                    course_grade = course.name + "_grade"
+                    course_exp   = course.name + "_exp"
+                    this_grade = Grade.objects.filter(course = course, student = p).first()
+                    this_grade.student_grade = form.cleaned_data[course_grade] # Grade on this course
+                    this_grade.mentor_exp = True if form.cleaned_data[course_exp] == 'Y' else False
+                    this_grade.save()
+                    # if the student has failed the class, or is progressing, we consider he did not take the course
+                    if (this_grade.student_grade != 'p' and this_grade.student_grade != 'n' and this_grade.student_grade != 'f'):
+                        this_grade.have_taken = True
+                    else:
+                        this_grade.have_taken = False
+                    this_grade.save()
+            else:
+                for course in Course.objects.all():
+                    course_grade = course.name + "_grade"
+                    course_exp   = course.name + "_exp"
+                    request.session[course_grade] = form.cleaned_data[course_grade]
+                    request.session[course_exp] = form.cleaned_data[course_exp]
             return HttpResponseRedirect(reverse('mentors:applystep4'))
         else:
             print(form.errors)
@@ -240,51 +275,88 @@ def applystep3(request):
 
 # Course preference
 def applystep4(request):
-    form = MentorApplicationfoForm_step4(request.POST or None, initial={})
+    this_user = request.user.userprofile
+    p = this_user.mentor_profile
+
+    initial={ 'pref_order': request.session.get('pref_order', p.course_pref if this_user.mentor_applied else None),}
+    if (this_user.mentor_applied): 
+        prefer_list = ast.literal_eval(request.session.get('pref_order', (p.course_pref)))
+        print(len(prefer_list))
+        print((prefer_list))
+
+    else:
+        prefer_list = ast.literal_eval(request.session.get('pref_order', '[]'))
+
+    course_list = [c.name for c in Course.objects.all()]
+    pref_courses = Course.objects.filter(name__in=prefer_list)
+    not_pref_courses = Course.objects.filter(name__in=[item for item in course_list if item not in prefer_list])
+
+    #print([i.name for i in pref_courses])
+    #print([i.name for i in not_pref_courses])
+
+    #pref_course = Course.objects.filter(name in set(pref_order))
+    form = MentorApplicationfoForm_step4(request.POST or None, initial = initial)
     if request.method == 'POST':
-        if form.is_valid():     
-            request.session['pref_order'] = form.cleaned_data['pref_order']
-            print(form.cleaned_data['pref_order'])
+        if form.is_valid():    
+            
+            if (this_user.mentor_applied):
+                p.pref_order = (form.cleaned_data['pref_order'])
+                p.save()
+            request.session['pref_order'] = (form.cleaned_data['pref_order'])
+            print(request.session['pref_order'])
+            #print(breakties(form.cleaned_data['pref_order']))
             return HttpResponseRedirect(reverse('mentors:applystep5'))
         else:
             print(form.errors)
-    return render(request, 'mentors/apply.html', {'courses':Course.objects.all(), 'apply_form': form})
+    return render(request, 'mentors/apply.html', {'pref_courses': pref_courses, 'not_pref_courses': not_pref_courses, 'courses':Course.objects.all(), 'apply_form': form})
 
 
 # Time slots page
 def applystep5(request):
+    this_user = request.user.userprofile
+    p = this_user.mentor_profile
     initial={
-        'time_slots': request.session.get('time_slots', None),
-        'other_times': request.session.get('other_times', None),
+        'time_slots': request.session.get('time_slots', p.time_slots if this_user.mentor_applied else None),
+        'other_times': request.session.get('other_times', p.other_times if this_user.mentor_applied else None),
     }
-
+    
     form = MentorApplicationfoForm_step5(request.POST or None, initial=initial)
     if request.method == 'POST':
         if form.is_valid():     
             #order_str = breakties(request.POST['pref_order'])
-            request.session['time_slots'] = form.cleaned_data['time_slots']
-            request.session['other_times'] = form.cleaned_data['other_times']
+            if (this_user.mentor_applied):
+                p.time_slots = form.cleaned_data['time_slots']
+                p.other_times = form.cleaned_data['other_times']
+                p.save()
+            else:
+                request.session['time_slots'] = form.cleaned_data['time_slots']
+                request.session['other_times'] = form.cleaned_data['other_times']
 
             return HttpResponseRedirect(reverse('mentors:applystep6'))
         else:
             print(form.errors)
     return render(request, 'mentors/apply.html', {'courses':Course.objects.all(), 'apply_form': form})
 
+
 # Students Additional Page
 def applystep6(request):
-    initial={
-        'relevant_info': request.session.get('relevant_info', None),
-    }
+    this_user = request.user.userprofile
+    p = this_user.mentor_profile
+    initial={ 'relevant_info': request.session.get('relevant_info', p.relevant_info if this_user.mentor_applied else None),}
+     
     form = MentorApplicationfoForm_step6(request.POST or None, initial=initial)
     if request.method == 'POST':
         if form.is_valid():     
-            #order_str = breakties(request.POST['pref_order'])
-            request.session['relevant_info'] = form.cleaned_data['relevant_info']
-            submit_application(request)
-            return render(request, 'mentors/index.html',{})
+            if (this_user.mentor_applied):
+                p.relevant_info = form.cleaned_data['relevant_info']
+                p.save()
+            else:
+                request.session['relevant_info'] = form.cleaned_data['relevant_info']
+                submit_application(request) # Sumbit a new application 
+            return HttpResponseRedirect(reverse('mentors:index'))
         else:
             print(form.errors)
-    return render(request, 'mentors/apply.html', {'courses':Course.objects.all(), 'apply_form': form})
+    return render(request, 'mentors/apply.html', {'apply_form': form})
 
 
 # return the prefer after brutally break ties
@@ -299,13 +371,18 @@ def breakties(order_str):
     return l
 
 def submit_application(request):
+    
     new_applicant = Mentor()
     new_applicant.RIN = request.session["RIN"]
     new_applicant.first_name = request.session["first_name"]
     new_applicant.last_name = request.session["last_name"]
     new_applicant.GPA = request.session["GPA"]
     new_applicant.phone = request.session["phone"]
+    new_applicant.recommender = request.session["recommender"]
+
     new_applicant.compensation = request.session["compensation"]
+    new_applicant.studnet_status = request.session["studnet_status"]
+    new_applicant.employed_paid_before = request.session["employed_paid_before"]
 
     # create a dictionary to store a list of preference
     #rin = new_applicant.RIN
@@ -314,13 +391,20 @@ def submit_application(request):
     #pref[rin] = breakties(request.session["pref_order"])
     #pref.save()
         
-    new_applicant.course_pref = breakties(request.session["pref_order"])
+    new_applicant.course_pref = (request.session["pref_order"])
     new_applicant.time_slots = request.session["time_slots"]
     new_applicant.other_times = request.session["other_times"]
     new_applicant.relevant_info = request.session["relevant_info"]
-
     new_applicant.save()
-    for i in new_applicant.time_slots: 
+
+    # Save the new application to the profile
+    this_user = request.user.userprofile
+    this_user.mentor_applied = True
+    this_user.mentor_profile = new_applicant
+    this_user.save()
+
+
+    for i in this_user.mentor_profile.course_pref: 
         print(i)
     #orderStr = self.cleaned_data["pref_order"]
     
@@ -346,17 +430,24 @@ def submit_application(request):
         else:
             new_grade.have_taken = False
         new_grade.save()
-        print(new_grade.course.name + ": " + new_grade.student_grade.upper())
-
+        print(new_grade.course.name + ": " + new_grade.student_grade)
     return new_applicant
 
 
 # withdraw application, should add semester later
 def withdraw(request):
     if request.method == 'GET':
-        Mentor.objects.all().delete()
-        Mentor.applied = False
-    return HttpResponseRedirect(reverse('mentors:index'))
+        try:
+            #request.user.userprofile.mentor_profile.delete()
+            request.user.userprofile.mentor_applied = False
+            print(request.user.userprofile.mentor_applied)
+            request.user.userprofile.save()
+            request.user.save()
+        except:
+            print('Can not delete mentor application')
+        # Clear sessions
+        # request.session.flush()
+    return render(request, 'mentors/index.html', {'applied': False})
 
 # load CS_Course.csv 
 def addcourse(request):
@@ -413,7 +504,6 @@ def addStudentRandom(request):
     numClass = len(Course.objects.all())
 
     if request.method == 'POST':
-        #Mentor.objects.all().delete()
 
         num_students = request.POST['num_students']
         for i in range(int(num_students)):
@@ -437,7 +527,7 @@ def addStudentRandom(request):
             for course in Course.objects.all():
                 new_grade = Grade(id=None)
                 #glist  = ['a','a-','b+','b','b-','c+','c','c-','d+','d','f','p','n']
-                glist  = ['a','a-','b+','b','b-','c','c+','n']
+                glist = ['a','a-','b+','b','b-','c','c+','n']
 
                 new_grade.student_grade = random.choice(glist)
                 if (new_grade.student_grade != 'p' and new_grade.student_grade != 'n' and new_grade.student_grade != 'f'):
@@ -462,7 +552,7 @@ def StartMatch(request):
                             'b+':   3.33, 'b':    3, 'b-':   2.67,
                             'c+':   2.33, 'c':    2, 'c-':   1.67,
                             'd+':   1.33, 'd':    1, 'f':    0,
-                            'p':    0,    'n':    0}
+                            'p':    0,    'n':    0, 'ap':   4,}
 
         # begin matching:
         studentFeatures = {}

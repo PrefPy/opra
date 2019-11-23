@@ -69,9 +69,10 @@ class MentorApplicationfoForm_step2(ModelForm):
         super(MentorApplicationfoForm_step2, self).__init__(*args, **kwargs)  
         self.helper = FormHelper()
         self.helper.layout = Layout(
-            HTML('== COMPENSATION AND RESPONSIBILITIES =='),
+            HTML('''<p class = 'form_title'> COMPENSATION AND RESPONSIBILITIES </p>  '''),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+
             HTML("<fieldset>"),
-            
             HTML("""
             <div class = "textline">
                 We currently have funding for a fixed number of paid programming mentors. Therefore, if you apply for pay, you may be asked to work for credit instead. Course credit counts as a graded 1-credit or 2-credit free elective. In general, if you work an average of 1-3 hours per week, you will receive 1 credit; if you average 4 or more hours per week, you will receive 2 credits. Note that no more than 4 credits may be earned as an undergraduate (spanning all courses and all semesters). Please do not apply for credit if you have already earned 4 credits as a mentor; apply only for pay.
@@ -121,24 +122,19 @@ class MentorApplicationfoForm_step3(forms.Form):
         self.helper = FormHelper()
         courses = Course.objects.all()
         course_layout = Field()
-        for course in courses:          
-            course_layout.append( HTML('''<div class = 'course_title' style="width: 330px; min-height: 80px; float:left;">''' + str(course)+ "</div>") )
-            course_layout.append(HTML("&nbsp; &nbsp; &nbsp; &nbsp;"))
+        for course in courses:     
+            course_layout.append(HTML(''' <div class ="col-md-4">'''))
+            course_layout.append(HTML('''<div class = 'course_title' style="float:left;">''' + str(course.name)+ "</div>") )
+            course_layout.append(HTML('''<div style="width: 330px; min-height: 80px; float:left;">''' + str(course.subject+" "+course.number)+ "</div>") )
+
+            course_layout.append(HTML("&nbsp; &nbsp; &nbsp;"))
+            course_layout.append(HTML(''' </div>'''))
             grades = (
-                     ('a', 'A'),
-                     ('a-', 'A-'),
-                     ('b+', 'B+'),
-                     ('b', 'B'),
-                     ('b-', 'B-'),
-                     ('c+', 'C+'),
-                     ('c', 'C'),
-                     ('c-', 'C-'),
-                     ('d+', 'D+'),
-                     ('d', 'D'),
-                     ('f', 'F'),
-                     ('p', 'Progressing'),
-                     ('ap', 'AP'),
-                     ('n', 'Not Taken'),
+                     ('a', 'A'), ('a-', 'A-'),
+                     ('b+', 'B+'), ('b', 'B'), ('b-', 'B-'),
+                     ('c+', 'C+'), ('c', 'C'), ('c-', 'C-'),
+                     ('d+', 'D+'), ('d', 'D'), ('f', 'F'),
+                     ('p', 'Progressing'), ('n', 'Not Taken'),
                      )
             choices_YN = (
                     ('Y', 'YES'),
@@ -149,14 +145,17 @@ class MentorApplicationfoForm_step3(forms.Form):
                 label = "Grade on this course:",
             ) 
             #self.initial[course.name+ "_grade"] = 'n'
-
             self.fields[course.name+ "_exp"] = forms.ChoiceField(choices = choices_YN, label = "")
             #self.initial[course.name+ "_exp"] = 'N'
-            course_layout.append(HTML("""<label  style = "float: left;"> Whether taken this course at RPI before and earned grade: </label>"""))
+            course_layout.append(HTML(''' <div class ="col-md-8">'''))
+
+            course_layout.append(HTML("""<p style = "float: left;" > I have taken this course at RPI before and earned grade: &nbsp </p>"""))
             course_layout.append(Field(course.name+ "_grade", label_class="float: left;"))
-            #course_layout.append(HTML(""" <div class = 'emptyspace'> </div>"""))
-            course_layout.append(HTML("""<label style = "float: left;"> Have mentored this RPI course before: </label>"""))
+            course_layout.append(HTML(""" <div class = 'emptyspace'> </div>"""))
+            course_layout.append(HTML("""<p style = "float: left;"> I have mentored this RPI course before: &nbsp </p>"""))
             course_layout.append(Field(course.name+ "_exp"))
+            course_layout.append(HTML(''' </div>'''))
+
             course_layout.append(HTML(""" <div class = 'vspacewithline'> </div>""")),
 
 

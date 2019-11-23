@@ -17,11 +17,17 @@ label.radio.inline{
   padding: 0px 15px;
 }
 
-.course_title{
-  font: 80px;
-  color: red;
+.form_title{
+  font: 200px;
   font-weight: bold;
   float: left;
+}
+
+.course_title{
+  font: 100px;
+  font-weight: bold;
+  float: left;
+  text-decoration: underline;
 }
 
 .course_block{

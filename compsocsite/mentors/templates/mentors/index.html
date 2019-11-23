@@ -56,15 +56,19 @@
             <div class = vspacewithline ></div>
             {% if applied %}
                 <tbody>
-                    <p>Your mentor application success!</p>
-                    <p>You can change your application at anytime, but remember, we will start to look at all the applications after 12/6, so make sure you submitted before the deadline.</p>
+                    <p>Your mentor application is successful!</p>
+                    <p>You can change your application at anytime, but remember, we will start to look at all the applications after 12/6, so make sure you filled out the form and submit before the deadline.</p>
 
                     <b> View your application and make changes: &nbsp</b>
                     <tr><td> <a href="{% url 'mentors:applyfunc1' %}"><span class="btn btn-primary">View and Change</span></a></td></tr>
                 </tbody>
                 <tr><td> <a href="{% url 'mentors:view_application' %}"><span class="btn btn-primary">View</span></a></td></tr>
+                <div class = vspacewithline ></div>
+
+                <p>You can withdraw your application if you do not want to apply for mentor anymore. A new application can be started after you withdrawed.</p>
+
                 <tr><form method="GET" action="{% url 'mentors:withdrawfunc' %}" id="withdrawfunc">
-                        <input type="submit" value="Withdraw apllication" class="btn btn-primary", style= "color:red">
+                        <input type="submit" value="Withdraw apllication" class="btn btn-primary", style= "color:red; background-color: rgb(220, 235, 245);">
                 </form></tr>
             {% else %}
              <b> Begin to apply: &nbsp</b>

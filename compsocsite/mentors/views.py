@@ -141,13 +141,13 @@ def applystep(request):
     p = this_user.mentor_profile
 
     initial={
-        'RIN': request.session.get('RIN', p.RIN if this_user.mentor_applied else None), 
-        'first_name': request.session.get('first_name', p.first_name if this_user.mentor_applied else None),
-        'last_name': request.session.get('last_name', p.last_name if this_user.mentor_applied else None),
-        'GPA': request.session.get('GPA', p.GPA if this_user.mentor_applied else None),
+        'RIN': p.RIN if this_user.mentor_applied else request.session.get('RIN', None), 
+        'first_name': p.first_name if this_user.mentor_applied else request.session.get('first_name', None),
+        'last_name':  p.last_name if this_user.mentor_applied else request.session.get('last_name', None),
+        'GPA':  p.GPA if this_user.mentor_applied else request.session.get('GPA', None),
         'email': request.user.email,
-        'phone': request.session.get('phone', p.phone if this_user.mentor_applied else None),
-        'recommender': request.session.get('recommender', p.recommender if this_user.mentor_applied else None)
+        'phone':  p.phone if this_user.mentor_applied else request.session.get('phone', None),
+        'recommender':  p.recommender if this_user.mentor_applied else request.session.get('recommender', None)
     }
     
     print(request.user.userprofile.time_creation)
@@ -196,9 +196,9 @@ def applystep2(request):
     this_user = request.user.userprofile
     p = this_user.mentor_profile
     initial={
-        'compensation': request.session.get('compensation', p.compensation if this_user.mentor_applied else None),
-        'studnet_status':request.session.get('studnet_status', p.studnet_status if this_user.mentor_applied else None),
-        'employed_paid_before':request.session.get('employed_paid_before', p.employed_paid_before if this_user.mentor_applied else None)
+        'compensation': p.compensation if this_user.mentor_applied else request.session.get('compensation', None),
+        'studnet_status': p.studnet_status if this_user.mentor_applied else request.session.get('studnet_status', None),
+        'employed_paid_before': p.employed_paid_before if this_user.mentor_applied else request.session.get('employed_paid_before', None)
     }
      
     form = MentorApplicationfoForm_step2(request.POST or None, initial=initial)
@@ -233,8 +233,8 @@ def applystep3(request):
             this_grade = Grade.objects.filter(course = course, student = p).first()
             course_grade = course.name + "_grade"
             course_exp   = course.name + "_exp"
-            initial.update({course_grade: request.session.get(course_grade, this_grade.student_grade)})
-            initial.update({course_exp: request.session.get(course_exp, 'N' if this_grade.mentor_exp == False else 'Y')})
+            initial.update({course_grade:  this_grade.student_grade})
+            initial.update({course_exp: 'N' if this_grade.mentor_exp == False else 'Y'})
     else:
         for course in Course.objects.all():
             course_grade = course.name + "_grade"
@@ -280,7 +280,7 @@ def applystep4(request):
 
     initial={ 'pref_order': request.session.get('pref_order', p.course_pref if this_user.mentor_applied else None),}
     if (this_user.mentor_applied): 
-        prefer_list = ast.literal_eval(request.session.get('pref_order', (p.course_pref)))
+        prefer_list = ast.literal_eval(p.course_pref)
         print(len(prefer_list))
         print((prefer_list))
 
@@ -300,9 +300,10 @@ def applystep4(request):
         if form.is_valid():    
             
             if (this_user.mentor_applied):
-                p.pref_order = (form.cleaned_data['pref_order'])
+                p.course_pref = form.cleaned_data['pref_order']
                 p.save()
-            request.session['pref_order'] = (form.cleaned_data['pref_order'])
+            else:
+                request.session['pref_order'] = (form.cleaned_data['pref_order'])
             print(request.session['pref_order'])
             #print(breakties(form.cleaned_data['pref_order']))
             return HttpResponseRedirect(reverse('mentors:applystep5'))
@@ -316,8 +317,8 @@ def applystep5(request):
     this_user = request.user.userprofile
     p = this_user.mentor_profile
     initial={
-        'time_slots': request.session.get('time_slots', p.time_slots if this_user.mentor_applied else None),
-        'other_times': request.session.get('other_times', p.other_times if this_user.mentor_applied else None),
+        'time_slots':  p.time_slots if this_user.mentor_applied else request.session.get('time_slots', None),
+        'other_times': p.other_times if this_user.mentor_applied else request.session.get('other_times', None),
     }
     
     form = MentorApplicationfoForm_step5(request.POST or None, initial=initial)
@@ -342,7 +343,7 @@ def applystep5(request):
 def applystep6(request):
     this_user = request.user.userprofile
     p = this_user.mentor_profile
-    initial={ 'relevant_info': request.session.get('relevant_info', p.relevant_info if this_user.mentor_applied else None),}
+    initial={ 'relevant_info': p.relevant_info if this_user.mentor_applied else request.session.get('relevant_info', None),}
      
     form = MentorApplicationfoForm_step6(request.POST or None, initial=initial)
     if request.method == 'POST':
@@ -371,8 +372,8 @@ def breakties(order_str):
     return l
 
 def submit_application(request):
-    
     new_applicant = Mentor()
+    
     new_applicant.RIN = request.session["RIN"]
     new_applicant.first_name = request.session["first_name"]
     new_applicant.last_name = request.session["last_name"]
@@ -383,14 +384,7 @@ def submit_application(request):
     new_applicant.compensation = request.session["compensation"]
     new_applicant.studnet_status = request.session["studnet_status"]
     new_applicant.employed_paid_before = request.session["employed_paid_before"]
-
-    # create a dictionary to store a list of preference
-    #rin = new_applicant.RIN
-    #pref = Dict()
-    #pref.name = rin
-    #pref[rin] = breakties(request.session["pref_order"])
-    #pref.save()
-        
+    
     new_applicant.course_pref = (request.session["pref_order"])
     new_applicant.time_slots = request.session["time_slots"]
     new_applicant.other_times = request.session["other_times"]
@@ -578,33 +572,19 @@ def StartMatch(request):
         classes = [c.name for c in Course.objects.all()]
         classCaps = {c.name: c.mentor_cap for c in Course.objects.all()}
         students = [s.RIN for s in Mentor.objects.all()]
-        numClasses = len(Course.objects.all())
         studentPrefs = {s.RIN: [n.strip() for n in ast.literal_eval(s.course_pref)] for s in Mentor.objects.all()}
-
-
-        #studentPrefs = {s: [c for c in r.sample(classes, r.randint(numClasses, numClasses ))] for s in students}
-        #studentFeatures = {s: {c: tuple(r.randint(0, 10) for i in range(numFeatures)) for c in classRank} for s, classRank in studentPrefs.items()}
         classFeatures = {c.name: (c.feature_cumlative_GPA, c.feature_course_GPA, c.feature_has_taken, c.feature_mentor_exp) for c in Course.objects.all()}
-        #classFeatures = {c: (0, 1000, 5, 5) for c in classes}
-
         matcher = Matcher(studentPrefs, studentFeatures, classCaps, classFeatures)
         classMatching = matcher.match()
 
-        
         assert matcher.isStable()
         print("matching is stable\n")
         
-
-        # create a context to store the results
-        result = Context()
-        result["courses"] = [] # list of courses
-
         #print out some classes and students
         for (course, student_list) in classMatching.items():
             print(course + ", cap: " + str(classCaps[course]) + ", features: ", classFeatures[course])
             this_course  = Course.objects.filter(name = course).first()
 
-            mentor_list = []
             for s_rin in student_list:        
                 this_student = Mentor.objects.filter(RIN = s_rin).first()
                 item = Grade.objects.filter(student = this_student, course = this_course).first()
@@ -614,15 +594,6 @@ def StartMatch(request):
                 #assign the course to this student
                 this_student.mentored_course = this_course
                 this_student.save()
-
-                new_mentor = {"name": this_student.first_name+" "+this_student.last_name, "GPA": this_student.GPA, "grade": item.student_grade.upper(), "Exp": str(item.mentor_exp)}
-                mentor_list.append(new_mentor)
-            
-            print()
-            result["courses"].append({"name": str(this_course),
-                                    "number": str(this_course.number),
-                                    "features": classFeatures[course], 
-                                    "mentors": mentor_list})
        
         unmatchedClasses = set(classes) - classMatching.keys()
         unmatchedStudents = set(students) - matcher.studentMatching.keys()
@@ -652,6 +623,12 @@ def viewMatchResult():
                                     "mentors": mentor_list})
     return result
 
+
+def getMentorAdmin(request):
+    AdminList = ["apple", "banana", "cherry"]
+
+    #if (request.user.email in )
+    return False
 
 # function to get preference order from a string
 # String orderStr

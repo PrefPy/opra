@@ -79,8 +79,9 @@ class MentorApplicationfoForm_step2(ModelForm):
             </div>
             """),
             HTML(""" <div class = 'vspacewithline'> </div>"""),
+            HTML(""" <div class = 'vspace'> </div>"""),
 
-            HTML("""<label class = 'inputline' style = "float: left;"> Select your compensations: </label>"""),
+            HTML("""<label class = 'inputline' style = "float: left; "> Select your compensations: </label>"""),
             Div('compensation', css_class = "inputline"),
             HTML(""" <div class = 'emptyspace'> </div>"""),
 
@@ -91,6 +92,7 @@ class MentorApplicationfoForm_step2(ModelForm):
             HTML("""<label class = 'inputline' style = "float: left;"> Please specify your student status: </label>"""),
             Div('studnet_status', css_class = "inputline"),
             HTML(""" <div class = 'emptyspace'> </div>"""),
+            HTML(""" <div class = 'vspace'> </div>"""),
 
             HTML(""" <div class = 'vspacewithline'> </div>"""),
             HTML(""" <div class="textline">For a paid position, you <strong>must</strong> follow the given instructions to ensure you are paid; otherwise, 

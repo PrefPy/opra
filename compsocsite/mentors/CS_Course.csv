@@ -1,14 +1,10 @@
-Intro to Computer Programming,CSCI,1010,P_1
-Computer Science I,CSCI,1100,P_2
-Beginning Prog for Engineers,CSCI,1190,P_3
-Data Structures,CSCI,1200,P_4
-Foundations of Computer Science,CSCI,2200,P_5
-Intro to Algorithms,CSCI,2300,P_6
-Computer Organization,CSCI,2500,P_7
-Principles of Software,CSCI,2600,P_8
-Machine Learning from Data,CSCI,4100,P_3
-Network Programming,CSCI,4220,P_10
-Crypto and Network Security I,CSCI,4230,P_11
-Database Systems,CSCI,4380,P_2
-Programming Languages,CSCI,4430,P_5
-Large-Scale Programming and Testing,CSCI,4460,P_4
+Computer Science I,CSCI,1100,P_1
+Beginning Prog for Engineers,CSCI,1190,P_2
+Data Structures,CSCI,1200,P_3
+Foundations of Computer Science,CSCI,2200,P_4
+Intro to Algorithms,CSCI,2300,P_5
+Computer Organization,CSCI,2500,P_6
+Principles of Software,CSCI,2600,P_7
+Intro to AI,CSCI,4150,P_8
+Operation Systems,CSCI,4210,P_9
+Database Systems,CSCI,4380,P_10

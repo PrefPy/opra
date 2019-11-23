@@ -131,6 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 #CAS
 AUTHENTICATION_BACKENDS = [
      'django.contrib.auth.backends.ModelBackend',
+     #'cas.backends.CASBackend',
 ]
 CAS_GATEWAY = True
 

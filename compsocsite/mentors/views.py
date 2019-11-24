@@ -137,6 +137,7 @@ class MatchResultView(views.generic.ListView):
 
 # apply step
 def applystep(request):
+    
     this_user = request.user.userprofile
     p = this_user.mentor_profile
 
@@ -193,6 +194,8 @@ def applystep(request):
 
 # Compensation agreement
 def applystep2(request):
+    if (checkPage(request)):
+        return checkPage(request)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
     initial={
@@ -224,6 +227,8 @@ def applystep2(request):
 
 # Course grade and mentor experience
 def applystep3(request):
+    if (checkPage(request)):
+        return checkPage(request)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
 
@@ -275,10 +280,12 @@ def applystep3(request):
 
 # Course preference
 def applystep4(request):
+    if (checkPage(request)):
+        return checkPage(request)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
 
-    initial={ 'pref_order': request.session.get('pref_order', p.course_pref if this_user.mentor_applied else None),}
+    initial={ 'pref_order':  p.course_pref if this_user.mentor_applied else request.session.get('pref_order', None),}
     if (this_user.mentor_applied): 
         prefer_list = ast.literal_eval(p.course_pref)
         print(len(prefer_list))
@@ -314,6 +321,8 @@ def applystep4(request):
 
 # Time slots page
 def applystep5(request):
+    if (checkPage(request)):
+        return checkPage(request)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
     initial={
@@ -341,6 +350,7 @@ def applystep5(request):
 
 # Students Additional Page
 def applystep6(request):
+    checkPage(request)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
     initial={ 'relevant_info': p.relevant_info if this_user.mentor_applied else request.session.get('relevant_info', None),}
@@ -370,6 +380,25 @@ def breakties(order_str):
             l.append(order[i][j])
                 
     return l
+
+
+# Check whether the student finsihed the previous part of the form to prevent the website crash
+def checkPage(request):
+    if (not request.user.userprofile.mentor_applied):
+        for k in ['RIN', 'first_name', 'last_name', 'GPA', 'email', 'phone', 'recommender']:
+            if (request.session.get(k, None) == None):
+                return HttpResponseRedirect(reverse('mentors:index'))
+        for k in ['compensation', 'studnet_status', 'employed_paid_before']:
+            if (request.session.get(k, None) == None):
+                return HttpResponseRedirect(reverse('mentors:index'))
+        for k in ['pref_order']:
+            if (request.session.get(k, None) == None):
+                return HttpResponseRedirect(reverse('mentors:index'))
+        for k in ['time_slots', 'other_times']:
+            if (request.session.get(k, None) == None):
+                return HttpResponseRedirect(reverse('mentors:index'))
+    return False
+
 
 def submit_application(request):
     new_applicant = Mentor()
@@ -630,6 +659,8 @@ def getMentorAdmin(request):
 
     #if (request.user.email in )
     return False
+
+
 
 # function to get preference order from a string
 # String orderStr

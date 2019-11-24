@@ -45,13 +45,14 @@ class IndexView(views.generic.ListView):
         # check if there exist a mentor application
         ctx['applied'] = self.request.user.userprofile.mentor_applied
         print(ctx['applied'])
+        ctx['admin'] = getMentorAdmin(self.request)
         return ctx
 
     def get_queryset(self):
         return Mentor.objects.all()
 
 def viewindex(request):
-    return render(request, 'mentors/index.html', {'applied': request.user.userprofile.mentor_applied})
+    return render(request, 'mentors/index.html', {'applied': request.user.userprofile.mentor_applied, 'admin': getMentorAdmin(request)})
 
 class ApplyView(views.generic.ListView):
     template_name = 'mentors/apply.html'
@@ -194,8 +195,8 @@ def applystep(request):
 
 # Compensation agreement
 def applystep2(request):
-    if (checkPage(request)):
-        return checkPage(request)
+    if (checkPage(request, 2)):
+        return checkPage(request, 2)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
     initial={
@@ -227,8 +228,8 @@ def applystep2(request):
 
 # Course grade and mentor experience
 def applystep3(request):
-    if (checkPage(request)):
-        return checkPage(request)
+    if (checkPage(request, 3)):
+        return checkPage(request, 3)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
 
@@ -280,8 +281,8 @@ def applystep3(request):
 
 # Course preference
 def applystep4(request):
-    if (checkPage(request)):
-        return checkPage(request)
+    if (checkPage(request, 4)):
+        return checkPage(request, 4)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
 
@@ -321,8 +322,8 @@ def applystep4(request):
 
 # Time slots page
 def applystep5(request):
-    if (checkPage(request)):
-        return checkPage(request)
+    if (checkPage(request, 5)):
+        return checkPage(request, 5)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
     initial={
@@ -350,7 +351,8 @@ def applystep5(request):
 
 # Students Additional Page
 def applystep6(request):
-    checkPage(request)
+    if (checkPage(request, 6)):
+        return checkPage(request, 6)
     this_user = request.user.userprofile
     p = this_user.mentor_profile
     initial={ 'relevant_info': p.relevant_info if this_user.mentor_applied else request.session.get('relevant_info', None),}
@@ -383,20 +385,21 @@ def breakties(order_str):
 
 
 # Check whether the student finsihed the previous part of the form to prevent the website crash
-def checkPage(request):
+def checkPage(request, page):
     if (not request.user.userprofile.mentor_applied):
-        for k in ['RIN', 'first_name', 'last_name', 'GPA', 'email', 'phone', 'recommender']:
+        if (page == 2):
+            keys = ['RIN', 'first_name', 'last_name', 'GPA', 'email', 'phone', 'recommender']
+        elif (page == 4 or page == 3):
+            keys = ['RIN', 'first_name', 'last_name', 'GPA', 'email', 'phone', 'recommender', 'compensation', 'studnet_status', 'employed_paid_before']
+        elif (page == 5):
+            keys = ['RIN', 'first_name', 'last_name', 'GPA', 'email', 'phone', 'recommender','compensation', 'studnet_status', 'employed_paid_before', 'pref_order']
+        elif (page == 6):
+            keys = ['RIN', 'first_name', 'last_name', 'GPA', 'email', 'phone', 'recommender','compensation', 'studnet_status', 'employed_paid_before', 'pref_order', 'time_slots', 'other_times']
+
+        for k in keys:
             if (request.session.get(k, None) == None):
                 return HttpResponseRedirect(reverse('mentors:index'))
-        for k in ['compensation', 'studnet_status', 'employed_paid_before']:
-            if (request.session.get(k, None) == None):
-                return HttpResponseRedirect(reverse('mentors:index'))
-        for k in ['pref_order']:
-            if (request.session.get(k, None) == None):
-                return HttpResponseRedirect(reverse('mentors:index'))
-        for k in ['time_slots', 'other_times']:
-            if (request.session.get(k, None) == None):
-                return HttpResponseRedirect(reverse('mentors:index'))
+        
     return False
 
 
@@ -470,8 +473,8 @@ def withdraw(request):
             print('Can not delete mentor application')
         # Clear sessions
         # request.session.flush()
-    return render(request, 'mentors/index.html', {'applied': False})
-
+    HttpResponseRedirect(reverse('mentors:index'))
+    
 # load CS_Course.csv 
 def addcourse(request):
     if request.method == 'POST':
@@ -493,7 +496,7 @@ def addcourse(request):
                 )
                 print(row[0] + " " + row[1] + " " + row[2] + " successfully added.")
 
-    return render(request, 'mentors/index.html', {})
+    return HttpResponseRedirect(reverse('mentors:index'))
 
 # Return the course searched
 def searchCourse(request):
@@ -527,7 +530,7 @@ def addStudentRandom(request):
     numClass = len(Course.objects.all())
 
     if request.method == 'POST':
-
+        Mentor.objects.all().delete()
         num_students = request.POST['num_students']
         for i in range(int(num_students)):
             new_applicant = Mentor()
@@ -567,7 +570,7 @@ def addStudentRandom(request):
 
             #print("Add a new student: " + new_applicant.first_name + new_applicant.last_name + ": GPA: " + str(new_applicant.GPA))
         print("students now: " + str(len(Mentor.objects.all())))
-    return render(request, 'mentors/index.html', {})
+    return HttpResponseRedirect(reverse('mentors:index'))
 
 
 def StartMatch(request):
@@ -655,9 +658,10 @@ def viewMatchResult():
 
 
 def getMentorAdmin(request):
-    AdminList = ["apple", "banana", "cherry"]
-
-    #if (request.user.email in )
+    Admin_Email_List = ["cheny42@rpi.edu", "xial@rpi.edu", "hulbes@rpi.edu", "goldsd3@rpi.edu" ]
+    if (request.user.email.strip() in Admin_Email_List):
+        return True
+    print(request.user.email.strip())
     return False
 
 

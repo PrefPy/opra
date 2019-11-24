@@ -78,6 +78,7 @@
     </div>
 </div>
 
+{% if admin %}
 <!- Professor apllication window>
 <div class="container">
     <div class="panel panel-default">
@@ -86,7 +87,7 @@
         </div>
         
         <div class="panel-body">
-            <b> Check your courses:  </b>
+            <b> Check your courses: &nbsp </b>
                 <tr><td> <a href="{% url 'mentors:view-course' %}"><span class="btn btn-primary">View</span></a></td></tr>
             </table>
         </div>
@@ -97,7 +98,7 @@
 <div class="container">
     <div class="panel panel-default">
         <div class="panel-heading">
-                <b> Admin </b>
+                <b> Administrator Page</b>
         </div>
         <div class="panel-body">
             <form method="POST" action="{% url 'mentors:addcoursefunc' %}" id="addcoursefunc">
@@ -126,4 +127,6 @@
     </div>
 </div>
 {% endif %}
+{% endif %}
 {% endblock %}
+

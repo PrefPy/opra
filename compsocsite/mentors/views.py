@@ -629,7 +629,7 @@ def viewMatchResult():
 
 
 def isMentorAdmin(request):
-    Admin_Email_List = ["zahavg@rpi.edu", "qianj2@rpi.edu", "cheny42@rpi.edu", "xial@rpi.edu", "hulbes@rpi.edu", "goldsd3@rpi.edu" ]
+    Admin_Email_List = ["tomjmwang@gmail.com", "zahavg@rpi.edu", "qianj2@rpi.edu", "cheny42@rpi.edu", "xial@rpi.edu", "hulbes@rpi.edu", "goldsd3@rpi.edu" ]
     if (request.user.email.strip() in Admin_Email_List):
         return True
     return False

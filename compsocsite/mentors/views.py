@@ -377,6 +377,7 @@ def submit_application(request):
     new_applicant.GPA = request.session["GPA"]
     new_applicant.phone = request.session["phone"]
     new_applicant.recommender = request.session["recommender"]
+    new_applicant.email = request.session["email"]
 
     new_applicant.compensation = request.session["compensation"]
     new_applicant.studnet_status = request.session["studnet_status"]
@@ -426,15 +427,16 @@ def submit_application(request):
 def withdraw(request):
     if request.method == 'GET':
         try:
-            #request.user.userprofile.mentor_profile.delete()
+            request.user.userprofile.mentor_profile.delete()
+            request.user.userprofile.mentor_profile = None
             request.user.userprofile.mentor_applied = False
             request.user.userprofile.save()
-            request.user.save()
-        except:
+        except Exception as e: 
+            print(e)
             print('Can not delete mentor application')
         # Clear sessions
         # request.session.flush()
-    HttpResponseRedirect(reverse('mentors:index'))
+    return HttpResponseRedirect(reverse('mentors:index'))
     
 # load CS_Course.csv to generate courses
 def addcourse(request):
@@ -446,7 +448,6 @@ def addcourse(request):
         reader = csv.reader(decoded_file)
 
         for row in reader:
-        
             c, created = Course.objects.get_or_create(
                 name = row[0],
                 subject = row[1],
@@ -664,7 +665,7 @@ def download_mentor_csv(request):
         "d": "Domestic",
     }
     for m in Mentor.objects.all():
-        row = [m.RIN, m.first_name, m.last_name, str(m.email), m.phone, m.GPA, m.recommender, comp[m.compensation], "paidbyrpi" if m.employed_paid_before else "", status[m.studnet_status], m.relevant_info.replace('"', '\'').replace('/[\n\r]+/', ' '), m.mentored_non_cs_bf]
+        row = [m.RIN, m.first_name, m.last_name, m.email, m.phone, m.GPA, m.recommender, comp[m.compensation], "paidbyrpi" if m.employed_paid_before else "", status[m.studnet_status], m.relevant_info.replace('"', '\'').replace('/[\n\r]+/', ' '), m.mentored_non_cs_bf]
         for course in Course.objects.all():
             grade = Grade.objects.filter(course = course, student = m).first()
             course_prefix = course.subject + " " + course.number

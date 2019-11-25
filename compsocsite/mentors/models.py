@@ -213,11 +213,11 @@ class Mentor(models.Model):
     #RIN = models.CharField(max_length=9, validators=[MinLengthValidator(9)], primary_key=True)
 
     RIN = models.CharField(max_length=9, validators=[MinLengthValidator(9)])
-    first_name = models.CharField(max_length=50) # first name
-    last_name = models.CharField(max_length=50) # last name
-    GPA = MinMaxFloat(min_value = 0.0, max_value = 4.0)
+    first_name = models.CharField(max_length=50, default="") # first name
+    last_name = models.CharField(max_length=50, default="") # last name
+    GPA = MinMaxFloat(min_value = 0.0, max_value = 4.0, default=0)
     email = models.CharField(max_length=50)
-    phone = models.CharField(max_length=50) # ???
+    phone = models.CharField(max_length=10, default="") # ???
     recommender = models.CharField(max_length=50, default="")
 
     # Compensation Choices

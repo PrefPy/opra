@@ -359,6 +359,7 @@ class MentorApplicationfoForm_step6(ModelForm):
         self.fields["relevant_info"] = forms.CharField(widget=forms.Textarea(attrs={'cols': 100, 'rows': 8}))
         self.helper.layout = Layout(
             HTML('''<p class = 'form_title'> ADDITIONAL INFOMATION </p>  '''),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
             HTML("<fieldset>"),
             HTML('''<div class = 'textline'> Please provide any other relevant information about yourself in the space below, including your mentoring preferences (i.e.,&nbsp;which courses you'd prefer to mentor, which courses you'd prefer not to mentor, other extracurricular CS activities you're involved with, etc.). <strong>Do not leave this blank.</strong></div>'''),
             Field('relevant_info', style = "width:100%"),

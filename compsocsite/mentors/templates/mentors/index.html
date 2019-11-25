@@ -66,12 +66,31 @@
                 <tr><td> <a href="{% url 'mentors:view_application' %}" ><span class="btn btn-primary" type = "hidden">View</span></a></td></tr>
                 {% endif %}
                 <div class = vspacewithline ></div>
+                 
+                <p>
+                    You can withdraw your application if you do not want to apply for mentor anymore. A new application can be started after you withdrawed.<br /><br/>
+                    <span class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-trash"></span> Withdraw apllication </span>
+                </p>
+            
+                <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                Confirm application withdraw
+                            </div>
+                            <div class="modal-body">
+                                Are you absolutely sure you want to withdraw your application?
+                            </div>
+                            <div class="modal-footer">
+                                <form method="GET" action="{% url 'mentors:withdrawfunc' %}" id="withdrawfunc">
+                                    <input type="submit" value="Yes" class="btn btn-danger btn-ok">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 
-                <p>You can withdraw your application if you do not want to apply for mentor anymore. A new application can be started after you withdrawed.</p>
-
-                <tr><form method="GET" action="{% url 'mentors:withdrawfunc' %}" id="withdrawfunc">
-                    <input type="submit" value="Withdraw apllication" class="btn btn-primary", style= "color:red; background-color: rgb(220, 235, 245);">
-                </form></tr>
+                                </form> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% else %}
              <b> Begin to apply: &nbsp</b>
                 <tr><td> <a href="{% url 'mentors:applyfunc1' %}"><span class="btn btn-primary">Apply</span></a></td></tr>

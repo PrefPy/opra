@@ -21,7 +21,7 @@ urlpatterns = [
 
 
     url(r'^view-course$', login_required(views.CourseFeatureView.as_view()), name='view-course'),
-    url(r'^view-course-result$', login_required(views.viewResultPage), name='view-course-result'),
+    url(r'^view-match-result$', login_required(views.MatchResultView.as_view()), name='view-match-result'),
 
     url(r'^addcoursefunc/$', login_required(views.addcourse), name='addcoursefunc'),
     url(r'^addStudentRandomfunc/$', views.addStudentRandom, name='addStudentRandomfunc'),

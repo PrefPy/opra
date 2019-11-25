@@ -45,7 +45,6 @@ class IndexView(views.generic.ListView):
         ctx = super(IndexView, self).get_context_data(**kwargs)
         # check if there exist a mentor application
         ctx['applied'] = self.request.user.userprofile.mentor_applied
-        print(ctx['applied'])
         ctx['admin'] = isMentorAdmin(self.request)
         return ctx
 
@@ -100,7 +99,9 @@ class MatchResultView(views.generic.ListView):
     template_name = 'mentors/view_match_result.html'
     def get_context_data(self, **kwargs):
         ctx = super(MatchResultView, self).get_context_data(**kwargs)
+        ctx['isAdmin'] = isMentorAdmin(self.request)
         ctx['courses'] = Course.objects.all()
+        ctx['result'] = viewMatchResult()
         return ctx
     def get_queryset(self):
         return Course.objects.all()
@@ -122,7 +123,6 @@ def applystep(request):
         'recommender':  p.recommender if this_user.mentor_applied else request.session.get('recommender', None)
     }
     
-    print(request.user.userprofile.time_creation)
     form = MentorApplicationfoForm_step1(request.POST or None, initial=initial)
     if request.method == 'POST':
         # initate a new mentor applicant
@@ -278,7 +278,7 @@ def applystep4(request):
                 p.save()
             else:
                 request.session['pref_order'] = (form.cleaned_data['pref_order'])
-            print(request.session['pref_order'])
+            #print(request.session['pref_order'])
             #print(breakties(form.cleaned_data['pref_order']))
             return HttpResponseRedirect(reverse('mentors:applystep5'))
         else:
@@ -419,7 +419,7 @@ def submit_application(request):
         else:
             new_grade.have_taken = False
         new_grade.save()
-        print(new_grade.course.name + ": " + new_grade.student_grade)
+        #print(new_grade.course.name + ": " + new_grade.student_grade)
     return new_applicant
 
 
@@ -460,7 +460,7 @@ def addcourse(request):
             c.feature_course_GPA = 1
             c.feature_mentor_exp = 1
             c.save()
-            print(row[0] + " " + row[1] + " " + row[2] +" "+ row[3] + " successfully added/changed.")
+            #print(row[0] + " " + row[1] + " " + row[2] +" "+ row[3] + " successfully added/changed.")
 
     return HttpResponseRedirect(reverse('mentors:index'))
 
@@ -518,7 +518,7 @@ def addStudentRandom(request):
             new_applicant.course_pref[new_applicant.RIN] = r.sample(classes, r.randint(1, numClass))
             '''
             new_applicant.course_pref = r.sample(classes, r.randint(1, numClass))
-            print(new_applicant.course_pref)
+            #print(new_applicant.course_pref)
             new_applicant.save()
 
             for course in Course.objects.all():
@@ -585,7 +585,7 @@ def StartMatch(request):
         
         #print out some classes and students
         for (course, student_list) in classMatching.items():
-            print(course + ", cap: " + str(classCaps[course]) + ", features: ", classFeatures[course])
+            #print(course + ", cap: " + str(classCaps[course]) + ", features: ", classFeatures[course])
             this_course  = Course.objects.filter(name = course).first()
 
             for s_rin in student_list:        
@@ -600,14 +600,15 @@ def StartMatch(request):
        
         unmatchedClasses = set(classes) - classMatching.keys()
         unmatchedStudents = set(students) - matcher.studentMatching.keys()
-        print(f"{len(unmatchedClasses)} classes with no students")
-        print(f"{len(unmatchedStudents)} students not in a class")
+        #print(f"{len(unmatchedClasses)} classes with no students")
+        #print(f"{len(unmatchedStudents)} students not in a class")
 
+    return HttpResponseRedirect(reverse('mentors:view-match-result'))
 
-    return render(request, 'mentors/view_match_result.html', {'result': viewMatchResult()})
+    #return render(request, 'mentors/view_match_result.html', {'result': viewMatchResult()})
 
 def viewResultPage(request):
-    return render(request, 'mentors/view_match_result.html', {'result': viewMatchResult()})
+    return HttpResponseRedirect(reverse('mentors:view-match-result'))
 
 def viewMatchResult():
     # create a context to store the results
@@ -628,10 +629,9 @@ def viewMatchResult():
 
 
 def isMentorAdmin(request):
-    Admin_Email_List = ["cheny42@rpi.edu", "xial@rpi.edu", "hulbes@rpi.edu", "goldsd3@rpi.edu" ]
+    Admin_Email_List = ["zahavg@rpi.edu", "qianj2@rpi.edu", "cheny42@rpi.edu", "xial@rpi.edu", "hulbes@rpi.edu", "goldsd3@rpi.edu" ]
     if (request.user.email.strip() in Admin_Email_List):
         return True
-    print(request.user.email.strip())
     return False
 
 # csv download fucntion

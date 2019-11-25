@@ -16,6 +16,8 @@
 	</p>
 </div>
 
+{% if admin %}
+
 <!- Mentor apllication window>
 <div class="container">
     <div class="panel panel-default">
@@ -100,7 +102,6 @@
 </div>
 
 
-{% if admin %}
 <!- Professor apllication window>
 <div class="container">
     <div class="panel panel-default">
@@ -126,12 +127,20 @@
             <form method="POST" action="{% url 'mentors:addcoursefunc' %}" id="addcoursefunc" enctype="multipart/form-data">
                 {% csrf_token %}
                 <p>You can upload csv and generate new courses. </p>
-                <p>For the old courses, you can change course name, mentor cap and time slots(['t1', 't2'...]).</p>
+                <p>For the old courses, you can change mentor capacity and time slots(['t1', 't2'...]).</p>
                 <p>But you can not delete them right now for the sake of secruity</p>
                 Load courses from upload: &nbsp
-                
+                <div class = vspace ></div>
+
                 <input type="file" name="myfile" id= />
                 <input type="submit" value="Sumbit and Load"  name="submit" id="submit" />
+            </form>
+            <div class = vspacewithline ></div>
+
+            <form method="POST" action="{% url 'mentors:download-mentor-csv' %}" id="download-mentor-csv">
+                {% csrf_token %}
+                Download the csv of all applicants: &nbsp
+                <input type="submit" value="Download csv"  name="submit" id="submit" />
             </form>
             <div class = vspacewithline ></div>
 
@@ -147,19 +156,16 @@
                 <input type="number" id="num_students" name="num_students" >
                 <input type="submit" value="Add student Random"  name="submit" id="submit" />
             </form>
-            {% endif %}
 
             <form method="POST" action="{% url 'mentors:matchfunc' %}" id="matchfunc">
                 {% csrf_token %}
-                Match:
+                Match: &nbsp
                 <input type="submit" value="Match" name="submit" id="submit" />
             </form>
             <div class = vspacewithline ></div>
+            <tr><td> <a href="{% url 'mentors:view-match-result' %}"><span class="btn btn-primary">View Match Result</span></a></td></tr>
+            {% endif %}
 
-            <form method="POST" action="{% url 'mentors:view-course-result' %}" id="matchfunc">
-                {% csrf_token %}
-                <input type="submit" value="View Match Result"  name="submit" id="submit" />
-            </form>
         </div>
     </div>
 </div>

@@ -1,0 +1,31 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+ 
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b> Applicants </b>
+        </div>
+        <b class ='textline' >Number of Applicants: &nbsp {{ applicants_number }}
+            <form method="POST" action="{% url 'mentors:download-mentor-csv' %}" id="download-mentor-csv">
+                {% csrf_token %}
+                Add Course (DEV): &nbsp
+                <input type="submit" value="Download csv"  name="submit" id="submit" />
+            </form>
+        </b>
+        <div class="panel-body"">
+            <div class = "row col-md-12">
+                {% for applicant in applicants %}
+                <div class="textline">
+                    RIN: {{ applicant.RIN }} &nbsp {{ applicant }} &nbsp {{ applicant.email }}  &nbsp{{ applicant.phone }} &nbsp  GPA: {{ applicant.GPA }}  &nbsp  Recommender:  {{ applicant.recommender }}
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

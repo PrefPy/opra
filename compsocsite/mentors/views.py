@@ -5,6 +5,7 @@ import datetime
 import os
 import time
 import collections
+import dateutil.parser
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
@@ -45,14 +46,14 @@ class IndexView(views.generic.ListView):
         # check if there exist a mentor application
         ctx['applied'] = self.request.user.userprofile.mentor_applied
         print(ctx['applied'])
-        ctx['admin'] = getMentorAdmin(self.request)
+        ctx['admin'] = isMentorAdmin(self.request)
         return ctx
 
     def get_queryset(self):
         return Mentor.objects.all()
 
 def viewindex(request):
-    return render(request, 'mentors/index.html', {'applied': request.user.userprofile.mentor_applied, 'admin': getMentorAdmin(request)})
+    return render(request, 'mentors/index.html', {'applied': request.user.userprofile.mentor_applied, 'admin': isMentorAdmin(request)})
 
 class ApplyView(views.generic.ListView):
     template_name = 'mentors/apply.html'
@@ -64,55 +65,24 @@ class ApplyView(views.generic.ListView):
     def get_queryset(self):
         return Mentor.objects.all()
 
-class view_applyView(views.generic.ListView):
+class viewApplictionView(views.generic.ListView):
     template_name = 'mentors/view_application.html'
     def get_context_data(self, **kwargs):
-        ctx = super(view_applyView, self).get_context_data(**kwargs)
-
+        ctx = super(viewApplictionView, self).get_context_data(**kwargs)
+        ctx['user'] = self.request.user.userprofile.mentor_profile
         return ctx
     def get_queryset(self):
         return Mentor.objects.all()
 
-# view of personal infomation page
-class ApplyPersonalInfoView(views.generic.ListView):
-    template_name = 'mentors/apply_personal_info.html'
+# Admin to view all the applications
+class viewStudentsView(views.generic.ListView):
+    template_name = 'mentors/view_students.html'
     def get_context_data(self, **kwargs):
-        ctx = super(ApplyPersonalInfoView, self).get_context_data(**kwargs)
-        # check if there exist a mentor application
-        ctx['applied'] = Mentor.applied
-        ctx['applications'] = Mentor.objects.all()
-
+        ctx = super(viewStudentsView, self).get_context_data(**kwargs)
+        ctx['isAdmin'] = isMentorAdmin(self.request)
+        ctx['applicants'] = Mentor.objects.all()
+        ctx['applicants_number'] = len(Mentor.objects.all())
         return ctx
-    def get_queryset(self):
-        return Mentor.objects.all()
-
-# view of compensation and reponsibility page
-class ApplyCompensationView(views.generic.ListView):
-    template_name = 'mentors/apply_compensation.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(ApplyCompensationView, self).get_context_data(**kwargs)
-        # check if there exist a mentor application
-        ctx['applied'] = Mentor.applied
-        ctx['applications'] = Mentor.objects.all()
-        ctx['step'] = Mentor.step
-
-        return ctx
-
-    def get_queryset(self):
-        return Mentor.objects.all()
-
-# view of preference of a student applicant page
-class ApplyPreferenceView(views.generic.ListView):
-    template_name = 'mentors/apply_preference.html'
-    def get_context_data(self, **kwargs):
-        ctx = super(ApplyPreferenceView, self).get_context_data(**kwargs)
-        # check if there exist a mentor application
-        ctx['applied'] = Mentor.applied
-        ctx['applications'] = Mentor.objects.all()
-        ctx['step'] = Mentor.step
-        # === need more for course data ===
-        return ctx
-
     def get_queryset(self):
         return Mentor.objects.all()
 
@@ -233,7 +203,7 @@ def applystep3(request):
     this_user = request.user.userprofile
     p = this_user.mentor_profile
 
-    initial={}
+    initial={ 'mentored_non_cs_bf': p.mentored_non_cs_bf if this_user.mentor_applied else request.session.get('mentored_non_cs_bf', None)}
     if (this_user.mentor_applied):
         for course in Course.objects.all():
             this_grade = Grade.objects.filter(course = course, student = p).first()
@@ -254,6 +224,7 @@ def applystep3(request):
     if request.method == 'POST':
         if form.is_valid():   
             if (this_user.mentor_applied):
+                p.mentored_non_cs_bf = form.cleaned_data['mentored_non_cs_bf']
                 for course in Course.objects.all():
                     course_grade = course.name + "_grade"
                     course_exp   = course.name + "_exp"
@@ -268,6 +239,7 @@ def applystep3(request):
                         this_grade.have_taken = False
                     this_grade.save()
             else:
+                request.session['mentored_non_cs_bf'] = form.cleaned_data['mentored_non_cs_bf']
                 for course in Course.objects.all():
                     course_grade = course.name + "_grade"
                     course_exp   = course.name + "_exp"
@@ -287,14 +259,8 @@ def applystep4(request):
     p = this_user.mentor_profile
 
     initial={ 'pref_order':  p.course_pref if this_user.mentor_applied else request.session.get('pref_order', None),}
-    if (this_user.mentor_applied): 
-        prefer_list = ast.literal_eval(p.course_pref)
-        print(len(prefer_list))
-        print((prefer_list))
-
-    else:
-        prefer_list = ast.literal_eval(request.session.get('pref_order', '[]'))
-
+    prefer_list = ast.literal_eval(p.course_pref if this_user.mentor_applied else request.session.get('pref_order', '[]'))
+         
     course_list = [c.name for c in Course.objects.all()]
     pref_courses = Course.objects.filter(name__in=prefer_list)
     not_pref_courses = Course.objects.filter(name__in=[item for item in course_list if item not in prefer_list])
@@ -399,7 +365,6 @@ def checkPage(request, page):
         for k in keys:
             if (request.session.get(k, None) == None):
                 return HttpResponseRedirect(reverse('mentors:index'))
-        
     return False
 
 
@@ -417,7 +382,8 @@ def submit_application(request):
     new_applicant.studnet_status = request.session["studnet_status"]
     new_applicant.employed_paid_before = request.session["employed_paid_before"]
     
-    new_applicant.course_pref = (request.session["pref_order"])
+    new_applicant.mentored_non_cs_bf = request.session["mentored_non_cs_bf"]
+    new_applicant.course_pref = request.session["pref_order"]
     new_applicant.time_slots = request.session["time_slots"]
     new_applicant.other_times = request.session["other_times"]
     new_applicant.relevant_info = request.session["relevant_info"]
@@ -428,10 +394,6 @@ def submit_application(request):
     this_user.mentor_applied = True
     this_user.mentor_profile = new_applicant
     this_user.save()
-
-
-    for i in this_user.mentor_profile.course_pref: 
-        print(i)
     #orderStr = self.cleaned_data["pref_order"]
     
     # Save Grades on the course average
@@ -466,7 +428,6 @@ def withdraw(request):
         try:
             #request.user.userprofile.mentor_profile.delete()
             request.user.userprofile.mentor_applied = False
-            print(request.user.userprofile.mentor_applied)
             request.user.userprofile.save()
             request.user.save()
         except:
@@ -475,26 +436,30 @@ def withdraw(request):
         # request.session.flush()
     HttpResponseRedirect(reverse('mentors:index'))
     
-# load CS_Course.csv 
+# load CS_Course.csv to generate courses
 def addcourse(request):
-    if request.method == 'POST':
-        Course.objects.all().delete()
-        #print(new_course.class_title + new_course.class_number + new_course.class_name + "successfully added")
-        with open("mentors/CS_Course.csv") as f:
-            reader = csv.reader(f)
-            for row in reader:
-                _ = Course.objects.get_or_create(
-                    name = row[0],
-                    subject = row[1],
-                    number = row[2],
-                    instructor = row[3],
-                    mentor_cap = r.randint(3, 10),
-                    feature_cumlative_GPA = r.randint(3, 10),
-                    feature_has_taken = r.randint(0, 10),
-                    feature_course_GPA = r.randint(3, 10),
-                    feature_mentor_exp = r.randint(0, 10),
-                )
-                print(row[0] + " " + row[1] + " " + row[2] + " successfully added.")
+    #Course.objects.all().delete()
+    #print(new_course.class_title + new_course.class_number + new_course.class_name + "successfully added")
+    if request.method == 'POST' and request.FILES['myfile']:
+        file = request.FILES['myfile']
+        decoded_file = file.read().decode('utf-8').splitlines()
+        reader = csv.reader(decoded_file)
+
+        for row in reader:
+        
+            c, created = Course.objects.get_or_create(
+                name = row[0],
+                subject = row[1],
+                number = row[2],
+            )
+            c.time_slots = row[4] if row[4].strip()!="" else "[]"
+            c.mentor_cap = row[3]
+            c.feature_cumlative_GPA = 1
+            c.feature_has_taken = 1
+            c.feature_course_GPA = 1
+            c.feature_mentor_exp = 1
+            c.save()
+            print(row[0] + " " + row[1] + " " + row[2] +" "+ row[3] + " successfully added/changed.")
 
     return HttpResponseRedirect(reverse('mentors:index'))
 
@@ -504,7 +469,11 @@ def searchCourse(request):
     if request.method == 'POST':
         course_name = request.POST.get('courses', False)
         choosen_course = Course.objects.filter(name = course_name).first()
-    return render(request, 'mentors/course_feature.html', {'courses': courses, 'choosen_course': choosen_course})
+        time_slots = Context()
+        time_slots["times"] = []
+        for t in ast.literal_eval(choosen_course.time_slots):
+            time_slots["times"].append(t)
+    return render(request, 'mentors/course_feature.html', {'courses': courses, 'choosen_course': choosen_course, 'time_slots': time_slots})
 
 
 # Change the value of features of a selected course
@@ -657,13 +626,63 @@ def viewMatchResult():
     return result
 
 
-def getMentorAdmin(request):
+def isMentorAdmin(request):
     Admin_Email_List = ["cheny42@rpi.edu", "xial@rpi.edu", "hulbes@rpi.edu", "goldsd3@rpi.edu" ]
     if (request.user.email.strip() in Admin_Email_List):
         return True
     print(request.user.email.strip())
     return False
 
+# csv download fucntion
+def download_mentor_csv(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="S20-UG-mentor-applicants.csv"'
+
+    writer = csv.writer(response)
+    row = ['RIN', 'Last Name', 'First Name', 'Email', 'Phone', 'GPA', 'Recommender', 'Compensation', 'Paid Before?', 'Status', 'Info', 'Mentored_nonCS']
+    for course in Course.objects.all():
+        course_prefix = course.subject + '_' + course.number
+        g = course_prefix+'_Grade'
+        m = course_prefix+'_Mentored'
+        row.append(g)
+        row.append(m)
+        
+    for course in Course.objects.all():
+        for t in ast.literal_eval(course.time_slots):
+            ct = course.subject + '_' + course.number + '_' + t
+            row.append(ct)
+    row.append("Other Times")
+    writer.writerow(row)
+    comp = {
+        "n": "Either",
+        "p": "Pay",
+        "c": 'Credit'
+    }
+    status = {
+        "i": "International",
+        "d": "Domestic",
+    }
+    for m in Mentor.objects.all():
+        row = [m.RIN, m.first_name, m.last_name, str(m.email), m.phone, m.GPA, m.recommender, comp[m.compensation], "paidbyrpi" if m.employed_paid_before else "", status[m.studnet_status], m.relevant_info.replace('"', '\'').replace('/[\n\r]+/', ' '), m.mentored_non_cs_bf]
+        for course in Course.objects.all():
+            grade = Grade.objects.filter(course = course, student = m).first()
+            course_prefix = course.subject + " " + course.number
+            row.append(grade.student_grade.upper())
+            row.append("Yes" if grade.mentor_exp else "")
+        for course in Course.objects.all():
+            for course_time in ast.literal_eval(course.time_slots):
+                if(course_time in [i.replace('_', ' ') for i in ast.literal_eval( m.time_slots)]):
+                    if (course.name in ast.literal_eval(m.course_pref)):
+                        row.append("wantstomentor")
+                    else:
+                        row.append("")
+                else:
+                    row.append("")
+        row.append(m.other_times.replace('/[\n\r]+/', '').replace('"', '\''))
+        writer.writerow(row)
+    
+    return response
 
 
 # function to get preference order from a string

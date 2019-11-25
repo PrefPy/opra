@@ -188,6 +188,7 @@ class Course(models.Model):
     # This should change to foreignkey afterwards
     # But we left this now to make the implementation easy
     instructor = models.CharField(max_length=50, default = 'none') # Instrcutor's name
+    time_slots = models.CharField(max_length=500, default = '[]') # Instrcutor's name
 
     # feature weights to represent the pref
     feature_cumlative_GPA = models.IntegerField(default=0)
@@ -232,7 +233,7 @@ class Mentor(models.Model):
             )
     studnet_status = models.CharField(max_length=1, choices = status, default='i')
     employed_paid_before = models.BooleanField(default = False)
-
+    mentored_non_cs_bf = models.BooleanField(default = False)
     '''
     time_slots_choices = (
                      ('M_4:00-4:50PM',      'M 4:00-4:50PM'),

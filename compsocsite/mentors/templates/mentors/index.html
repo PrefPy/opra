@@ -62,13 +62,15 @@
                     <b> View your application and make changes: &nbsp</b>
                     <tr><td> <a href="{% url 'mentors:applyfunc1' %}"><span class="btn btn-primary">View and Change</span></a></td></tr>
                 </tbody>
-                <tr><td> <a href="{% url 'mentors:view_application' %}"><span class="btn btn-primary">View</span></a></td></tr>
+                {% if dev %}
+                <tr><td> <a href="{% url 'mentors:view_application' %}" ><span class="btn btn-primary" type = "hidden">View</span></a></td></tr>
+                {% endif %}
                 <div class = vspacewithline ></div>
 
                 <p>You can withdraw your application if you do not want to apply for mentor anymore. A new application can be started after you withdrawed.</p>
 
                 <tr><form method="GET" action="{% url 'mentors:withdrawfunc' %}" id="withdrawfunc">
-                        <input type="submit" value="Withdraw apllication" class="btn btn-primary", style= "color:red; background-color: rgb(220, 235, 245);">
+                    <input type="submit" value="Withdraw apllication" class="btn btn-primary", style= "color:red; background-color: rgb(220, 235, 245);">
                 </form></tr>
             {% else %}
              <b> Begin to apply: &nbsp</b>
@@ -77,6 +79,7 @@
         </div>
     </div>
 </div>
+
 
 {% if admin %}
 <!- Professor apllication window>
@@ -101,24 +104,39 @@
                 <b> Administrator Page</b>
         </div>
         <div class="panel-body">
-            <form method="POST" action="{% url 'mentors:addcoursefunc' %}" id="addcoursefunc">
+            <form method="POST" action="{% url 'mentors:addcoursefunc' %}" id="addcoursefunc" enctype="multipart/form-data">
                 {% csrf_token %}
-                Add Course (DEV): 
-                <input type="submit" value="Load csv"  name="submit" id="submit" />
+                <p>You can upload csv and generate new courses. </p>
+                <p>For the old courses, you can change course name, mentor cap and time slots(['t1', 't2'...]).</p>
+                <p>But you can not delete them right now for the sake of secruity</p>
+                Load courses from upload: &nbsp
+                
+                <input type="file" name="myfile" id= />
+                <input type="submit" value="Sumbit and Load"  name="submit" id="submit" />
             </form>
+            <div class = vspacewithline ></div>
 
+                {% csrf_token %}
+                View all the applicants: &nbsp
+                <tr><td> <a href="{% url 'mentors:view-students' %}"><span class="btn btn-primary">View</span></a></td></tr>
+            <div class = vspacewithline ></div>
+
+            {% if dev %}
             <form method="POST" action="{% url 'mentors:addStudentRandomfunc' %}" id="addStudentRandomfunc">
                 {% csrf_token %}
                  Add Student Random (DEV):
                 <input type="number" id="num_students" name="num_students" >
                 <input type="submit" value="Add student Random"  name="submit" id="submit" />
             </form>
+            {% endif %}
 
             <form method="POST" action="{% url 'mentors:matchfunc' %}" id="matchfunc">
                 {% csrf_token %}
                 Match:
                 <input type="submit" value="Match" name="submit" id="submit" />
             </form>
+            <div class = vspacewithline ></div>
+
             <form method="POST" action="{% url 'mentors:view-course-result' %}" id="matchfunc">
                 {% csrf_token %}
                 <input type="submit" value="View Match Result"  name="submit" id="submit" />

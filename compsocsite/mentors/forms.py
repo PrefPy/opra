@@ -31,7 +31,9 @@ class MentorApplicationfoForm_step1(ModelForm):
         self.helper = FormHelper()
         self.fields['recommender'].required = False
         self.helper.layout = Layout(
-            HTML('== PERSONAL INFORMATION =='),
+            HTML('''<p class = 'form_title'> PERSONAL INFORMATION </p>  '''),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+
             HTML("<fieldset>"),
             Div('RIN', css_class = "inputline"),
             HTML(""" <div class = 'emptyspace'> </div>"""),
@@ -118,7 +120,10 @@ class MentorApplicationfoForm_step2(ModelForm):
         self.helper.add_input(Button('prev', 'Prev', onclick="window.history.go(-1); return false;"))
         self.helper.add_input(Submit('next', 'Next'))
 
-class MentorApplicationfoForm_step3(forms.Form):
+class MentorApplicationfoForm_step3(ModelForm):
+    class Meta:
+        model = Mentor
+        fields = ( 'mentored_non_cs_bf',)
     def __init__(self, *args, **kwargs):
         super(MentorApplicationfoForm_step3, self).__init__(*args, **kwargs)  
         self.helper = FormHelper()
@@ -138,12 +143,20 @@ class MentorApplicationfoForm_step3(forms.Form):
                      ('d+', 'D+'), ('d', 'D'), ('f', 'F'),
                      ('p', 'Progressing'), ('n', 'Not Taken'),
                      )
+            grades_ap = (
+                     ('a', 'A'), ('a-', 'A-'),
+                     ('b+', 'B+'), ('b', 'B'), ('b-', 'B-'),
+                     ('c+', 'C+'), ('c', 'C'), ('c-', 'C-'),
+                     ('d+', 'D+'), ('d', 'D'), ('f', 'F'),
+                     ('p', 'Progressing'), ('ap', 'AP'), ('n', 'Not Taken'),
+                     )
             choices_YN = (
                     ('Y', 'YES'),
                     ('N', 'NO'),
             )
+             
             self.fields[course.name+ "_grade"] = forms.ChoiceField(
-                choices = grades, 
+                choices = grades_ap if course.number == '1100' else grades, 
                 label = "Grade on this course:",
             ) 
             #self.initial[course.name+ "_grade"] = 'n'
@@ -162,7 +175,9 @@ class MentorApplicationfoForm_step3(forms.Form):
 
 
         self.helper.layout = Layout(
-            HTML('== COURSE EXPERIENCE =='),
+            HTML('''<p class = 'form_title'> COURSE EXPERIENCE </p>  '''),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
+
             HTML("<fieldset>"),
             HTML('''<div class = 'textline'> Below is a list of courses likely to need mentors. Note that CSCI 1100 is in
              Python, CSCI 1190 is in MATLAB, CSCI 1200 is in C++, CSCI 2300 is in Python/C++, CSCI 2500 
@@ -173,6 +188,9 @@ class MentorApplicationfoForm_step3(forms.Form):
             you plan to take in the future. In some cases, you are allowed to mentor for courses you have never taken;
             be sure to describe equivalent courses or experiences in the general comments textbox further below.
             </div>'''),
+            HTML(""" <div class = 'vspacewithline'> </div>"""),
+            HTML('''<label class = 'inputline' style = "float: left;">Have you mentored any <b style = 'color: red;'>Non-CS</b> courses before:</label>'''),
+            Div('mentored_non_cs_bf'),
             HTML(""" <div class = 'vspacewithline'> </div>"""),
             course_layout,
             HTML("</fieldset>"),
@@ -191,8 +209,8 @@ class MentorApplicationfoForm_step4(forms.Form):
         self.fields["pref_order"].required = False
         
         self.helper.layout = Layout(
-            HTML('== COURSE PREFERENCE =='),
-
+            HTML('''<p class = 'form_title'> COURSE PREFERENCE </p>  '''),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
             HTML("<fieldset>"),
             HTML('''<div class = 'textline'> Select the courses you would like to mentor and the courses 
             you do not prefer. For the course you would like to mentor, please change their rankings by
@@ -293,9 +311,9 @@ class MentorApplicationfoForm_step5(ModelForm):
                      ('W_2:00-3:50PM',      'W 2:00-3:50PM'),
                      ('W_4:00-4:50PM',      'W 4:00-4:50PM'),
                      ('W_5:00-5:50AM',      'W 5:00-5:50AM'),
-                     ('W_6:00-6:50PM', '     W 6:00-7:50PM'),
-                     ('T_4:00-5:50AM',      'T 4:00-5:50AM'),
-                     ('T_6:00-6:50PM',      'T 6:00-7:50PM'),
+                     ('W_6:00-6:50PM',      'W 6:00-7:50PM'),
+                     ('R_4:00-5:50AM',      'R 4:00-5:50AM'),
+                     ('R_6:00-6:50PM',      'R 6:00-7:50PM'),
         )
         self.fields["time_slots"] = forms.MultipleChoiceField(
             choices=time_slots_choices, 
@@ -306,7 +324,8 @@ class MentorApplicationfoForm_step5(ModelForm):
         
         
         self.helper.layout = Layout(
-            HTML('== SCHEDULING =='),
+            HTML('''<p class = 'form_title'> SCHEDULING </p>  '''),
+            HTML(""" <div class = 'emptyspace'> </div>"""),
             HTML("<fieldset>"),
             HTML(''' <div class="textline"> Indicate your availability for the 
             Spring 2020 semester by carefully checking all boxes that apply. The more boxes you check,
@@ -339,7 +358,7 @@ class MentorApplicationfoForm_step6(ModelForm):
 
         self.fields["relevant_info"] = forms.CharField(widget=forms.Textarea(attrs={'cols': 100, 'rows': 8}))
         self.helper.layout = Layout(
-            HTML('== ADDITIONAL INFOMATION =='),
+            HTML('''<p class = 'form_title'> ADDITIONAL INFOMATION </p>  '''),
             HTML("<fieldset>"),
             HTML('''<div class = 'textline'> Please provide any other relevant information about yourself in the space below, including your mentoring preferences (i.e.,&nbsp;which courses you'd prefer to mentor, which courses you'd prefer not to mentor, other extracurricular CS activities you're involved with, etc.). <strong>Do not leave this blank.</strong></div>'''),
             Field('relevant_info', style = "width:100%"),

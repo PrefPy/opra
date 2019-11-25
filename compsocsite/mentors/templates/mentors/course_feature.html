@@ -33,7 +33,11 @@
                 {% csrf_token %}
                 <div> <b>{{choosen_course.name}}: </b></div>
                 <input type="hidden" name="course"  value="{{choosen_course.name}}"/>
+                <div>Time Slots:</div>
 
+                {% for time in time_slots.times%}
+                <div>{{time}} </div>
+                {% endfor %}
                 <div><b>Capacity: </b>{{choosen_course.mentor_cap}}</div>
                 <div class="panel-body" >
                     <ul id="sliders" >

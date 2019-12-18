@@ -253,39 +253,39 @@ class Matcher:
 				next[c] = self.after(c, s)
 				
 				
-				#if s is already matched
-				if s in studentMatching:
+				#the class s is currently matched to, or None if unmatched
+				c2 = None
 				
-					#current class that s is in
+				if s in studentMatching:
 					c2 = studentMatching[s]
 					
 					assert c2 != c
 					
-					#if s prefers c more than current class
-					if self.prefers(s, c, c2):
+				
+				#we propose to c				
+				#if s prefers c more than the current class / being unmatched
+				if self.prefers(s, c, c2):
+				
+					#we will move s from c2 to c
+					#we don't need to do this if c2 was none,
+					#meaning s was unmatched
+					if c2 != None:
 					
-						#old class c2 becomes available again
-						
 						#unmatch to old class
 						currCap[c2] -= 1
 						
 						#if c2 isn't already scheduled to match, put it in the queue
 						if c2 not in queue:
 							queue.put(c2)
-						
-						#s becomes matched to c
-						studentMatching[s] = c
-						currCap[c] += 1
-						
-						
-					#otherwise, we're rejected
-					#just go to the next proposal
-				
-				#else, s is unmatched, so c gets them
-				else:
+					
+					
 					#s becomes matched to c
 					studentMatching[s] = c
 					currCap[c] += 1
+					
+					
+				#otherwise, we're rejected
+				#just go to the next proposal
 			
 			
 			#we finished the proposals for this class for this round

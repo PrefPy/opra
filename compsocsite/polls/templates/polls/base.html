@@ -20,9 +20,10 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="/static/css/stylish-portfolio.css" />
-	<link rel="stylesheet" type="text/css" href="/static/css/shared.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/css/introjs.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/shared.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/submission_form.css"/>
+	  <link rel="stylesheet" type="text/css" href="/static/css/introjs.css"/>
+	  <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css"/>
     <!-- Custom Fonts -->
     <link href="/static/fonts/sanc.css" rel="stylesheet" type="text/css" />     
     <link rel="stylesheet" href="/static/fonts/lato.css">
@@ -169,7 +170,9 @@
 						<li><a href="{% url 'polls:m_polls' %}"><span class="fa fa-object-group"></span> Multi-Polls</a></li>
             <li><a href="{% url 'polls:classes' %}"><span class="fa fa-object-group"></span>Classes</a></li>
 						<li><a href="{% url 'groups:index' %}"><span class="glyphicon glyphicon-user"></span>Groups</a></li>
-						<li><a href="{% url 'sessions_local:sessions_main' %}"><span class="glyphicon glyphicon-book"></span>Sessions</a></li>
+            <li><a href="{% url 'sessions_local:sessions_main' %}"><span class="glyphicon glyphicon-book"></span>Sessions</a></li>
+            <li><a href="{% url 'mentors:index' %}"><span class="glyphicon glyphicon-file"></span>Mentor Application</a></li>
+
 						{% if not request.flavour == "mobile" %}
 						<li>
 						

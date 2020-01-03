@@ -1,0 +1,176 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+	<p>
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+				{{ message }}
+			</div>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</p>
+</div>
+
+
+<!- Mentor apllication window>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b> Spring 2020 Undergraduate Programming Mentor Application Form </b>
+        </div>
+        
+        <div class="panel-body">
+            <p>
+                The Computer Science Department is currently recruiting undergraduate
+                programming mentors for Spring 2020 courses!
+            </p>
+
+            <p>
+                Undergraduate programming mentors help students better understand computer science and,
+                in particular, programming.
+                Mentoring typically occurs during labs and recitations, with either the instructor or
+                TA heading each session.
+                Mentors also typically hold group office hours.
+                And for some courses, mentors meet periodically
+                with TAs and instructors to receive guidance as to how to best mentor.
+            </p>
+
+            <p>
+                Because mentoring for CSCI requires approximately six hours per week
+                on top of your other commitments,
+                <strong>please do not mentor for other departments</strong>
+                (e.g., the I-PERSIST mentoring program).
+            </p>
+
+            <p>
+                Please apply below.
+                Applications are due by 12/6/2019.
+                Send any questions
+                to&nbsp;<a href="mailto:hulbes@rpi.edu" style = "color:red;">Shianne Hulbert</a>.
+                <strong>And please be sure to specify your schedule below to the best of your knowledge.</strong>
+            </p>
+            <div class = vspacewithline ></div>
+            {% if applied %}
+                <tbody>
+                    <p>Your mentor application is successful!</p>
+                    <p>You can change your application at anytime, but remember, we will start to look at all the applications after 12/6, so make sure you filled out the form and submit before the deadline.</p>
+
+                    <b> View your application and make changes: &nbsp</b>
+                    <tr><td> <a href="{% url 'mentors:applyfunc1' %}"><span class="btn btn-primary">View and Change</span></a></td></tr>
+                </tbody>
+                {% if dev %}
+                <tr><td> <a href="{% url 'mentors:view_application' %}" ><span class="btn btn-primary" type = "hidden">View</span></a></td></tr>
+                {% endif %}
+                <div class = vspacewithline ></div>
+                 
+                <p>
+                    You can withdraw your application if you do not want to apply for mentor anymore. A new application can be started after you withdrawed.<br /><br/>
+                    <span class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete"><span class="glyphicon glyphicon-trash"></span> Withdraw apllication </span>
+                </p>
+            
+                <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                Confirm application withdraw
+                            </div>
+                            <div class="modal-body">
+                                Are you absolutely sure you want to withdraw your application?
+                            </div>
+                            <div class="modal-footer">
+                                <form method="GET" action="{% url 'mentors:withdrawfunc' %}" id="withdrawfunc">
+                                    <input type="submit" value="Yes" class="btn btn-danger btn-ok">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+
+                                </form> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+             <b> Begin to apply: &nbsp</b>
+                <tr><td> <a href="{% url 'mentors:applyfunc1' %}"><span class="btn btn-primary">Apply</span></a></td></tr>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% if admin %}
+
+<!- Professor apllication window>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b> Professor Interface </b>
+        </div>
+        
+        <div class="panel-body">
+            <b> Check your courses: &nbsp </b>
+                <tr><td> <a href="{% url 'mentors:view-course' %}"><span class="btn btn-primary">View</span></a></td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+                <b> Administrator Page</b>
+        </div>
+        <div class="panel-body">
+            <form method="POST" action="{% url 'mentors:addcoursefunc' %}" id="addcoursefunc" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>You can upload csv and generate new courses. </p>
+                <p>For the old courses, you can change mentor capacity and time slots(['t1', 't2'...]).</p>
+                <p>But you can not delete them right now for the sake of secruity</p>
+                Load courses from upload: &nbsp
+                <div class = vspace ></div>
+
+                <input type="file" name="myfile" id= />
+                <input type="submit" value="Sumbit and Load"  name="submit" id="submit" />
+            </form>
+            <div class = vspacewithline ></div>
+
+            <form method="POST" action="{% url 'mentors:download-mentor-csv' %}" id="download-mentor-csv">
+                {% csrf_token %}
+                Download the csv of all applicants: &nbsp
+                <input type="submit" value="Download csv"  name="submit" id="submit" />
+            </form>
+            <div class = vspacewithline ></div>
+
+                {% csrf_token %}
+                View all the applicants: &nbsp
+                <tr><td> <a href="{% url 'mentors:view-students' %}"><span class="btn btn-primary">View</span></a></td></tr>
+            <div class = vspacewithline ></div>
+
+            {% if dev %}
+            <form method="POST" action="{% url 'mentors:addStudentRandomfunc' %}" id="addStudentRandomfunc">
+                {% csrf_token %}
+                 Add Student Random (DEV):
+                <input type="number" id="num_students" name="num_students" >
+                <input type="submit" value="Add student Random"  name="submit" id="submit" />
+            </form>
+
+            <form method="POST" action="{% url 'mentors:matchfunc' %}" id="matchfunc">
+                {% csrf_token %}
+                Match: &nbsp
+                <input type="submit" value="Match" name="submit" id="submit" />
+            </form>
+            <div class = vspacewithline ></div>
+            <tr><td> <a href="{% url 'mentors:view-match-result' %}"><span class="btn btn-primary">View Match Result</span></a></td></tr>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}
+

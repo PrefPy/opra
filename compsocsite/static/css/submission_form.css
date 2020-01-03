@@ -1,0 +1,183 @@
+.accordion-heading{
+  font-size: 66px;
+  color: red;
+
+}
+.my_label {
+  color: rgb(63, 63, 63);
+  font-weight: bold;
+  display: block;
+  float: left;
+  width: 33%;
+  display: inline-block;
+}
+
+label.radio.inline{
+  float: left;
+  padding: 0px 15px;
+}
+
+.form_title{
+  font: 200px;
+  font-weight: bold;
+  float: left;
+}
+
+.course_title{
+  font: 100px;
+  font-weight: bold;
+  float: left;
+  text-decoration: underline;
+}
+
+.course_block{
+  width:100%;
+  height:200px;
+}
+
+.label_special{
+  float:left;
+  color:red;
+}
+.c_tier {
+  float: left;
+  
+  color: dimgray;
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 40px; 
+  
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 151px;
+  font-weight: 900;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0px 15px 0px 0px;
+  border-radius: 0.3rem;
+}
+
+.course_choice {
+  white-space: nowrap;
+  background:whitesmoke;
+  height: 40px;
+  line-height: 40px; 
+  width: 100%;
+  padding: 0;
+  border-top: 2px solid	 rgb(187, 179, 179);
+  border-radius: 0.1rem;
+  flex-wrap: wrap;
+}
+
+
+.course_choice2 {
+  white-space: nowrap;
+  background:whitesmoke;
+  height: 40px;
+  line-height: 40px; 
+  width: 100%;
+  padding: 0;
+  border-top: 2px solid	 rgb(187, 179, 179);
+  border-radius: 0.1rem;
+  flex-wrap: wrap;
+}
+
+.course-element {
+  flex: 0 50%;
+  display: inline-block;
+  float: left;
+  margin: 2.5px 4px;
+  cursor: default;
+  width: 275px;
+  height: 35px;
+  line-height: 35px; 
+  font-size: 15px;
+  color:black;
+  border-radius: 0.2rem;  
+}
+
+.course-element-still {
+  flex: 0 50%;
+  display: inline-block;
+  float: left;
+  margin: 2.5px 4px;
+  cursor: default;
+  width: 275px;
+  height: 35px;
+  line-height: 35px; 
+  font-size: 15px;
+  color:black;
+  border-radius: 0.2rem; 
+}
+
+.course-element.ui-selecting {
+  background-color: rgb(109, 108, 106)
+}
+.course-element.ui-selected {
+  background-color: rgb(176, 197, 214)
+}
+
+.ui-slider-handle{
+  background-color: grey;
+}
+
+.inputline{
+  margin: 2px 8px 4px 8px;
+  display: block;
+
+}
+.textline {
+  margin: 2px 8px 12px 8px;
+  display: block;
+}
+
+.controls{
+  float: left;
+}
+
+.control-group{
+  display: block;
+  float: left;
+}
+
+.control-label{
+  clear: both;
+  display: block;
+  width: 128px;
+  float: left;
+  text-align: right;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.textinput {
+}
+
+.checkbox{
+  width:20%;
+  height:30px;
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+}
+
+.emptyspace {
+  clear: both;
+ 
+}
+
+.vspace {
+  clear: both;
+  margin-top: 6px;
+  padding-bottom: 6px;
+}
+
+.vspacewithline {
+  clear: both;
+  margin-top: 12px;
+  padding-bottom: 11px;
+  border-top: 1px solid #d5dfe5;
+}

@@ -1,0 +1,26 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+{% if isAdmin %}
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b> Applicants </b>
+        </div>
+        <div class="panel-body"">
+            <div class = "row col-md-12">
+                <b class ='textline' >Number of students applied: &nbsp {{ applicants_number }} </b>
+                {% for applicant in applicants %}
+                <div class="textline">
+                    {{forloop.counter}}. &nbspRIN: {{ applicant.RIN }} &nbsp {{ applicant }} &nbsp {{ applicant.email }}  &nbsp{{ applicant.phone }} &nbsp  GPA: {{ applicant.GPA }}  &nbsp  Recommender:  {{ applicant.recommender }}
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

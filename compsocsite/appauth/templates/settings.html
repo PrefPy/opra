@@ -29,7 +29,7 @@
                 </fieldset>
                 <fieldset class="form-group">
                     <label for="email">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" value="{{ request.user.email }}">
+                    <input type="text" class="form-control" id="email" name="email" value="{{ request.user.email }}" readonly>
                 </fieldset>
                 <input type="submit" class="btn btn-success" value="Save Changes">
             </form>

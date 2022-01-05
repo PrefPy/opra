@@ -53,8 +53,8 @@ window.location = "{% url 'polls:index' %}";
     <form id="user_form" method="post" action="{% url 'appauth:login' %}">
         {% csrf_token %}
         
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" />
+        <label for="email">Email</label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" value="" size="50" />
 
         <label for="password">Password</label> 
         <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="" size="50" />

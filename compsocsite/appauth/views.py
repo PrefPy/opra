@@ -33,30 +33,29 @@ def register(request):
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
         # Note that we make use of both UserForm and UserProfileForm.
-        user_form = UserForm(data=request.POST)
+        data=request.POST
+        data["username"] = data["email"]
+        user_form = UserForm(data=data)
  
         # If the two forms are valid...
         if user_form.is_valid():
-            if '@' in request.POST['username']:
-                user_form = UserForm()
-            else:
                 # Save the user's form data to the database.
-                user = user_form.save()
-                
-                # Hash the password with the set_password method
-                user.set_password(user.password)
-                user.is_active = False
-                user.save()
-                profile = UserProfile(user=user, displayPref = 1, time_creation=timezone.now())
-                profile.save()
-                # Update our variable to tell the template registration was successful.
-                registered = True
-                
-                htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>Click This Link To Activate Your Account</a></p>"
-                mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
+            user = user_form.save()
+            
+            # Hash the password with the set_password method
+            user.set_password(user.password)
+            user.is_active = False
+            user.save()
+            profile = UserProfile(user=user, displayPref = 1, time_creation=timezone.now())
+            profile.save()
+            # Update our variable to tell the template registration was successful.
+            registered = True
+            
+            htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/register/confirm/"+opra_crypto.encrypt(user.id)+"'>Click This Link To Activate Your Account</a></p>"
+            mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
         #else    print (user_form.errors)
         else:
-            return HttpResponse("This user name already exists. Please try a different one. <a href='/auth/register'>Return to registration</a>")
+            return HttpResponse("This email already exists. Please try a different one. <a href='/auth/register'>Return to registration</a>")
 # Not a HTTP POST, so we render our form using two ModelForm instances.
 # These forms will be blank, ready for user input.
     else:
@@ -82,28 +81,27 @@ def quickRegister(request, question_id):
     
     registered = False
     if request.method == 'POST':
-        user_form = UserForm(data=request.POST)
+        data=request.POST
+        data["username"] = data["email"]
+        user_form = UserForm(data=data)
         if user_form.is_valid():
-            if '@' in request.POST['username']:
-                user_form = UserForm()
-            else:
-                # Save the user's form data to the database.
-                user = user_form.save()
-                
-                # Hash the password with the set_password method
-                user.set_password(user.password)
-                user.is_active = False
-                user.save()
-                profile = UserProfile(user=user, displayPref = 1,time_creation=timezone.now())
-                profile.save()
-                # Update our variable to tell the template registration was successful.
-                registered = True
-                
-                htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/"+str(question_id)+"/quickconfirm/"+opra_crypto.encrypt(user.id)+"'>Click This Link To Activate Your Account</a></p>"
-                mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
+            # Save the user's form data to the database.
+            user = user_form.save()
+            
+            # Hash the password with the set_password method
+            user.set_password(user.password)
+            user.is_active = False
+            user.save()
+            profile = UserProfile(user=user, displayPref = 1,time_creation=timezone.now())
+            profile.save()
+            # Update our variable to tell the template registration was successful.
+            registered = True
+            
+            htmlstr =  "<p><a href='https://opra.cs.rpi.edu/auth/"+str(question_id)+"/quickconfirm/"+opra_crypto.encrypt(user.id)+"'>Click This Link To Activate Your Account</a></p>"
+            mail.send_mail("OPRA Confirmation","Please confirm your account registration.",'oprahprogramtest@gmail.com',[user.email],html_message=htmlstr)
         #else    print (user_form.errors)
         else:
-            return HttpResponse("This user name already exists. Please try a different one. <a href='/polls/"+str(question_id)+"'>Return to registration</a>")
+            return HttpResponse("This email already exists. Please try a different one. <a href='/polls/"+str(question_id)+"'>Return to registration</a>")
     return render(request,
                               'register.html',
                               {'user_form': user_form, 'registered': registered})
@@ -128,7 +126,7 @@ def quickLogin(request, key, question_id):
 def user_login(request):
     context = RequestContext(request)
     if request.method == 'POST':
-        username = request.POST['username']
+        username = request.POST['email']
         password = request.POST['password']
         
         # Check if the username/password combination is valid - a User object is returned if it is.
@@ -172,21 +170,15 @@ def updateSettings(request):
     context = RequestContext(request)
     
     if request.method == 'POST':
-        updatedEmail = request.POST['email']
+        #updatedEmail = request.POST['email']
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         if (first_name == "" and last_name != "") or (first_name != "" and last_name == ""):
             return HttpResponse("Please enter both a first and last name")
 	
-    try:
-        validate_email(updatedEmail)
-    except ValidationError as e:
-        return HttpResponse("Invalid email")
-    else:
-        request.user.first_name = first_name
-        request.user.last_name = last_name
-        request.user.email = updatedEmail
-        request.user.save()
+    request.user.first_name = first_name
+    request.user.last_name = last_name
+    request.user.save()
 	
     return HttpResponseRedirect(reverse('appauth:settings'))
 
@@ -245,7 +237,7 @@ def resetPage(request, key):
 
 def forgetPassword(request):
     email = request.POST['email']
-    username = request.POST['username']
+    username = email
     if email == "" or username == "":
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     user = get_object_or_404(User, email=email, username=username)

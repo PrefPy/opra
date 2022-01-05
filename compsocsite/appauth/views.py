@@ -33,7 +33,7 @@ def register(request):
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
         # Note that we make use of both UserForm and UserProfileForm.
-        data=request.POST
+        data=request.POST.copy()
         data["username"] = data["email"]
         user_form = UserForm(data=data)
  
@@ -81,7 +81,7 @@ def quickRegister(request, question_id):
     
     registered = False
     if request.method == 'POST':
-        data=request.POST
+        data=request.POST.copy()
         data["username"] = data["email"]
         user_form = UserForm(data=data)
         if user_form.is_valid():

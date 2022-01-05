@@ -26,8 +26,8 @@
 <script>
     function register(){
         if($('#reg_email').val() == ''){ $('#error').html("Please enter an email."); $('#reg_email').focus(); }
-        else if($('#reg_username').val() == ''){ $('#error').html("Please enter a username."); $('#reg_username').focus(); }
-        else if($('#reg_username').val().indexOf('@') > -1){ $('#error').html("Username should not include @ character."); $('#reg_username').focus(); }
+        //else if($('#reg_username').val() == ''){ $('#error').html("Please enter a username."); $('#reg_username').focus(); }
+        //else if($('#reg_username').val().indexOf('@') > -1){ $('#error').html("Username should not include @ character."); $('#reg_username').focus(); }
         else if($('#reg_password').val() == ''){ $('#error').html("Please enter a password."); $('#reg_password').focus(); }
         else{ $('#user_form').submit(); }
     }
@@ -75,10 +75,10 @@
                 <small class="text-muted">We will only use this to send notifications. We will never share your information with anyone else.</small>
             </fieldset>
             
-            <fieldset class="form-group">
+            <!-- <fieldset class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="reg_username" name="username" placeholder="Enter Username" value="" size="50" />  
-            </fieldset>
+	    </fieldset> -->
             
             <fieldset class="form-group">
                 <label for="username">Password</label> 

@@ -99,8 +99,8 @@
             <!--login model-->
 		        <div class="modal-body">
               <fieldset class="form-group">
-                <label for="username">Username </label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" value="" size="50" autofocus/>
+                <label for="username">Email </label>
+                <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email" value="" size="50" autofocus/>
               </fieldset>
               <fieldset class="form-group">
                 <label for="username">Password</label><a style="position:relative;left:60%;" href="{% url 'appauth:forgetpasswordview'%}">Forgot Password?</a>
@@ -108,11 +108,11 @@
               </fieldset>
               <script>
 	              if (typeof(QueryString["name"]) != "undefined"){
-	                $('#username').val(QueryString["name"]);
+	                $('#email').val(QueryString["name"]);
 	                $('#password').focus();
 	              }
 	              else{
-	                $('#username').focus();
+	                $('#email').focus();
 	              }
               </script>
 		        </div>

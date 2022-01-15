@@ -477,6 +477,9 @@ function changeMethod (value){
 	else if(method == 3){ swit += ";3;;"; methodIndicator = "slider"; sliderSort(order); }
 	else if(method == 4){ swit += ";4;;"; methodIndicator = "star"; init_star = true; starSort(order); init_star = false;}
 	else if(method == 5 || method == 6){ yesNoSort(method, order); }
+
+	// Hard-coded allowing submission
+	//if(method != 1){ $(".submitbutton").prop("disabled", "false");console.log("method", method); }
 };
 
 function recordCommentTime(){
@@ -850,14 +853,14 @@ $( document ).ready(function() {
 	// 	//console.log(value);
 	// });
 
-	window.setInterval(function(){
-		  checkSubmission();
+	window.setInterval(function(){  
+		checkSubmission();
 		  setupSortable();
   	}, 1000);
 	  changeCSS();
 
   function checkSubmission(){
-    if($("#left-sortable").children().size() > 0){
+    if(method > 1 || $("#left-sortable").children().size() > 0){
 		$(".submitbutton").prop("disabled", false);
     }
     else{

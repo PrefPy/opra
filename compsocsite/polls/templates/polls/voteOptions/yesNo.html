@@ -55,7 +55,7 @@
                         <ul id="yesNoList" >
                         <!-- The user hasn't voted on this poll yet -->
                         {% for item in items %}
-                            <label class="checkbox" id="item{{ item.item_text }}" type="{{ forloop.counter }}" onclick="select(this);">
+                            <label class="checkbox" id="item{{ item.item_text }}" type="{{ forloop.counter }}" >
                               <input type="checkbox" style="display:none">
                               <span class="glyphicon" aria-hidden="true"></span>
                                 <!-- Display image (uploaded) -->
@@ -117,5 +117,32 @@
             {% endif %}
         {% endif %}
         yesNoSort(5,original_order);
+	    var el = document.getElementsByClassName('checkbox');
+	    for (var i=0; i<el.length; i++) {
+	    el[i].addEventListener('click', function(event) {
+		    if (this === event.target) {
+			    onCheckEvent(this);
+			  }
+		    else {
+			    event.stopPropagation();
+			    select(this);
+			    return false;
+		    }
+	    }, false);
+	    }
     });
+function onCheckEvent(checkbox) {
+	//console.log("allow ties?", allowTies);
+	if (!allowTies && !$(checkbox).children()[0].checked){
+                    var checkboxes = document.getElementsByClassName('checkbox');
+			    for (var i=0; i<checkboxes.length; ++i) {
+				   if ($(checkboxes[i]).children()[0].checked){
+					    //console.log("should uncheck!");
+					    $(checkboxes[i]).children()[0].checked = false;
+					    select(checkboxes[i]);
+				    }
+                            }
+	}
+                    select(checkbox);
+}
 </script>

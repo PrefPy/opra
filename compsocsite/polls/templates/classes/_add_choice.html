@@ -16,11 +16,17 @@
 </ul>
 <script>
     var counter = 0;
+
     $('#addOption{{class.id}}').click(function(){
-        var text = $('#choice').val();
+        //let counter = $('#added{{class.id}}').children.length
+        console.log('You had:', $('#new_quiz{{ class.id }} #choice').val())
+        console.log('adding new option, counter: ',counter);
+        var text = $('#new_quiz{{ class.id }} #choice').val();
         $('#added{{class.id}}').append("<div class=\"row\"><div class=\"col-xs-10 form-group\"><input type=\"text\" id=\"choice" + counter + "\" class=\"added{{class.id}} form-control\" name=\"choice" + counter + "\" value=\"\" size=\"50\"/></div></div>");
-        $('#choice' + counter).val(text);
-        $('#choice').val("");
+        console.log('added new field')
+        $('#new_quiz{{ class.id }} #choice' + counter).val(text);
+
+        $('#new_quiz{{ class.id }} #choice').val("");
         counter = counter + 1;
     });
 </script>

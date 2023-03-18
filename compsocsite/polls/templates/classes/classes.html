@@ -16,8 +16,8 @@
         $('.added' + integer).each(function(){
         	if($(this).val() != ""){ array.push($(this).val()); }
         });
-        if($('#choice').val() != ""){ array.push($('#choice').val()); }
-        $('#choice').val(JSON.stringify(array));
+        if($(`#new_quiz${integer} #choice`).val() != ""){ array.push($(`#new_quiz${integer} #choice`).val()); }
+        $(`#new_quiz${integer} #choice`).val(JSON.stringify(array));
     }
 
     function start(id){
